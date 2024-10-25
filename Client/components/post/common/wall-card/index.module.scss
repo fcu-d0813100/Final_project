@@ -1,0 +1,56 @@
+@import '@/styles/_variant.scss';
+
+.post-card1{
+    width: 255px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    @media (max-width: 390px) {
+        width: 160px;
+        gap: 5px;
+    }
+    .post-img {
+        position: relative;
+        width: 100%;
+        img{
+            object-fit: cover;
+            border-radius: 5px;
+            &:hover{
+                opacity: 0.8;
+            }
+        }
+    }
+    .post-title{
+        padding: 0 8px;
+        display: -webkit-box; 
+        -webkit-box-orient: vertical; 
+        -webkit-line-clamp: 2; 
+        overflow: hidden; 
+        text-overflow: ellipsis;
+    }
+    .post-info{
+        display: flex;
+        justify-content: space-between;
+        padding: 0 8px;
+        &>div{
+            display: flex;
+
+            align-items: center;
+
+        }
+        .post-info-user{
+            gap: 10px;
+            & img{
+                // width: 24px;
+                // height: 24px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+        .post-info-like{
+            gap: 7px;
+        }
+    }
+
+}

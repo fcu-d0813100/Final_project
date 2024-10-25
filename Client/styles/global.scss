@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com');
+@import url('https://fonts.gstatic.com');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import './variant.scss';
+body {
+  font-family: $primary-font;
+  margin: 0;
+}
+.h1 {
+  font-size: 40px;
+  font-family: $primary-font;
+  font-weight: 700;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h2 {
+  font-size: 36px;
+  font-family: $primary-font;
+  font-weight: 600;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h3 {
+  font-size: 32px;
+  font-family: $primary-font;
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h4 {
+  font-size: 24px;
+  font-family: $primary-font;
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h5 {
+  font-size: 20px;
+  font-family: $primary-font;
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h6 {
+  font-size: 18px;
+  font-family: $primary-font;
+  font-weight: 400;
+  margin: 0;
+  word-wrap: break-word;
+}
+.p {
+  font-size: 16px;
+  font-family: $primary-font;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+  word-wrap: break-word;
+}
+.ps {
+  /* 註解 */
+  font-size: 14px;
+  font-family: $primary-font;
+  font-weight: 400;
+  margin: 0;
+  word-wrap: break-word;
+}
+.ps-phone {
+  /* 註解-手機版 */
+  font-size: 12px;
+  font-family: $primary-font;
+  font-weight: 400;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h1-L {
+  font-size: 64px;
+  font-family: $secondary-font;
+  font-style: italic;
+  font-weight: 700;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h2-L {
+  font-size: 52px;
+  font-family: $secondary-font;
+  font-style: italic;
+  font-weight: 700;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h3-L {
+  font-size: 46px;
+  font-family: $secondary-font;
+  font-style: italic;
+  font-weight: 600;
+  margin: 0;
+  word-wrap: break-word;
+}
+.h4-L {
+  font-size: 32px;
+  font-family: $secondary-font;
+  font-style: italic;
+  font-weight: 600;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+// btn 寬度自己調整
+.btn-primary {
+  height: 50px;
+  width: 200px;
+  border-radius: 3px;
+  border: black solid 1px;
+  background-color: black;
+  color: white;
+  &:hover {
+    border: black solid 1px;
+    background-color: white;
+    color: black;
+    transition: ease 0.3s;
+  }
+}
+
+// btn 寬度自己調整
+.btn-secondary {
+  height: 50px;
+  width: 200px;
+  border-radius: 3px;
+  border: black solid 1px;
+  background-color: white;
+  color: black;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: black;
+    color: white;
+    border: black solid 1px;
+    transition: ease 0.3s;
+  }
+}
+
+// btn 寬度自己調整
+.btn-danger {
+  height: 50px;
+  width: 200px;
+  background-color: $red-500;
+  color: #fff;
+  border-radius: 3px;
+  border: $red-500 solid 1px;
+
+  &:hover {
+    background-color: #6f2619;
+    border: #6f2619 solid 1px;
+    transition: 0.3s;
+  }
+}
+
+// btn 寬度自己調整
+// 綠色按鈕
+.btn-success {
+  height: 50px;
+  width: 200px;
+  background-color: $green-500;
+  color: #fff;
+  border-radius: 3px;
+  border: $green-500 solid 1px;
+
+  &:hover {
+    background: $green-700;
+    border: $green-700 solid 1px;
+    transition: ease 0.3s;
+  }
+}
+//透明按鈕 首頁
+.btn-outline {
+  height: 50px;
+  width: 200px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  color: white;
+  border: white solid 1px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: ease 0.3s;
+  }
+}
+//灰色按鈕 登出
+.btn-logout {
+  height: 50px;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 3px;
+  color: $green-700;
+  border: white solid 1px;
+
+  &:hover {
+    opacity: 0.8;
+    transition: ease 0.3s;
+  }
+}
+.ph {
+  font-size: 24px;
+}

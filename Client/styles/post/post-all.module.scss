@@ -1,0 +1,277 @@
+@import '@/styles/_variant.scss';
+
+.member-post{
+    max-width: 100%;
+    padding: 70px 120px;
+    box-sizing: border-box;
+    @media (max-width: 390px) {
+        padding: 15px;
+    }
+}
+.post-title{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px $green-500 solid;
+    box-sizing: border-box;
+    margin: 0;
+
+    & span:first-child{
+        color: $green-700;
+        @media (max-width: 390px) {
+            padding: 10px 0;
+            font-size: 24px;
+        }
+    };
+    & span:last-child{
+        color: #bfbfbf4d;
+        @media (max-width: 390px) {
+           display: none;
+        }
+    }
+}
+.post-content{
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    .post-navbar{
+        display: flex;
+        position: relative;
+        justify-content: space-between;
+        padding: 16px 40px 0;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+
+        @media (max-width: 390px) {
+            padding: 0;;
+         }
+        .post-nav{
+            display: flex;
+            justify-content: space-between;
+            gap: 100px;
+            list-style: none;
+            box-sizing: border-box;
+            padding: 0 0 28px;
+            @media(max-width: 390px) {
+                padding: 0 8px;
+                gap: 68px;
+            }
+            >.nav-link {
+                box-sizing: border-box;
+                padding: 5px 0;
+                position: relative;
+                
+                white-space: nowrap;
+                flex: 1 1 0 auto;
+                
+               a{
+                color: #000;
+                // border-bottom: 2px $red-500 solid;
+
+                &:hover,&:active{
+                    border-bottom: 2px $red-500 solid;
+                }
+
+               }
+                @media(max-width: 390px) {
+                    padding: 5px 0 3px;
+                    font-size: 20px;
+                    
+                 }
+                 .active {
+                    position: relative;
+                  }
+            }
+            
+        }
+        .post-add{  
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background-color: $green-400;
+            color: white;
+            font-size: 24px;
+            font-weight: 200;
+            width: 55px;
+            height: 55px;
+            border-radius: 50px;
+            border: none;
+            white-space: nowrap;
+            // overflow: hidden;
+            transition: width 0.3s ease;
+            @media (max-width: 390px) {
+                position: absolute;
+                top: -48px;
+                right: 15px;
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+             }
+             &>span{
+                display: none; 
+             }
+             &:hover{
+                width: 134px;
+                gap: 8px;
+               span{
+                display: inline-block;
+                opacity: 1
+               }
+             }
+        }
+        .post-plus{ 
+            width: 35px; 
+            height: 35px;
+            background-color: $green-400;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: none;
+            text-align: center;
+            font-weight: 400;
+            @media (max-width: 390px) {
+                display: block;
+                position: absolute;
+                top: -48px;
+                right: 15px;
+             }
+        }
+    }
+
+    
+}
+
+.post-all{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    @media (max-width: 390px) {
+        padding: 0;
+    }
+    // .post-card3{
+    //     display: flex;
+    //     padding: 20px;
+    //     gap: 40px;
+    //     @media (max-width: 390px){
+    //             padding: 8px;
+    //             gap: 12px;
+    //     }
+    //     img{
+    //         width: 200px;
+    //         height: 200px;
+    //         @media (max-width: 390px){
+    //             width: 80px;
+    //             height: 80px;
+    //         }
+    //     }
+    //     .post-info{
+    //         max-height: 200px;
+    //         display: flex;
+    //         flex-direction: column;
+    //         justify-content: space-between;
+    //         /* padding: 0 20px; */
+    //         .post-info-main{
+    //             display: flex;
+    //             flex-direction: column;
+    //             // gap: 5px;
+    //             @media (max-width: 390px){
+    //                 // gap: 0;
+    //             }
+    //             .post-main-title{
+    //                 display: flex;
+    //                 justify-content: space-between;
+    //                 align-items: center;
+    //                 // height: 32px;
+    //                 margin: 0;
+    //                 @media (max-width: 390px){
+    //                     font-size: 18px;
+    //                     display: -webkit-box;
+    //                     -webkit-box-orient: vertical;
+    //                     -webkit-line-clamp: 1; 
+    //                     overflow: hidden;
+    //                 }
+    //                 // hover 按鈕
+    //                 .ps{
+    //                     display: flex;
+    //                     visibility: hidden;
+    //                     @media (max-width: 390px){
+    //                         display: none;
+    //                     }
+    //                     button{
+    //                         border: none;
+    //                         padding: 10px;
+    //                         background-color: transparent;
+    //                     }
+    //                 }
+    //             }
+    //             .post-main-content{
+    //                 display: -webkit-box;
+    //                 -webkit-box-orient: vertical;
+    //                 -webkit-line-clamp: 4; 
+    //                 overflow: hidden;
+    //                 @media (max-width: 390px){
+    //                     -webkit-line-clamp: 1; 
+    //                      height: 20px;
+    //                 }
+    //             }
+    //         }
+    //         .post-info-others{
+    //             display: flex;
+    //             justify-content: space-between ;
+    //             // line-height: 36px;
+    //             .post-icon{
+    //                 display: flex;
+    //                 gap: 28px;
+    //                 // width: 112px;
+    //                 @media (max-width: 390px){
+    //                     justify-content:start;
+    //                     gap:8px ;
+    //                     & svg{
+    //                         width: 20px;
+    //                         height: 20px;
+    //                     }
+    //                 }
+    //                 .post-icons-like{
+    //                     display: flex;
+    //                     gap: 7px;
+    //                     align-items: center;
+    //                 }
+    //                 .post-icons-reply{
+    //                     display: flex;
+    //                     gap: 7px;
+    //                     align-items: center;
+    //                 }
+    //             }
+    //             .post-date{
+    //                 display: flex;
+    //                 align-items: center;
+    //                 gap: 10px;
+    //                 @media (max-width: 390px){
+    //                     font-size: 14px;
+    //                 }
+    //                  & span{
+    //                     color: $green-500;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     &:hover{
+    //         background-color: #BFBFBF33;
+            
+    //     }
+    //     &:hover> .post-info .ps button{
+    //         transition: visibility  0.4s;
+    //         display: block;
+    //         visibility: visible;
+    //     }
+    // }
+}
+
+// .post-card3:hover> .post-info .ps button{
+//     transition: visibility  0.4s;
+//     display: block;
+//     visibility: visible;
+// }

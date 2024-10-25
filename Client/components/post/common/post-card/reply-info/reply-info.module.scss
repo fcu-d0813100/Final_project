@@ -1,0 +1,41 @@
+// .like svg {
+//     &:hover, &.active {
+//         fill: $green-500;
+//         stroke: $green-500;
+//         stroke-width: 1px;
+//     }
+// }
+
+
+@import '@/styles/_variant.scss';
+
+.reply-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    line-height: normal;
+    .user-name {
+        font-size: 20px;
+        font-weight: 500;
+        color: $green-600;
+        & span {
+            font-size: 14px;
+            color: #BFBFBF;
+        }
+    }
+    .post-icons {
+        
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        color:#8A8A8A ;
+        &>div{
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            line-height: 0;
+           
+        }
+    }
+
+}
