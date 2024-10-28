@@ -4,7 +4,7 @@
   position: relative;
   background-color: #626553;
   width: 100%;
-  height: 915px;
+  height: 908px;
   overflow: hidden;
   display: flex;
   justify-content: start;
@@ -22,7 +22,7 @@
 .home-bestSeller .bestSeller-text {
   width: 48%;
   left: 50%;
-  top: 10%;
+  top: 5%;
   font-weight: 600;
   border-bottom: 3px solid #8a8a8a;
   position: absolute;
@@ -31,14 +31,14 @@
 .home-bestSeller .bestSeller-slogan {
   position: absolute;
   left: 50%;
-  top: 23%;
+  top: 18%;
   font-weight: 500;
   position: absolute;
   color: #fff;
 }
 .home-bestSeller .bestSeller-card {
   position: absolute;
-  right: 10%;
+  right: 4%;
   top: 30%;
   color: #fff;
 }
@@ -49,7 +49,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid #8a8a8a;
+
   padding: 35px;
   margin-right: 51px;
 }
@@ -69,7 +69,7 @@
   height: 315px;
 }
 .home-bestSeller .bestSeller-bgi-pc {
-  width: 87%;
+  width: 86%;
   height: auto;
   -o-object-fit: cover;
   object-fit: cover;
@@ -80,23 +80,23 @@
   }
   .home-bestSeller .bestSeller-brand {
     position: absolute;
-    top: 75%;
+    top: 83%;
     font-size: 4rem;
   }
   .home-bestSeller .bestSeller-text {
     width: 80%;
-    font-size: 3rem;
+    font-size: 2.5rem;
     top: 0%;
-    left: 10%;
+    left: 4%;
     font-weight: 600;
-    border-bottom: 3px solid #8a8a8a;
+    border-bottom: 1px solid #fff;
     position: absolute;
     color: #fff;
   }
   .home-bestSeller .bestSeller-slogan {
     position: absolute;
-    top: 20%;
-    left: 10%;
+    top: 15%;
+    left: 4%;
     font-size: medium;
     font-weight: 500;
     position: absolute;
@@ -104,7 +104,7 @@
   }
   .home-bestSeller .bestSeller-card {
     position: absolute;
-    right: 10%;
+    right: 3%;
     top: 30%;
     color: #fff;
   }
@@ -138,6 +138,7 @@
   .home-bestSeller .bestSeller-bgi-mobile {
     width: 390px;
     height: 100%;
+
     -o-object-fit: cover;
     object-fit: cover;
   }

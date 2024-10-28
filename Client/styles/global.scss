@@ -2,12 +2,8 @@
 @import url('https://fonts.gstatic.com');
 @import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import './variant.scss';
-<<<<<<< HEAD
-.container body {
-=======
 
-.body {
->>>>>>> c350e11e5acf3e8c31a44ad0784761b5c3f8c065
+.container body {
   font-family: $primary-font;
   margin: 0;
 }
