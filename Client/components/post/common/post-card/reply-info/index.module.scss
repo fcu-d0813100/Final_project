@@ -15,10 +15,16 @@
     gap: 4px;
     line-height: normal;
     .user-name {
-        font-size: 20px;
-        font-weight: 500;
-        color: $green-600;
-        & span {
+        display: flex;
+        align-items: end;
+        gap: 10px;
+        
+        & span:first-child {
+            font-size: 18px;
+            font-weight: 500;
+            color: #666464;
+        }
+        & span:last-child {
             font-size: 14px;
             color: #BFBFBF;
         }

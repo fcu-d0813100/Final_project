@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Carousel from 'react-bootstrap/Carousel';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+
+// 在 index.js 或 App.js 文件中引入
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import {
-  // PiThumbsUp,
   PiHeartStraight,
   PiHeartStraightFill,
   PiChatCircle,
 } from 'react-icons/pi';
-// import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
-
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// import 'swiper/swiper-bundle.min.css';
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma';
 
 import styles from './index.module.scss';
-import ReplyInfo from './reply-info/reply-info';
+import ReplyInfo from './reply-info';
 export default function PostCard1(props) {
   //有多icon 狀態初始化為物件
   // const [hover, setHover] = useState({
@@ -42,13 +47,13 @@ export default function PostCard1(props) {
   const [focus, setFocus] = useState(false);
   const [user, setUser] = useState('');
   const [reply, setReply] = useState('');
-  const FocusHandle = (e) => {
-    setFocus(true);
-    // setInputValue(e.target.value);
-    // if (inputValue !== '') {
-    //   setFocus(true);
-    // }
-  };
+  // const FocusHandle = (e) => {
+  //   setFocus(true);
+  //   // setInputValue(e.target.value);
+  //   // if (inputValue !== '') {
+  //   //   setFocus(true);
+  //   // }
+  // };
   const cancelHandle = (e) => {
     e.preventDefault();
     setInputValue('');
@@ -59,6 +64,7 @@ export default function PostCard1(props) {
   const replyHandle = (text, user) => {
     setUser(user);
     setReply(text);
+    setFocus(true);
   };
   const iconHandle = (iconId) => {
     //先複製原本的狀態 然後動態搜尋 改相反
@@ -71,16 +77,38 @@ export default function PostCard1(props) {
   return (
     <>
       <div className={styles['post-card3']}>
-        {/* post-img */}
+        {/* post-img with Sw*/}
         <div className={styles['post-img']}>
-          <Image
-            src="/post/p1_1.webp"
-            alt="Post Image"
-            fill
-            priority
-            style={{ objectFit: 'cover' }}
-            sizes="100%"
-          />
+          <Carousel interval={null}>
+            <Carousel.Item>
+              <Image
+                className={styles['user-image']}
+                src="/post/p2_1.webp"
+                alt="User Image"
+                width={600}
+                height={650}
+                objectFit="cover"
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <Image
+                className={styles['user-image']}
+                src="/post/p1_1.webp"
+                alt="User Image"
+                width={600}
+                height={720}
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <Image
+                className={styles['user-image']}
+                src="/post/p2_1.webp"
+                alt="User Image"
+                width={600}
+                height={720}
+              />
+            </Carousel.Item>
+          </Carousel>
         </div>
         {/* post-text */}
         <div className={styles['post-text']}>
@@ -107,6 +135,11 @@ export default function PostCard1(props) {
                   一起用最有氛圍感的派對妝容 來迎接年末派對時刻！
                   不知不覺又到了一年最後一個月 NARS推出流金夜閃系列✨
                   一起用最有氛圍感的派對妝容 來迎接年末派對時刻！
+                  起用最有氛圍感的派對妝容 來迎接年末派對時刻！
+                  不知不覺又到了一年最後一個月 NARS推出流金夜閃系列✨
+                  一起用最有氛圍感的派對妝容起用最有氛圍感的派對妝容
+                  來迎接年末派對時刻！ 不知不覺又到了一年最後一個月
+                  NARS推出流金夜閃系列✨ 一起用最有氛圍感的派對妝容
                 </span>
                 <span>#NARS</span>
                 <span>#聖誕派對</span>
@@ -117,7 +150,7 @@ export default function PostCard1(props) {
             {/* reply */}
             <div className={styles['post-reply']}>
               <div className={styles['reply-amount']}>共有2條評論</div>
-              <div className={styles['reply-wrap-big']}>
+              <div className={styles['reply-wrap']}>
                 <div className={styles['reply-big-container']}>
                   <div className={styles['reply-big']}>
                     <Image
@@ -127,7 +160,14 @@ export default function PostCard1(props) {
                       width={40}
                       height={40}
                     />
-                    <ReplyInfo onReplyClick={replyHandle} />
+                    <ReplyInfo
+                      onReplyClick={replyHandle}
+                      username="Anna"
+                      datetime="2022-12-12 12:12:12"
+                      replyContent="新的遮瑕膏測評! 遮瑕力超強"
+                      likeCount={15}
+                      replyCount={10}
+                    />
                   </div>
                   <div className={styles['reply-small-container']}>
                     <div className={styles['reply-small']}>
@@ -138,13 +178,16 @@ export default function PostCard1(props) {
                         width={34}
                         height={34}
                       />
-                      <div className={styles['reply-wrap-small']}>
-                        <ReplyInfo onReplyClick={replyHandle} />
-                        <div className={styles['reply-more']}>
-                          展開 3 條回覆
-                        </div>
-                      </div>
+                      <ReplyInfo
+                        onReplyClick={replyHandle}
+                        username="Anna"
+                        datetime="2022-12-12 12:12:12"
+                        replyContent="新的遮瑕膏測評! "
+                        likeCount={15}
+                        replyCount={10}
+                      />
                     </div>
+                    <div className={styles['reply-more']}>展開 3 條回覆</div>
                   </div>
                 </div>
               </div>
@@ -161,7 +204,7 @@ export default function PostCard1(props) {
                 type="text"
                 className={styles['reply-input']}
                 placeholder="新增評論"
-                onFocus={FocusHandle}
+                onFocus={() => setFocus(true)}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
