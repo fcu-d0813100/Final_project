@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
+import { GrGoogle } from "react-icons/gr";
+import { FaLine } from "react-icons/fa6";
+import { PiEyeClosed } from "react-icons/pi";
+
+
+
 
 export default function UserLogin(props) {
   return (
@@ -45,18 +51,19 @@ export default function UserLogin(props) {
                     placeholder="請輸入帳號/信箱"
                   />
                 </div>
-                <div className={styles['input-area']}>
+                <div className={`${styles['input-area']} ${styles['line-input-pw']}`}>
                   <label htmlFor="password" className={styles['text-input']}>
                     密碼
                   </label>
                   <input
                     type="password"
                     id="password"
-                    className={styles['line-input']}
+                    className={`${styles['line-input']} `}
                     placeholder="請輸入英文字母及數字"
                   />
+                  <PiEyeClosed className={styles.eyeiclosed} />
                 </div>
-                <div className={`form-check ${styles['form-area']} my-2 `}>
+                <div className={`form-check ${styles['form-area']} my-4 `}>
                   <div>
                     <input
                       className={`form-check-input ${styles['form-check-input2']}`}
@@ -64,9 +71,8 @@ export default function UserLogin(props) {
                       value=""
                       id="remember"
                     />
-                    {/* 按鈕沒有變黑色 */}
                     <label
-                      className={`form-check-label  ps`}
+                      className={`form-check-label ps`}
                       htmlFor="remember"
                     >
                       記住帳密
@@ -80,13 +86,19 @@ export default function UserLogin(props) {
                   <button className={`btn-primary h6 ${styles['btn-primary']}`}>
                     登入
                   </button>
+
                 </div>
-                <div className="row pt-4">
+
+                <div className="row pt-4 d-flex justify-content-end align-items-start">
                   <div className={`col-7 ${styles['signin-rwd']}`}>
                     還沒有帳號?{' '}
                     <a href="#" className="text-black">
                       立即註冊
                     </a>
+                  </div>
+                  <div className="col-5 d-flex justify-content-end align-items-center">
+                    <FaLine className={styles['icon-line']} />
+                    <GrGoogle className={styles['icon-google']} />
                   </div>
                 </div>
               </div>
