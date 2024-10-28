@@ -6,16 +6,14 @@
   gap: 50px;
 }
 
-<<<<<<< HEAD
 .title {
-=======
-.h3-L {
->>>>>>> dev_chia
-  padding-inline: 100px;
-}
+  .h3-L {
+    padding-inline: 100px;
+  }
 
-.h5 {
-  color: $green-500;
+  .h5 {
+    color: $green-500;
+  }
 }
 
 .img-group {
@@ -69,16 +67,14 @@
 }
 
 @media (max-width: 1200px) {
-<<<<<<< HEAD
   .title {
-=======
-  .h3-L {
->>>>>>> dev_chia
-    font-size: 40px;
-  }
+    .h3-L {
+      font-size: 40px;
+    }
 
-  .h5 {
-    font-size: 19px;
+    .h5 {
+      font-size: 19px;
+    }
   }
 
   .img-group a {
@@ -92,21 +88,20 @@
     gap: 20px;
   }
 
-<<<<<<< HEAD
   .title {
-=======
-  .h3-L {
->>>>>>> dev_chia
-    padding-inline: 30px;
-    font-size: 32px;
-  }
+    .h3-L {
+      padding-inline: 30px;
+      font-size: 32px;
+    }
 
-  .h5 {
-    font-size: 14px;
+    .h5 {
+      font-size: 14px;
+    }
   }
 
   .img-group {
     padding-inline: 20px;
+
     a {
       width: 79px;
       height: 79px;
