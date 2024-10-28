@@ -1,10 +1,10 @@
 'use client'
-import styles from '@/styles/teacher/teachers.module.scss'
+import styles from '@/components/teacher/common/teachers.module.scss'
 import Image from 'next/image'
 import { PiMagnifyingGlass, PiCaretDown, PiArrowRight } from 'react-icons/pi'
 
-import TeachersHeader from '@/components/teacher/teachers/teachers-header'
-import Boxrow from '@/components/teacher/teachers/box-row'
+import TeachersHeader from '@/components/teacher/common/teachers-header'
+import Boxrow from '@/components/teacher/common/teacher-boxrow'
 
 import React, { useState, useEffect, Fragment } from 'react'
 

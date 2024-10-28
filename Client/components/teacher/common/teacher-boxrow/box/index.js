@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import styles from '@/styles/teacher/teachers.module.scss'
+import styles from '@/components/teacher/common/teachers.module.scss'
 import Image from 'next/image'
 import { PiArrowRight } from 'react-icons/pi'
 

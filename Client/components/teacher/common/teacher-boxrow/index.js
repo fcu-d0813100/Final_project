@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import TeacherBox from '@/components/teacher/teachers/teacher-box.js'
+import TeacherBox from '@/components/teacher/common/teacher-boxrow/box'
+import styles from '@/components/teacher/common/teachers.module.scss'
 
 export default function Boxrow(props) {
   return (
