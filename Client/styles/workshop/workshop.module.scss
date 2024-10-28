@@ -1,0 +1,266 @@
+@import '@/styles/_variant.scss';
+
+
+.section01 {
+  height: 700px;
+  background: url(/workshop/workshop_01_bg.jpg) center no-repeat;
+  background-size: cover;
+
+  .wInformation {
+    width: 50%;
+    padding: 80px;
+    padding-right: 0px;
+
+    .name {
+      font-size: 45px;
+      font-weight: 700;
+      color: $green-600;
+      padding-block: 20px;
+      border-bottom: 1.5px solid $green-400;
+    }
+    .infoContainer {
+      width: 70%;
+      font-size: 18px;
+      margin-left: 100px;
+      margin-block: 60px;
+    }
+    .wText {
+      padding-inline: 45px;
+      margin-block: 40px;
+      border-left: 1.5px solid $green-500;
+    }
+    .type {
+      color: $green-500;
+    }
+    .tName {
+      color: $green-600;
+    }
+  }
+  .cover {
+    width: 50%;
+
+    .coverImg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+//----------------------------------------------
+.workshopSpace {
+  position: relative;
+  .workshopImg {
+    position: absolute;
+    width: 500px;
+    height: auto;
+    top: -60px;
+    left: 60px;
+  }
+}
+//----------------------------------------------
+.section02 {
+  .checkDate {
+    height: 230px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+    text-align: center;
+
+    .wDate {
+      padding-bottom: 12px;
+      padding-inline: 20px;
+      border-bottom: solid 1px black;
+
+      font-size: 32px;
+      font-family: Noto Sans;
+      font-weight: 500;
+      margin: 0;
+      word-wrap: break-word;
+
+      transition: font-size 0.3s;
+    }
+
+    .wTime {
+      padding: 15px;
+    }
+    .wPerson {
+      width: 290px;
+      height: 28px;
+      border: 1.5px solid $green-500;
+      border-radius: 20px;
+      text-align: center;
+      color: $green-500;
+      margin: auto;
+      .pMax {
+        height: 100%;
+        padding-top: 2px;
+        color: white;
+        background-color: $green-500;
+        border-radius: 20px;
+        transition: 0.4s;
+      }
+    }
+    transition: 0.3s, background 0.4s;
+    &:hover {
+      color: white;
+      background: black url(/workshop/cart_bg.jpg) center no-repeat;
+      background-size: cover;
+      .wDate {
+        font-size: 36px;
+        font-family: Noto Sans;
+        font-weight: 600;
+        margin: 0;
+        word-wrap: break-word;
+        border-bottom: solid 1px rgb(255, 255, 255);
+      }
+
+      .wPerson {
+        border: 1.5px solid white;
+        color: white;
+
+        .pMax {
+          color: rgb(0, 0, 0);
+          background-color: white;
+        }
+      }
+    }
+  }
+  //-------------
+  .checkDateDisable {
+    height: 230px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+    text-align: center;
+    color: $gray-200;
+
+    .wDateDisable {
+      padding-bottom: 12px;
+      padding-inline: 20px;
+      border-bottom: solid 1px $gray-200;
+    }
+    .wTimeDisable {
+      padding: 15px;
+    }
+    .wPersonDisable {
+      width: 220px;
+      height: 28px;
+      border: 1.5px solid $gray-200;
+      border-radius: 20px;
+      text-align: center;
+      color: $gray-200;
+      margin: auto;
+      .pMaxDisable {
+        height: 100%;
+        padding-top: 2px;
+        color: white;
+        background-color: $gray-200;
+        border-radius: 20px;
+        transition: 0.4s;
+      }
+    }
+  }
+
+  //-------------
+  .cName {
+    font-size: 32px;
+    font-family: "Noto Sans";
+    font-weight: 400px;
+    margin: 0px;
+  }
+  .cDateTime {
+    line-height: 22px;
+    color: $green-500;
+    padding-inline: 10px;
+    padding-block: 0;
+    margin-inline: 15px;
+    border-left: 1px solid $green-500;
+  }
+  .price {
+    color: $red-500;
+  }
+
+  .btnSm {
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid black;
+    text-align: center;
+    padding: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    
+    &:hover {
+      background: rgb(0, 0, 0);
+      color: white;
+    }
+  }
+}
+
+//----------------------------------------------
+.section03 {
+  height: 700px;
+  .fImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+//----------------------------------------------
+
+.section04 {
+  .smImg01 {
+    width: 50%;
+    height: 620px;
+    background-color: $red-500;
+    .img01 {
+      width: 100%;
+      height: 85%;
+      object-fit: cover;
+    }
+  }
+  .titleEn {
+    color: $green-500;
+    opacity: 40%;
+  }
+  .rightSide {
+    width: 50%;
+
+    .outline {
+      width: 620px;
+      margin-left: 90px;
+      padding-right: 90px;
+      border-right: 1px solid black;
+      .context {
+        line-height: 2.5rem;
+      }
+    }
+  }
+}
+//----------------------------------------------
+.section05 {
+  background: url(/workshop/section05_bg.png) center no-repeat;
+  background-size: cover;
+
+  .leftSide {
+    width: 50%;
+    padding-inline: 90px;
+  margin-top: -100px;
+    color: white;
+    border-left: 1px solid #90957a;
+    p {
+      line-height: 2.5rem;
+    }
+  }
+  .smImg02 {
+    width: 50%;
+    height: 620px;
+    .img02 {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}

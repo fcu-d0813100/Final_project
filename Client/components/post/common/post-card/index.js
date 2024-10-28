@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Carousel from 'react-bootstrap/Carousel';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+// import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
 // 在 index.js 或 App.js 文件中引入
 import 'bootstrap/dist/css/bootstrap.min.css';
