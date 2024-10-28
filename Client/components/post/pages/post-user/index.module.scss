@@ -1,5 +1,7 @@
 @import '@/styles/_variant.scss';
-
+.user-layout{
+    display: flex;
+}
 .member-post{
     max-width: 100%;
     padding: 70px 120px;
@@ -101,6 +103,8 @@
             white-space: nowrap;
             // overflow: hidden;
             transition: width 0.3s ease;
+            text-decoration: none;
+
             @media (max-width: 390px) {
                 position: absolute;
                 top: -48px;
@@ -109,6 +113,7 @@
                 height: 35px;
                 font-size: 16px;
              }
+            
              &>span{
                 display: none; 
              }
@@ -143,7 +148,7 @@
     
 }
 
-.post-all{
+.publish-all{
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -154,3 +159,9 @@
  
 }
 
+.save-all{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 20px 40px;
+}
