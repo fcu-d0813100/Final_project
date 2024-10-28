@@ -1,0 +1,45 @@
+:root {
+  --bs-breakpoint-xs: 0;
+  --bs-breakpoint-sm: 390px;
+  --bs-breakpoint-md: 768px;
+  --bs-breakpoint-xl: 1200px;
+  --bs-breakpoint-xxl: 1440px;
+}
+@media (min-width: 390px) {
+  .container,
+  .container-sm {
+    max-width: 360px;
+  }
+}
+
+@media (min-width: 576px) {
+    .container, .container-sm {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container, .container-md, .container-sm {
+        max-width: 608px;
+    }
+}
+@media (min-width: 992px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 960px;
+    }
+}
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1140px;
+    }
+}
+@media (min-width: 1440px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl,
+  .container-xxl {
+    max-width: 1440px;
+  }
+}

@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
@@ -16,6 +20,7 @@
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "next": "^14.2.5",
+    "phosphor-react": "^1.4.1",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
@@ -25,7 +30,9 @@
     "react-icons": "^5.2.1",
     "react-infinite-scroll-hook": "^4.1.1",
     "react-paginate": "^8.2.0",
+    "react-slick": "^0.30.2",
     "react-top-loading-bar": "^2.3.1",
+    "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.11.0",
     "sweetalert2-react-content": "^5.0.7",
     "swiper": "^11.1.1",

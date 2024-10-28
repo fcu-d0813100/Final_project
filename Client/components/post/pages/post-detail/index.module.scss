@@ -2,6 +2,7 @@
 
 .post-container{
     display: flex;
+    // justify-content:center
     // flex: 1 1 auto;
     flex-direction: column;
     gap: 50px;
@@ -16,7 +17,7 @@
     }
     .post-read{
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         position: relative;
         a{
             color: #000;
