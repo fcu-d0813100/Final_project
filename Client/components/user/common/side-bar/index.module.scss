@@ -1,32 +1,38 @@
 @import '@/styles/_variant.scss';
 
-.nav{
+.nav {
     width: 300px;
     background-color: $green-800;
     flex-direction: column;
-    .collapse{
+
+    .collapse {
         width: 100%;
-        &>div{
-            flex-direction:column;
+
+        &>div {
+            flex-direction: column;
             flex: 1;
             gap: 30px;
             padding-top: 142px;
             text-align: center;
-            &>a{
+
+            &>a {
                 position: relative;
                 color: $gray-100;
                 padding: 20px 114px;
                 // margin: 0;
-                display: flex; 
+                display: flex;
                 justify-content: center;
                 align-items: center;
-                svg{
+
+                svg {
                     display: none;
                 }
-                &.active{
+
+                &.active {
                     border-bottom: 1.5px solid $gray-100;
                     color: $gray-100;
-                    svg{
+
+                    svg {
                         position: absolute;
                         left: 0;
                         padding: 21.5px;
@@ -35,12 +41,14 @@
                         border-bottom-right-radius: 15px;
                         color: $green-700;
                         margin-right: 50px;
-                        display:inline;
+                        display: inline;
                     }
                 }
-                &.hover{
-                    color:#fff;
-                    svg{
+
+                &.hover {
+                    color: #fff;
+
+                    svg {
                         position: absolute;
                         left: 0;
                         padding: 21.5px;
@@ -49,15 +57,16 @@
                         border-bottom-right-radius: 15px;
                         // color: $green-700;
                         margin-right: 50px;
-                        display:inline;
+                        display: inline;
                         // display: none;
                     }
                 }
             }
         }
-        
+
     }
-    button{
+
+    button {
         margin-block: 70px;
     }
 }

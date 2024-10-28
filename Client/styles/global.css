@@ -1,0 +1,214 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com");
+@import url("https://fonts.gstatic.com");
+@import url("https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+/* 最常用的綠500 */
+/* 最常用的紅500 */
+/* 第二常用其他綠 */
+/* 灰色不確定大家用的多不多 */
+/* 常用字體 */
+.body {
+  font-family: "Noto Sans";
+  margin: 0;
+}
+
+.h1 {
+  font-size: 40px;
+  font-family: "Noto Sans";
+  font-weight: 700;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h2 {
+  font-size: 36px;
+  font-family: "Noto Sans";
+  font-weight: 600;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h3 {
+  font-size: 32px;
+  font-family: "Noto Sans";
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h4 {
+  font-size: 24px;
+  font-family: "Noto Sans";
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h5 {
+  font-size: 20px;
+  font-family: "Noto Sans";
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h6 {
+  font-size: 18px;
+  font-family: "Noto Sans";
+  font-weight: 400;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.p {
+  font-size: 16px;
+  font-family: "Noto Sans";
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.ps {
+  /* 註解 */
+  font-size: 14px;
+  font-family: "Noto Sans";
+  font-weight: 400;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.ps-phone {
+  /* 註解-手機版 */
+  font-size: 12px;
+  font-family: "Noto Sans";
+  font-weight: 400;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h1-L {
+  font-size: 64px;
+  font-family: "Libre Bodoni";
+  font-style: italic;
+  font-weight: 700;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h2-L {
+  font-size: 52px;
+  font-family: "Libre Bodoni";
+  font-style: italic;
+  font-weight: 700;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h3-L {
+  font-size: 46px;
+  font-family: "Libre Bodoni";
+  font-style: italic;
+  font-weight: 600;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h4-L {
+  font-size: 32px;
+  font-family: "Libre Bodoni";
+  font-style: italic;
+  font-weight: 600;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.btn-primary {
+  height: 50px;
+  width: 200px;
+  border-radius: 3px;
+  border: black solid 1px;
+  background-color: black;
+  color: white;
+}
+.btn-primary:hover {
+  border: black solid 1px;
+  background-color: white;
+  color: black;
+  transition: ease 0.3s;
+}
+
+.btn-secondary {
+  height: 50px;
+  width: 200px;
+  border-radius: 3px;
+  border: black solid 1px;
+  background-color: white;
+  color: black;
+  box-sizing: border-box;
+}
+.btn-secondary:hover {
+  background-color: black;
+  color: white;
+  border: black solid 1px;
+  transition: ease 0.3s;
+}
+
+.btn-danger {
+  height: 50px;
+  width: 200px;
+  background-color: #963827;
+  color: #fff;
+  border-radius: 3px;
+  border: #963827 solid 1px;
+}
+.btn-danger:hover {
+  background-color: #6f2619;
+  border: #6f2619 solid 1px;
+  transition: 0.3s;
+}
+
+.btn-success {
+  height: 50px;
+  width: 200px;
+  background-color: #90957a;
+  color: #fff;
+  border-radius: 3px;
+  border: #90957a solid 1px;
+}
+.btn-success:hover {
+  background: #626553;
+  border: #626553 solid 1px;
+  transition: ease 0.3s;
+}
+
+.btn-outline {
+  height: 50px;
+  width: 200px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  color: white;
+  border: white solid 1px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+.btn-outline:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: ease 0.3s;
+}
+
+.btn-logout {
+  height: 50px;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 3px;
+  color: #626553;
+  border: white solid 1px;
+}
+.btn-logout:hover {
+  opacity: 0.8;
+  transition: ease 0.3s;
+}
+
+.ph {
+  font-size: 24px;
+}/*# sourceMappingURL=global.css.map */
