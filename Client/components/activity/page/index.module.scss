@@ -13,7 +13,6 @@
 .act-sec1 {
   margin: 0 auto;
   margin-top: 40px;
-  margin-bottom: 20px;
   width: 100%;
   height: 55px;
 
@@ -59,28 +58,30 @@
   }
 }
 .act-main {
-  position: relative; /* 使用相對定位 */
+  padding-top: 40px;
   width: 100%; /* 寬度 100% */
-  height: 100vh; /* 高度設置為 100% 視口高度 */
-  //   background-image: url('/Client/public/activity/bg.png'); /* 設置背景圖片 */
+  height: 3083px; /* 高度設置為 100% 視口高度 */
+  background-image: url('/activity/bg.png');
+
   background-size: cover; /* 背景圖片覆蓋 */
   background-position: center; /* 背景圖片居中 */
-}
-.act-card-sec {
-  width: 1440px;
-  height: 2847px;
-  .h3 {
-    position: relative;
-    top: 70px;
+  background-attachment: fixed;
+
+  .month-title {
     width: 100%;
     height: 40px;
-    border: 2px solid;
-    padding: 0;
-    border-top: $green-600;
-    border-left: $green-600;
-    border-right: $green-600;
-    color: $green-600;
+    border-bottom: 3px solid;
+    font-size: x-large;
+    color: #797d66;
   }
+}
+.act-card-sec {
+  a {
+    display: flex;
+    text-decoration: none;
+  }
+  width: 1440px;
+  height: 2847px;
 }
 $card-width: 963px;
 $card-height: 397px;
@@ -90,14 +91,12 @@ $badge-bg-color: #90957a;
 $status-color: #963827;
 $font-color-light: #90957a;
 .cardLeft {
-  top: -140px;
-  z-index: -10;
   position: relative;
   .rightTextCHN {
     position: absolute;
     width: 300px;
     height: 53px;
-    top: 450px;
+    top: 350px;
     left: 1000px;
     font-weight: 900;
     font-size: 32px;
@@ -111,7 +110,7 @@ $font-color-light: #90957a;
     height: 53px;
     left: 1000px;
     width: 300px;
-    top: 510px;
+    top: 410px;
     font-size: 16px;
   }
 }
@@ -119,7 +118,7 @@ $font-color-light: #90957a;
   position: relative;
   .leftTextCHN {
     position: absolute;
-    top: 450px;
+    top: 290px;
     right: 1000px;
     padding-left: 170px;
     width: 300px;
@@ -132,20 +131,19 @@ $font-color-light: #90957a;
   }
   .leftTextENG {
     position: absolute;
-    top: 510px;
+    top: 350px;
     left: 110px;
   }
 }
 .cardL {
   position: relative;
-  top: 150px;
+  margin-top: 50px;
   display: flex; // 確保圖片和文字橫向排列
   flex-direction: row; // 橫向排列
   width: $card-width;
   height: $card-height;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
-  overflow: hidden;
   background-color: #fff;
   margin-bottom: 67px;
 
@@ -175,14 +173,30 @@ $font-color-light: #90957a;
     justify-content: space-between;
 
     .card-date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       font-weight: bold;
-      color: $font-color-light;
+      font-size: xx-large;
+      color: black;
+      width: 100%;
+      border-bottom: 1px solid black;
     }
 
     .card-info {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      font-weight: bold;
+      font-size: xx-large;
+      color: black;
+      width: 100%;
       p {
         margin: 10px 0;
         font-size: 14px;
+      }
+      .title {
+        font-size: 20px;
       }
     }
 
@@ -213,7 +227,6 @@ $font-color-light: #90957a;
 }
 .cardR {
   position: relative;
-  top: 150px;
   margin-left: 340px;
   display: flex; // 確保圖片和文字橫向排列
   flex-direction: row; // 橫向排列
@@ -251,14 +264,30 @@ $font-color-light: #90957a;
     justify-content: space-between;
 
     .card-date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       font-weight: bold;
-      color: $font-color-light;
+      font-size: xx-large;
+      color: black;
+      width: 100%;
+      border-bottom: 1px solid black;
     }
 
     .card-info {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      font-weight: bold;
+      font-size: xx-large;
+      color: black;
+      width: 100%;
       p {
         margin: 10px 0;
         font-size: 14px;
+      }
+      .title {
+        font-size: 20px;
       }
     }
 
