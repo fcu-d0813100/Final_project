@@ -6,7 +6,7 @@
   gap: 50px;
 }
 
-.h3-L {
+.title {
   padding-inline: 100px;
 }
 
@@ -65,7 +65,7 @@
 }
 
 @media (max-width: 1200px) {
-  .h3-L {
+  .title {
     font-size: 40px;
   }
 
@@ -84,7 +84,7 @@
     gap: 20px;
   }
 
-  .h3-L {
+  .title {
     padding-inline: 30px;
     font-size: 32px;
   }

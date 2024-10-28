@@ -6,7 +6,7 @@ export default function Brands() {
         <>
             <div className={`${styles['brands']} container-sm d-flex align-items-center`}>
                 <div className="header text-center ">
-                    <div className={`${styles['h3-L']} border-bottom border-dark border-2`}>Featured Brands</div>
+                    <div className={`${styles['title']} h3-L border-bottom border-dark border-2`}>Featured Brands</div>
                     <div className={`${styles['h5']} p-3`}>精選品牌｜從經典到新潮，盡在掌握</div>
                 </div>
                 <div className={`${styles['img-group']} d-flex flex-wrap justify-content-center`}>

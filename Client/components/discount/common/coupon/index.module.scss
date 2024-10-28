@@ -1,4 +1,4 @@
-@import '@/styles/global.scss';
+@import '@/styles/_variant.scss';
 
 .coupon-lg {
     width: 550px;
@@ -20,7 +20,7 @@
         color: #fff;
         width: 250px;
 
-        .h3-L {
+        .name {
             font-size: 24px;
         }
     }
@@ -53,19 +53,19 @@
         }
         .text {
             width: 180px;
-            .h3-L {
+            .name {
                 font-size: 18px;
             }
-            .h2-L {
+            .discount {
                 font-size: 36px;
             }
-            .h6 {
+            .max {
                 font-size: 16px;
             }
         }
         
         .align-self-end{
-            .p{
+            .right-ps{
                 font-size: 8px;
             }
         }
@@ -84,13 +84,13 @@
         }
         .text {
             width: 130px;
-            .h3-L {
+            .name {
                 font-size: 11px;
             }
-            .h2-L {
+            .discount {
                 font-size: 24px;
             }
-            .h6 {
+            .max {
                 font-size: 8px;
             }
         }
@@ -100,7 +100,7 @@
             font-size: 10px;
         }
         
-            .p{
+            .right-ps{
                 line-height: 100%;
                 font-size: 8px;
             }
