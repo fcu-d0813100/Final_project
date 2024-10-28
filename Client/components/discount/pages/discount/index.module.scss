@@ -1,0 +1,111 @@
+@import '@/styles/global.scss';
+
+
+.nav a {
+    color: $green-500;
+}
+
+.discount-group {
+    margin-top: 20px; // 上方間距 
+}
+
+.discount {
+    width: 100%; // 容器寬度
+    height: auto; // 高度自動
+    overflow: hidden; // 隱藏溢出部分
+
+    .img {
+        max-width: 100%; // 使圖片最大寬度為容器的寬度
+        height: auto; // 高度自動調整
+        margin-bottom: 5%; // 每個優惠的下方間距
+    }
+}
+
+//     .btn-white {
+//         width: 150px;
+//         height: 50px;
+//         border-radius: 3px;
+//         border: white solid 1px;
+//         color: #fff;
+//         align-content: center;
+//         position: absolute;
+
+//         &:hover {
+//             background: rgba(255, 255, 255, 0.70);
+//             border-radius: 3px;
+//             border: transparent;
+//             transition: ease 0.5s;
+//             color: #000;
+//         }
+//     }
+// }
+
+// .discount1 {
+//     background-image: url("/discount/nars-discount2.svg");
+
+//     .btn {
+//         right: 270px;
+//         bottom: 40px;
+//     }
+// }
+
+// .discount2 {
+//     background-image: url("/discount/nars-discount.svg");
+
+//     .btn {
+//         left: 400px;
+//         bottom: 50px;
+//     }
+// }
+
+// .discount3 {
+//     background-image: url("/discount/ysl-discount.svg");
+
+//     .btn-primary {
+//         align-content: center;
+//         text-align: center;
+//         width: 250px;
+//         height: 70px;
+//         position: absolute;
+//         left: 140px;
+//         bottom: 10px;
+//     }
+// }
+
+// .discount4 {
+//     background-image: url("/discount/bb-discount.svg");
+
+//     .btn {
+//         left: 270px;
+//         bottom: 50px;
+//     }
+// }
+
+.carousel {
+    display: none;
+}
+
+@media (max-width: 576px) {
+
+    .carousel-indicators {
+        margin-bottom: 0px;
+    }
+
+    .carousel-indicators [data-bs-target] {
+        border-radius: 50%;
+        width: 5px;
+        height: 5px;
+    }
+
+    .carousel {
+        display: block;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .discount-group {
+        display: none;
+    }
+}
