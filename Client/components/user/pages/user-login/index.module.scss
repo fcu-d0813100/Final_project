@@ -1,5 +1,3 @@
-@import '@/styles/global.scss';
-
 .bg-img {
   background: url(/user/login-bg.jpg) center center no-repeat;
   background-size: cover;
@@ -18,7 +16,12 @@
 }
 
 .card-img {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), url(/user/login-user.jpg) lightgray 50% / cover no-repeat;
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.4) 100%
+    ),
+    url(/user/login-user.jpg) lightgray 50% / cover no-repeat;
   height: 100%;
   width: 825px;
   padding: 120px 0 50px 0;
@@ -39,7 +42,6 @@
     border: white solid 1.5px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     transition: background-color ease 0.3s, filter ease 0.3s;
-
   }
 }
 
@@ -52,7 +54,6 @@
   word-wrap: break-word;
   color: white;
   text-align: center;
-
 }
 
 .slogan {
@@ -65,14 +66,12 @@
   color: white;
   text-align: center;
   margin: 20px auto 30px auto;
-
 }
 
 .text {
   color: white;
   text-align: center;
   margin: 10px 0 50px 0;
-
 }
 
 .btn-outline {
@@ -87,7 +86,6 @@
   &:hover {
     background-color: rgba(135, 135, 135, 0.4);
     transition: ease 0.3s;
-
   }
 }
 
@@ -98,7 +96,6 @@
   display: flex;
   align-items: start;
   flex-direction: column;
-
 }
 
 .login-title {
@@ -107,7 +104,6 @@
   font-weight: 700;
   color: black;
   padding: 0 0 10px 0;
-
 }
 
 .line-input {
@@ -118,7 +114,6 @@
   padding: 10px 0;
   width: 100%;
   font-size: 16px;
-
 }
 
 .line-input:focus {
@@ -130,8 +125,6 @@
   font-family: Noto Sans;
   font-weight: 400;
   margin: 0;
-
-
 }
 
 .text-input {
@@ -150,7 +143,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
 }
 
 .forget-ps {
@@ -158,7 +150,6 @@
   text-decoration: none;
   border-bottom: 1px solid black;
   padding-bottom: 5px;
-
 }
 
 .btn-primary {
@@ -170,7 +161,6 @@
   border-color: black;
 }
 
-
 .signin-rwd {
   display: none;
 }
@@ -180,7 +170,6 @@
 }
 
 @media (max-width: 1200px) {
-
   .logo {
     font-size: 60px;
   }
@@ -196,7 +185,6 @@
   .login-title {
     font-size: 64px;
     padding: 0;
-
   }
 }
 
@@ -241,13 +229,17 @@
 }
 
 @media (max-width: 750px) {
-
   .container-login {
     position: relative;
   }
 
   .bg-img {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), url(/user/login-bg.jpg) lightgray 50% / cover no-repeat;
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.4) 100%
+      ),
+      url(/user/login-bg.jpg) lightgray 50% / cover no-repeat;
   }
 
   .login-section {
@@ -278,9 +270,8 @@
     max-height: 100%;
     max-width: 600px;
     max-height: 600px;
-    background: rgba(255, 255, 255, 0.90);
+    background: rgba(255, 255, 255, 0.9);
   }
-
 
   .card-img {
     background: none;
@@ -307,13 +298,11 @@
     color: #fff;
     border-radius: 3px;
     border: #6f2619 solid 1px;
-
   }
 
   .signin-rwd {
     display: block;
   }
-
 }
 
 .copyright {
@@ -337,5 +326,4 @@
     width: 100%;
     height: auto;
   }
-
 }

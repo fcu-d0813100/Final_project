@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com');
 @import url('https://fonts.gstatic.com');
 @import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-@import './variant.scss';
+@import './_variant.scss';
 
 body {
   font-family: $primary-font;
