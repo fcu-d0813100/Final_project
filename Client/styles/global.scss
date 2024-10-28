@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com');
 @import url('https://fonts.gstatic.com');
 @import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-@import './variant.scss';
+@import './_variant.scss';
+
 body {
   font-family: $primary-font;
   margin: 0;
 }
+
 .h1 {
   font-size: 40px;
   font-family: $primary-font;
@@ -13,6 +15,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h2 {
   font-size: 36px;
   font-family: $primary-font;
@@ -20,6 +23,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h3 {
   font-size: 32px;
   font-family: $primary-font;
@@ -27,6 +31,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h4 {
   font-size: 24px;
   font-family: $primary-font;
@@ -34,6 +39,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h5 {
   font-size: 20px;
   font-family: $primary-font;
@@ -41,6 +47,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h6 {
   font-size: 18px;
   font-family: $primary-font;
@@ -48,6 +55,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .p {
   font-size: 16px;
   font-family: $primary-font;
@@ -56,6 +64,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .ps {
   /* 註解 */
   font-size: 14px;
@@ -64,6 +73,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .ps-phone {
   /* 註解-手機版 */
   font-size: 12px;
@@ -72,6 +82,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h1-L {
   font-size: 64px;
   font-family: $secondary-font;
@@ -80,6 +91,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h2-L {
   font-size: 52px;
   font-family: $secondary-font;
@@ -88,6 +100,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h3-L {
   font-size: 46px;
   font-family: $secondary-font;
@@ -96,6 +109,7 @@ body {
   margin: 0;
   word-wrap: break-word;
 }
+
 .h4-L {
   font-size: 32px;
   font-family: $secondary-font;
@@ -113,6 +127,7 @@ body {
   border: black solid 1px;
   background-color: black;
   color: white;
+
   &:hover {
     border: black solid 1px;
     background-color: white;
@@ -171,6 +186,7 @@ body {
     transition: ease 0.3s;
   }
 }
+
 //透明按鈕 首頁
 .btn-outline {
   height: 50px;
@@ -180,11 +196,13 @@ body {
   color: white;
   border: white solid 1px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.4);
     transition: ease 0.3s;
   }
 }
+
 //灰色按鈕 登出
 .btn-logout {
   height: 50px;
@@ -199,6 +217,7 @@ body {
     transition: ease 0.3s;
   }
 }
+
 .ph {
   font-size: 24px;
 }
