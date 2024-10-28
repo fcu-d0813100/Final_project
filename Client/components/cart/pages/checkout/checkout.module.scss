@@ -1,4 +1,4 @@
-@import "global.scss";
+@import '@/styles/_variant.scss';
 
 .step {
   margin-block: 100px;
@@ -65,6 +65,9 @@
               width: 100%;
             }
           }
+          button {
+            border: none;
+          }
         }
       }
 
@@ -121,7 +124,7 @@
           padding: 8px;
           position: relative;
           &::after {
-            content: "";
+            content: '';
             position: absolute;
             left: 50%;
             top: 100%;
@@ -137,7 +140,7 @@
           }
         }
 
-        input[type="radio"] {
+        input[type='radio'] {
           display: none;
           + label {
             position: relative;
@@ -145,7 +148,7 @@
             font-size: 16px;
 
             &:before {
-              content: "";
+              content: '';
               position: absolute;
               left: 0;
               top: 50%;
@@ -159,7 +162,7 @@
 
             // 當 radio 被選中時，內部的圓圈
             &:after {
-              content: "";
+              content: '';
               position: absolute;
               left: 4px;
               top: 50%;

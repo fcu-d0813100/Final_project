@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import CheckoutBox from './common/CheckoutBox'
+import CheckoutBox from '@/components/cart/common/checkoutbox/index'
 import style from './checkout.module.scss'
 import Image from 'next/image'
 import { CaretUp, CaretDown } from '@phosphor-icons/react'
@@ -13,7 +13,6 @@ export default function Checkout() {
 
   return (
     <>
-      <h1 className={style.happy}>結帳</h1>
       <div className="container">
         {/* 步驟圖片 */}
         <div className={style.step}>
@@ -372,8 +371,18 @@ export default function Checkout() {
             </form>
           </div>
 
-          {/* 結帳box */}
-          <CheckoutBox />
+          {/* 總計box */}
+          <div className={style.checkout}>
+            <div className={style.sticky}>
+              <CheckoutBox />
+              <div
+                className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
+              >
+                <button className="btn-primary">返回</button>
+                <button className="ms-2 btn-secondary">結賬</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -1,0 +1,58 @@
+@import '@/styles/_variant.scss';
+
+.bgc-img {
+  height: 85vh;
+  width: 100%;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    overflow: hidden;
+  }
+  .msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    .msg-text {
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    button {
+      padding-inline: 100px;
+    }
+  }
+}
+
+//首頁3女人霧面按鈕
+.btn-women {
+  background-color: rgba(0, 0, 0, 0.14);
+  padding: 15px 20px;
+  border-radius: 3px;
+  color: #fff;
+  border: 2px solid #fff;
+  backdrop-filter: blur(4px);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+  &:hover {
+    transition: ease 0.3s;
+    background: rgba(255, 255, 255, 1);
+    color: #000;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .bgc-img {
+    height: 90vh;
+    .msg {
+      .msg-text {
+        font-size: 32px;
+      }
+      button {
+        padding-inline: 60px;
+      }
+    }
+  }
+}
