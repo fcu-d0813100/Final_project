@@ -80,18 +80,18 @@ export default function UserSignup(props) {
                       <option value="other">其他</option>
                     </select>
                   </div>
-                  <div className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-6`}>
+                  <div className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-12 col-sm-6`}>
                     <label htmlFor="" className={styles['text-input']}>
-                      手機<span className={`d-inline ${styles['text-red']} ps-1`}>*</span></label>
+                      手機<span className={`d-inline ${styles['text-red']} ps-1 `}>*</span></label>
                     <input
                       type="text"
                       id=""
                       className={`${styles['line-input']} `}
                     />
                   </div>
-                  <div className={`${styles['input-area']} ${styles['line-input-pw']} ps-2 col-6`}>
+                  <div className={`${styles['input-area']} ${styles['line-input-pw']} ps-2 col-12 col-sm-6`}>
                     <label htmlFor="password" className={styles['text-input']}>
-                      生日                  </label>
+                      生日</label>
                     <input
                       type="date"
                       id=""
@@ -119,8 +119,8 @@ export default function UserSignup(props) {
                     創建帳號
                   </button>
                 </div>
-                <div className="row pt-4 d-flex justify-content-end align-items-start">
-                  <div className={`col-7 ${styles['signin-rwd']}`}>
+                <div className="row d-flex justify-content-end align-items-start">
+                  <div className={`col-7 ${styles['signup-rwd']}`}>
                     已經有帳號了?{' '}
                     <Link href="/user/login" className="text-black">
                       立即登入

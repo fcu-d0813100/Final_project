@@ -18,8 +18,7 @@
 }
 
 .card-img {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.276) 100%),
-    url(/user/signup.jpg) lightgray;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.276) 100%), url(/user/signup.jpg) lightgray 50% / cover no-repeat;
   background-size: 120%;
   background-position: center top;
   background-position: center calc(70%);
@@ -104,7 +103,7 @@
   font-family: Libre Bodoni;
   font-weight: 700;
   color: black;
-  padding: 30px 0;
+  padding: 10px 0;
 
 }
 
@@ -167,7 +166,6 @@
   align-items: center;
 }
 
-/* 在您的 CSS 模块文件中添加 */
 .custom-select {
   background-color: transparent;
   border: none;
@@ -224,7 +222,7 @@
   border-color: black;
 }
 
-.signin-rwd {
+.signup-rwd {
   display: none;
 }
 
@@ -272,7 +270,7 @@
     z-index: 1;
     max-height: 100%;
     max-width: 750px;
-    max-height: 600px;
+    max-height: 800px;
     background-color: #fff;
     border-radius: 10px;
     display: flex;
@@ -280,10 +278,20 @@
   }
 
   .card-login {
-    padding: 60px 20px 30px 20px;
+    padding: 60px 30px 30px 30px;
     display: flex;
     align-items: center;
     flex-direction: column;
+  }
+
+  .card-img {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.276) 100%), url(/user/signup.jpg) lightgray 50% / cover no-repeat;
+    background-position: center center;
+    background-position: center calc(70%);
+    height: 100%;
+    width: 825px;
+    padding: 120px 0 50px 0;
+    border-radius: 0 10px 10px 0;
   }
 
   .text {
@@ -292,6 +300,11 @@
 }
 
 @media (max-width: 750px) {
+  .card-login {
+    padding-top: 30px;
+  }
+
+
   .container-login {
     position: relative;
   }
@@ -323,15 +336,19 @@
   }
 
   .input-area {
-    padding: 10px 0;
+    padding: 12px 0;
   }
 
   .bg-card {
-
     max-height: 100%;
     max-width: 600px;
-    max-height: 600px;
+    height: 1000px;
     background: rgba(255, 255, 255, 0.9);
+    padding: 20px 0 50px 0;
+  }
+
+  .form-area {
+    padding-block: 10px;
   }
 
   .card-img {
