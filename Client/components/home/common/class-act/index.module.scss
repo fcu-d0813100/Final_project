@@ -1,4 +1,7 @@
-@import '@/styles/global.scss';
+<<<<<<< HEAD
+@import '@/styles/_variant.scss';
+=======
+>>>>>>> dev_miao
 
 .promobg {
   background: url(/home/promo-banner.svg) center center no-repeat;
@@ -6,7 +9,6 @@
   height: 650px;
   position: relative;
 }
-
 
 .promo-title {
   border-bottom: 1px solid white;
@@ -27,7 +29,6 @@
   padding-inline: 50px;
 }
 
-
 @media (max-width: 768px) {
   .act-section {
     padding-inline: 10px;
@@ -36,7 +37,6 @@
   .container-padding {
     padding: 30px;
   }
-
 
   .line-style {
     display: none;
@@ -49,7 +49,6 @@
 
   .info {
     margin: 15px 0;
-
   }
 
   .info-padding {
@@ -68,8 +67,6 @@
   .promo-title {
     border-bottom: 0;
     padding-top: 5px;
-
-
   }
 
   .promobg {
@@ -77,11 +74,10 @@
     padding-bottom: 30px;
   }
 
-
   .promobg {
     background: url(/home/promo-banner-rwd.svg) center center no-repeat;
     background-size: cover;
-    height: 100%;
+    height: 110vh;
   }
 
   .date {
