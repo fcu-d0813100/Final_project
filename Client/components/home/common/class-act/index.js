@@ -29,8 +29,8 @@ export default function ClassAct(props) {
             >
               <div className="row">
                 <div className="col-12">
-                  <h3 className={`${styles.h3} text-white ${styles['promo-title']} `}>
-                    <span className={styles.date}>9/20-9/30</span>
+                  <h3 className={`${styles.h3} text-white ${styles['promo-title']} ps-3 `}>
+                    <span className={`${styles.date} pe-3`}>9/20 - 9/30</span>
                     新班開課嘍！
                   </h3>
                 </div>
@@ -60,10 +60,10 @@ export default function ClassAct(props) {
               <div className="row">
                 <div className="col-12">
                   <h3
-                    className={`${styles.h3} text-white ${styles['info-padding']}  ${styles['promo-title']}`}
+                    className={`${styles.h3} text-white ${styles['info-padding']}  ${styles['promo-title']} ps-3`}
                   >
-                    <span className={styles.date}>11/29 SOGO</span>
-                    彩妝博覽會開幕！
+                    <span className={`${styles.date} pe-3`}>11/29</span>
+                    SOGO彩妝博覽會開幕！
                   </h3>
                 </div>
               </div>

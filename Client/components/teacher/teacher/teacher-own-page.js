@@ -194,11 +194,10 @@ export default function TeacherOwnPage(props) {
                       <h4 className="h4 mb-3">{workshop.price}</h4>
                       <div className={styles.wStatus}>
                         <p
-                          className={`ps ${
-                            workshop.status === '已截止'
+                          className={`ps ${workshop.status === '已截止'
                               ? styles.over
                               : styles.nowOpen
-                          }`}
+                            }`}
                         >
                           {workshop.status}
                         </p>

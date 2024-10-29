@@ -1,4 +1,6 @@
-@import '@/styles/global.scss';
+// @import '@/styles/global.scss';
+@import '@/styles/_variant.scss';
+
 .act-img-container {
   height: 930px;
   overflow: hidden;
@@ -21,18 +23,27 @@
     margin-bottom: 20px;
     width: 100%;
     height: 56px;
-    display: flex; /* 使用 Flexbox 使內容居中 */
-    justify-content: center; /* 水平置中 */
-    align-items: center; /* 垂直置中 */
+    display: flex;
+    /* 使用 Flexbox 使內容居中 */
+    justify-content: center;
+    /* 水平置中 */
+    align-items: center;
+    /* 垂直置中 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); //
+
     ul {
       width: 100%;
-      display: flex; /* 使 ul 成為 Flexbox */
+      display: flex;
+      /* 使 ul 成為 Flexbox */
       list-style: none;
-      padding: 0; /* 移除預設的內邊距 */
-      margin: 0; /* 移除預設的外邊距 */
-      justify-content: center; /* 水平置中 */
-      align-items: center; /* 垂直置中 */
+      padding: 0;
+      /* 移除預設的內邊距 */
+      margin: 0;
+      /* 移除預設的外邊距 */
+      justify-content: center;
+      /* 水平置中 */
+      align-items: center;
+      /* 垂直置中 */
 
       li {
         flex: 1;
@@ -40,14 +51,19 @@
         height: 55px;
         border: none;
         color: $green-500;
-        display: flex; /* 使用 Flexbox 使 li 內容居中 */
-        justify-content: center; /* 水平置中 */
-        align-items: center; /* 垂直置中 */
+        display: flex;
+        /* 使用 Flexbox 使 li 內容居中 */
+        justify-content: center;
+        /* 水平置中 */
+        align-items: center;
+
+        /* 垂直置中 */
         a {
           text-decoration: none; // 移除底線
           color: inherit; // 繼承父元素的顏色
           cursor: pointer; // 設置為手型游標
         }
+
         &:hover {
           border-radius: 50px;
           background: black;
@@ -57,14 +73,19 @@
     }
   }
 }
+
 .act-main {
   padding-top: 40px;
-  width: 100%; /* 寬度 100% */
-  height: 3083px; /* 高度設置為 100% 視口高度 */
+  width: 100%;
+  /* 寬度 100% */
+  height: 3083px;
+  /* 高度設置為 100% 視口高度 */
   background-image: url('/activity/bg.png');
 
-  background-size: cover; /* 背景圖片覆蓋 */
-  background-position: center; /* 背景圖片居中 */
+  background-size: cover;
+  /* 背景圖片覆蓋 */
+  background-position: center;
+  /* 背景圖片居中 */
   background-attachment: fixed;
 
   .month-title {
@@ -75,14 +96,17 @@
     color: #797d66;
   }
 }
+
 .act-card-sec {
   a {
     display: flex;
     text-decoration: none;
   }
+
   width: 1440px;
   height: 2847px;
 }
+
 $card-width: 963px;
 $card-height: 397px;
 $border-radius: 8px;
@@ -90,8 +114,10 @@ $box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 $badge-bg-color: #90957a;
 $status-color: #963827;
 $font-color-light: #90957a;
+
 .cardLeft {
   position: relative;
+
   .rightTextCHN {
     position: absolute;
     width: 300px;
@@ -105,6 +131,7 @@ $font-color-light: #90957a;
     border-left: #90957a;
     border-right: #90957a;
   }
+
   .rightTextENG {
     position: absolute;
     height: 53px;
@@ -114,8 +141,10 @@ $font-color-light: #90957a;
     font-size: 16px;
   }
 }
+
 .cardRight {
   position: relative;
+
   .leftTextCHN {
     position: absolute;
     top: 290px;
@@ -129,12 +158,14 @@ $font-color-light: #90957a;
     border-left: #90957a;
     border-right: #90957a;
   }
+
   .leftTextENG {
     position: absolute;
     top: 350px;
     left: 110px;
   }
 }
+
 .cardL {
   position: relative;
   margin-top: 50px;
@@ -191,10 +222,12 @@ $font-color-light: #90957a;
       font-size: xx-large;
       color: black;
       width: 100%;
+
       p {
         margin: 10px 0;
         font-size: 14px;
       }
+
       .title {
         font-size: 20px;
       }
@@ -225,6 +258,7 @@ $font-color-light: #90957a;
     }
   }
 }
+
 .cardR {
   position: relative;
   margin-left: 340px;
@@ -282,10 +316,12 @@ $font-color-light: #90957a;
       font-size: xx-large;
       color: black;
       width: 100%;
+
       p {
         margin: 10px 0;
         font-size: 14px;
       }
+
       .title {
         font-size: 20px;
       }
