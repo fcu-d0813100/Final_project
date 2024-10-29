@@ -10,6 +10,26 @@
   }
 }
 
+/* 小于992px时的样式 */
+@media (max-width: 992px) {
+  .act-img-container {
+    height: 600px; /* 修改高度为600px */
+  }
+
+  .act-img-container img {
+    height: 600px; /* 确保图片高度也为600px */
+  }
+}
+@media (max-width: 576px) {
+  .act-img-container {
+    height: 300px; /* 修改高度为600px */
+  }
+
+  .act-img-container img {
+    height: 300px; /* 确保图片高度也为600px */
+  }
+}
+
 .act-sec1 {
   margin: 0 auto;
   margin-top: 40px;
@@ -55,6 +75,19 @@
         }
       }
     }
+  }
+}
+@media (max-width: 992px) {
+  .search {
+    width: 100%; /* 使表单宽度为100% */
+  }
+
+  .form-control {
+    width: calc(100% - 40px); /* 确保输入框占满剩余空间，减去按钮的宽度 */
+  }
+
+  .btn {
+    width: 40px; /* 设置按钮固定宽度 */
   }
 }
 .act-main {
