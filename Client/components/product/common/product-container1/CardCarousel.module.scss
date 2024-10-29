@@ -1,0 +1,83 @@
+// CardCarousel.module.scss
+
+.container {
+  width: 1440px;
+  max-width: 95%;
+  margin: 0 auto;
+
+  .prevArrow {
+    position: absolute;
+    top: 45%; // 將箭頭垂直居中
+    left: 0; // 調整箭頭的水平位置，往左移動
+    transform: translateY(-50%);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1; // 確保箭頭在滑塊的前面顯示
+  }
+  
+  .nextArrow {
+    position: absolute;
+    top: 45%; // 將箭頭垂直居中
+    right: 0; // 調整箭頭的水平位置，往右移動
+    transform: translateY(-50%);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1; // 確保箭頭在滑塊的前面顯示
+  }
+}
+
+.product-card-w {
+  // 確保卡片在不同的螢幕大小下不會爆版
+
+  // 針對不同斷點進行響應式調整
+  @media (max-width: 1440px) {
+    .container{
+      max-width: 1440px;
+    }
+    .product-card-w {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .container{
+      max-width: 1140px;
+    }
+    .product-card-w {
+      width: 31%;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .container{
+      max-width: 960px;
+    }
+    .product-card-w {
+      width: 48%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container{
+      max-width: 608px;
+    }
+    .product-card-w {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .container{
+      max-width: 540px;
+    }
+    .product-card-w {
+      width: 10% !important;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .product-card-w {
+      width: 0%;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+@import '@/styles/_variant.scss';
+
+.footer-two {
+    font-size: 14px;
+    padding-block: 30px;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+  }
+
+  // 小於1000
+  @media screen and (max-width: 550px) {
+    .footer-two {
+      font-size: 12px;
+      padding-inline: 50px;
+    }
+  }
+  
