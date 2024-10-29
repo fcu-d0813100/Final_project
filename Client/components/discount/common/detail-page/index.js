@@ -1,25 +1,42 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import Coupon from '@/components/discount/common/coupon';
 import Header from '@/components/home/common/header';
 import styles from './index.module.scss'; // 確保引入正確的樣式
+import Footer from '@/components/home/common/footer'
 
-export default function DiscountDetail() {
-    const [imageSrc, setImageSrc] = useState('/discount/nars2-1920.svg');
+
+export default function DiscountDetail({
+    title = "",
+    date = "",
+    content,
+    details = "",
+    largeImageSrc = '/discount/nars-1920.svg', // 大圖片默認值
+    smallImageSrc = '/discount/phone-size/nars1.svg', // 小圖片默認值
+    coupons,
+    onImageChange
+}) {
+    const [currentImageSrc, setCurrentImageSrc] = useState(largeImageSrc);
+
     useEffect(() => {
         const handleResize = () => {
-            setImageSrc(window.innerWidth < 768 ? '/discount/phone-size/nars1.svg' : '/discount/nars-1920.svg');
+            const newImageSrc = window.innerWidth < 768 ? smallImageSrc : largeImageSrc;
+            setCurrentImageSrc(newImageSrc);
+            if (onImageChange) {
+                onImageChange(newImageSrc);
+            }
         };
 
         window.addEventListener('resize', handleResize);
         handleResize(); // 初始設置
 
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [largeImageSrc, smallImageSrc, onImageChange]);
+
     return (
         <>
             <Header />
             <header className={styles.title}>
-                <img className={styles.img} src={imageSrc} alt="NARS 優惠" ></img>
+                <img className={styles.img} src={currentImageSrc} alt="NARS 優惠" />
             </header>
 
             <main className="container">
@@ -27,31 +44,40 @@ export default function DiscountDetail() {
                     <a className="text-decoration-none" href="">首頁</a> / 優惠活動
                 </nav>
                 <section className={styles.section}>
-                    <h1 className={`${styles.title} text-center h1`}>【NARS】九月購物狂歡，購買指定商品享85折</h1>
+                    <h1 className={`${styles.title} text-center h1`}>{title}</h1>
                     <article className={styles.article}>
                         <div className={`${styles["sub-title"]} align-self-stretch h6`}>
                             <span className="h5">活動日期</span><br />
-                            2024/9/01 00:00 - 2024/9/30 23:59 (GMT+08)
+                            {date}
                         </div>
                         <hr className="align-self-stretch" />
                         <div className={`${styles["sub-title"]} align-self-stretch h6`}>
                             <span className="h5">優惠內容</span><br />
-                            活動期間內購買NARS指定商品，滿2000即享有85折優惠。
+                            {content}
                         </div>
                         <hr className="align-self-stretch" />
                         <div className={`${styles["sub-title"]} align-self-stretch h6`}>
                             <span className="h5">活動詳情</span><br />
-                            於商城內和指定品牌消費並使用指定優惠券，結帳滿$2000元即享有85折優惠，數量有限，用完為止。優惠券有效期限至2024-9-30。（此優惠代碼為Beatique提供，請在購物車/結帳頁內全站優惠券入口輸入或選用，同一帳號/同一人限使用一次。
+                            {details}
                         </div>
                         <hr className="align-self-stretch" />
                         <div className="coupon-group d-flex flex-wrap justify-content-around">
-                            <Coupon />
-                            <Coupon />
+                            {coupons.map((coupon, index) => (
+                                <Coupon
+                                    key={index}
+                                    img={coupon.img}
+                                    title={coupon.title}
+                                    discount={coupon.discount}
+                                    condition={coupon.condition}
+                                    expiration={coupon.expiration}
+                                />
+                            ))}
                         </div>
                     </article>
                 </section>
             </main>
+            
+            <Footer />
         </>
     );
 }
-
