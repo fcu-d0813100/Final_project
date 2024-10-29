@@ -17,7 +17,6 @@ export default function Brands() {
                     <a className={styles.ysl} href=""></a>
                 </div>
             </div>
-
         </>
     );
 }

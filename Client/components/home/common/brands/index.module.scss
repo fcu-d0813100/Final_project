@@ -1,8 +1,4 @@
 @import '@/styles/_variant.scss';
-<<<<<<< HEAD
-
-=======
->>>>>>> dev_miao
 .brands {
   padding: 10% 0px;
   flex-direction: column;
@@ -64,9 +60,9 @@
 @media (max-width: 1200px) {
   .title {
     font-size: 40px;
-    .h5 {
-      font-size: 19px;
-    }
+  }
+  .sub-title {
+    font-size: 19px;
   }
   .img-group a {
     width: 150px;
@@ -81,9 +77,9 @@
   .title {
     padding-inline: 30px;
     font-size: 32px;
-    .h5 {
-      font-size: 14px;
-    }
+  }
+  .sub-title {
+    font-size: 14px;
   }
   .img-group {
     padding-inline: 20px;
