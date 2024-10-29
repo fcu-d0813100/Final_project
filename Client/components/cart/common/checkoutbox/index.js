@@ -1,6 +1,6 @@
 import React from 'react'
 import style from './checkout-box.module.scss'
-export default function CheckoutBox() {
+export default function CheckoutBox({ pTotal, wTotal }) {
   return (
     <>
       {/* 優惠券 */}
@@ -17,11 +17,11 @@ export default function CheckoutBox() {
           </div>
           <div className={style.item}>
             <span>彩妝商品</span>
-            <span>NT$4,500</span>
+            <span>NT${pTotal}</span>
           </div>
           <div className={style.item}>
             <span>課程商品</span>
-            <span>NT$6,400</span>
+            <span>NT${wTotal}</span>
           </div>
           <div className={`${style.item} ${style['discount_item']}`}>
             <span>全站9折</span>
