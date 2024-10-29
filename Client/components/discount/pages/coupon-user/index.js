@@ -9,6 +9,24 @@ import Modal from '@/components/discount/common/mymodal'; // 引入自定義模�
 export default function UserCoupon() {
     const [modalShow, setModalShow] = useState(false); // 使用狀態來控制模態框顯示
 
+    const coupons = [
+        {
+            img: '/discount/coupon/brands/bobbi.svg',
+            title: 'GIFT COUPON',
+            discount: '20% OFF',
+            condition: '滿$2000',
+            expiration: '2024/10/5',
+        },
+        {
+            img: '/discount/coupon/brands/bobbi.svg',
+            title: 'SPECIAL DISCOUNT',
+            discount: '15% OFF',
+            condition: '滿$1500',
+            expiration: '2024/11/10',
+        },
+        // 可以添加更多優惠券
+    ];
+
     return (
         <>
             <UserSection titleCN="優惠券" titleENG='Coupon'>
@@ -33,10 +51,16 @@ export default function UserCoupon() {
                             <div className={`${styles.btn}`}>領取</div>
                         </div>
                         <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                            <Coupon />
-                            <Coupon />
-                            <Coupon />
-                            <Coupon />
+                        {coupons.map((coupon, index) => (
+                                <Coupon 
+                                    key={index}
+                                    img={coupon.img} 
+                                    title={coupon.title} 
+                                    discount={coupon.discount} 
+                                    condition={coupon.condition} 
+                                    expiration={coupon.expiration} 
+                                />
+                            ))}
                         </div>
                     </div>
                 </aside>
