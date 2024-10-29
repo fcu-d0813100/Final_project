@@ -5,6 +5,9 @@ import Image from 'next/image'
 import Styles from '@/components/activity/page/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
+import Footer from '@/components/home/common/footer'
+import { Heart } from 'phosphor-react'
+import { PiMagnifyingGlass } from 'react-icons/pi'
 
 export default function Activity() {
   // 使用 useEffect 確保 Bootstrap JavaScript 僅在客戶端加載
@@ -92,8 +95,22 @@ export default function Activity() {
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarScroll">
+              <form className="d-flex me-auto my-2 my-lg-0" role="search">
+                <input
+                  className="form-control me-2 rounded-pill border-dark"
+                  type="search"
+                  placeholder="活動 |"
+                  aria-label="Search"
+                />
+                <button className="btn" type="submit">
+                  <PiMagnifyingGlass
+                    style={{ width: '24px', height: '24px' }}
+                  />
+                </button>
+              </form>
+
               <ul
-                className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
+                className="navbar-nav my-2 my-lg-0 navbar-nav-scroll"
                 style={{ '--bs-scroll-height': '100px' }}
               >
                 <li className="nav-item dropdown border-bottom border-dark mb-3">
@@ -103,9 +120,11 @@ export default function Activity() {
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
+                    
                   >
                     狀態
                   </a>
+
                   <ul className="dropdown-menu">
                     <li>
                       <a className="dropdown-item" href="#">
@@ -139,17 +158,6 @@ export default function Activity() {
                   </ul>
                 </li>
               </ul>
-              <form className="d-flex" role="search">
-                <input
-                  className="form-control me-2 rounded-pill border-dark"
-                  type="search"
-                  placeholder="活動 |"
-                  aria-label="Search"
-                />
-                <button className="btn" type="submit">
-                  <i className="ph ph-magnifying-glass"></i>
-                </button>
-              </form>
             </div>
           </div>
         </nav>
@@ -164,7 +172,111 @@ export default function Activity() {
           <div className={`${Styles['cardLeft']} d-flex`}>
             <div className={Styles['cardL']}>
               {/* 卡片內圖片 */}
-              <a href="#">
+              <Link href="#">
+                <div className={Styles['card-img']}>
+                  <div className={`${Styles['card-text']} d-flex`}>
+                    <div className="currentR">
+                      <p className={Styles['num']}>06</p>
+                      <p>目前人數</p>
+                    </div>
+                    <div className="maxR">
+                      <p className={Styles['num']}>50</p>
+                      <p>報名人數</p>
+                    </div>
+                    <div className="view">
+                      <p className={Styles['num']}>247</p>
+                      <p>瀏覽次數</p>
+                    </div>
+                  </div>
+                  <p className={Styles['card-det']}>詳細資訊</p>
+                  <Image
+                    src={'/activity/BOBBI1_1.png'}
+                    width={1200}
+                    height={800}
+                    alt="BOBBI1_1.png"
+                  />
+                </div>
+
+                {/* 卡片內資訊 */}
+              </Link>
+              <div className={Styles['card-content']}>
+                <div className={Styles['card-date']}>
+                  2024-11-16 ~ 2024-11-17
+                </div>
+                <div className={Styles['card-info']}>
+                  <p className={Styles['title']}>主辦單位 | host</p>
+                  <p>Yves Saint Laurent</p>
+                  <p className={Styles['title']}>活動地點 | location</p>
+                  <p>110台北市信義區市府路45號</p>
+                </div>
+                {/* 卡片內狀態及收藏 */}
+                <div className={Styles['card-footer']}>
+                  <div className={Styles['status']}>報名中</div>
+                  <Heart className={Styles['ph-heart']} size={24} color="red" />
+                </div>
+              </div>
+            </div>
+            {/* 左邊卡片樣式的 中文名字跟英文名字(字在右邊) */}
+            <div className={Styles['rightTextCHN']}>奢光派對</div>
+            <div className={Styles['rightTextENG']}>YSL BEAUTY LIGHT CLUB </div>
+          </div>
+          {/* ------------------------------------------------------------- */}
+          <div className={`${Styles['cardRight']} d-flex`}>
+            {/* 右邊卡片樣式的 中文名字跟英文名字(字在左邊) */}
+            <div className={Styles['leftTextCHN']}>奢光派對</div>
+            <div className={Styles['leftTextENG']}>YSL BEAUTY LIGHT CLUB </div>
+            <div className={Styles['cardR']}>
+              <Link href="#">
+                <div className={Styles['card-img']}>
+                  <div className={`${Styles['card-text']} d-flex`}>
+                    <div className="currentR">
+                      <p className={Styles['num']}>06</p>
+                      <p>目前人數</p>
+                    </div>
+                    <div className="maxR">
+                      <p className={Styles['num']}>50</p>
+                      <p>報名人數</p>
+                    </div>
+                    <div className="view">
+                      <p className={Styles['num']}>247</p>
+                      <p>瀏覽次數</p>
+                    </div>
+                  </div>
+                  <p className={Styles['card-det']}>詳細資訊</p>
+                  <Image
+                    src={'/activity/YSL3_1.png'}
+                    width={1200}
+                    height={800}
+                    alt="YSL3_1.png"
+                  />
+                </div>
+
+                {/* 卡片內資訊 */}
+              </Link>
+
+              <div className={Styles['card-content']}>
+                <div className={Styles['card-date']}>
+                  2024-11-16 ~ 2024-11-17
+                </div>
+                <div className={Styles['card-info']}>
+                  <p className={Styles['title']}>主辦單位 | host</p>
+                  <p>Yves Saint Laurent</p>
+                  <p className={Styles['title']}>活動地點 | location</p>
+                  <p>110台北市信義區市府路45號</p>
+                </div>
+                {/* 狀態擊收藏 */}
+                <div className={Styles['card-footer']}>
+                  <div className={Styles['status']}>報名中</div>
+                  <Heart className={Styles['ph-heart']} size={24} color="red" />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* 左邊款卡片樣式 */}
+          <div className={`${Styles['cardLeft']} d-flex`}>
+            <div className={Styles['cardL']}>
+              {/* 卡片內圖片 */}
+              <Link href="#">
                 <div className={Styles['card-img']}>
                   <Image
                     src={'/activity/BOBBI1_1.png'}
@@ -174,7 +286,7 @@ export default function Activity() {
                   />
                 </div>
                 {/* 卡片內資訊 */}
-              </a>
+              </Link>
               <div className={Styles['card-content']}>
                 <div className={Styles['card-date']}>
                   2024-11-16 ~ 2024-11-17
@@ -202,7 +314,7 @@ export default function Activity() {
             <div className={Styles['leftTextCHN']}>奢光派對</div>
             <div className={Styles['leftTextENG']}>YSL BEAUTY LIGHT CLUB </div>
             <div className={Styles['cardR']}>
-              <a href="#">
+              <Link href="#">
                 {/* 圖片 */}
                 <div className={Styles['card-img']}>
                   <Image
@@ -213,7 +325,7 @@ export default function Activity() {
                   />
                 </div>
                 {/* 資訊 */}
-              </a>
+              </Link>
               <div className={Styles['card-content']}>
                 <div className={Styles['card-date']}>
                   2024-11-16 ~ 2024-11-17
@@ -237,7 +349,7 @@ export default function Activity() {
           <div className={`${Styles['cardLeft']} d-flex`}>
             <div className={Styles['cardL']}>
               {/* 卡片內圖片 */}
-              <a href="#">
+              <Link href="#">
                 <div className={Styles['card-img']}>
                   <Image
                     src={'/activity/BOBBI1_1.png'}
@@ -247,7 +359,7 @@ export default function Activity() {
                   />
                 </div>
                 {/* 卡片內資訊 */}
-              </a>
+              </Link>
               <div className={Styles['card-content']}>
                 <div className={Styles['card-date']}>
                   2024-11-16 ~ 2024-11-17
@@ -275,7 +387,7 @@ export default function Activity() {
             <div className={Styles['leftTextCHN']}>奢光派對</div>
             <div className={Styles['leftTextENG']}>YSL BEAUTY LIGHT CLUB </div>
             <div className={Styles['cardR']}>
-              <a href="#">
+              <Link href="#">
                 {/* 圖片 */}
                 <div className={Styles['card-img']}>
                   <Image
@@ -286,80 +398,7 @@ export default function Activity() {
                   />
                 </div>
                 {/* 資訊 */}
-              </a>
-              <div className={Styles['card-content']}>
-                <div className={Styles['card-date']}>
-                  2024-11-16 ~ 2024-11-17
-                </div>
-                <div className={Styles['card-info']}>
-                  <p className={Styles['title']}>主辦單位 | host</p>
-                  <p>Yves Saint Laurent</p>
-                  <p className={Styles['title']}>活動地點 | location</p>
-                  <p>110台北市信義區市府路45號</p>
-                </div>
-                {/* 狀態擊收藏 */}
-                <div className={Styles['card-footer']}>
-                  <div className={Styles['badge']}>12 人</div>
-                  <div className={Styles['status']}>報名中</div>
-                  <i className={Styles['ph-heart']} />
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* 左邊款卡片樣式 */}
-          <div className={`${Styles['cardLeft']} d-flex`}>
-            <div className={Styles['cardL']}>
-              {/* 卡片內圖片 */}
-              <a href="#">
-                <div className={Styles['card-img']}>
-                  <Image
-                    src={'/activity/BOBBI1_1.png'}
-                    width={1200}
-                    height={800}
-                    alt="BOBBI1_1.png"
-                  />
-                </div>
-                {/* 卡片內資訊 */}
-              </a>
-              <div className={Styles['card-content']}>
-                <div className={Styles['card-date']}>
-                  2024-11-16 ~ 2024-11-17
-                </div>
-                <div className={Styles['card-info']}>
-                  <p className={Styles['title']}>主辦單位 | host</p>
-                  <p>Yves Saint Laurent</p>
-                  <p className={Styles['title']}>活動地點 | location</p>
-                  <p>110台北市信義區市府路45號</p>
-                </div>
-                {/* 卡片內狀態及收藏 */}
-                <div className={Styles['card-footer']}>
-                  <div className={Styles['badge']}>12 人</div>
-                  <div className={Styles['status']}>報名中</div>
-                  <i className={Styles['ph-heart']} />
-                </div>
-              </div>
-            </div>
-            {/* 左邊卡片樣式的 中文名字跟英文名字(字在右邊) */}
-            <div className={Styles['rightTextCHN']}>奢光派對</div>
-            <div className={Styles['rightTextENG']}>YSL BEAUTY LIGHT CLUB </div>
-          </div>
-          <div className={`${Styles['cardRight']} d-flex`}>
-            {/* 右邊卡片樣式的 中文名字跟英文名字(字在左邊) */}
-            <div className={Styles['leftTextCHN']}>奢光派對</div>
-            <div className={Styles['leftTextENG']}>YSL BEAUTY LIGHT CLUB </div>
-            <div className={Styles['cardR']}>
-              <a href="#">
-                {/* 圖片 */}
-                <div className={Styles['card-img']}>
-                  <Image
-                    src={'/activity/YSL3_1.png'}
-                    width={1200}
-                    height={800}
-                    alt="YSL3_1.png"
-                  />
-                </div>
-                {/* 資訊 */}
-              </a>
+              </Link>
               <div className={Styles['card-content']}>
                 <div className={Styles['card-date']}>
                   2024-11-16 ~ 2024-11-17
@@ -382,6 +421,7 @@ export default function Activity() {
         </div>
       </div>
       <Brands />
+      <Footer />
     </>
   )
 }
