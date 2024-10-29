@@ -7,23 +7,20 @@
 }
 
 .title {
- 
-    padding-inline: 100px;
-  
+  padding-inline: 100px;
 }
+
 .sub-title {
   color: $green-500;
 }
 
 .img-group {
   gap: 20px;
-
   a {
     width: 200px;
     height: 200px;
     background-size: cover;
   }
-
   .bb {
     background-image: url('/brands/bb-light.svg');
 
@@ -31,7 +28,6 @@
       background-image: url('/brands/bb-dark.svg');
     }
   }
-
   .estee {
     background-image: url('/brands/estee-light.svg');
 
@@ -39,7 +35,6 @@
       background-image: url('/brands/estee-dark.svg');
     }
   }
-
   .lancome {
     background-image: url('/brands/lancome-light.svg');
 
@@ -47,7 +42,6 @@
       background-image: url('/brands/lancome-dark.svg');
     }
   }
-
   .nars {
     background-image: url('/brands/nars-light.svg');
 
@@ -55,7 +49,6 @@
       background-image: url('/brands/nars-dark.svg');
     }
   }
-
   .ysl {
     background-image: url('/brands/ysl-light.svg');
 
@@ -67,15 +60,11 @@
 
 @media (max-width: 1200px) {
   .title {
-    .h3-L {
-      font-size: 40px;
-    }
-
+    font-size: 40px;
     .h5 {
       font-size: 19px;
     }
   }
-
   .img-group a {
     width: 150px;
     height: 150px;
@@ -86,18 +75,13 @@
   .brands {
     gap: 20px;
   }
-
   .title {
-    .h3-L {
-      padding-inline: 30px;
-      font-size: 32px;
-    }
-
+    padding-inline: 30px;
+    font-size: 32px;
     .h5 {
       font-size: 14px;
     }
   }
-
   .img-group {
     padding-inline: 20px;
 
