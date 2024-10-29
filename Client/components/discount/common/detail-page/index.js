@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 import Coupon from '@/components/discount/common/coupon';
 import Header from '@/components/home/common/header';
 import styles from './index.module.scss'; // 確保引入正確的樣式
+import Footer from '@/components/home/common/footer'
 
-export default function DiscountDetail({ 
-    title = "", 
-    date = "", 
-    content, 
-    details="", 
+
+export default function DiscountDetail({
+    title = "",
+    date = "",
+    content,
+    details = "",
     largeImageSrc = '/discount/nars-1920.svg', // 大圖片默認值
     smallImageSrc = '/discount/phone-size/nars1.svg', // 小圖片默認值
-    coupons, 
-    onImageChange 
+    coupons,
+    onImageChange
 }) {
     const [currentImageSrc, setCurrentImageSrc] = useState(largeImageSrc);
 
@@ -61,19 +63,21 @@ export default function DiscountDetail({
                         <hr className="align-self-stretch" />
                         <div className="coupon-group d-flex flex-wrap justify-content-around">
                             {coupons.map((coupon, index) => (
-                                <Coupon 
+                                <Coupon
                                     key={index}
-                                    img={coupon.img} 
-                                    title={coupon.title} 
-                                    discount={coupon.discount} 
-                                    condition={coupon.condition} 
-                                    expiration={coupon.expiration} 
+                                    img={coupon.img}
+                                    title={coupon.title}
+                                    discount={coupon.discount}
+                                    condition={coupon.condition}
+                                    expiration={coupon.expiration}
                                 />
                             ))}
                         </div>
                     </article>
                 </section>
             </main>
+            
+            <Footer />
         </>
     );
 }
