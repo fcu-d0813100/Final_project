@@ -1,4 +1,4 @@
-@import '@/styles/global.scss';
+@import '@/styles/_variant.scss';
 .act-img-container {
   height: 930px;
   overflow: hidden;
@@ -60,7 +60,7 @@
 .act-main {
   padding-top: 40px;
   width: 100%; /* 寬度 100% */
-  height: 3083px; /* 高度設置為 100% 視口高度 */
+  height: 2780px; /* 高度設置為 100% 視口高度 */
   background-image: url('/activity/bg.png');
 
   background-size: cover; /* 背景圖片覆蓋 */
@@ -70,6 +70,7 @@
   .month-title {
     width: 100%;
     height: 40px;
+    margin-bottom: 50px;
     border-bottom: 3px solid;
     font-size: x-large;
     color: #797d66;
@@ -83,8 +84,8 @@
   width: 1440px;
   height: 2847px;
 }
-$card-width: 963px;
-$card-height: 397px;
+$card-width: 800px;
+$card-height: 350px;
 $border-radius: 8px;
 $box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 $badge-bg-color: #90957a;
@@ -94,10 +95,10 @@ $font-color-light: #90957a;
   position: relative;
   .rightTextCHN {
     position: absolute;
-    width: 300px;
+    width: 470px;
     height: 53px;
-    top: 350px;
-    left: 1000px;
+    top: 240px;
+    right: 0%;
     font-weight: 900;
     font-size: 32px;
     border: 1px solid #90957a;
@@ -108,9 +109,9 @@ $font-color-light: #90957a;
   .rightTextENG {
     position: absolute;
     height: 53px;
-    left: 1000px;
+    right: 13%;
     width: 300px;
-    top: 410px;
+    top: 300px;
     font-size: 16px;
   }
 }
@@ -118,10 +119,10 @@ $font-color-light: #90957a;
   position: relative;
   .leftTextCHN {
     position: absolute;
-    top: 290px;
-    right: 1000px;
-    padding-left: 170px;
-    width: 300px;
+    top: 240px;
+    left: 0%;
+    padding-left: 340px;
+    width: 470px;
     font-weight: 900;
     font-size: 32px;
     border: 1px solid #90957a;
@@ -131,13 +132,13 @@ $font-color-light: #90957a;
   }
   .leftTextENG {
     position: absolute;
-    top: 350px;
-    left: 110px;
+    top: 300px;
+    left: 280px;
   }
 }
 .cardL {
   position: relative;
-  margin-top: 50px;
+
   display: flex; // 確保圖片和文字橫向排列
   flex-direction: row; // 橫向排列
   width: $card-width;
@@ -150,7 +151,7 @@ $font-color-light: #90957a;
   .card-img {
     padding: 10px;
     width: 476px;
-    height: 396px;
+    height: 348px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,6 +163,71 @@ $font-color-light: #90957a;
       object-fit: cover;
       display: block;
     }
+  }
+  .card-img::after {
+    content: '';
+    position: absolute;
+    top: 0; /* 初始位置在图片下方 */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* 黑色半透明 */
+    transition: all 0.3s ease-in; /* 平滑的过渡效果 */
+    transform: translateY(100);
+  }
+
+  .card-img:hover::after {
+    top: 0; /* 使覆盖层上升到图片上方 */
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  .card-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    opacity: 0; /* 初始状态透明 */
+    display: flex;
+    justify-content: space-around; /* 均匀分配每个子块 */
+    align-items: center; /* 垂直居中 */
+    width: 70%; /* 让文字区域占据整个宽度 */
+    transition: opacity 0.3s ease; /* 平滑的过渡效果 */
+    z-index: 2;
+    .num {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .card-img:hover .card-text {
+    opacity: 1;
+  }
+
+  .card-text > div {
+    text-align: center;
+    flex: 1; /* 每个子块占据相等的宽度 */
+  }
+
+  .card-text p {
+    margin: 0;
+    line-height: 1.2em;
+  }
+  .card-det {
+    position: absolute;
+    left: 50%;
+    bottom: 10px; /* 控制离底部的距离 */
+    transform: translateX(-50%);
+    color: white;
+    opacity: 0; /* 初始状态透明 */
+    transition: opacity 1s ease; /* 平滑的过渡效果，0.5秒后开始 */
+    z-index: 2;
+  }
+
+  .card-img:hover .card-det {
+    opacity: 1; /* 悬停时显示文字 */
   }
 
   .card-content {
@@ -177,7 +243,7 @@ $font-color-light: #90957a;
       flex-direction: column;
       align-items: center;
       font-weight: bold;
-      font-size: xx-large;
+      font-size: x-large;
       color: black;
       width: 100%;
       border-bottom: 1px solid black;
@@ -192,11 +258,11 @@ $font-color-light: #90957a;
       color: black;
       width: 100%;
       p {
-        margin: 10px 0;
         font-size: 14px;
       }
       .title {
         font-size: 20px;
+        margin-bottom: 0px;
       }
     }
 
@@ -227,7 +293,7 @@ $font-color-light: #90957a;
 }
 .cardR {
   position: relative;
-  margin-left: 340px;
+  margin-left: 500px;
   display: flex; // 確保圖片和文字橫向排列
   flex-direction: row; // 橫向排列
   width: $card-width;
@@ -241,7 +307,7 @@ $font-color-light: #90957a;
   .card-img {
     padding: 10px;
     width: 476px;
-    height: 396px;
+    height: 349px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -253,6 +319,71 @@ $font-color-light: #90957a;
       object-fit: cover;
       display: block;
     }
+  }
+  .card-img::after {
+    content: '';
+    position: absolute;
+    top: 0; /* 初始位置在图片下方 */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* 黑色半透明 */
+    transition: all 0.3s ease-in; /* 平滑的过渡效果 */
+    transform: translateY(100);
+  }
+
+  .card-img:hover::after {
+    top: 0; /* 使覆盖层上升到图片上方 */
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  .card-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    opacity: 0; /* 初始状态透明 */
+    display: flex;
+    justify-content: space-around; /* 均匀分配每个子块 */
+    align-items: center; /* 垂直居中 */
+    width: 70%; /* 让文字区域占据整个宽度 */
+    transition: opacity 0.3s ease; /* 平滑的过渡效果 */
+    z-index: 2;
+    .num {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .card-img:hover .card-text {
+    opacity: 1;
+  }
+
+  .card-text > div {
+    text-align: center;
+    flex: 1; /* 每个子块占据相等的宽度 */
+  }
+
+  .card-text p {
+    margin: 0;
+    line-height: 1.2em;
+  }
+  .card-det {
+    position: absolute;
+    left: 50%;
+    bottom: 10px; /* 控制离底部的距离 */
+    transform: translateX(-50%);
+    color: white;
+    opacity: 0; /* 初始状态透明 */
+    transition: opacity 1s ease; /* 平滑的过渡效果，0.5秒后开始 */
+    z-index: 2;
+  }
+
+  .card-img:hover .card-det {
+    opacity: 1; /* 悬停时显示文字 */
   }
 
   .card-content {
@@ -268,7 +399,7 @@ $font-color-light: #90957a;
       flex-direction: column;
       align-items: center;
       font-weight: bold;
-      font-size: xx-large;
+      font-size: x-large;
       color: black;
       width: 100%;
       border-bottom: 1px solid black;
@@ -283,11 +414,11 @@ $font-color-light: #90957a;
       color: black;
       width: 100%;
       p {
-        margin: 10px 0;
         font-size: 14px;
       }
       .title {
         font-size: 20px;
+        margin-bottom: 0px;
       }
     }
 
