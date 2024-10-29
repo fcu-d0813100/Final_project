@@ -8,6 +8,7 @@ import Brands from '@/components/home/common/brands'
 import Footer from '@/components/home/common/footer'
 import { Heart } from 'phosphor-react'
 import { PiMagnifyingGlass } from 'react-icons/pi'
+import Dropdown from '@/components/shared/dropdownList/sample'
 
 export default function Activity() {
   // 使用 useEffect 確保 Bootstrap JavaScript 僅在客戶端加載
@@ -30,7 +31,7 @@ export default function Activity() {
         />
       </div>
 
-      <div className={`${Styles['act-sec1']} container`}>
+      <div className={`${Styles['act-sec1']} container d-none d-lg-block`}>
         <div
           className={`${Styles['act-month-button']} ${Styles['act-sec1']} d-none d-lg-block`}
         >
@@ -80,87 +81,43 @@ export default function Activity() {
       </div>
 
       {/* 活動搜尋input */}
-      <div className={`${Styles['act-search']} container`}>
-        <nav className="navbar navbar-expand-lg">
-          <div className="container-fluid">
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarScroll"
-              aria-controls="navbarScroll"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarScroll">
-              <form className="d-flex me-auto my-2 my-lg-0" role="search">
-                <input
-                  className="form-control me-2 rounded-pill border-dark"
-                  type="search"
-                  placeholder="活動 |"
-                  aria-label="Search"
-                />
-                <button className="btn" type="submit">
-                  <PiMagnifyingGlass
-                    style={{ width: '24px', height: '24px' }}
-                  />
-                </button>
-              </form>
+      <div
+        className={`${Styles['act-search']} container d-flex flex-wrap justify-content-between`}
+      >
+        <form
+          className={`${Styles['search']} d-flex me-auto my-2 my-lg-0 align-items-center`} // 使表单在小屏幕下满宽
+          role="search"
+        >
+          <input
+            className="form-control me-2 rounded-pill border-dark"
+            type="search"
+            placeholder="活動 |"
+            aria-label="Search"
+            style={{ height: '30px' }} // 高度保持一致
+          />
+          <button
+            className="btn d-flex align-items-center justify-content-center"
+            type="submit"
+            style={{ height: '30px', padding: '0 10px' }} // 使按钮高度与输入框一致
+          >
+            <PiMagnifyingGlass style={{ width: '20px', height: '20px' }} />
+          </button>
+        </form>
 
-              <ul
-                className="navbar-nav my-2 my-lg-0 navbar-nav-scroll"
-                style={{ '--bs-scroll-height': '100px' }}
-              >
-                <li className="nav-item dropdown border-bottom border-dark mb-3">
-                  <a
-                    className="nav-link dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    
-                  >
-                    狀態
-                  </a>
+        <div className="ms-auto pc-drop text-center d-lg-block d-none">
+          {' '}
+          {/* 在大屏幕下显示，其他情况隐藏 */}
+          <Dropdown />
+        </div>
+      </div>
 
-                  <ul className="dropdown-menu">
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        報名中
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        已截止
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li className="nav-item dropdown border-bottom border-dark mb-3 d-lg-none">
-                  <a
-                    className="nav-link dropdown-toggle month-button-mobile"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    月份
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        ALL
-                      </a>
-                    </li>
-                    {/* 更多月份選項 */}
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
+      <div
+        className="d-flex d-lg-none justify-content-center
+      "
+      >
+        {' '}
+        {/* 小于768px时居中 */}
+        <Dropdown />
       </div>
 
       {/* 活動列表區域 */}
