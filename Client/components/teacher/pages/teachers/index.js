@@ -17,9 +17,11 @@ export default function Teachers(props) {
         <div className={`${styles.section01} container `}>
           <Boxrow />
         </div>
+
         <div className={`container ${styles.bottomText}`}>
           <p className="pt-3">Define Your Beauty</p>
         </div>
+        
       </div>
     </>
   )
