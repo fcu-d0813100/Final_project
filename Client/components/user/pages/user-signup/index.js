@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import { PiEyeClosed, PiCaretDown } from "react-icons/pi";
+import { PiEyeClosed } from "react-icons/pi";
 import Link from 'next/link';
 
 
