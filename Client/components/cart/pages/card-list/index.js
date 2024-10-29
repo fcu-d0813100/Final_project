@@ -1,12 +1,11 @@
 import React from 'react'
 import style from './cart-list.module.scss'
-import { Trash } from '@phosphor-icons/react'
-import CheckoutBox from './common/CheckoutBox'
+import { Minus, Plus, Trash } from '@phosphor-icons/react'
+import CheckoutBox from '@/components/cart/common/checkoutbox/index'
 import Image from 'next/image'
 
 export default function CartList() {
   const products = []
-
   return (
     <>
       <div className="container">
@@ -44,15 +43,17 @@ export default function CartList() {
                       <div className={style['sub_text']}>顏色：來杯摩卡01</div>
                     </div>
                   </div>
+                  {/* 數量加減按鈕 */}
                   <div className="d-flex align-items-center justify-content-end">
                     <button className={style['btn-sm']}>
-                      <i className="ph ph-minus align-middle pb-1" />
+                      <Minus size={20} />
                     </button>
                     <span className="px-3 h6">1</span>
                     <button className={style['btn-sm']}>
-                      <i className="ph ph-plus align-middle pb-1" />
+                      <Plus size={20} />
                     </button>
                   </div>
+                  {/* 商品價格 */}
                   <div className={`h6 ${style.price}`}>
                     NT900
                     <div className={style['origin_price']}>NT$1,200</div>
@@ -96,15 +97,18 @@ export default function CartList() {
                       </div>
                     </div>
                   </div>
+                  {/* 數量加減按鈕 */}
                   <div className="d-flex align-items-center justify-content-end">
                     <button className={style['btn-sm']}>
-                      <i className="ph ph-minus align-middle pb-1" />
+                      <Minus size={20} />
                     </button>
                     <span className="px-3 h6">1</span>
                     <button className={style['btn-sm']}>
-                      <i className="ph ph-plus align-middle pb-1" />
+                      <Plus size={20} />
                     </button>
                   </div>
+
+                  {/* 課程價格 */}
                   <div className={`h6 ${style.price}`}>
                     NT900
                     <div className={style['origin_price']}>NT$1,200</div>
@@ -123,7 +127,17 @@ export default function CartList() {
             {/* 課程box-end */}
 
             {/* 總計box */}
-            <CheckoutBox />
+            <div className={style.checkout}>
+              <div className={style.sticky}>
+                <CheckoutBox />
+                <div
+                  className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
+                >
+                  <button className="btn-primary">繼續購物</button>
+                  <button className="ms-2 btn-secondary">前往結賬</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

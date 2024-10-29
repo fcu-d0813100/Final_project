@@ -14,8 +14,8 @@ export default function Home() {
           <div className={`${Styles['home-bestSeller']} ${Styles['body']}`}>
             <Image
               src={'/activity/homeMainPic.png'}
-              width={300}
-              height={400}
+              width={1920}
+              height={549}
               alt=""
               className={Styles['bestSeller-bgi-pc']}
             />
