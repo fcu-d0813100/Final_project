@@ -1,6 +1,12 @@
 .user-sction{
     display: flex;
     .any-sction{
+        flex: 1;
+        max-width: 100%;
         padding: 70px 120px;
+        box-sizing: border-box;
+        @media (max-width: 390px) {
+            padding: 15px;
+        }
     }
 }
