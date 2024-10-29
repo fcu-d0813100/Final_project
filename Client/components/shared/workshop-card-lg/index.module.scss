@@ -1,0 +1,98 @@
+@import '@/styles/_variant.scss';
+
+.workshop {
+  position: relative;
+  height: 615px;
+  margin-bottom: 65px;
+  color: black;
+
+  .workshopImg {
+    width: 100%;
+    height: 100%;
+    transition: 0.3s;
+    .coverImg {
+      width: 100%;
+      height: 70%;
+      object-fit: cover;
+      transition: height 0.3s;
+    }
+  }
+  .wInformation {
+    width: 85%;
+    height: 260px;
+    background-color: #f4f4f4;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+    transition: 0.3s;
+
+    .innerText {
+      width: 85%;
+    }
+    .wTitle {
+      width: 100%;
+      border-bottom: 1px solid black;
+      padding: 0 0 5px 10px;
+      margin-bottom: 5px;
+    }
+    .wDetail {
+      padding-left: 10px;
+      padding-right: 20px;
+      p {
+        color: $gray-300;
+      }
+      h4 {
+        color: $green-500;
+      }
+      .wStatus {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .over {
+          color: white;
+          background-color: $red-500;
+          border-radius: 17px;
+          padding-inline: 20px;
+        }
+        .nowOpen {
+          color: white;
+          background-color: $green-500;
+          border-radius: 17px;
+          padding-inline: 20px;
+        }
+      }
+      .more {
+        display: flex;
+        align-items: center;
+        color: $red-500;
+      }
+    }
+  }
+  transition: 0.2s;
+
+  &:hover {
+    .workshopImg {
+      width: 100%;
+      height: 100%;
+      padding: 25px;
+      background-color: #f4f4f4;
+
+      .coverImg {
+        width: 100%;
+        height: 65%;
+        object-fit: cover;
+      }
+    }
+    .wInformation {
+      // background-color: rgb(244, 244, 244);
+      position: absolute;
+      padding: 25px;
+      width: 100%;
+      bottom: 45px;
+    }
+  }
+}
