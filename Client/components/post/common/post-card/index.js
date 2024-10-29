@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Carousel from 'react-bootstrap/Carousel';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+// import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
 // 在 index.js 或 App.js 文件中引入
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,7 +16,7 @@ import {
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma';
 
 import styles from './index.module.scss';
-import ReplyInfo from './reply-info';
+import ReplyInfo from '../reply-info';
 export default function PostCard1(props) {
   //有多icon 狀態初始化為物件
   // const [hover, setHover] = useState({

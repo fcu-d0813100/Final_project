@@ -113,13 +113,12 @@ export default function Index() {
             <Nav.Link
               key={link.key}
               href={link.href}
-              className={`${
-                linkState[link.key].active
+              className={`${linkState[link.key].active
                   ? styles['active']
                   : linkState[link.key].hover
-                  ? styles['hover']
-                  : ''
-              }`}
+                    ? styles['hover']
+                    : ''
+                }`}
               onMouseEnter={() => handleMouseEnter(link.key)}
               onMouseLeave={() => handleMouseLeave(link.key)}
             >
@@ -127,9 +126,11 @@ export default function Index() {
               {link.label}
             </Nav.Link>
           ))}
+        <button className="btn-logout">登出</button>
+
         </Nav>
       </Navbar.Collapse>
-      <button className="btn-logout">登出</button>
+      
     </Navbar>
   );
 }
