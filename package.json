@@ -8,14 +8,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-regular-svg-icons": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "@phosphor-icons/react": "^2.1.7",
-    "react-slick": "^0.30.2",
-    "slick-carousel": "^1.8.1"
-  }
+  "license": "ISC"
 }
