@@ -130,7 +130,7 @@ export default function Index() {
 
         </Nav>
       </Navbar.Collapse>
-
+      <button className="btn-logout">登出</button>
     </Navbar>
   );
 }

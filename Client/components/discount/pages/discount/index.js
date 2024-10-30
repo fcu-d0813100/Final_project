@@ -3,7 +3,6 @@ import Header from '@/components/home/common/header';
 import Image from 'next/image';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss'; // 確保引入正確的樣式
-import Link from 'next/link';
 
 export default function Discount() {
   return (
@@ -15,18 +14,18 @@ export default function Discount() {
         </div>
 
         <section className={styles["discount-group"]}>
-          <Link className={styles.discount} href="/discount/nars2">
+          <a className={styles.discount} href="#">
             <img className={styles.img} src='/discount/nars-discount2.svg' alt="NARS 優惠" />
-          </Link>
-          <Link className={styles.discount} href="/discount/nars">
+          </a>
+          <a className={styles.discount} href="#">
             <img className={styles.img} src='/discount/nars-discount.svg' alt="NARS 優惠" />
-          </Link>
-          <Link className={styles.discount} href="/discount/ysl">
+          </a>
+          <a className={styles.discount} href="#">
             <img className={styles.img} src='/discount/ysl-discount.svg' alt="YSL 優惠" />
-          </Link>
-          <Link className={styles.discount} href="/discount/bb">
+          </a>
+          <a className={styles.discount} href="#">
             <img className={styles.img} src='/discount/bb-discount.svg' alt="BB 優惠" />
-          </Link>
+          </a>
         </section>
 
         <div id="carouselExampleIndicators" className={`carousel slide ${styles.carousel}`} data-bs-ride="carousel">
@@ -40,42 +39,42 @@ export default function Discount() {
           <div className={styles['carousel-inner']}>
             <div className="carousel-item active">
               <Image src="/discount/phone-size/beautique.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block "
-                alt="Beautique 優惠" />
+              width={390}
+              height={442}
+              style={{ width: '100%', height: 'auto' }}
+              className="d-block "
+              alt="Beautique 優惠" />
             </div>
             <div className="carousel-item">
-              <Image src="/discount/phone-size/nars.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block "
-                alt="NARS 優惠" />
+              <Image src="/discount/phone-size/nars.svg" 
+              width={390} 
+              height={442} 
+              style={{ width: '100%', height: 'auto' }}
+              className="d-block " 
+              alt="NARS 優惠" />
             </div>
             <div className="carousel-item">
-              <Image src="/discount/phone-size/nars1.svg"
-                width={390} height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block "
-                alt="NARS 優惠 1" />
+              <Image src="/discount/phone-size/nars1.svg" 
+              width={390} height={442} 
+              style={{ width: '100%', height: 'auto' }}
+              className="d-block " 
+              alt="NARS 優惠 1" />
             </div>
             <div className="carousel-item">
-              <Image src="/discount/phone-size/ysl.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block"
-                alt="YSL 優惠" />
+              <Image src="/discount/phone-size/ysl.svg" 
+              width={390} 
+              height={442} 
+              style={{ width: '100%', height: 'auto' }}
+              className="d-block" 
+              alt="YSL 優惠" />
             </div>
             <div className="carousel-item">
-              <Image src="/discount/phone-size/bb.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block"
-                alt="BB 優惠" />
+              <Image src="/discount/phone-size/bb.svg" 
+              width={390} 
+              height={442} 
+              style={{ width: '100%', height: 'auto' }}
+              className="d-block" 
+              alt="BB 優惠" />
             </div>
           </div>
         </div>
