@@ -1,0 +1,12 @@
+@import '@/styles/_variant.scss';
+
+.section1 {
+  height: 530px;
+  background: url(/teacher/information-bn.png) center center no-repeat;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

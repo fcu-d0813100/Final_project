@@ -1,5 +1,38 @@
 @import '@/styles/_variant.scss';
 
+.h3 {
+  font-size: 32px;
+  font-family: 'Noto Sans';
+  font-weight: 500;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.h1-L {
+  font-size: 64px;
+  font-family: 'Libre Bodoni';
+  font-style: italic;
+  font-weight: 700;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.btn-danger {
+  height: 50px;
+  width: 200px;
+  background-color: #963827;
+  color: #fff;
+  border-radius: 3px;
+  border: #963827 solid 1px;
+}
+
+.btn-danger:hover {
+  background-color: #6f2619;
+  border: #6f2619 solid 1px;
+  transition: 0.3s;
+}
+
+>>>>>>> origin/dev_yun
 .home-bestSeller {
   position: relative;
   background-color: #626553;

@@ -1,5 +1,5 @@
 'use client'
-import styles from '@/styles/teacher/teachers.module.scss'
+import styles from '@/components/teacher/common/teachers.module.scss'
 import { PiMagnifyingGlass, PiCaretDown } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
