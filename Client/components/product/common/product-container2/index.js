@@ -2,8 +2,6 @@
 import React from 'react'
 import Slider from 'react-slick'
 import styles from './index.module.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import cardStyles from './CardCarousel.module.scss' // 引入 CSS 模組
