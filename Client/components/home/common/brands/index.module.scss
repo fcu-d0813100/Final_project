@@ -1,0 +1,110 @@
+@import '@/styles/_variant.scss';
+
+.brands {
+  padding: 10% 0px;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.title {
+  .h3-L {
+    padding-inline: 100px;
+  }
+
+  .h5 {
+    color: $green-500;
+  }
+}
+
+.img-group {
+  gap: 20px;
+
+  a {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+  }
+
+  .bb {
+    background-image: url('/brands/bb-light.svg');
+
+    &:hover {
+      background-image: url('/brands/bb-dark.svg');
+    }
+  }
+
+  .estee {
+    background-image: url('/brands/estee-light.svg');
+
+    &:hover {
+      background-image: url('/brands/estee-dark.svg');
+    }
+  }
+
+  .lancome {
+    background-image: url('/brands/lancome-light.svg');
+
+    &:hover {
+      background-image: url('/brands/lancome-dark.svg');
+    }
+  }
+
+  .nars {
+    background-image: url('/brands/nars-light.svg');
+
+    &:hover {
+      background-image: url('/brands/nars-dark.svg');
+    }
+  }
+
+  .ysl {
+    background-image: url('/brands/ysl-light.svg');
+
+    &:hover {
+      background-image: url('/brands/ysl-dark.svg');
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .title {
+    .h3-L {
+      font-size: 40px;
+    }
+
+    .h5 {
+      font-size: 19px;
+    }
+  }
+
+  .img-group a {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .brands {
+    gap: 20px;
+  }
+
+  .title {
+    .h3-L {
+      padding-inline: 30px;
+      font-size: 32px;
+    }
+
+    .h5 {
+      font-size: 14px;
+    }
+  }
+
+  .img-group {
+    padding-inline: 20px;
+
+    a {
+      width: 79px;
+      height: 79px;
+    }
+  }
+}

@@ -4,21 +4,14 @@ import { Tab, Nav } from 'react-bootstrap';
 import { PiNotePencilBold } from 'react-icons/pi';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss';
-import SideBar from '@/components/user/common/side-bar';
+import UserSection from '@/components/user/common/user-section'
 import PublishCard from '@/components/post/common/publish-card';
 import WallCard from '@/components/post/common/wall-card';
 export default function Index(props) {
   return (
     <>
-      <div className={styles['user-layout']}>
-        <SideBar />
-        <div className={styles['member-post']}>
-          <div className={styles['post-section']}>
-            <div className={styles['post-title']}>
-              <span className="h3">我的貼文</span>
-              <span className="h1-L">My Post</span>
-            </div>
-            <div className={styles['post-content']}>
+      <UserSection titleCN="我的貼文" titleENG="My Post">
+        <div className={styles['post-content']}>
               <Tab.Container defaultActiveKey="/home">
                 <div className={styles['post-navbar']}>
                   <Nav
@@ -91,9 +84,8 @@ export default function Index(props) {
                 </Tab.Content>
               </Tab.Container>
             </div>
-          </div>
-        </div>
-      </div>
+      </UserSection>
+      
     </>
   );
 }

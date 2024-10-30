@@ -1,0 +1,85 @@
+@import '@/styles/_variant.scss';
+
+.promobg {
+  background: url(/home/promo-banner.svg) center center no-repeat;
+  background-size: cover;
+  height: 650px;
+  position: relative;
+}
+
+.promo-title {
+  border-bottom: 1px solid white;
+  padding-bottom: 12px;
+}
+
+.line-style {
+  position: absolute;
+  top: 0;
+  left: 50%;
+}
+
+.info {
+  padding-block: 50px;
+}
+
+.act-section {
+  padding-inline: 50px;
+}
+
+@media (max-width: 768px) {
+  .act-section {
+    padding-inline: 10px;
+  }
+
+  .container-padding {
+    padding: 30px;
+  }
+
+  .line-style {
+    display: none;
+  }
+
+  .promo-title {
+    font-size: 32px;
+    margin: 10px 0;
+  }
+
+  .info {
+    margin: 15px 0;
+  }
+
+  .info-padding {
+    padding-block: 0px;
+  }
+
+  // .text-white {
+  //   padding-block: 0px;
+  // }
+
+  .class-area {
+    border-bottom: 1px solid white;
+    padding: 50px 0;
+  }
+
+  .promo-title {
+    border-bottom: 0;
+    padding-top: 5px;
+  }
+
+  .promobg {
+    height: 100vh;
+    padding-bottom: 30px;
+  }
+
+  .promobg {
+    background: url(/home/promo-banner-rwd.svg) center center no-repeat;
+    background-size: cover;
+    height: 110vh;
+  }
+
+  .date {
+    font-size: 20px;
+    display: flex;
+    padding-bottom: 10px;
+  }
+}
