@@ -1,5 +1,6 @@
 @import '@/styles/_variant.scss';
 
+
 .promobg {
   background: url(/home/promo-banner.svg) center center no-repeat;
   background-size: cover;
@@ -10,6 +11,7 @@
 .promo-title {
   border-bottom: 1px solid white;
   padding-bottom: 12px;
+  padding-left: 5px;
 }
 
 .line-style {
@@ -28,11 +30,12 @@
 
 @media (max-width: 768px) {
   .act-section {
-    padding-inline: 10px;
+    padding-inline: 0px;
+    margin-top: 30px;
   }
 
   .container-padding {
-    padding: 30px;
+    padding: 40px;
   }
 
   .line-style {
@@ -42,7 +45,11 @@
   .promo-title {
     font-size: 32px;
     margin: 10px 0;
+    border-bottom: 0;
+    padding-top: 5px;
+    padding-left: 0px;
   }
+
 
   .info {
     margin: 15px 0;
@@ -52,29 +59,18 @@
     padding-block: 0px;
   }
 
-  // .text-white {
-  //   padding-block: 0px;
-  // }
 
   .class-area {
     border-bottom: 1px solid white;
     padding: 50px 0;
   }
 
-  .promo-title {
-    border-bottom: 0;
-    padding-top: 5px;
-  }
-
-  .promobg {
-    height: 100vh;
-    padding-bottom: 30px;
-  }
 
   .promobg {
     background: url(/home/promo-banner-rwd.svg) center center no-repeat;
     background-size: cover;
-    height: 110vh;
+    padding-bottom: 30px;
+    height: 900px;
   }
 
   .date {
