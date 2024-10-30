@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import style from './cart-list.module.scss'
 import { Minus, Plus, Trash } from '@phosphor-icons/react'
 import CheckoutBox from '@/components/cart/common/checkoutbox/index'
-import { useCart } from '@/components/hooks/use-cartP'
+import { useCartProduct } from '@/components/hooks/use-cartP'
+import { useCartWorkshop } from '@/components/hooks/use-cartW'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 const products = [
   {
@@ -29,15 +31,28 @@ const products = [
 ]
 
 export default function CartList() {
-  // 從商品鉤子取得內容
+  //按鈕路由
+  const router = useRouter()
+
+  // 從use-cartP鉤子取得商品內容
   const {
-    itemd = [],
-    totalPrice = 0,
-    totalQty = 0,
-    onDecrease = () => {},
-    onIncrease = () => {},
-    onRemove = () => {},
-  } = useCart()
+    productItems = [],
+    pTotalPrice = 0,
+    pTotalQty = 0,
+    onIncreaseProduct = () => {},
+    onDecreaseProduct = () => {},
+    onRemoveProduct = () => {},
+  } = useCartProduct()
+
+  // 從use-cartW鉤子取得課程內容
+  const {
+    workshopItems = [],
+    wTotalPrice = 0,
+    wTotalQty = 0,
+    onIncreaseWorkshop = () => {},
+    onDecreaseWorkshop = () => {},
+    onRemoveWorkshop = () => {},
+  } = useCartWorkshop()
 
   return (
     <>
@@ -60,7 +75,7 @@ export default function CartList() {
               {/* 帶入資料 */}
               <div className={`d-xl-block ${style.cosmetic}`}>
                 <div className={` h5 ${style['cosmetic-topic']}`}>彩妝商品</div>
-                {products.map((product) => (
+                {productItems.map((product) => (
                   <div key={product.id} className={style['cosmetic-box']}>
                     <div className={` col-6 ${style['cosmetic-detail']}`}>
                       <div className={style['cosmetic-img']}>
@@ -191,8 +206,18 @@ export default function CartList() {
                 <div
                   className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
                 >
-                  <button className="btn-primary">繼續購物</button>
-                  <button className="ms-2 btn-secondary">前往結賬</button>
+                  <button
+                    className="btn-primary"
+                    onClick={() => router.push('/')}
+                  >
+                    繼續購物
+                  </button>
+                  <button
+                    className="ms-2 btn-secondary"
+                    onClick={() => router.push('/cart/checkout')}
+                  >
+                    前往結賬
+                  </button>
                 </div>
               </div>
             </div>

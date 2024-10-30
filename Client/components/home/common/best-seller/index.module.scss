@@ -111,10 +111,10 @@
     height: auto;
     object-fit: cover;
   }
-}
 
-.btn-mobile {
-  display: none;
+  .btn-mobile {
+    display: none;
+  }
 }
 
 /* Media Queries */
@@ -130,6 +130,7 @@
       top: 470px;
       font-size: 180px !important;
     }
+
     .bestSeller-slogan {
       top: 20% !important;
     }
@@ -143,9 +144,6 @@
 
       .card1,
       .card2 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         padding: 25px !important;
 
         img {
@@ -163,10 +161,16 @@
   }
 }
 
-@media (max-width: 1192px) {
+@media (max-width: 1200px) {
   .home-bestSeller {
+    .bestSeller-bgi-pc {
+      width: 86%;
+      height: 689px;
+      object-fit: cover;
+    }
+
     .bestSeller-brand {
-      top: 300px;
+      top: 520px;
       font-size: 120px !important;
     }
 
@@ -175,7 +179,7 @@
     }
 
     .bestSeller-card {
-      top: 25%;
+      top: 35%;
       right: 10% !important;
 
       button {
@@ -184,9 +188,6 @@
 
       .card1,
       .card2 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         padding: 15px !important;
 
         img {
@@ -198,10 +199,117 @@
   }
 }
 
+@media (max-width: 768px) {
+  .home-bestSeller {
+    .bestSeller-bgi-pc {
+      width: 86%;
+      height: 689px;
+      object-fit: cover;
+    }
+
+    .bestSeller-brand {
+      top: 520px;
+      font-size: 120px !important;
+    }
+
+    .bestSeller-text {
+      width: 48%;
+      left: 50%;
+      top: 0%;
+      font-size: 56px;
+      font-weight: 600;
+      border-bottom: 3px solid #8a8a8a;
+      color: #fff;
+    }
+
+    .bestSeller-slogan {
+      font-size: 25px;
+      top: 15% !important;
+    }
+
+    .bestSeller-card {
+      top: 30%;
+      right: 10% !important;
+
+      button {
+        width: 175px !important;
+      }
+
+      .card1 {
+        padding: 15px !important;
+
+        img {
+          width: 200px !important;
+          height: 200px !important;
+        }
+      }
+
+      .card2 {
+        display: none;
+      }
+
+      .btn-pc {
+        display: none;
+      }
+    }
+
+    .btn-mobile {
+      display: inline-block;
+      width: 100%;
+    }
+  }
+}
+
 @media (max-width: 576px) {
-  .btn-mobile {
-    display: inline-block;
-    width: 100%;
+  .home-bestSeller {
+    .bestSeller-bgi-pc {
+      width: 86%;
+      height: 689px;
+      object-fit: cover;
+    }
+
+    .bestSeller-brand {
+      top: 540px;
+      font-size: 100px !important;
+    }
+
+    .bestSeller-text {
+      width: 48%;
+      left: 50%;
+      top: 0%;
+      font-size: 48px;
+      font-weight: 600;
+      border-bottom: 3px solid #8a8a8a;
+      color: #fff;
+    }
+
+    .bestSeller-slogan {
+      font-size: 20px;
+      top: 15% !important;
+    }
+
+    .bestSeller-card {
+      top: 30%;
+      right: 1% !important;
+
+      button {
+        width: 175px !important;
+      }
+
+      .card1 {
+        padding: 15px !important;
+
+        img {
+          width: 200px !important;
+          height: 200px !important;
+        }
+      }
+    }
+
+    .btn-mobile {
+      display: inline-block;
+      width: 100%;
+    }
   }
 }
 
@@ -216,8 +324,8 @@
 
     .bestSeller-brand {
       position: absolute;
-      top: 83% !important;
-      font-size: 4rem;
+      top: 85% !important;
+      font-size: 50px !important;
     }
 
     .bestSeller-text {
@@ -246,7 +354,7 @@
       }
 
       .card1 {
-        height: 241px;
+        height: 241px !important;
         background-color: rgba(255, 255, 255, 0.2);
         padding: 15px;
         margin-right: 0;
@@ -256,8 +364,8 @@
         }
 
         img {
-          width: 132px;
-          height: 134px;
+          width: 132px !important;
+          height: 134px !important;
           padding-top: 10px;
           margin-bottom: 34px;
         }
@@ -266,16 +374,16 @@
       .card2 {
         display: none;
       }
-    }
 
-    .bestSeller-bgi-pc {
-      display: none;
-    }
+      .bestSeller-bgi-pc {
+        display: none;
+      }
 
-    .bestSeller-bgi-mobile {
-      width: 390px;
-      height: 100%;
-      object-fit: cover;
+      .bestSeller-bgi-mobile {
+        width: 390px;
+        height: 100%;
+        object-fit: cover;
+      }
     }
   }
 }
