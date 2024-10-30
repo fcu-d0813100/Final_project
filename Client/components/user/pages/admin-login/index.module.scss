@@ -22,7 +22,7 @@
   background: linear-gradient(0deg,
       rgba(0, 0, 0, 0.4) 0%,
       rgba(0, 0, 0, 0.4) 100%),
-    url(/user/login-user.jpg) lightgray 50% / cover no-repeat;
+    url(/user/login-admin.jpg) lightgray 40% / cover no-repeat;
   height: 100%;
   width: 825px;
   padding: 120px 0 50px 0;
@@ -66,8 +66,9 @@
   word-wrap: break-word;
   color: white;
   text-align: center;
-  margin: 20px auto 30px auto;
+  margin: 50px auto 50px auto;
 }
+
 
 .text {
   color: white;
@@ -93,18 +94,34 @@
 .card-login {
   width: 100%;
   max-width: 470px;
-  padding: 10px 60px 10px 60px;
-  display: flex;
-  align-items: start;
-  flex-direction: column;
+  height: 100%;
+  padding-block: 0px;
 }
+
+.input-padding {
+  margin-top: 50px;
+  padding-inline: 60px;
+
+}
+
+.admin-title {
+  font-family: Libre Bodoni;
+  color: $gray-200;
+  text-align: right;
+  font-family: "Libre Bodoni";
+  font-size: 30px;
+  font-style: italic;
+  font-weight: 600;
+  margin: 10px;
+}
+
 
 .login-title {
   font-size: 76px;
   font-family: Libre Bodoni;
   font-weight: 700;
   color: black;
-  padding: 30px 0;
+  padding: 20px 0 50px 0;
 
 }
 
@@ -154,12 +171,8 @@
 }
 
 .input-area {
-  padding: 20px 0;
-
+  padding: 30px 0;
 }
-
-
-
 
 .form-area {
   display: flex;
@@ -176,6 +189,7 @@
 
 .btn-primary {
   width: 100%;
+  margin-top: 40px;
 }
 
 .icon-line {
@@ -244,6 +258,14 @@
     padding: 0;
   }
 
+  .admin-title {
+    font-size: 20px;
+  }
+
+  .input-padding {
+    padding-inline: 30px;
+  }
+
   .bg-card {
     z-index: 1;
     max-height: 100%;
@@ -256,7 +278,6 @@
   }
 
   .card-login {
-    padding: 60px 20px 30px 20px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -272,6 +293,7 @@
     position: relative;
   }
 
+
   .bg-img {
     background: linear-gradient(0deg,
         rgba(0, 0, 0, 0.4) 0%,
@@ -279,9 +301,6 @@
       url(/user/login-bg.jpg) lightgray 50% / cover no-repeat;
   }
 
-  .login-section {
-    margin: 50px 0 10px 0;
-  }
 
   .logo {
     z-index: 2;
@@ -297,6 +316,7 @@
     font-size: 48px;
     display: flex;
     justify-content: center;
+    margin-bottom: 20px;
   }
 
   .input-area {
@@ -306,7 +326,7 @@
   .bg-card {
     max-height: 100%;
     max-width: 600px;
-    max-height: 600px;
+    max-height: 550px;
     background: rgba(255, 255, 255, 0.9);
   }
 
@@ -349,7 +369,11 @@
 @media (max-width: 400px) {
   .card-login {
     width: 100%;
-    height: auto;
+    height: 550px;
+  }
+
+  .login-title {
+    padding-top: 0;
   }
 
   .container-login {

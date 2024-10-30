@@ -1,6 +1,5 @@
 @import '@/styles/_variant.scss';
 
-
 .bg-img {
   background: url(/user/login-bg.jpg) center center no-repeat;
   background-size: cover;
@@ -19,14 +18,14 @@
 }
 
 .card-img {
-  background: linear-gradient(0deg,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.4) 100%),
-    url(/user/login-user.jpg) lightgray 50% / cover no-repeat;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.276) 100%), url(/user/signup.jpg) lightgray 50% / cover no-repeat;
+  background-size: 120%;
+  background-position: center top;
+  background-position: center calc(70%);
   height: 100%;
   width: 825px;
   padding: 120px 0 50px 0;
-  border-radius: 10px 0 0 10px;
+  border-radius: 0 10px 10px 0;
 }
 
 .btn-login {
@@ -104,7 +103,7 @@
   font-family: Libre Bodoni;
   font-weight: 700;
   color: black;
-  padding: 30px 0;
+  padding: 10px 0;
 
 }
 
@@ -134,6 +133,10 @@
   top: 50%;
 }
 
+.text-red {
+  color: $red-500;
+}
+
 .line-input:focus {
   border-bottom: 2px solid #000;
 }
@@ -154,18 +157,37 @@
 }
 
 .input-area {
-  padding: 20px 0;
-
+  padding: 5px 0;
 }
-
-
-
 
 .form-area {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
+.custom-select {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #000;
+  outline: none;
+  padding: 10px 0;
+  width: 100%;
+  font-size: 16px;
+}
+
+.custom-select:focus {
+  outline: none;
+  border: none;
+
+}
+
+.custom-select option {
+  background-color: #fff;
+  border: none;
+  border-radius: 2px;
+}
+
 
 .forget-ps {
   color: black;
@@ -200,7 +222,7 @@
   border-color: black;
 }
 
-.signin-rwd {
+.signup-rwd {
   display: none;
 }
 
@@ -248,7 +270,7 @@
     z-index: 1;
     max-height: 100%;
     max-width: 750px;
-    max-height: 600px;
+    max-height: 800px;
     background-color: #fff;
     border-radius: 10px;
     display: flex;
@@ -256,10 +278,20 @@
   }
 
   .card-login {
-    padding: 60px 20px 30px 20px;
+    padding: 60px 30px 30px 30px;
     display: flex;
     align-items: center;
     flex-direction: column;
+  }
+
+  .card-img {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.276) 100%), url(/user/signup.jpg) lightgray 50% / cover no-repeat;
+    background-position: center center;
+    background-position: center calc(70%);
+    height: 100%;
+    width: 825px;
+    padding: 120px 0 50px 0;
+    border-radius: 0 10px 10px 0;
   }
 
   .text {
@@ -268,6 +300,11 @@
 }
 
 @media (max-width: 750px) {
+  .card-login {
+    padding-top: 30px;
+  }
+
+
   .container-login {
     position: relative;
   }
@@ -284,7 +321,6 @@
   }
 
   .logo {
-    z-index: 2;
     position: absolute;
     top: 30px;
     left: 50%;
@@ -300,14 +336,19 @@
   }
 
   .input-area {
-    padding: 10px 0;
+    padding: 12px 0;
   }
 
   .bg-card {
     max-height: 100%;
     max-width: 600px;
-    max-height: 600px;
+    height: 1000px;
     background: rgba(255, 255, 255, 0.9);
+    padding: 20px 0 50px 0;
+  }
+
+  .form-area {
+    padding-block: 10px;
   }
 
   .card-img {
