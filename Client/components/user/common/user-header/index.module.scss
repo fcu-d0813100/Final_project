@@ -1,3 +1,6 @@
+@import '@/styles/_variant.scss';
+
+
 .header-img {
   background: url(/user/user-header.png) right center;
   background-size: cover;
@@ -9,18 +12,15 @@
   align-items: center;
 }
 
-.user-header-icon {
-  display: none;
-}
 
 @media (max-width: 768px) {
-  .user-header-icon {
-    display: block;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
+  // .user-header-icon {
+  //   display: block;
+  //   position: absolute;
+  //   top: 10px;
+  //   right: 10px;
+  //   cursor: pointer;
+  // }
 }
 
 @media (max-width: 576px) {
