@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import styles from '@/styles/teacher/teachers.module.scss'
+import styles from '@/components/teacher/common/teachers.module.scss'
 import Image from 'next/image'
 import { PiArrowRight } from 'react-icons/pi'
 
-export default function TeacherBox(props) {
+export default function TeacherBox({ blackImg, colorImg, name, type, nation, years }) {
   return (
     <>
       <a href="#" className="flex-grow-1">
@@ -16,8 +16,7 @@ export default function TeacherBox(props) {
               height={350}
               className={`${styles.TImg}`}
               alt=""
-              src="/teacher/teachers_img/T_1.jpg"
-              priority
+              src={blackImg}
             />
           </div>
         </div>
@@ -27,19 +26,18 @@ export default function TeacherBox(props) {
             width={350}
             height={350}
             className={styles.colorImg}
-            src="/teacher/teachers_img/T_1_color.jpg"
+            src={colorImg}
             alt=""
-            priority
           />
           <div className={styles.textContent}>
-            <h1 className={`h3-L ${styles.tName}`}>Gina Bettelli</h1>
+            <h1 className={`h3-L ${styles.tName}`}>{name}</h1>
             <div className={styles.information}>
               <div className="h5">Main skills</div>
               <div className={styles.tDetail}>
-                <p className="mb-5">時尚攝影妝</p>
+                <p className="mb-5">{type}</p>
                 <p className="my-2">
-                  America | 美國 <br />
-                  <span>資歷20年</span>
+                  {nation} <br />
+                  <span>資歷{years}年</span>
                 </p>
                 <div
                   className={`${styles.more} d-flex align-content-center mt-5`}
