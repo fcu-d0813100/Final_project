@@ -1,0 +1,244 @@
+@import '@/styles/_variant.scss';
+.product-page {
+    // display: flex;
+    justify-content: center;
+    padding-top: 50px;
+  
+    .row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      width: 1440px;
+    }
+
+    .thumbnail-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-sizing: border-box;
+      .thumbnail {
+        // width: 10px;
+        border: 1px solid #ddd;
+        &:hover{
+          border: 1px solid $green-500;
+          cursor: pointer;
+        }
+      }
+      .arrow-button{
+        border: none;
+        background-color: #fff;
+        color: $green-500;
+        &:hover{
+          background-color: $green-500;
+          color: #fff;
+        }
+      }
+  //     .post-nav {
+  //       background-color: #531616;
+  //       display: flex;
+  //   .nav-item {
+  //     flex: 1 1 50% !important;
+  //     background-color: #c73f3f;
+  //     // width: 700px !important; // 設定固定寬度，您可以調整這個值
+  //     text-align: center; // 讓文字在內部居中對齊
+  //   }
+    
+  //   .nav-link {
+  //     font-size: 16px;
+  //     color: #6c757d;
+  //     font-weight: bold;
+  //     padding: 8px 0;
+  //     border: none;
+  //     border-bottom: 2px solid transparent;
+      
+  //     &.active {
+  //       color: #000;
+  //       border-bottom-color: #000;
+  //     }
+
+  //     &:hover {
+  //       color: #000;
+  //       text-decoration: none;
+  //     }
+  //   }
+  // }
+    }
+
+    .nav-section-bg{
+      background-color: #d3d1d1;
+    }
+    // 導航
+    .post-nav{
+      display: flex !important;
+      // flex-direction: ;
+      .nav-item {
+        display: inline-block;
+        flex: 0 0 49.1% !important;
+        // background-color: #c73f3f;
+        // width: 700px !important; // 設定固定寬度，您可以調整這個值
+        text-align: center; // 讓文字在內部居中對齊
+      }
+      a{
+        // display: inline-block !important;
+      }
+    }
+    
+
+    .main-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      img {
+        width: 100%;
+        height: auto;
+      }
+      .zoom-lens {
+        position: absolute;
+        width: 200px;  // 放大鏡的寬度
+        height: 200px; // 放大鏡的高度
+        border: 2px solid #ddd;
+        border-radius: 50%; // 圓形放大鏡效果
+        background-repeat: no-repeat;
+        background-size: 200%; // 根據放大倍率調整
+        pointer-events: none; // 避免影響滑鼠事件
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .product-details {
+      // max-width: 500px;
+      box-sizing: border-box;
+      padding-top: 15%;
+      padding-left: 10%;
+      // display: flex;
+      justify-content: center;
+      
+      .product-details-info{
+        padding-bottom: 5%;
+        border-bottom: 1px solid $green-500;
+        p{
+          margin: 0;
+        }
+      }
+      .favorite-button {
+        background: none;  // 去掉按钮背景色
+        border: none;      // 去掉按钮边框
+        padding: 0;        // 去掉按钮内边距
+        cursor: pointer;   // 鼠标样式变为手形
+        outline: none;     // 去掉点击后的边框
+      }
+      
+
+      .price {
+        display: flex;
+        align-items: center;
+        padding-top: 5%;
+        .current-price {
+          font-size: 20px;
+          color: #b12704;
+          margin-right: 10px;
+        }
+  
+        .original-price {
+          font-size: 16px;
+          color: #999;
+          text-decoration: line-through;
+        }
+      }
+  
+      .color-selector {
+        margin: 20px 0;
+  
+        .color-options {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+  
+          .color-swatch {
+            width: 40px;
+            height: 40px;
+            box-sizing: content-box;
+            // padding: 5px;
+            border: 5px solid #ffffff;
+            box-shadow: 0 0 0 1px lightgray; /* 設置外框線，顏色和寬度可調整 */
+            &:hover{
+              box-shadow: 0 0 0 3px $green-500; /* 設置外框線，顏色和寬度可調整 */
+              cursor: pointer;
+            }
+          }
+        }
+      }
+  
+      .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 20px 0;
+        span{
+          display: inline-block;
+          width: 50px;
+          text-align: center;
+        }
+        .btnSm {
+          width: 40px;
+          height: 40px;
+          border-radius: 3px;
+          border: 1px solid black;
+          text-align: center;
+          padding: 0;
+          background: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: 0.3s;
+          svg{
+            font-size: 12px;
+          }
+          &:hover {
+            background: rgb(0, 0, 0);
+            color: white;
+          }
+        }
+      }
+      
+      
+
+      .buttons {
+        display: flex;
+        gap: 20px;
+  
+        .add-to-cart,
+        .buy-now {
+          padding: 10px 20px;
+          font-size: 16px;
+        }
+  
+        .add-to-cart {
+          background-color: #000;
+          color: #fff;
+          border: none;
+          .icon {
+            box-sizing: content-box;
+            font-size: 1.2em;
+            color: #ffffff;
+            padding: 2% 5%;
+          }
+        }
+  
+        .buy-now {
+          background-color: #fff;
+          color: #000;
+          border: 1px solid #000;
+        }
+        .icon {
+          box-sizing: content-box;
+          font-size: 1.2em;
+          color: #000000;
+          padding: 2% 5%;
+          padding-bottom: 5.2%;
+        }
+      }
+    }
+  }
+  

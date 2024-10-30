@@ -68,7 +68,7 @@ router.get('/post_wall/:id', async function (req, res, next) {
         post_author.id AS post_author_id,
         post_author.nickname AS post_author_nickname,
         GROUP_CONCAT(DISTINCT post_image.pic) AS post_imgs,
-        GROUP_CONCAT(DISTINCT post_tag.id) AS tags,
+        GROUP_CONCAT(DISTINCT post_tag.name) AS tags,
         COUNT(DISTINCT post_like.id) AS like_count,
         COUNT(DISTINCT post_save.id) AS save_count,
         COUNT(DISTINCT CommentHierarchy.id) AS comment_count,
@@ -94,7 +94,7 @@ router.get('/post_wall/:id', async function (req, res, next) {
     LEFT JOIN
         CommentHierarchy ON post.id = CommentHierarchy.post_id
     WHERE
-        post.id = ?
+        post.id = ${req.params.id}
     GROUP BY
         post.id,
         post_author.id,
@@ -192,7 +192,15 @@ router.get('/post_publish/:user_id/:post_id', async function (req, res, next) {
   res.json(result)
 })
 
-// 新增 post
-// 更新 特定ID post
-// 刪除 特定ID delete
+// create post  put
+// update post  put
+// delete 特定ID delete
+
+// create comment
+// update comment
+// delete comment
+
+// search 熱門排序
+// search 最新排序
+// search 指定關鍵字
 export default router
