@@ -30,6 +30,12 @@
   }
 }
 
+.btn-danger:hover {
+  background-color: #6f2619;
+  border: #6f2619 solid 1px;
+  transition: 0.3s;
+}
+
 .home-bestSeller {
   position: relative;
   background-color: #626553;
