@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { PiCaretDown } from 'react-icons/pi'
@@ -9,6 +8,7 @@ export default function Dropdown({
   items = [], // 將 item 改為一個數組
 }) {
   // 使用 useEffect 確保 Bootstrap JavaScript 僅在客戶端加載
+  //
   useEffect(() => {
     typeof document !== undefined
       ? require('bootstrap/dist/js/bootstrap.bundle.min.js')

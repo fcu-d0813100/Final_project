@@ -1,6 +1,6 @@
 .h3 {
   font-size: 32px;
-  font-family: 'Noto Sans';
+  font-family: "Noto Sans";
   font-weight: 500;
   margin: 0;
   word-wrap: break-word;
@@ -8,7 +8,7 @@
 
 .h1-L {
   font-size: 64px;
-  font-family: 'Libre Bodoni';
+  font-family: "Libre Bodoni";
   font-style: italic;
   font-weight: 700;
   margin: 0;
@@ -100,7 +100,7 @@
   width: 86%;
   height: auto;
   -o-object-fit: cover;
-  object-fit: cover;
+     object-fit: cover;
 }
 
 .btn-mobile {
@@ -108,18 +108,18 @@
 }
 
 /* Media Queries */
-@media (max-width: 1919px) {
+@media (max-width: 1921px) {
   .home-bestSeller .bestSeller-brand {
-    top: 61%;
+    top: 75%;
   }
 }
 @media (max-width: 1440px) {
   .home-bestSeller .bestSeller-brand {
-    top: 470px;
-    font-size: 180px !important;
+    top: 60%;
+    font-size: 150px;
   }
   .home-bestSeller .bestSeller-slogan {
-    top: 20% !important;
+    top: 18% !important;
   }
   .home-bestSeller .bestSeller-card {
     top: 30%;
@@ -143,18 +143,21 @@
     width: 86%;
     height: auto;
     -o-object-fit: cover;
-    object-fit: cover;
+       object-fit: cover;
   }
 }
 @media (max-width: 1200px) {
+  .home-bestSeller {
+    height: 698px;
+  }
   .home-bestSeller .bestSeller-bgi-pc {
     width: 86%;
-    height: 689px;
+    height: 697px;
     -o-object-fit: cover;
-    object-fit: cover;
+       object-fit: cover;
   }
   .home-bestSeller .bestSeller-brand {
-    top: 520px;
+    top: 500px;
     font-size: 120px !important;
   }
   .home-bestSeller .bestSeller-slogan {
@@ -180,12 +183,47 @@
     height: 175px !important;
   }
 }
+@media (max-width: 992px) {
+  .home-bestSeller {
+    height: 698px;
+  }
+  .home-bestSeller .bestSeller-brand {
+    top: 500px;
+    font-size: 100px !important;
+  }
+  .home-bestSeller .bestSeller-slogan {
+    top: 18% !important;
+  }
+  .home-bestSeller .bestSeller-card {
+    top: 35%;
+    right: 1% !important;
+  }
+  .home-bestSeller .bestSeller-card button {
+    width: 175px !important;
+  }
+  .home-bestSeller .bestSeller-card .card1,
+  .home-bestSeller .bestSeller-card .card2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px !important;
+  }
+  .home-bestSeller .bestSeller-card .card1 img,
+  .home-bestSeller .bestSeller-card .card2 img {
+    width: 175px !important;
+    height: 175px !important;
+  }
+}
 @media (max-width: 768px) {
+  .btn-mobile {
+    display: inline-block;
+    width: 100%;
+  }
   .home-bestSeller .bestSeller-bgi-pc {
     width: 86%;
-    height: 689px;
+    height: 700px;
     -o-object-fit: cover;
-    object-fit: cover;
+       object-fit: cover;
   }
   .home-bestSeller .bestSeller-brand {
     top: 520px;
@@ -198,7 +236,6 @@
     font-size: 56px;
     font-weight: 600;
     border-bottom: 3px solid #8a8a8a;
-    position: absolute;
     color: #fff;
   }
   .home-bestSeller .bestSeller-slogan {
@@ -213,92 +250,81 @@
     width: 175px !important;
   }
   .home-bestSeller .bestSeller-card .card1 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 15px !important;
   }
   .home-bestSeller .bestSeller-card .card1 img {
     width: 200px !important;
     height: 200px !important;
   }
-  .home-bestSeller .bestSeller-card .card2 img,
   .home-bestSeller .bestSeller-card .card2 {
     display: none;
-  }
-  .btn-mobile {
-    display: inline-block;
-    width: 100%;
   }
   .home-bestSeller .bestSeller-card .btn-pc {
     display: none;
   }
 }
 @media (max-width: 576px) {
+  .btn-mobile {
+    display: inline-block;
+    width: 100%;
+  }
   .home-bestSeller .bestSeller-bgi-pc {
     width: 86%;
-    height: 689px;
+    height: 700px;
     -o-object-fit: cover;
-    object-fit: cover;
+       object-fit: cover;
   }
   .home-bestSeller .bestSeller-brand {
-    top: 540px;
-    font-size: 100px !important;
+    top: 530px;
+    font-size: 120px !important;
   }
   .home-bestSeller .bestSeller-text {
-    width: 48%;
-    left: 50%;
+    width: 60%;
+    left: 1%;
     top: 0%;
     font-size: 48px;
     font-weight: 600;
     border-bottom: 3px solid #8a8a8a;
-    position: absolute;
     color: #fff;
   }
   .home-bestSeller .bestSeller-slogan {
-    font-size: 20px;
+    font-size: 24px;
     top: 15% !important;
+    left: 1%;
   }
   .home-bestSeller .bestSeller-card {
     top: 30%;
-    right: 1% !important;
+    right: 10% !important;
   }
   .home-bestSeller .bestSeller-card button {
     width: 175px !important;
   }
   .home-bestSeller .bestSeller-card .card1 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 15px !important;
   }
   .home-bestSeller .bestSeller-card .card1 img {
     width: 200px !important;
     height: 200px !important;
   }
-
-  .btn-mobile {
-    display: inline-block;
-    width: 100%;
+  .home-bestSeller .bestSeller-card .card2 {
+    display: none;
   }
-
-  .btn-mobile {
-    display: inline-block;
-    width: 100%;
+  .home-bestSeller .bestSeller-card .btn-pc {
+    display: none;
   }
 }
 @media (max-width: 391px) {
   .btn-mobile {
     display: inline-block;
-    width: 100%;
+    width: 390px;
   }
   .home-bestSeller {
     height: 438px;
   }
   .home-bestSeller .bestSeller-brand {
     position: absolute;
-    top: 85% !important;
-    font-size: 50px !important;
+    top: 83% !important;
+    font-size: 4rem !important;
   }
   .home-bestSeller .bestSeller-text {
     width: 80%;
@@ -323,7 +349,7 @@
     display: none;
   }
   .home-bestSeller .bestSeller-card .card1 {
-    height: 241px !important;
+    height: 241px;
     background-color: rgba(255, 255, 255, 0.2);
     padding: 15px;
     margin-right: 0;
@@ -334,8 +360,8 @@
   .home-bestSeller .bestSeller-card .card1 img {
     width: 132px !important;
     height: 134px !important;
-    padding-top: 10px;
-    margin-bottom: 34px;
+    padding-top: 10px !important;
+    margin-bottom: 34px !important;
   }
   .home-bestSeller .bestSeller-card .card2 {
     display: none;
@@ -347,11 +373,11 @@
     width: 390px;
     height: 100%;
     -o-object-fit: cover;
-    object-fit: cover;
+       object-fit: cover;
   }
 }
 @media (min-width: 391px) {
   .bestSeller-bgi-mobile {
     display: none;
   }
-} /*# sourceMappingURL=index.module.css.map */
+}/*# sourceMappingURL=index.module.css.map */
