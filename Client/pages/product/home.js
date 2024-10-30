@@ -1,6 +1,6 @@
 // pages/index.jsx
 import React from 'react';
-import ProductContainer from '../../components/product/homeproductlist.js';
+import ProductContainer from '@/components/product/homeproductlist.js';
 
 const products = [
   {

@@ -1,0 +1,138 @@
+@import '@/styles/_variant.scss';
+
+.section01 {
+  .bannerImg {
+    height: 700px;
+    width: 100%;
+    position: relative;
+
+    .bn {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bnInformation {
+      color: white;
+      position: absolute;
+      left: 40px;
+      top: 40px;
+      p {
+        line-height: 2rem;
+        padding: 15px;
+      }
+    }
+
+    .whiteRec {
+      background-color: rgba(255, 255, 255, 0.2);
+      height: 55px;
+      width: 25%;
+      position: absolute;
+      bottom: 180px;
+      left: 0px;
+    }
+
+    .signImg {
+      height: 280px;
+      width: auto;
+      position: absolute;
+      right: 0px;
+      top: 130px;
+    }
+  }
+}
+
+// -------------------------------
+
+.section02 {
+  .textContent {
+    display: flex;
+    margin-block: 80px;
+
+    > div {
+      margin-inline: 40px;
+      margin-block: 20px;
+    }
+  }
+
+  h4 {
+    padding-bottom: 30px;
+  }
+
+  p {
+    line-height: 2rem;
+  }
+}
+// -------------------------------
+
+.section03 {
+  background: #f4f4f4;
+  padding: 50px;
+  .tWorkshopTitle {
+    margin-top: 30px;
+    padding-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $green-500;
+    h4 {
+      color: $gray-200;
+    }
+  }
+
+  .selectBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    height: 65px;
+    border-radius: 10px;
+
+    .searchInput {
+      height: 33px;
+      background-color: rgb(255, 255, 255);
+      border: 1.5px solid $green-500;
+      border-radius: 20px;
+      color: $green-500;
+      padding: 15px;
+      margin-left: 20px;
+    }
+    .searchInput:focus {
+      outline: none;
+      background-color: $gray-100;
+    }
+
+    .dropdownTitle {
+      height: 28px;
+      width: 120px;
+      padding-inline: 10px;
+      text-decoration: none;
+      color: rgb(0, 0, 0);
+      border-bottom: 1px solid rgb(0, 0, 0);
+
+      .ph {
+        font-size: 20px;
+      }
+    }
+
+    .dropdownMenu {
+      transform: rotateX(0deg);
+      background: rgba(255, 255, 255, 0.9);
+
+      border-radius: 0;
+      transition: 0.5s;
+      opacity: 1;
+      margin-block: 5px;
+      --bs-dropdown-link-color: #6b6b6b;
+      --bs-dropdown-link-active-color: #626553;
+      --bs-dropdown-link-active-bg: white;
+      --bs-dropdown-link-hover-color: #ededed;
+      --bs-dropdown-link-hover-bg: #797d66;
+      --bs-dropdown-min-width: 9rem;
+      --bs-dropdown-border-color: white;
+    }
+  }
+  .tOwnWorkshops {
+    padding-inline: 52px;
+  }
+}

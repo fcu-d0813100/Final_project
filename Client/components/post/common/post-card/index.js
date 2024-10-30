@@ -16,7 +16,7 @@ import {
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma';
 
 import styles from './index.module.scss';
-import ReplyInfo from './reply-info';
+import ReplyInfo from '../reply-info';
 export default function PostCard1(props) {
   //有多icon 狀態初始化為物件
   // const [hover, setHover] = useState({
