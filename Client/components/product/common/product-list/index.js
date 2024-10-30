@@ -1,36 +1,24 @@
 // components/ProductPage.js
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import Swiper from 'swiper/bundle'
+// import Swiper from 'swiper/bundle'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/bundle'
 import 'bootstrap/dist/css/bootstrap.min.css'
+<<<<<<< HEAD
+=======
+import { FaChevronDown } from 'react-icons/fa'
+import ProductCarousel from './ProductCarousel' // 引入新的轮播图组件
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
+>>>>>>> dev_zhei
 import Image from 'next/image'
 
 const ProductPage = () => {
-  useEffect(() => {
-    new Swiper('.product-myswiper-w', {
-      spaceBetween: 20,
-      centeredSlides: true,
-      //   autoplay: {
-      //     delay: 2500,
-      //     disableOnInteraction: false,
-      //   },
-      pagination: {
-        el: '.product-swiperpagination-w',
-        clickable: true,
-      },
-      navigation: {
-        nextEl: '.product-swiperbuttonnext-w',
-        prevEl: '.product-swiperbuttonprev-w',
-      },
-    })
-  }, [])
-
   const products = [
     {
+      id: 1,
       brand: 'YSL',
       name: '時尚印記唇釉',
       originalPrice: 2080,
@@ -39,6 +27,7 @@ const ProductPage = () => {
       color: '#e3a790',
     },
     {
+      id: 2,
       brand: 'NARS',
       name: '唇膏',
       originalPrice: 1900,
@@ -47,6 +36,7 @@ const ProductPage = () => {
       color: '#732111',
     },
     {
+      id: 3,
       brand: 'LANCOME',
       name: '絕對完美柔霧唇膏',
       originalPrice: 2500,
@@ -56,31 +46,43 @@ const ProductPage = () => {
     },
   ]
 
+  // 狀態管理價格和品牌下拉菜單是否顯示
+  const [isPriceDropdownOpen, setIsPriceDropdownOpen] = useState(false)
+  const [isBrandDropdownOpen, setIsBrandDropdownOpen] = useState(false)
+  const [selectedPrice, setSelectedPrice] = useState('價格')
+  const [selectedBrand, setSelectedBrand] = useState('品牌')
+
+  const handlePriceClick = (value) => {
+    setSelectedPrice(value)
+    setIsPriceDropdownOpen(false) // 選中後關閉菜單
+  }
+
+  const handleBrandClick = (value) => {
+    setSelectedBrand(value)
+    setIsBrandDropdownOpen(false) // 選中後關閉菜單
+  }
+
+  // 狀態管理收藏的商品
+  const [favoriteProducts, setFavoriteProducts] = useState({})
+
+  const handleFavoriteClick = (id) => {
+    setFavoriteProducts((prevFavorites) => ({
+      ...prevFavorites,
+      [id]: !prevFavorites[id],
+    }))
+  }
+
   return (
-    <div className="container">
+    <div className={styles['container']}>
       {/* 頁面標題 */}
       <header>
-        <div className="hamburger-menu">
+        <div className={styles['hamburger-menu']}>
           <i className="fa-solid fa-bars"></i>
         </div>
       </header>
 
       {/* 輪播圖 */}
-      {/* <div className="swiper-container product-myswiper-w">
-        <div className={`$(styles['swiper-wrapper']) swiper-wrapper`}>
-          {products.map((product, index) => (
-            <div
-              className={`$(styles['swiper-slide']) swiper-slide`}
-              key={index}
-            >
-              <img src={'/product/S__18604034.jpg'} alt={product.name} />
-            </div>
-          ))}
-        </div>
-        <div className="swiper-button-next product-swiperbuttonnext-w"></div>
-        <div className="swiper-button-prev product-swiperbuttonprev-w"></div>
-        <div className="swiper-pagination product-swiperpagination-w"></div>
-      </div> */}
+      <ProductCarousel />
 
       <div
         className={`${styles['product-container-w']} ${styles['container-sm']} container`}
@@ -141,7 +143,6 @@ const ProductPage = () => {
                   </a>
                 </li>
               </ul>
-
               {/* 價格選單 */}
               <div className={`${styles['product-selectwrapper-w']} ms-3`}>
                 <div
@@ -150,7 +151,7 @@ const ProductPage = () => {
                 >
                   <div className={styles['product-selecttrigger-w']}>
                     <span className="p">價格</span>
-                    <i className="fa-solid fa-chevron-down"></i>
+                    <FaChevronDown size={12} />
                   </div>
                   <div className={`${styles['product-selectoptions-w']} p`}>
                     <div
@@ -183,7 +184,7 @@ const ProductPage = () => {
                 >
                   <div className={styles['product-selecttrigger-w']}>
                     <span className="p">品牌</span>
-                    <i className="fa-solid fa-chevron-down"></i>
+                    <FaChevronDown size={12} />
                   </div>
                   <div className={`${styles['product-selectoptions-w']} p`}>
                     <div
@@ -238,17 +239,14 @@ const ProductPage = () => {
               </div>
 
               <div className="d-flex col-md-6 col-lg-5 justify-content-md-end pb-3">
-                {/* 商品排序 */}
                 <div className={`${styles['product-selectwrapper-w']} ms-3`}>
                   <div
                     className={styles['product-select-w']}
                     id="product-selectpage-w"
                   >
                     <div className={styles['product-selecttrigger-w']}>
-                      <span className="p">每頁顯示20個</span>
-                      <i>
-                        <FontAwesomeIcon icon={faChevronDown} />
-                      </i>
+                      <span className="p">商品排序</span>
+                      <FaChevronDown size={15} />
                     </div>
                     <div
                       className={`${styles['product-selectoptions-w']} ms-3`}
@@ -257,25 +255,19 @@ const ProductPage = () => {
                         className={styles['product-selectoption-w']}
                         data-value="10"
                       >
-                        每頁顯示20個
+                        價格: 由低到高
                       </div>
                       <div
                         className={styles['product-selectoption-w']}
                         data-value="20"
                       >
-                        每頁顯示40個
-                      </div>
-                      <div
-                        className={styles['product-selectoption-w']}
-                        data-value="30"
-                      >
-                        每頁顯示60個
+                        價格: 由高到低
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* 每頁顯示數量 */}
+                {/* 商品排序 */}
                 <div className={`${styles['product-selectwrapper-w']} ms-3`}>
                   <div
                     className={styles['product-select-w']}
@@ -283,9 +275,7 @@ const ProductPage = () => {
                   >
                     <div className={styles['product-selecttrigger-w']}>
                       <span className="p">每頁顯示20個</span>
-                      <i>
-                        <FontAwesomeIcon icon={faChevronDown} />
-                      </i>
+                      <FaChevronDown size={15} />
                     </div>
                     <div
                       className={`${styles['product-selectoptions-w']} ms-3`}
@@ -316,15 +306,15 @@ const ProductPage = () => {
 
             {/* 商品列表商品區 */}
             <div
-              className={`${styles['row']} ${styles['product-card-container']} justify-content-start`} // 新增 `justify-content-start` 確保卡片對齊方式
+              className={`${styles['row']} ${styles['product-card-container']}`}
               id="product-card-container"
             >
-              {Array.from({ length: 12 }).map((_, index) => {
-                const product = products[index % products.length] // 重複使用已聲明的商品
+              {Array.from({ length: 20 }).map((_, index) => {
+                const product = products[index % products.length]
                 return (
                   <div
                     key={index}
-                    className={`${styles['product-card-w']} col-6 col-md-4 col-lg-3 text-center mb-4`} // 添加 `mb-4` 調整卡片之間的間距
+                    className={`${styles['product-card-w']} col-6 col-md-4 col-lg-3 text-center mb-5`}
                   >
                     <div className={styles['info']}>
                       <div
@@ -338,10 +328,27 @@ const ProductPage = () => {
                         SALE
                       </div>
                     </div>
-                    <i className="fa-regular fa-heart"></i>
+                    {/* 愛心收藏按鈕 */}
+                    <button
+                      onClick={() => handleFavoriteClick(product.id)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                      }}
+                    >
+                      {favoriteProducts[product.id] ? (
+                        <FaHeart color="#973929" size={24} />
+                      ) : (
+                        <FaRegHeart size={24} />
+                      )}
+                    </button>
                     <Image
-                      width={200} // 設置適當的寬度
-                      height={200} // 設置適當的高度
+                      width={200}
+                      height={200}
                       src={product.imageUrl}
                       className={styles['product-cardimg-w']}
                       alt={product.name}
@@ -355,14 +362,13 @@ const ProductPage = () => {
                       </h5>
                       <span
                         className={`${styles['product-price-w']} h6`}
-                        style={{ color: product.color }}
+                        style={{ color: '#973929' }}
                       >
                         <del style={{ color: '#90957a' }} className="h6-del">
                           NT${product.originalPrice}
                         </del>{' '}
                         NT${product.salePrice}
                       </span>
-                      <br />
                       <div className={styles['product-colorsquares-w']}>
                         <div
                           className={styles['product-colorbox-w']}

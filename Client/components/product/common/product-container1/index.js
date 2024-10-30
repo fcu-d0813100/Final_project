@@ -1,11 +1,15 @@
-// components/CardCarousel.js
-import React from 'react'
+import React, { useState } from 'react'
 import Slider from 'react-slick'
+<<<<<<< HEAD
 import styles from './index.module.scss' // 引入你的 SCSS 模組
+=======
+import styles from './index.module.scss'
+import cardStyles from './CardCarousel.module.scss'
+import { PiHeartStraight, PiHeartStraightFill } from 'react-icons/pi'
+import Image from 'next/image'
+>>>>>>> dev_zhei
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import cardStyles from './CardCarousel.module.scss' // 引入 CSS 模組
-import Image from 'next/image'
 
 // 自定義上一頁箭頭
 const PrevArrow = ({ onClick }) => (
@@ -44,147 +48,52 @@ const NextArrow = ({ onClick }) => (
 )
 
 const CardCarousel = ({ products }) => {
+  const [favoriteProducts, setFavoriteProducts] = useState({})
+
+  const handleFavoriteClick = (id) => {
+    setFavoriteProducts((prevFavorites) => ({
+      ...prevFavorites,
+      [id]: !prevFavorites[id],
+    }))
+  }
+
   const settings = {
-    infinite: true, // 無限滾動
-    speed: 500, // 切換速度（毫秒）
-    slidesToShow: 4, // 每次顯示4個卡片
-    slidesToScroll: 4, // 每次滾動4個卡片
-    autoplay: true, // 啟用自動播放
-    autoplaySpeed: 2200, // 自動播放速度（毫秒）
-    pauseOnHover: true, // 滑鼠懸停時暫停自動播放
-    nextArrow: <NextArrow />, // 自定義下一頁箭頭
-    prevArrow: <PrevArrow />, // 自定義上一頁箭頭
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: true,
+    autoplaySpeed: 2200,
+    pauseOnHover: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
-      {
-        breakpoint: 1440, // 小於 1440px 時顯示 4 個卡片
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-        },
-      },
-      {
-        breakpoint: 1200, // 小於 1200px 時顯示 3 個卡片
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 992, // 小於 992px 時顯示 2 個卡片
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 768, // 小於 768px 時顯示 1 個卡片
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 576, // 小於 576px 時顯示 1 個卡片
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 390, // 小於 390px 時顯示 1 個卡片
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
+      { breakpoint: 1440, settings: { slidesToShow: 4, slidesToScroll: 4 } },
+      { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+      { breakpoint: 992, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+      { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+      { breakpoint: 576, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+      { breakpoint: 390, settings: { slidesToShow: 2, slidesToScroll: 2 } },
     ],
   }
 
-  // const product = [
-  //   {
-  //     brand: 'YSL',
-  //     name: '時尚印記啞光唇釉',
-  //     originalPrice: 2080,
-  //     salePrice: 1580,
-  //     imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-  //     color: '#e3a790',
-  //   },
-  //   {
-  //     brand: 'NARS',
-  //     name: '唇膏',
-  //     originalPrice: 1900,
-  //     salePrice: 1400,
-  //     imageUrl: '/product/NARS_LS01_M_133.webp',
-  //     color: '#732111',
-  //   },
-  //   {
-  //     brand: 'LANCOME',
-  //     name: '絕對完美柔霧唇膏',
-  //     originalPrice: 2500,
-  //     salePrice: 2200,
-  //     imageUrl: '/product/LANCOME_LS01_M_196.webp',
-  //     color: '#8f352d',
-  //   },
-  //   {
-  //     brand: 'YSL',
-  //     name: '時尚印記啞光唇釉',
-  //     originalPrice: 2080,
-  //     salePrice: 1580,
-  //     imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-  //     color: '#e3a790',
-  //   },
-  //   {
-  //     brand: 'YSL',
-  //     name: '時尚印記啞光唇釉',
-  //     originalPrice: 2080,
-  //     salePrice: 1580,
-  //     imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-  //     color: '#e3a790',
-  //   },
-  //   {
-  //     brand: 'NARS',
-  //     name: '唇膏',
-  //     originalPrice: 1900,
-  //     salePrice: 1400,
-  //     imageUrl: '/product/NARS_LS01_M_133.webp',
-  //     color: '#732111',
-  //   },
-  //   {
-  //     brand: 'LANCOME',
-  //     name: '絕對完美柔霧唇膏',
-  //     originalPrice: 2500,
-  //     salePrice: 2200,
-  //     imageUrl: '/product/LANCOME_LS01_M_196.webp',
-  //     color: '#8f352d',
-  //   },
-  //   {
-  //     brand: 'YSL',
-  //     name: '時尚印記啞光唇釉',
-  //     originalPrice: 2080,
-  //     salePrice: 1580,
-  //     imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-  //     color: '#e3a790',
-  //   },
-  //   // 可以繼續添加其他商品
-  // ]
-
   return (
     <div
-      className={`${styles['homepage-products-container1']} ${cardStyles.container} `}
+      className={`${styles['homepage-products-container1']} ${cardStyles.container}`}
     >
       <div className={styles['row']}>
         <div className={styles['product-title1']}>
           <span className={`${styles['new-arrivalc']} h3`}>新品上市</span>
           <span className={`${styles['new-arrival']} h2-L`}>New Arrival</span>
         </div>
-        {/* 使用 Slider 元件來包裹你的產品列表 */}
+
         <Slider
           {...settings}
           className={`${styles['product-card-container1']} ${cardStyles['d-flex']}`}
         >
-          {products.map((product, index) => (
+          {products.map((product) => (
             <div
-              key={index}
+              key={product.id}
               className={`${styles['product-card-w']} col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 text-center`}
             >
               <div className={styles['info']}>
@@ -197,15 +106,32 @@ const CardCarousel = ({ products }) => {
                   SALE
                 </div>
                 <div className={styles['product-discount-w']}>
-                  89<span>折</span>
+                  95<span>折</span>
                 </div>
               </div>
-              <i className="fa-regular fa-heart">
-                <FontAwesomeIcon icon={faRegularHeart} />
-              </i>
+
+              {/* 愛心收藏按鈕 */}
+              <button
+                onClick={() => handleFavoriteClick(product.id)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                }}
+              >
+                {favoriteProducts[product.id] ? (
+                  <PiHeartStraightFill color="#973929" size={24} />
+                ) : (
+                  <PiHeartStraight size={24} />
+                )}
+              </button>
+
               <Image
-                width={200} // 設置適當的寬度
-                height={200} // 設置適當的高度
+                width={200}
+                height={200}
                 src={product.imageUrl}
                 className={styles['product-cardimg-w']}
                 alt={product.name}
