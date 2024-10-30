@@ -45,43 +45,54 @@ export default function Discount() {
           </div>
           <div className='carousel-inner'>
             <div className="carousel-item active">
-              <Image src="/discount/phone-size/beautique.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block "
-                alt="Beautique 優惠" />
+              <Link className={styles.discount} href="/discount/nars2">
+                <Image src="/discount/phone-size/beautique.svg"
+                  width={390}
+                  height={442}
+                  style={{ width: '100%', height: 'auto' }}
+                  className="d-block "
+                  alt="Beautique 優惠" />
+              </Link>
+            </div>
+
+            <div className="carousel-item">
+              <Link className={styles.discount} href="/discount/nars2">
+                <Image src="/discount/phone-size/nars.svg"
+                  width={390}
+                  height={442}
+                  style={{ width: '100%', height: 'auto' }}
+                  className="d-block "
+                  alt="NARS 優惠" />
+              </Link>
             </div>
             <div className="carousel-item">
-              <Image src="/discount/phone-size/nars.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block "
-                alt="NARS 優惠" />
+              <Link className={styles.discount} href="/discount/nars">
+                <Image src="/discount/phone-size/nars1.svg"
+                  width={390} height={442}
+                  style={{ width: '100%', height: 'auto' }}
+                  className="d-block "
+                  alt="NARS 優惠 1" />
+              </Link>
             </div>
             <div className="carousel-item">
-              <Image src="/discount/phone-size/nars1.svg"
-                width={390} height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block "
-                alt="NARS 優惠 1" />
+              <Link className={styles.discount} href="/discount/ysl">
+                <Image src="/discount/phone-size/ysl.svg"
+                  width={390}
+                  height={442}
+                  style={{ width: '100%', height: 'auto' }}
+                  className="d-block"
+                  alt="YSL 優惠" />
+              </Link>
             </div>
             <div className="carousel-item">
-              <Image src="/discount/phone-size/ysl.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block"
-                alt="YSL 優惠" />
-            </div>
-            <div className="carousel-item">
-              <Image src="/discount/phone-size/bb.svg"
-                width={390}
-                height={442}
-                style={{ width: '100%', height: 'auto' }}
-                className="d-block"
-                alt="BB 優惠" />
+              <Link className={styles.discount} href="/discount/bb">
+                <Image src="/discount/phone-size/bb.svg"
+                  width={390}
+                  height={442}
+                  style={{ width: '100%', height: 'auto' }}
+                  className="d-block"
+                  alt="BB 優惠" />
+              </Link>
             </div>
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
