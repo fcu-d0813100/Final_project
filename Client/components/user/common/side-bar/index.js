@@ -99,7 +99,7 @@ export default function Index() {
   };
 
   return (
-    <Navbar expand="lg" className={styles['nav']}>
+    <Navbar expand="sm" className={styles['nav']}>
       <Navbar.Toggle
         aria-controls="basic-navbar-nav"
         className={styles['toggle-btn']}
@@ -118,7 +118,7 @@ export default function Index() {
                 : linkState[link.key].hover
                   ? styles['hover']
                   : ''
-                }`}
+                } h6`}
               onMouseEnter={() => handleMouseEnter(link.key)}
               onMouseLeave={() => handleMouseLeave(link.key)}
             >
@@ -126,7 +126,7 @@ export default function Index() {
               {link.label}
             </Nav.Link>
           ))}
-          <button className="btn-logout">登出</button>
+          <button className="btn-logout h6">登出</button>
 
         </Nav>
       </Navbar.Collapse>
