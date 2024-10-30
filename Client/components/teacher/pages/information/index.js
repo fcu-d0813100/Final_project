@@ -13,8 +13,8 @@ export default function TeacherInformation(props) {
         </div>
       </div>
 
-      <div className="d-flex">
-        <div className={styles.aside}></div>
+      <div>
+        <div className={styles.aside}>1</div>
 
         <div className={styles.main}>
           <div className={styles.dashboardTitle}>
@@ -91,6 +91,37 @@ export default function TeacherInformation(props) {
           </div>
 
           <hr className="opacity-75" />
+
+          <div className={styles.moreInformation}>
+            <div className={`d-flex row-cols-3 p-5 ${styles.moretextArea}`}>
+              <div className="px-5">
+                <h4 className="h4">我的 Slogan</h4>
+                <p className="p">
+                  “我喜歡贈送口紅。
+                  口紅如此豐富多變，一旦你用過了它們，你就離不開了！”
+                </p>
+              </div>
+              <div className="px-5">
+                <h4 className="h4">關於我 About me</h4>
+                <p className="p">
+                  現任職彩妝藝術總監。身為一個表演者，我喜歡後台的能量和創造力，但無論在哪裡
+                  -
+                  在世界各地教授彩妝大師班，在全球舉行活動或參與密集的時裝週活動
+                  - 品牌的多樣性仍然是我持續的靈感來源。
+                </p>
+              </div>
+              <div className="px-5">
+                <h4 className="h4">經歷 Experience</h4>
+                <p className="p">
+                  擔任 M.A.C 彩妝藝術總監 17年與 Grace Jones 一起合作，並由
+                  Jean-Paul Goude 負責拍攝V雜誌封面。
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="d-flex">
+            <button className="btn-primary h6 ms-auto">編輯</button>
+          </div>
         </div>
       </div>
     </>
