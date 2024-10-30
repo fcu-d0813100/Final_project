@@ -11,9 +11,12 @@ export default function PostWall(props) {
   const [wallCard, setWallCard] = useState([])
   useEffect(() => {
     async function getWallCard() {
-      let response = await axios.get(`http://localhost:3005/api/post`, {
-        withCredentials: true,
-      })
+      let response = await axios.get(
+        `http://localhost:3005/api/post/post_wall`,
+        {
+          withCredentials: true,
+        }
+      )
       setWallCard(response.data.data)
     }
     getWallCard()
@@ -60,10 +63,10 @@ export default function PostWall(props) {
             {wallCard.map((post) => (
               <WallCard
                 key={post.id}
-                imageSrc={`/post/${post.post_img}`} // 或根据 post 数据动态传递，如 post.imageSrc
+                imageSrc={`/post/${post.post_img}`}
                 title={post.title}
                 username={post.nickname}
-                avatarSrc={`/user/${post.user_img}` || '/post/user-img.png'} // 动态的用户头像
+                avatarSrc={`/user/${post.user_img}` || '/post/user-img.png'}
                 likeCount={post.like_count}
               />
             ))}
