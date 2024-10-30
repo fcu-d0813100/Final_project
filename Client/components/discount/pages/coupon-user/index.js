@@ -8,6 +8,8 @@ import Modal from '@/components/discount/common/mymodal';
 export default function UserCoupon() {
     const [modalShow, setModalShow] = useState(false);
     const [couponCode, setCouponCode] = useState('');
+    
+
 
     const coupons = [
         {
@@ -64,13 +66,13 @@ export default function UserCoupon() {
                         </div>
                         <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
                             {coupons.map((coupon, index) => (
-                                <Coupon 
+                                <Coupon
                                     key={index}
-                                    img={coupon.img} 
-                                    title={coupon.title} 
-                                    discount={coupon.discount} 
-                                    condition={coupon.condition} 
-                                    expiration={coupon.expiration} 
+                                    img={coupon.img}
+                                    title={coupon.title}
+                                    discount={coupon.discount}
+                                    condition={coupon.condition}
+                                    expiration={coupon.expiration}
                                 />
                             ))}
                         </div>

@@ -1,0 +1,69 @@
+.container {
+  width: 1440px;
+  max-width: 95%;
+  margin: 0 auto;
+}
+.container .prevArrow {
+  position: absolute;
+  top: 45%;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1;
+}
+.container .nextArrow {
+  position: absolute;
+  top: 45%;
+  right: 0;
+  transform: translateY(-50%);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+@media (max-width: 1440px) {
+  .product-card-w .container {
+    max-width: 1440px;
+  }
+  .product-card-w .product-card-w {
+    width: 100%;
+  }
+}
+@media (max-width: 1200px) {
+  .product-card-w .container {
+    max-width: 1140px;
+  }
+  .product-card-w .product-card-w {
+    width: 31%;
+  }
+}
+@media (max-width: 992px) {
+  .product-card-w .container {
+    max-width: 960px;
+  }
+  .product-card-w .product-card-w {
+    width: 48%;
+  }
+}
+@media (max-width: 768px) {
+  .product-card-w .container {
+    max-width: 608px;
+  }
+  .product-card-w .product-card-w {
+    width: 100%;
+  }
+}
+@media (max-width: 576px) {
+  .product-card-w .container {
+    max-width: 540px;
+  }
+  .product-card-w .product-card-w {
+    width: 10% !important;
+  }
+}
+@media (max-width: 390px) {
+  .product-card-w .product-card-w {
+    width: 0%;
+  }
+}/*# sourceMappingURL=CardCarousel.module.css.map */

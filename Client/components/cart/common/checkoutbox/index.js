@@ -1,13 +1,11 @@
 import React from 'react'
 import style from './checkout-box.module.scss'
+import DiscountBox from '../discountbox'
 export default function CheckoutBox({ pTotal, wTotal }) {
   return (
     <>
       {/* 優惠券 */}
-      <div className={style['checkout_discount']}>
-        <span>優惠券</span>
-        <span className="ps">輸入享有折扣 &gt;</span>
-      </div>
+      <DiscountBox />
 
       {/* 總計盒子 */}
       <div className={style['checkout_total']}>

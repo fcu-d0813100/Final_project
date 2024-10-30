@@ -29,6 +29,7 @@ const products = [
     color: '#8f352d',
   },
   {
+    id: 1,
     brand: 'YSL',
     name: '時尚印記啞光唇釉',
     originalPrice: 2080,
@@ -37,6 +38,7 @@ const products = [
     color: '#e3a790',
   },
   {
+    id: 2,
     brand: 'YSL',
     name: '時尚印記啞光唇釉',
     originalPrice: 2080,
@@ -45,6 +47,7 @@ const products = [
     color: '#e3a790',
   },
   {
+    id: 3,
     brand: 'NARS',
     name: '唇膏',
     originalPrice: 1900,
@@ -53,6 +56,7 @@ const products = [
     color: '#732111',
   },
   {
+    id: 4,
     brand: 'LANCOME',
     name: '絕對完美柔霧唇膏',
     originalPrice: 2500,
@@ -61,6 +65,7 @@ const products = [
     color: '#8f352d',
   },
   {
+    id: 5,
     brand: 'YSL',
     name: '時尚印記啞光唇釉',
     originalPrice: 2080,
