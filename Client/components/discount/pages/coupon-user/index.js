@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Coupon from '@/components/discount/common/coupon';
-import styles from './index.module.scss'; // 確保引入正確的樣式
+import styles from './index.module.scss';
 import UserSection from '@/components/user/common/user-section';
-import Modal from '@/components/discount/common/mymodal'; // 引入自定義模態框
-
+import Modal from '@/components/discount/common/mymodal';
 
 export default function UserCoupon() {
-    const [modalShow, setModalShow] = useState(false); // 使用狀態來控制模態框顯示
+    const [modalShow, setModalShow] = useState(false);
+    const [couponCode, setCouponCode] = useState('');
 
     const coupons = [
         {
@@ -24,8 +24,12 @@ export default function UserCoupon() {
             condition: '滿$1500',
             expiration: '2024/11/10',
         },
-        // 可以添加更多優惠券
     ];
+
+    const handleClaimCoupon = () => {
+        // 在這裡添加優惠券代碼的處理邏輯
+        console.log(`Claiming coupon: ${couponCode}`);
+    };
 
     return (
         <>
@@ -35,7 +39,9 @@ export default function UserCoupon() {
                         歷史紀錄
                     </Link>
 
-                    <button onClick={() => setModalShow(true)} className={`${styles.btn}`}></button>
+                    <button onClick={() => setModalShow(true)} className={`${styles.btn}`}>
+                        新增優惠券
+                    </button>
 
                     <Modal
                         show={modalShow}
@@ -47,11 +53,17 @@ export default function UserCoupon() {
                     <div className={styles.content}>
                         <div className={`${styles.search} d-flex justify-content-center align-items-center`}>
                             <div className={`p me-4`}>新增優惠券</div>
-                            <input className="p-1 me-4" type="text" placeholder="請輸入優惠券代碼" />
-                            <div className={`${styles.btn}`}>領取</div>
+                            <input
+                                className="p-1 me-4"
+                                type="text"
+                                placeholder="請輸入優惠券代碼"
+                                value={couponCode}
+                                onChange={(e) => setCouponCode(e.target.value)}
+                            />
+                            <div className={`${styles.btn}`} onClick={handleClaimCoupon}>領取</div>
                         </div>
                         <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                        {coupons.map((coupon, index) => (
+                            {coupons.map((coupon, index) => (
                                 <Coupon 
                                     key={index}
                                     img={coupon.img} 

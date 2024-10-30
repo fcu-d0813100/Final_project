@@ -4,6 +4,8 @@ import Image from 'next/image';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss'; // 確保引入正確的樣式
 import Link from 'next/link';
+import Footer from '@/components/home/common/footer'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function Discount() {
   return (
@@ -29,15 +31,15 @@ export default function Discount() {
           </Link>
         </section>
 
-        <div id="carouselExampleIndicators" className={`carousel slide ${styles.carousel}`} data-bs-ride="carousel">
-          <div className={styles["carousel-indicators"]}>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className={`active ${styles.indicator}`} aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" className={styles.indicator} aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" className={styles.indicator} aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" className={styles.indicator} aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" className={styles.indicator} aria-label="Slide 5"></button>
+        <div id="carouselExampleIndicators" className={`${styles.phoneSize} carousel slide`} data-bs-ride="carousel">
+          <div className={`carousel-indicators `}>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className={`active indicator ${styles.btn}`} aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" className={`indicator ${styles.btn}`} aria-label="Slide 2"/>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" className={`indicator ${styles.btn}`} aria-label="Slide 3"/>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" className={`indicator ${styles.btn}`} aria-label="Slide 4"/>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" className={`indicator ${styles.btn}`} aria-label="Slide 5"/>
           </div>
-          <div className={styles['carousel-inner']}>
+          <div className='carousel-inner'>
             <div className="carousel-item active">
               <Image src="/discount/phone-size/beautique.svg"
                 width={390}
@@ -80,6 +82,7 @@ export default function Discount() {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }
