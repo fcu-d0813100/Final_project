@@ -4,86 +4,28 @@
     width: 300px;
     background-color: $green-800;
     flex-direction: column;
-    position: relative;
-
-    @media(max-width: 390px) {
-        width: auto;
-    }
-
-    .toggle-btn {
-        color: #fff;
-        position: absolute;
-        // position: fixed;
-        top: -514px;
-        left: 0;
-        border: none;
-        width: auto;
-        height: auto;
-
-        span {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(237, 237, 237, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-        }
-
-        &:focus,
-        &:active {
-            outline: none;
-            box-shadow: none;
-        }
-    }
 
     .collapse {
-        // width: 100%;
-        // display: flex;
-        // flex-direction: column;
-        flex: 1 1 0;
-        background-color: $green-800;
-
-        @media(max-width: 390px) {
-            // width:fit-content;
-            // display: unset !important;
-            position: absolute;
-            z-index: 1000;
-            top: -400px;
-            left: 0px;
-        }
+        width: 100%;
 
         &>div {
-            width: 100%;
-            display: flex;
             flex-direction: column;
             flex: 1;
             gap: 30px;
             padding-top: 142px;
             text-align: center;
-            align-items: stretch;
-
-            @media(max-width: 390px) {
-                gap: 16px;
-                padding-top: 0;
-            }
 
             &>a {
-                // max-width: 300px;
-                flex: 1;
                 position: relative;
                 color: $gray-100;
-                // padding: 20px 0;
-                padding: 20px 0;
-                margin: 0;
+                padding: 20px 114px;
+                // margin: 0;
                 display: flex;
                 justify-content: center;
                 align-items: center;
 
-                @media (max-width: 768px) {
-                    padding: 20px 10px;
-                }
-
                 svg {
                     display: none;
-
-                    @media (max-width: 390px) {
-                        display: none;
-                    }
                 }
 
                 &.active {
@@ -100,10 +42,6 @@
                         color: $green-700;
                         margin-right: 50px;
                         display: inline;
-
-                        @media (max-width: 390px) {
-                            display: none;
-                        }
                     }
                 }
 
@@ -120,11 +58,7 @@
                         // color: $green-700;
                         margin-right: 50px;
                         display: inline;
-
                         // display: none;
-                        @media (max-width: 390px) {
-                            display: none;
-                        }
                     }
                 }
             }
@@ -134,12 +68,5 @@
 
     button {
         margin-block: 70px;
-        margin-inline: 48px;
-
-        @media(max-width: 390px) {
-            margin-inline: 20px;
-            width: 120px;
-            padding: 10px;
-        }
     }
 }

@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 import { GrGoogle } from "react-icons/gr";
 import { FaLine } from "react-icons/fa6";
 import { PiEyeClosed } from "react-icons/pi";
-import Link from 'next/link'
+
 
 
 
@@ -30,11 +30,9 @@ export default function UserLogin(props) {
                   註冊成為Beautique會員，第一時間掌握最新美妝潮流！
                 </h6>
                 <div className="col-12 d-flex justify-content-center align-items-center">
-                  <Link href="/user/signup">
-                    <button className={`btn-outline h6 ${styles['btn-outline']}`}>
-                      立即註冊
-                    </button>
-                  </Link>
+                  <button className={`btn-outline h6 ${styles['btn-outline']}`}>
+                    立即註冊
+                  </button>
                 </div>
               </div>
               {/* 右側登入表單區塊 */}
@@ -94,9 +92,9 @@ export default function UserLogin(props) {
                 <div className="row pt-4 d-flex justify-content-end align-items-start">
                   <div className={`col-7 ${styles['signin-rwd']}`}>
                     還沒有帳號?{' '}
-                    <Link href="/user/signup" className="text-black">
+                    <a href="#" className="text-black">
                       立即註冊
-                    </Link>
+                    </a>
                   </div>
                   <div className="col-5 d-flex justify-content-end align-items-center">
                     <FaLine className={styles['icon-line']} />

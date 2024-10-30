@@ -41,14 +41,12 @@
 // }
 //   }
 
-//
+//   .hamburger-menu {
+//     display: none;
+//     font-size: 1.5rem;
+//     cursor: pointer;
+//   }
 // }
-
-.hamburger-menu {
-  display: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
 
 .active {
   border-bottom: 2px solid #90957a;
@@ -62,114 +60,92 @@
 //   height: 100%;
 // }
 
-// .swiper-container {
-//   width: 100%;
-//   height: 100%;
-//   .swiper-wrapper {
-//     display: flex;
-//     width: 100%;
-//     height: auto;
-//   }
-// }
-// .test-pagination {
-//   background-color: yellow; /* 测试背景色 */
-//   color: rgb(180, 39, 39);
-//   z-index: 100;
-// }
+.swiper {
+  width: 100%;
+  height: auto;
+  .swiper-wrapper {
+    width: 100px;
+    height: auto;
+  }
+}
 
-// .product-swiperslide-w {
-//   background-image: url('/product/S__18604034.jpg');
-//   background-size: cover;
-//   background-position: center;
-//   // width: 1920px;
-//   max-width: 100%;
-//   text-align: center;
-//   font-size: 18px;
-//   background: #fff;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// }
+.product-swiperslide-w {
+  background-image: url('/product/S__18604034.jpg');
+  background-size: cover;
+  background-position: center;
+  // width: 1920px;
+  max-width: 100%;
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-// .swiper-slide {
-//   width: 100%; // 每個 slide 的寬度
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// }
+.swiper-slide {
+  width: 100% !important;
+  height: 100%;
+}
 
-// .swiper-slide .imgs {
-//   // max-width: 100% !important;
-//   // height: 100%;
-//   object-fit: cover;
-// }
+.swiper-slide img {
+  max-width: 100% !important;
+  //   height: 100%;
+  object-fit: cover;
+}
 
-// .product-swiperpagination-w {
-//   background-color: #8f1a1a;
-//   position: absolute;
-//   text-align: center;
-//   bottom: 0px;
-//   width: 100%;
-//   height: auto;
-//   z-index: 10;
+.product-swiperpagination-w {
+  position: absolute;
+  text-align: center;
+  bottom: 10px;
+  width: 100%;
+  z-index: 10;
 
-//   .swiper-pagination-bullet span {
-//     width: 8px;
-//     height: 8px;
-//     display: inline-block;
-//     border-radius: 50%;
-//     background: #d84646;
-//     opacity: 0.5;
-//     margin: 0 5px;
-//   }
+  .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.5;
+    margin: 0 5px;
+  }
 
-//   .swiper-pagination-bullet-active {
-//     opacity: 1;
-//     background: #ffffff;
-//   }
-// }
+  .swiper-pagination-bullet-active {
+    opacity: 1;
+    background: #ffffff;
+  }
+}
 
-// .swiper-pagination-bullet {
-//   width: 8px;
-//   height: 8px;
-//   display: inline-block;
-//   border-radius: 50%;
-//   background: #d84646;
-//   opacity: 0.5;
-//   margin: 0 5px;
-// }
+.product-swiperbuttonnext-w,
+.product-swiperbuttonprev-w {
+  position: absolute;
+  top: 50%;
+  width: 27px;
+  height: 44px;
+  margin-top: -22px;
+  z-index: 10;
+  cursor: pointer;
+  display: block;
 
-// .product-swiperbuttonnext-w,
-// .product-swiperbuttonprev-w {
-//   position: absolute;
-//   top: 50%;
-//   width: 27px;
-//   height: 44px;
-//   margin-top: -22px;
-//   z-index: 10;
-//   cursor: pointer;
-//   display: block;
+  &.product-swiperbuttonnext-w {
+    right: 10px;
+    background-image: url('/product/chevron-right-solid.svg');
+  }
 
-//   &.product-swiperbuttonnext-w {
-//     right: 10px;
-//     background-image: url('/product/chevron-right-solid.svg');
-//   }
-
-//   &.product-swiperbuttonprev-w {
-//     left: 10px;
-//     background-image: url('/product/chevron-left-solid.svg');
-//   }
-// }
+  &.product-swiperbuttonprev-w {
+    left: 10px;
+    background-image: url('/product/chevron-left-solid.svg');
+  }
+}
 
 /* Container */
 .product-container-w {
   display: flex;
   justify-content: center;
   max-width: 100%;
-  width: 1440px;
   margin: 1440px;
   margin: 0 auto;
-  // gap: 50%;
   .product-row-w {
     display: flex;
     flex-wrap: nowrap;
@@ -308,7 +284,7 @@
 
 .product-card-container {
   display: flex;
-  gap: 5%;
+  gap: 10px;
   width: 100%;
   justify-content: center;
 }
@@ -386,7 +362,6 @@
   }
 
   .add-to-cart {
-    width: 75%;
     visibility: hidden;
     margin: 0 auto;
     padding: 10px 40px;

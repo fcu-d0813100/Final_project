@@ -113,11 +113,11 @@
         }
 
         .add {
-          svg {
+          i {
             position: absolute;
             font-size: 22px;
-            top: 0;
-            right: 15%;
+            top: -0.8%;
+            right: 18%;
             display: inline-block;
             @media (max-width: 390px) {
               font-size: 18px;
