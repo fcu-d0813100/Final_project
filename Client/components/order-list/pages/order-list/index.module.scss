@@ -1,0 +1,32 @@
+@import '@/styles/_variant.scss';
+
+.left {
+    width: 300px;
+    height: 1080px;
+    background-color: $green-500;
+}
+
+.right {
+    flex: 1 0 0;
+    padding-block: 70px;
+    padding-inline: 120px;
+    .title {
+        border-bottom: $gray-200 solid 2px;
+    }
+}
+
+.title-right {
+    color: $green-500;
+
+    a {
+        color: $green-500;
+
+        &:hover {
+            color: $green-800;
+        }
+    }
+}
+
+.order-list {
+    gap: 10px;
+}

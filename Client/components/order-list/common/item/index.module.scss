@@ -1,0 +1,42 @@
+@import '@/styles/_variant.scss';
+
+.item {
+    padding-inline: 20px;
+}
+
+.item-img {
+    width: 160px;
+    height: 160px;
+}
+
+.item-left {
+    width: 400px;
+}
+
+.text-group {
+    width: 200px;
+}
+
+.count {
+    width: 200px;
+}
+
+.sub-total {
+    width: 200px;
+}
+
+.color-right {
+    color: $green-500;
+}
+
+.color-left {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #998568;
+
+    .color {
+        width: 20px;
+        height: 20px;
+        background-color: #998568;
+    }
+}

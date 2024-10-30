@@ -1,10 +1,17 @@
 import React from 'react';
 import styles from './index.module.scss';
 
-export default function Coupon() {
+const Coupon = ({
+    img = "",
+    title = "",
+    discount = "",
+    condition = 0,
+    expiration = "無使用期限" }) => {
     return (
         <div className={`${styles['coupon-lg']} d-flex align-items-center justify-content-around px-2`}>
-            <div className={styles.img}></div>
+            <div className={styles.img}>
+                <img className={styles['coupon-image']} src={img} alt="Coupon Image" />
+            </div>
             <div className={styles.text}>
                 <div className={`${styles.name} h3-L`}>GIFT COUPON</div>
                 <div className={`${styles.discount} h2-L`}>20% OFF</div>
