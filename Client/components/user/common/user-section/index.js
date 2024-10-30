@@ -14,7 +14,7 @@ export default function index({children,titleCN,titleENG }) {
                 {children}
             </div>
         </div>
+        
     </>
   )
 }
- 

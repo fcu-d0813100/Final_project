@@ -39,10 +39,10 @@ function TopBar() {
 
             {/* 右邊 會員中心和購物車 */}
             <Col xs={4} className={`text-end ${styles['header-icons']}`}>
-              <Link href="/user">
+              <Link href="/1015/nqv">
                 <PiUser size={22} className="me-3" />
               </Link>
-              <Link href="/cart">
+              <Link href="/1015/nqv">
                 <PiHandbagSimple size={22} />
               </Link>
             </Col>
@@ -110,7 +110,7 @@ function TopBar() {
                 </div>
               </div>
             </NavDropdown>
-            <Nav.Link href="/discount" className={styles['li']}>
+            <Nav.Link href="#offers" className={styles['li']}>
               優惠專區
             </Nav.Link>
             <NavDropdown
@@ -123,20 +123,20 @@ function TopBar() {
               <NavDropdown.Item href="#action/3.2">美妝課程</NavDropdown.Item>
             </NavDropdown>
 
-            <Nav.Link href="/post" className={styles['li']}>
+            <Nav.Link href="#community" className={styles['li']}>
               美妝社群
             </Nav.Link>
-            <Nav.Link href="/activity" className={styles['li']}>
+            <Nav.Link href="#events" className={styles['li']}>
               活動
             </Nav.Link>
 
-            <Nav.Link href="/about" className={styles['li']}>
+            <Nav.Link href="#about" className={styles['li']}>
               About
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      
+      {/* <div className={styles['body']}></div> */}
     </>
   );
 }

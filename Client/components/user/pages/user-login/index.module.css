@@ -16,10 +16,7 @@
 }
 
 .card-img {
-  background: linear-gradient(0deg,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.4) 100%),
-    url(/user/login-user.jpg) lightgray 50% / cover no-repeat;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%), url(/user/login-user.jpg) lightgray 50%/cover no-repeat;
   height: 100%;
   width: 825px;
   padding: 120px 0 50px 0;
@@ -34,13 +31,12 @@
   color: white;
   border: white solid 1px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border: white solid 1.5px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    transition: background-color ease 0.3s, filter ease 0.3s;
-  }
+}
+.btn-login:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: white solid 1.5px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: background-color ease 0.3s, filter ease 0.3s;
 }
 
 .logo {
@@ -80,11 +76,10 @@
   color: white;
   border: white solid 1px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-
-  &:hover {
-    background-color: rgba(135, 135, 135, 0.4);
-    transition: ease 0.3s;
-  }
+}
+.btn-outline:hover {
+  background-color: rgba(135, 135, 135, 0.4);
+  transition: ease 0.3s;
 }
 
 .card-login {
@@ -102,7 +97,6 @@
   font-weight: 700;
   color: black;
   padding: 30px 0;
-
 }
 
 .line-input {
@@ -114,12 +108,10 @@
   width: 100%;
   font-size: 16px;
   flex: 1;
-
 }
 
 .line-input-pw {
   position: relative;
-
 }
 
 .eyeiclosed {
@@ -133,6 +125,13 @@
 
 .line-input:focus {
   border-bottom: 2px solid #000;
+}
+
+.line-input::-moz-placeholder {
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: 400;
+  margin: 0;
 }
 
 .line-input::placeholder {
@@ -152,11 +151,7 @@
 
 .input-area {
   padding: 20px 0;
-
 }
-
-
-
 
 .form-area {
   display: flex;
@@ -209,21 +204,17 @@
   .logo {
     font-size: 60px;
   }
-
   .slogan {
     font-size: 28px;
   }
-
   .text {
     font-size: 16px;
   }
-
   .login-title {
     font-size: 64px;
     padding: 0;
   }
 }
-
 @media (max-width: 992px) {
   .container-login {
     display: flex;
@@ -232,7 +223,6 @@
     margin: 0 auto;
     padding: 0;
   }
-
   .login-section {
     display: flex;
     justify-content: center;
@@ -240,7 +230,6 @@
     margin: 0 auto;
     padding: 0;
   }
-
   .bg-card {
     z-index: 1;
     max-height: 100%;
@@ -251,35 +240,26 @@
     display: flex;
     justify-content: row;
   }
-
   .card-login {
     padding: 60px 20px 30px 20px;
     display: flex;
     align-items: center;
     flex-direction: column;
   }
-
   .text {
     font-size: 14px;
   }
 }
-
 @media (max-width: 750px) {
   .container-login {
     position: relative;
   }
-
   .bg-img {
-    background: linear-gradient(0deg,
-        rgba(0, 0, 0, 0.4) 0%,
-        rgba(0, 0, 0, 0.4) 100%),
-      url(/user/login-bg.jpg) lightgray 50% / cover no-repeat;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%), url(/user/login-bg.jpg) lightgray 50%/cover no-repeat;
   }
-
   .login-section {
     margin: 50px 0 10px 0;
   }
-
   .logo {
     z-index: 2;
     position: absolute;
@@ -288,43 +268,35 @@
     transform: translateX(-50%);
     font-size: 32px;
   }
-
   .login-title {
     padding-block: 20px;
     font-size: 48px;
     display: flex;
     justify-content: center;
   }
-
   .input-area {
     padding: 10px 0;
   }
-
   .bg-card {
     max-height: 100%;
     max-width: 600px;
     max-height: 600px;
     background: rgba(255, 255, 255, 0.9);
   }
-
   .card-img {
     background: none;
     width: 0;
     height: 0;
   }
-
   .slogan {
     display: none;
   }
-
   .text {
     display: none;
   }
-
   .btn-outline {
     display: none;
   }
-
   .btn-primary {
     height: 50px;
     width: 100%;
@@ -333,12 +305,10 @@
     border-radius: 3px;
     border: #6f2619 solid 1px;
   }
-
   .signin-rwd {
     display: block;
   }
 }
-
 .copyright {
   padding-top: 30px;
 }
@@ -348,16 +318,14 @@
     width: 100%;
     height: auto;
   }
-
   .container-login {
     padding: 0;
     margin: 0;
     width: 100%;
   }
-
   .bg-card {
     border-radius: 0;
     width: 100%;
     height: auto;
   }
-}
+}/*# sourceMappingURL=index.module.css.map */

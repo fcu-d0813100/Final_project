@@ -126,11 +126,9 @@ export default function Index() {
               {link.label}
             </Nav.Link>
           ))}
-        <button className="btn-logout">登出</button>
-
         </Nav>
       </Navbar.Collapse>
-      
+      <button className="btn-logout">登出</button>
     </Navbar>
   );
 }
