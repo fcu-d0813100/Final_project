@@ -1,11 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import style from './cart-list.module.scss'
 import { Minus, Plus, Trash } from '@phosphor-icons/react'
 import CheckoutBox from '@/components/cart/common/checkoutbox/index'
+import { useCart } from '@/components/hooks/use-cartP'
 import Image from 'next/image'
 
+const products = [
+  {
+    id: 1,
+    brand: 'LANCOME',
+    name: '玲瓏巧思五色眼影盤',
+    color: '來杯摩卡01',
+    image: '/cart/LANCOME_LG01_M_888.webp',
+    price: 900,
+    originalPrice: 1200,
+    quantity: 1,
+  },
+  {
+    id: 2,
+    brand: 'DIOR',
+    name: '魅惑變色潤唇膏',
+    color: '玫瑰粉紅',
+    image: '/cart/DIOR_LIP_PINK.webp',
+    price: 1100,
+    originalPrice: 1350,
+    quantity: 2,
+  },
+]
+
 export default function CartList() {
-  const products = []
+  // 從商品鉤子取得內容
+  const {
+    itemd = [],
+    totalPrice = 0,
+    totalQty = 0,
+    onDecrease = () => {},
+    onIncrease = () => {},
+    onRemove = () => {},
+  } = useCart()
+
   return (
     <>
       <div className="container">
@@ -24,48 +57,67 @@ export default function CartList() {
           <div className={style.outer}>
             <div className={style.list}>
               {/* 彩妝品box */}
+              {/* 帶入資料 */}
               <div className={`d-xl-block ${style.cosmetic}`}>
                 <div className={` h5 ${style['cosmetic-topic']}`}>彩妝商品</div>
-                <div className={style['cosmetic-box']}>
-                  <div className={` col-6 ${style['cosmetic-detail']}`}>
-                    <div className={style['cosmetic-img']}>
-                      <Image
-                        src="/cart/LANCOME_LG01_M_888.webp"
-                        alt="cosmetic"
-                        width={300}
-                        height={300}
-                        className="img-fluid"
-                      />
+                {products.map((product) => (
+                  <div key={product.id} className={style['cosmetic-box']}>
+                    <div className={` col-6 ${style['cosmetic-detail']}`}>
+                      <div className={style['cosmetic-img']}>
+                        <Image
+                          src={product.image}
+                          alt="cosmetic"
+                          width={300}
+                          height={300}
+                          className="img-fluid"
+                        />
+                      </div>
+                      <div className={style['cosmetic-text']}>
+                        <div className="ps">{product.brand}</div>
+                        <div className="h6 mb-3">{product.name}</div>
+                        <div className={style['sub_text']}>
+                          顏色：{product.color}
+                        </div>
+                      </div>
                     </div>
-                    <div className={style['cosmetic-text']}>
-                      <div className="ps">LANCOME</div>
-                      <div className="h6 mb-3">玲瓏巧思五色眼影盤</div>
-                      <div className={style['sub_text']}>顏色：來杯摩卡01</div>
+
+                    {/* 數量加減按鈕 */}
+                    <div className="d-flex align-items-center justify-content-end">
+                      <button
+                        className={style['btn-sm']}
+                        onClick={() => pQtyChange(product.id, -1)}
+                      >
+                        <Minus size={20} />
+                      </button>
+                      <span className="px-3 h6">{product.quantity}</span>
+                      <button
+                        className={style['btn-sm']}
+                        onClick={() => pQtyChange(product.id, 1)}
+                      >
+                        <Plus size={20} />
+                      </button>
+                    </div>
+
+                    {/* 商品價格 */}
+                    <div className={`h6 ${style.price}`}>
+                      NT${(product.price * product.quantity).toLocaleString()}
+                      <div className={style['origin_price']}>
+                        NT$
+                        {(
+                          product.originalPrice * product.quantity
+                        ).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className={style.trash}>
+                      <button type="button">
+                        <Trash size={28} />
+                      </button>
                     </div>
                   </div>
-                  {/* 數量加減按鈕 */}
-                  <div className="d-flex align-items-center justify-content-end">
-                    <button className={style['btn-sm']}>
-                      <Minus size={20} />
-                    </button>
-                    <span className="px-3 h6">1</span>
-                    <button className={style['btn-sm']}>
-                      <Plus size={20} />
-                    </button>
-                  </div>
-                  {/* 商品價格 */}
-                  <div className={`h6 ${style.price}`}>
-                    NT900
-                    <div className={style['origin_price']}>NT$1,200</div>
-                  </div>
-                  <div className={style.trash}>
-                    <button type="button">
-                      <Trash size={28} />
-                    </button>
-                  </div>
-                </div>
+                ))}
                 <div className={style['cosmetic_amount']}>
-                  商品小計： <span>NT$1,200</span>
+                  商品小計：
+                  <span>NT${}</span>
                 </div>
               </div>
               {/* 彩妝品box-end */}
@@ -73,6 +125,7 @@ export default function CartList() {
               {/* 課程box */}
               <div className={style.course}>
                 <div className={`h5 ${style['course-topic']}`}>課程報名</div>
+                {/* {workshops.map((workshop) => ( */}
                 <div className={style['course-box']}>
                   <div className={` col-6 ${style['course-detail']}`}>
                     <div className={style['course-img']}>
@@ -85,33 +138,37 @@ export default function CartList() {
                       />
                     </div>
                     <div className={style['course-text']}>
-                      <div className={`ps mb-1 ${style['sub_text']}`}>
-                        Terry Barber 老師
-                      </div>
-                      <div className="h6 mb-3">F19 時尚攝影彩妝班</div>
+                      <div className={`ps mb-1 ${style['sub_text']}`}>老師</div>
+                      <div className="h6 mb-3"> 課程名</div>
                       <div className="ps">
-                        2024/10/3 (四)
+                        天
                         <span className={`ms-2  ${style['sub_text']}`}>
-                          9:00 - 12:00 | 3hr
+                          時間
                         </span>
                       </div>
                     </div>
                   </div>
                   {/* 數量加減按鈕 */}
                   <div className="d-flex align-items-center justify-content-end">
-                    <button className={style['btn-sm']}>
+                    <button
+                      className={style['btn-sm']}
+                      onClick={() => wAmountChange(workshop.id, -1)}
+                    >
                       <Minus size={20} />
                     </button>
-                    <span className="px-3 h6">1</span>
-                    <button className={style['btn-sm']}>
+                    <span className="px-3 h6"> 數量</span>
+                    <button
+                      className={style['btn-sm']}
+                      onClick={() => wAmountChange(workshop.id, 1)}
+                    >
                       <Plus size={20} />
                     </button>
                   </div>
 
                   {/* 課程價格 */}
                   <div className={`h6 ${style.price}`}>
-                    NT900
-                    <div className={style['origin_price']}>NT$1,200</div>
+                    NT$金額
+                    <div className={style['origin_price']}>NT$ 金額</div>
                   </div>
                   <div className={style.trash}>
                     <button type="button" className={style.trash}>
@@ -119,8 +176,9 @@ export default function CartList() {
                     </button>
                   </div>
                 </div>
+                {/* ))} */}
                 <div className={style['course_amount']}>
-                  商品小計： <span>NT$1,200</span>
+                  商品小計： <span>NT</span>
                 </div>
               </div>
             </div>
