@@ -1,12 +1,12 @@
 'use client'
 
-import WorkshopsAll from '@/components/workshop/workshops/workshops-all-page'
+import WorkshopAll from '@/components/workshop/pages/workshops'
 import React, { useState, useEffect } from 'react'
 
 export default function Workshops(props) {
   return (
     <>
-      <WorkshopsAll/>
+      <WorkshopAll/>
     </>
   )
 }

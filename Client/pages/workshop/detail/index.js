@@ -1,12 +1,12 @@
 'use client'
 
-import WorkshopAll from '@/components/workshop/workshop/workshop-all-page'
+import WorkshopDetail from '@/components/workshop/pages/workshop-detail'
 import React, { useState, useEffect } from 'react'
 
 export default function Workshop(props) {
   return (
     <>
-      <WorkshopAll />
+      <WorkshopDetail />
     </>
   )
 }
