@@ -3,8 +3,12 @@ import CheckoutBox from '@/components/cart/common/checkoutbox/index'
 import style from './checkout.module.scss'
 import Image from 'next/image'
 import { CaretUp, CaretDown } from '@phosphor-icons/react'
+import { useRouter } from 'next/router'
 
 export default function Checkout() {
+  //按鈕路由
+  const router = useRouter()
+
   //切換顯示訂單內容
   const [isVisible, setIsVisible] = useState(false)
   const toggleVisibility = () => {
@@ -378,7 +382,9 @@ export default function Checkout() {
               <div
                 className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
               >
-                <button className="btn-primary">返回</button>
+                <button className="btn-primary" onClick={() => router.back()}>
+                  返回
+                </button>
                 <button className="ms-2 btn-secondary">結賬</button>
               </div>
             </div>
