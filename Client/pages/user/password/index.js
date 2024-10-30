@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import FavoriteUser from '@/components/user/pages/favorite-user';
+import PasswordUser from '@/components/user/pages/password-user';
 export default function Index(props) {
   return (
     <>
-      <FavoriteUser />
+      <PasswordUser />
     </>
   );
 }
