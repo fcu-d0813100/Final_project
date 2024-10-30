@@ -1,0 +1,29 @@
+@import '@/styles/_variant.scss';
+
+.nav-underline .nav-link:hover,
+.nav-underline .nav-link:active {
+  border-bottom: 2px solid #963827;
+}
+
+.line {
+  border-top: 1px solid $gray-200;
+}
+
+
+.favorite-area {
+  margin-top: 100px;
+}
+
+.interested {
+  margin-top: 200px;
+}
+
+@media (max-width: 768px) {
+  .interested {
+    margin-top: 100px;
+  }
+
+  // main {
+  //   justify-content: center;
+  // }
+}
