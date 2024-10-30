@@ -99,7 +99,7 @@ export default function Index() {
   };
 
   return (
-    <Navbar expand="sm" className={styles['nav']}>
+    <Navbar expand="lg" className={styles['nav']}>
       <Navbar.Toggle
         aria-controls="basic-navbar-nav"
         className={styles['toggle-btn']}
