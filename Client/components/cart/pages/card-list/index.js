@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import style from './cart-list.module.scss'
 import { Minus, Plus, Trash } from '@phosphor-icons/react'
 import CheckoutBox from '@/components/cart/common/checkoutbox/index'
-import { useCart } from '@/components/hooks/use-cart'
+import { useCart } from '@/components/hooks/use-cartP'
 import Image from 'next/image'
 
 const products = [
