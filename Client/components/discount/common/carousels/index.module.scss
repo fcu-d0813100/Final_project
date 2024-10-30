@@ -1,0 +1,18 @@
+.carousel-indicators {
+    button {
+        width: 12px; /* 調整圓形按鈕的大小 */
+        height: 12px;
+        border-radius: 50%; /* 圓形按鈕 */
+        background-color: rgba(255, 255, 255, 0.5); /* 半透明背景 */
+        border: none; /* 去掉邊框 */
+        margin: 0 3px; /* 讓按鈕之間有間隔 */
+
+        &.active {
+            background-color: #fff; /* 活動按鈕的顏色 */
+        }
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.8); /* 懸停時的顏色 */
+        }
+    }
+}
