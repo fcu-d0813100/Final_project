@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
 import Slider from 'react-slick'
-<<<<<<< HEAD
-import styles from './index.module.scss' // 引入你的 SCSS 模組
-=======
 import styles from './index.module.scss'
 import cardStyles from './CardCarousel.module.scss'
 import { PiHeartStraight, PiHeartStraightFill } from 'react-icons/pi'
 import Image from 'next/image'
->>>>>>> dev_zhei
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
