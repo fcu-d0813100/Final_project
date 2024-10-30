@@ -7,12 +7,9 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/bundle'
 import 'bootstrap/dist/css/bootstrap.min.css'
-<<<<<<< HEAD
-=======
 import { FaChevronDown } from 'react-icons/fa'
 import ProductCarousel from './ProductCarousel' // 引入新的轮播图组件
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
->>>>>>> dev_zhei
 import Image from 'next/image'
 
 const ProductPage = () => {
