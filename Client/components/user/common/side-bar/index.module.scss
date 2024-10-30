@@ -115,7 +115,7 @@
                 }
 
                 &.hover {
-                    color: #fff;
+                    color: rgba(255, 255, 255, 0.695);
 
                     svg {
                         position: absolute;
@@ -126,7 +126,6 @@
                         border-bottom-right-radius: 15px;
                         margin-right: 50px;
                         display: inline;
-                        display: none;
 
                         // @media (max-width: 390px) {
                         //     display: none;
