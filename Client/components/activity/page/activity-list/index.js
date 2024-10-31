@@ -2,7 +2,7 @@ import Header from '@/components/home/common/header'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import Styles from '@/components/activity/page/index.module.scss'
+import Styles from '@/components/activity/page/activity-list/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
 import Footer from '@/components/home/common/footer'
@@ -10,7 +10,7 @@ import { Heart } from 'phosphor-react'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Dropdown from '@/components/shared/dropdownList/sample'
 
-export default function Activity() {
+export default function Activity(props) {
   // 使用 useEffect 確保 Bootstrap JavaScript 僅在客戶端加載
   useEffect(() => {
     typeof document !== undefined
