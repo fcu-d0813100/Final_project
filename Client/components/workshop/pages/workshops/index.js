@@ -11,38 +11,38 @@ import React, { useState, useEffect } from 'react'
 export default function WorkshopAll(props) {
   const [workshop, setWorkshop] = useState([])
 
-  const getWorkshop = async () => {
-    try {
-      const res = await fetch('http://localhost:3005/api/workshop', {
-        method: 'GET',
-      })
-      const data = await res.json()
-      setWorkshop(data) // 將資料存入狀態
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
-
-  useEffect(() => {
-    getWorkshop() // 呼叫函式獲取資料
-  }, [])
+  // const getWorkshop = async () => {
+  //   try {
+  //     const res = await fetch('http://localhost:3005/api/workshop', {
+  //       method: 'GET',
+  //     })
+  //     const data = await res.json()
+  //     setWorkshop(data) // 將資料存入狀態
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }
 
   // useEffect(() => {
-  //   async function getWorkshop() {
-  //     try {
-  //       let response = await axios.get(
-  //         `http://localhost:3005/api/workshop/workshop`,
-  //         {
-  //           withCredentials: true,
-  //         }
-  //       )
-  //       setWorkshop(response.data)
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error)
-  //     }
-  //   }
-  //   getWorkshop()
+  //   getWorkshop() // 呼叫函式獲取資料
   // }, [])
+
+  useEffect(() => {
+    async function getWorkshop() {
+      try {
+        let response = await axios.get(
+          `http://localhost:3005/api/workshop/workshop`,
+          {
+            withCredentials: true,
+          }
+        )
+        setWorkshop(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    getWorkshop()
+  }, [])
 
   return (
     <>
