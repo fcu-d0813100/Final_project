@@ -121,7 +121,7 @@ export default function index({
           <hr className="underline"></hr>
 
           {/* 積分 */}
-          <div className="row d-flex align-items-center">
+          <div className="row d-flex py-5 align-items-center">
             <div className='col-10 d-flex align-items-center justify-content-between'>
               <div className="col-6">
                 <div className={`row ${styles['level-area']} ${styles['table-title']} mt-2`}>
@@ -146,7 +146,7 @@ export default function index({
                 </div>
               </div>
             </div>
-            <div className="col-12 p-0  gap-5 d-flex align-items-center">
+            <div className="col-10 pt-3 mt-3 justify-content-center  gap-5 d-flex align-items-center">
               <Image src="/user/regular.svg" width={224} height={172} />
               <Image src="/user/platinum.svg" width={224} height={172} />
               <Image src="/user/diamond.svg" width={224} height={172} />

@@ -21,15 +21,15 @@ export default function index({
     <>
       <UserSection titleCN="更新資訊" titleENG="Information">
         <form action="" method="post" encType="multipart/form-data">
-          <div class="d-flex mt-4">
-            <div class="col-12 d-flex row justify-content-between align-items-center">
-              <div class="col-8 d-flex flex-wrap">
+          <div class="d-flex mt-4 container">
+            <div class="d-flex row justify-content-between align-items-center">
+              <div class="col-9 px-0   d-flex flex-wrap">
                 <div class={`col-4 mt-5 ${styles.info} `}>
                   <label class="form-label pb-2">姓名 <span class=" ps pe-4 ">| name</span></label>
                   <input type="text" class={`form-control ${styles['form-control2']} `} />
                 </div>
                 <div class={`col-4 mt-5 ${styles.info} `}>
-                  <label class="form-label pb-2">暱稱 <span class=" ps pe-4">| nickname</span></label>
+                  <label class="form-label pb-2">暱稱 <span class="ps pe-4">| nickname</span></label>
                   <input type="text" class={`form-control ${styles['form-control2']} `} />
                 </div>
                 <div class={`col-4 mt-5 ${styles.info} `}>
@@ -49,18 +49,16 @@ export default function index({
                   <input type="email" class={`form-control ${styles['form-control2']} `} name="email" />
                 </div>
               </div>
-              <div class="col-4 d-flex justify-content-center align-items-center">
-                <div class="col-8">
-                  <div class="ratio ratio-1x1 w-75">
+              <div class="col-3 d-flex align-items-center">
+                <div class="ratio ratio-1x1 w-75">
 
-                    <Image
-                      width={255}
-                      height={255}
-                      className={styles.avatar}
-                      src="/user/img/avatar02.jpg"
-                      alt=""
-                    />
-                  </div>
+                  <Image
+                    width={255}
+                    height={255}
+                    className={styles.avatar}
+                    src="/user/img/avatar02.jpg"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
@@ -73,7 +71,7 @@ export default function index({
           <div className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
               <label className={`form-label pb-2`}>
-                居住縣市 <span className={`${styles.ps} ${styles['info-address']}`}>| city</span>
+                居住縣市 <span className={`ps ${styles['info-address']}`}>| city</span>
               </label>
               <select className={`form-select ${styles['form-select2']}`}>
                 <option value="" disabled selected>請選擇縣市</option>
@@ -82,7 +80,7 @@ export default function index({
             </div>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
               <label className={`form-label pb-2`}>
-                居住區域 <span className={`d-inline ${styles.ps} ${styles['info-address']}`}>| area</span>
+                居住區域 <span className={` ps ${styles['info-address']}`}>| area</span>
               </label>
               <select className={`form-select ${styles['form-select2']}`}>
                 <option value="" disabled selected>請選擇區域</option>
@@ -112,7 +110,11 @@ export default function index({
           </div>
 
           <div className={`${styles['submit-area']} d-flex justify-content-end align-items-center row`}>
+            <Link href="/user/information">
+              <button type="button" className={`btn-success h6 me-4`}>上一頁</button>
+            </Link>
             <button type="button" className={`btn-secondary h6 me-4`}>取消</button>
+
             <button type="submit" className={`btn-primary h6`}>儲存</button>
           </div>
         </form>

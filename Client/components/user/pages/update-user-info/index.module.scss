@@ -5,8 +5,8 @@
   width: 225px;
   height: 225px;
   object-fit: cover;
-}
 
+}
 
 .info .form-control2 {
   border-radius: 5px;
@@ -20,13 +20,12 @@
 }
 
 .form-select2 {
-  border-radius: 8px;
+  border-radius: 5px;
   box-shadow: 5px #e9ecef;
   border: 1px solid $gray-200;
 
   &:focus {
     box-shadow: 0 0 0 0.1rem $green-500;
-
   }
 }
 
@@ -42,6 +41,7 @@
 
 .info span {
   color: $green-500;
+
 }
 
 .info-phone {
@@ -51,8 +51,6 @@
 .info-address {
   padding-right: 40px;
 }
-
-
 
 
 .address-line {
