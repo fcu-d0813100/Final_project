@@ -7,6 +7,7 @@
   background-color: $green-800;
   float: left;
 }
+
 .main {
   padding: 70px 120px;
   padding-left: 420px;
@@ -27,10 +28,12 @@
       align-items: center;
       justify-content: center;
       margin-right: 67px;
+
       h4 {
         color: $green-700;
       }
     }
+
     .infoTable {
       margin-top: 35px;
       display: flex;
@@ -44,10 +47,12 @@
         padding: 5px 30px;
         border-left: 3px solid $green-200;
       }
+
       td {
         padding-right: 30px;
       }
     }
+
     .TeacherImg {
       width: 255px;
       height: 255px;
@@ -68,18 +73,19 @@
     .moretextArea {
       background: #f8f8f8;
       border-radius: 5px;
-      
-      h4{
+
+      h4 {
         margin-bottom: 50px;
         color: $green-500;
       }
-      p{
+
+      p {
         line-height: 2rem;
         padding-bottom: 20px;
       }
-      
+
     }
-    
+
   }
- 
+
 }
