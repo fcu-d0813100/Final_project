@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import UserSection from '@/components/user/common/user-section';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss';
 import Image from 'next/image';
+import Link from 'next/link';
 export default function index({
   name = '王美美',
   nickname = 'Bella',
@@ -114,7 +114,7 @@ export default function index({
               </table>
             </div>
             <div className='col-4 d-flex justify-content-end pe-2'>
-              <button className="btn-primary h6">編輯</button>
+              <Link href="/user/information/update"><button className="btn-primary h6">編輯</button></Link>
             </div>
           </div>
 
