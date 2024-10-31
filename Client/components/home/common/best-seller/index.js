@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Styles from '@/components/home/common/best-seller/index.module.scss'
+import Styles from '@/components/home/common/best-seller/index.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 // import PlaceholderText from '@/components/eddy_item/common/placeholder-text'

@@ -1,0 +1,68 @@
+@import '@/styles/_variant.scss';
+
+.checkout_discount {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 30px;
+  border: 1px solid $gray-200;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  span:nth-child(2) {
+    color: $green-500;
+  }
+  &:hover {
+    background-color: $green-500;
+    span {
+      color: #fff;
+    }
+    span:nth-child(2) {
+      transform: translateX(10px);
+      transition: transform 0.6s ease;
+    }
+  }
+}
+
+.modal {
+  margin: 200px 0 0 0;
+  .modal-header {
+    display: flex;
+    justify-content: flex-end;
+    margin: 15px 15px 0 0;
+    .close-button {
+      color: $green-500;
+    }
+  }
+
+  .modal-body {
+    padding-inline: 50px;
+  }
+
+  .form-select {
+    color: $green-500;
+    &:focus {
+      border-color: $green-500;
+      box-shadow: 0 0 0 1px $green-500;
+    }
+    option {
+      color: $green-500;
+    }
+  }
+
+  .btn-comfirm {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      background-color: $green-500;
+      color: #fff;
+      border: none;
+      margin: 20px;
+      padding: 10px 50px;
+      border-radius: 3px;
+      &:hover {
+        opacity: 0.7;
+        transition: ease 0.3s;
+      }
+    }
+  }
+}
