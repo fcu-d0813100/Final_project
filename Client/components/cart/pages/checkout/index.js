@@ -6,6 +6,7 @@ import { Form, Row, Col } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import BuyRule from '../../common/buyrule'
 import OrderBox from '../../common/orderbox'
+import Seven from '../../../../pages/cart/ship'
 
 export default function Checkout() {
   //----------按鈕路由
@@ -68,12 +69,12 @@ export default function Checkout() {
                       />
                       <Form.Check
                         type="radio"
-                        label="超商"
+                        label="7-11"
                         name="deliveryMethod"
-                        id="deliveryMethod超商"
-                        value="超商"
-                        checked={deliveryMethod === '超商'}
-                        onChange={() => setDeliveryMethod('超商')}
+                        id="deliveryMethod7-11"
+                        value="7-11"
+                        checked={deliveryMethod === '7-11'}
+                        onChange={() => setDeliveryMethod('7-11')}
                       />
                     </Form.Group>
 
@@ -160,20 +161,7 @@ export default function Checkout() {
                     ) : (
                       <div className={style['shipping-form']}>
                         {/* 超商店名選擇 */}
-                        <Form.Group
-                          className="mb-3"
-                          controlId="convenience-store"
-                        >
-                          <Form.Label>選擇超商</Form.Label>
-                          <Form.Select name="convenience_store">
-                            <option value="" disabled selected>
-                              選擇超商店名
-                            </option>
-                            <option value="familyMart">全家便利商店</option>
-                            <option value="711">7-Eleven</option>
-                            <option value="okMart">OK便利商店</option>
-                          </Form.Select>
-                        </Form.Group>
+                        <Seven />
                       </div>
                     )}
                   </Form>
