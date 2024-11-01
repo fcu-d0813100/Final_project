@@ -51,10 +51,12 @@ router.get('/:wid', async function (req, res, next) {
   teachers.name AS teacher_name,
   workshop_type.id AS workshop_type_id,
   workshop_type.type AS workshop_type_type,
+  workshop_time.id AS workshop_time_id,
 
   GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
   GROUP_CONCAT(workshop_time.start_time ORDER BY workshop_time.date ASC) AS start_times,
-  GROUP_CONCAT(workshop_time.end_time ORDER BY workshop_time.date ASC) AS end_times
+  GROUP_CONCAT(workshop_time.end_time ORDER BY workshop_time.date ASC) AS end_times,
+  GROUP_CONCAT(workshop_time.id ORDER BY workshop_time.date ASC) AS time_id
   
  FROM
     workshop
@@ -71,19 +73,6 @@ WHERE
   const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
   res.json(result)
   console.log(req.params.wid)
-
-  //   try {
-  //     const result = await db.query(sqlSelect, [wid])
-  //     if (result.length > 0) {
-  //       res.json(result[0]) // 只返回第一個物件
-  //       console.log(result[0]) // 只輸出單一物件
-  //     } else {
-  //       res.status(404).json({ message: '找不到該工作坊資料' })
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-  //     res.status(500).json({ message: '伺服器錯誤' })
-  //   }
 })
 
 export default router
