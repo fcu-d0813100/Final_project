@@ -51,70 +51,32 @@
         padding: 20px 30px;
         border: 1px solid $gray-200;
         border-radius: 0 0 5px 5px;
-        .order-content {
-          border-radius: 5px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          background-color: $gray-100;
-          padding: 15px 25px;
-          .pic {
-            width: 150px;
-            height: 150px;
-            img {
-              width: 100%;
-            }
-          }
-          button {
-            border: none;
-          }
-        }
       }
 
-      //點擊後，訂單表細節內容
-      .order-list {
-        margin-top: 10px;
-        background-color: $gray-100;
-        width: 100%;
-        overflow-x: auto;
-        border-radius: 5px;
-        table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-        .old-price {
-          color: $gray-200;
-          font-size: 14px;
-          text-decoration: line-through;
-          margin-right: 5px;
-        }
-        .new-price {
-          color: $red-500;
-        }
-        th,
-        td {
-          padding: 15px 30px 10px 30px;
-          text-align: left;
-          color: $gray-300;
-        }
-        th {
-          color: #000;
-        }
-        th:nth-child(3),
-        td:nth-child(3) {
-          text-align: center;
-        }
-
-        th:nth-child(4),
-        td:nth-child(4) {
-          text-align: right;
-        }
-      }
       .payment-topic,
       .shipping-topic {
-        margin-top: 60px;
+        margin-top: 30px;
         margin-bottom: 15px;
         color: $green-500;
+        font-weight: 600;
+        span {
+          color: $red-500;
+          font-weight: 400;
+        }
+      }
+
+      .shipping-form {
+        margin: 20px 30px;
+        padding: 10px 40px;
+        border-radius: 5px;
+        background-color: $gray-100;
+      }
+
+      .credit-card {
+        margin: 20px 30px;
+        padding: 10px 40px;
+        border-radius: 5px;
+        background-color: $gray-100;
       }
 
       // 付款方式&物流
@@ -180,37 +142,6 @@
             }
           }
         }
-      }
-    }
-
-    //購買須知
-    .buy-rule {
-      margin-block: 30px 150px;
-      padding: 30px;
-      border: 1px solid $gray-200;
-      border-radius: 5px;
-      color: $green-700;
-      p {
-        font-weight: 600;
-        padding: 5px;
-        line-height: 30px;
-      }
-    }
-    .btn-sm {
-      width: 30px;
-      height: 30px;
-      border-radius: 3px;
-      border: 1px solid black;
-      text-align: center;
-      padding: 0;
-      background: white;
-      transition: 0.3s;
-      .ph {
-        font-size: 20px;
-      }
-      &:hover {
-        background: rgb(0, 0, 0);
-        color: white;
       }
     }
   }

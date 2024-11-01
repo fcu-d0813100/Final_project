@@ -1,0 +1,47 @@
+@import '@/styles/_variant.scss';
+
+.card {
+  margin-right: 50px;
+  font-family: 'Noto Sans';
+  width: 270px;
+  height: 393px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加陰影 */
+  border-radius: 8px; /* 可選：添加圓角 */
+  overflow: hidden;
+
+  .card-img {
+    width: 100%;
+    height: 60%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    a {
+      text-decoration: none !important;
+    }
+    p {
+      margin-bottom: 0px;
+      text-decoration: none;
+      color: black;
+    }
+    .title {
+      font-weight: 900;
+    }
+  }
+}

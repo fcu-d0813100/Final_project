@@ -1,0 +1,57 @@
+@import '@/styles/_variant.scss';
+
+//訂單簡易展示方框
+.order-box .order-header {
+  button {
+    padding: 50px 30px;
+    background-color: $gray-100 !important;
+    color: black !important;
+    &:focus {
+      background-color: $gray-200 !important;
+      box-shadow: none !important;
+      color: black !important;
+    }
+    .order-detail {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
+}
+
+//點擊後，訂單表細節內容
+.order-list {
+  background-color: $gray-100;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .old-price {
+    color: $gray-200;
+    font-size: 14px;
+    text-decoration: line-through;
+    margin-right: 5px;
+  }
+  .new-price {
+    color: $red-500;
+  }
+  th,
+  td {
+    padding: 10px 10px 10px 10px;
+    text-align: left;
+    color: $gray-300;
+  }
+  th {
+    color: #000;
+  }
+  th:nth-child(3),
+  td:nth-child(3) {
+    text-align: center;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    text-align: right;
+  }
+}
