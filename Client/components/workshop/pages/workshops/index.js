@@ -9,7 +9,7 @@ import WorkshopCardLg from '@/components/shared/workshop-card-lg'
 import React, { useState, useEffect } from 'react'
 
 export default function WorkshopAll(props) {
-  const [Workshop, setWorkshop] = useState([])
+  const [workshop, setWorkshop] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +42,7 @@ export default function WorkshopAll(props) {
   //   }
   //   getWorkshop()
   // }, [])
+
   const getStatus = (registrationStart, registrationEnd) => {
     const currentDate = new Date()
     const startDate = new Date(registrationStart)
@@ -65,7 +66,7 @@ export default function WorkshopAll(props) {
 
       <div className={`${styles.section03} container`}>
         <div className={`${styles.tOwnWorkshops} row row-cols-3 my-5`}>
-          {Workshop.map((item) => {
+          {workshop.map((item) => {
             // 將 dates 字串轉換成陣列
             const datesArray = item.dates ? item.dates.split(',') : []
 

@@ -60,7 +60,7 @@ export default function Carousel({ items = [] }) {
           </div>
         ))}
       </div>
-      <div className={`${Styles['btngrp']} d-flex justify-content-between`}>
+      <div className={`${Styles['btngrp']} d-flex justify-content-between `}>
         <button onClick={prevSlide}>Prev</button>
         <button onClick={nextSlide}>Next</button>
       </div>
