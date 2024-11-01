@@ -6,20 +6,28 @@ import styles from './index.module.scss'
 import UserCard from '../../common/userCard'
 import UserSection from '@/components/user/common/user-section'
 import { PiPlus } from 'react-icons/pi'
+import AdminSB from '@/components/admin/common/admin-side-bar'
+import UserTitle from '@/components/user/common/user-title'
 export default function Index(props) {
   return (
     <>
-      <UserSection titleCN="活動管理" titleENG="New activity">
-        <Tab.Container defaultActiveKey="/pdlike">
-          <div className={styles['post-navbar']}></div>
-          <Tab.Content>
-            <Tab.Pane eventKey="/pdlike"></Tab.Pane>
+      <header
+        className={`${styles.header} d-flex justify-content-between align-items-center px-5`}
+      >
+        <div className={`${['h3-L']}`}>Beautique</div>
+        <div className="h5">Admin</div>
+      </header>
+      <div className={styles['user-section']}>
+        <AdminSB />
+        <div className={styles['any-section']}>
+          <UserTitle CN="活動管理" ENG="Activity Management" />
+          <div>
             <div className={`${styles['card-Area']} d-flex mt-5`}>
               <Link href="#">
                 <UserCard />
               </Link>
 
-              <Link href="#">
+              <Link href="/admin/activity/upload">
                 <button className={styles['new-act']}>
                   <div className="text-center">
                     <PiPlus className={styles.plus} />
@@ -30,30 +38,9 @@ export default function Index(props) {
                 </button>
               </Link>
             </div>
-
-            <Tab.Pane eventKey="/classlike">
-              <div className={`row ${styles.line} `}>
-                <div
-                  className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center `}
-                >
-                  <h5 className="h5">目前沒有報名活動</h5>
-                </div>
-                <div className="col-12 d-flex justify-content-center align-items-center mt-5">
-                  <h5 className="p">請先至活動頁面完成報名</h5>
-                </div>
-                <div className="col-12 d-flex justify-content-center align-items-center mt-5">
-                  <Link href="/activity" passHref>
-                    <button className="btn-primary h6">前往報名</button>
-                  </Link>
-                </div>
-              </div>
-              {/* <div className={`row ${styles.interested}`}>
-                <h6 className="h4">猜你可能感興趣</h6>
-              </div> */}
-            </Tab.Pane>
-          </Tab.Content>
-        </Tab.Container>
-      </UserSection>
+          </div>
+        </div>
+      </div>
     </>
   )
 }
