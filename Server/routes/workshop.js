@@ -43,4 +43,32 @@ LEFT JOIN
   console.log(result)
 })
 
+router.get('/:wid', async function (req, res, next) {
+  const sqlSelect = `SELECT
+  workshop.*,
+  teachers.id AS teacher_id,
+  teachers.name AS teacher_name,
+  workshop_type.id AS workshop_type_id,
+  workshop_type.type AS workshop_type_type,
+
+  GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
+  GROUP_CONCAT(workshop_time.start_time ORDER BY workshop_time.date ASC) AS start_times,
+  GROUP_CONCAT(workshop_time.end_time ORDER BY workshop_time.date ASC) AS end_times
+  
+ FROM
+    workshop
+ JOIN
+    teachers ON  workshop.teachers_id = teachers.id 
+ LEFT JOIN
+    workshop_time ON workshop_time.workshop_id = workshop.id
+ LEFT JOIN
+    workshop_type ON workshop.type_id = workshop_type.id
+ GROUP BY
+    workshop.id, teachers.id, workshop.isUpload, workshop.valid, workshop_type.id`
+
+  const result = await db.query(sqlSelect).catch((e) => console.log(e))
+  res.json(result)
+  console.log(result)
+})
+
 export default router
