@@ -7,6 +7,7 @@ import Header from '@/components/home/common/header'
 import WallCard from '@/components/post/common/wall-card'
 import axios from 'axios'
 import styles from './index.module.scss'
+
 export default function PostWall(props) {
   const [wallCard, setWallCard] = useState([])
   useEffect(() => {

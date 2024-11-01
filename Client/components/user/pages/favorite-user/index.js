@@ -1,32 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Tab, Nav } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import styles from './index.module.scss';
+import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Tab, Nav } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import styles from './index.module.scss'
 import UserSection from '@/components/user/common/user-section'
 export default function Index(props) {
   return (
     <>
       <UserSection titleCN="我的收藏" titleENG="favorite">
-
         <Tab.Container defaultActiveKey="/pdlike">
           <div className={styles['post-navbar']}>
-            <Nav
-              variant="underline"
-              className={`${styles['nav-item']} h6`}
-            >
+            <Nav variant="underline" className={`${styles['nav-item']} h6`}>
               <Nav.Item className={`${styles['nav-link']} `}>
-                <Nav.Link className={`${styles['link-style']} `} eventKey="/pdlike">最愛商品</Nav.Link>
+                <Nav.Link
+                  className={`${styles['link-style']} `}
+                  eventKey="/pdlike"
+                >
+                  最愛商品
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item className={`${styles['nav-link']} `}>
-                <Nav.Link className={`${styles['link-style']} `} eventKey="/classlike">課程追蹤</Nav.Link>
+                <Nav.Link
+                  className={`${styles['link-style']} `}
+                  eventKey="/classlike"
+                >
+                  課程追蹤
+                </Nav.Link>
               </Nav.Item>
             </Nav>
           </div>
           <Tab.Content>
             <Tab.Pane eventKey="/pdlike">
               <div className={`row ${styles.line} `}>
-                <div className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center `}>
+                <div
+                  className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center `}
+                >
                   <h5 className="h5">目前沒有收藏商品</h5>
                 </div>
                 <div className="col-12 d-flex justify-content-center align-items-center mt-5">
@@ -44,7 +52,9 @@ export default function Index(props) {
             </Tab.Pane>
             <Tab.Pane eventKey="/classlike">
               <div className={`row ${styles.line} `}>
-                <div className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center `}>
+                <div
+                  className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center `}
+                >
                   <h5 className="h5">目前沒有收藏課程</h5>
                 </div>
                 <div className="col-12 d-flex justify-content-center align-items-center mt-5">
@@ -63,7 +73,6 @@ export default function Index(props) {
           </Tab.Content>
         </Tab.Container>
       </UserSection>
-
     </>
-  );
+  )
 }
