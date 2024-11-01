@@ -40,10 +40,11 @@ LEFT JOIN
 
   const result = await db.query(sqlSelect).catch((e) => console.log(e))
   res.json(result)
-  console.log(result)
+  //console.log(result)
 })
 
 router.get('/:wid', async function (req, res, next) {
+  //   const { wid } = req.params
   const sqlSelect = `SELECT
   workshop.*,
   teachers.id AS teacher_id,
@@ -63,12 +64,26 @@ router.get('/:wid', async function (req, res, next) {
     workshop_time ON workshop_time.workshop_id = workshop.id
  LEFT JOIN
     workshop_type ON workshop.type_id = workshop_type.id
+WHERE
+    workshop.id=${req.params.wid}
  GROUP BY
     workshop.id, teachers.id, workshop.isUpload, workshop.valid, workshop_type.id`
-
-  const result = await db.query(sqlSelect).catch((e) => console.log(e))
+  const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
   res.json(result)
-  console.log(result)
+  console.log(req.params.wid)
+
+  //   try {
+  //     const result = await db.query(sqlSelect, [wid])
+  //     if (result.length > 0) {
+  //       res.json(result[0]) // 只返回第一個物件
+  //       console.log(result[0]) // 只輸出單一物件
+  //     } else {
+  //       res.status(404).json({ message: '找不到該工作坊資料' })
+  //     }
+  //   } catch (e) {
+  //     console.log(e)
+  //     res.status(500).json({ message: '伺服器錯誤' })
+  //   }
 })
 
 export default router

@@ -1,5 +1,6 @@
 'use client'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 import { useCartWorkshop } from '@/hooks/use-cartW'
 import Footer from '@/components/home/common/footer'
 import TopBar from '@/components/home/common/header'
@@ -13,56 +14,73 @@ import { PiMinus, PiPlus, PiPlusCircle, PiHandbagSimple } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
 export default function WorkshopDetail(props) {
-  const router = useRouter(null)
-  const [workshop, setWorkshop] = useState([])
+  const router = useRouter()
+  const [tworkshop, settWorkshop] = useState(null)
 
-  const fetchData = async (wid) => {
-    try {
-      const response = await fetch(`http://localhost:3005/api/workshop/${wid}`)
-      if (!response.ok) {
-        throw new Error('網路回應不成功：' + response.status)
-      }
-      const data = await response.json()
-      setWorkshop(data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  const { workshopId } = router.query
 
   useEffect(() => {
-    if (router.isReady && router.query.wid) {
-      fetchData(router.query.wid)
+    async function getworkshop() {
+      if (workshopId) {
+        const response = await axios.get(
+          `http://localhost:3005/api/workshop/${wid}`,
+          { withCredentials: true }
+        )
+        settWorkshop(response.data)
+      }
     }
-  }, [router.isReady, router.query.wid])
+    getworkshop()
+  }, [workshopId])
 
-  // const [classTime, setClassTime] = useState([])
-
-  // const handleIncrease = (classTimeId) => {
-  //   const nextClassTime = classTime.map((v) =>
-  //     v.id === classTimeId ? { ...v, count: v.count + 1 } : v
-  //   )
-  //   setClassTime(nextClassTime)
+  // const fetchData = async (wid) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:3005/api/workshop/${wid}`)
+  //     if (!response.ok) {
+  //       throw new Error('網路回應不成功：' + response.status)
+  //     }
+  //     const data = await response.json()
+  //     settWorkshop(data)
+  //     console.log(data)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
   // }
 
-  // const handleDecrease = (classTimeId) => {
-  //   const nextClassTime = classTime.map((v) =>
-  //     v.id === classTimeId && v.count > 0 ? { ...v, count: v.count - 1 } : v
-  //   )
-  //   setClassTime(nextClassTime)
-  // }
+  // 用useEffect監聽router.isReady變動
+  useEffect(() => {
+    if (router.isReady) {
+      getworkshop(router.query.wid)
+    }
+  }, [router.isReady])
+
+  const [classTime, setClassTime] = useState()
+
+  const handleIncrease = (classTimeId) => {
+    const nextClassTime = classTime.map((v) =>
+      v.id === classTimeId ? { ...v, count: v.count + 1 } : v
+    )
+    setClassTime(nextClassTime)
+  }
+
+  const handleDecrease = (classTimeId) => {
+    const nextClassTime = classTime.map((v) =>
+      v.id === classTimeId && v.count > 0 ? { ...v, count: v.count - 1 } : v
+    )
+    setClassTime(nextClassTime)
+  }
 
   return (
     <>
       <TopBar />
       <WorkshopDetailHeader
-        name={workshop.name}
+        name={item.name}
         description="時尚攝影彩妝班專注於培養學員掌握專業時尚彩妝與修容技巧，融合創意與流行元素，打造獨特的時尚造型。適合想進入時尚產業的學員，從基礎到高階全面提升。"
         beginDate="2024/09/30"
         endDate="2024/10/20"
         address="台北市大同區重慶北路三段43號2樓"
         type="時尚攝影類"
         teacher="Terry Barber"
-        cover={`/workshop/workshop_img/${workshop.workshop_type_id}-${workshop.id}-c.jpg`}
+        cover={`/workshop/workshop_img/${item.workshop_type_id}-${item.id}-c.jpg`}
       />
 
       <div className={styles.workshopSpace}>
@@ -79,8 +97,7 @@ export default function WorkshopDetail(props) {
         <h4 className="h4 text-center mb-5">開課時程</h4>
 
         <div className="row row-cols-3 g-4">
-          {/* {workshop.map((classTime) => (
-            <TimeSelect
+          {/* <TimeSelect
               key={classTime.id}
               date={classTime.date}
               beginTime={classTime.beginTime}
@@ -91,29 +108,7 @@ export default function WorkshopDetail(props) {
               disabled={classTime.disabled}
               //isActive={selectedId === classTime.id} // 傳遞是否為選中的狀態
               //onSelect={() => handleSelectTime(classTime.id)} // 傳遞選擇函數
-            />
-          ))} */}
-
-          {/* <TimeSelect
-            key={1}
-            date="2024/9/28"
-            beginTime="13:00"
-            endTime="16:00"
-            hours={3}
-            min={4}
-            max={12}
-          />
-
-          <TimeSelect
-            key={2}
-            disabled={true}
-            date="2024/9/28"
-            beginTime="13:00"
-            endTime="16:00"
-            hours={3}
-            min={4}
-            max={12}
-          /> */}
+            /> */}
         </div>
 
         <hr className="border-2 my-5" />
@@ -145,12 +140,7 @@ export default function WorkshopDetail(props) {
               </button>
             </div>
             <div>
-              <button
-                className="btn-primary h6"
-                // onClick={() => {
-                //   onAdd(workshop)
-                // }}
-              >
+              <button className="btn-primary h6">
                 <PiPlusCircle className="me-2 ph" />
                 加入購物車
               </button>
