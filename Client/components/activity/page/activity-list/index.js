@@ -9,6 +9,8 @@ import Footer from '@/components/home/common/footer'
 import { Heart } from 'phosphor-react'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Dropdown from '@/components/shared/dropdownList/sample'
+import ListCarousel from '@/components/activity/common/ListCarousel/actCarousel'
+
 
 export default function Activity(props) {
   // 使用 useEffect 確保 Bootstrap JavaScript 僅在客戶端加載
@@ -23,12 +25,7 @@ export default function Activity(props) {
       <Header />
       {/* 輪播圖片 */}
       <div className={Styles['act-img-container']}>
-        <Image
-          src={'/activity/YSL4_1.png'}
-          width={1920}
-          height={700}
-          alt="YSL4_1"
-        />
+        <ListCarousel />
       </div>
 
       <div className={`${Styles['act-sec1']} container d-none d-lg-block`}>
