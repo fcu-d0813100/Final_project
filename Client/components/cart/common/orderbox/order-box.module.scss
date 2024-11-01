@@ -1,58 +1,28 @@
 @import '@/styles/_variant.scss';
 
 //訂單簡易展示方框
-
-.accordion-button {
-  background-color: #ae2323 !important; // 設置背景顏色
-  color: #ffffff !important; // 設置文字顏色
-  font-size: 1.2rem !important;
-  border: none; // 移除邊框
-
-  &::after {
-    background-image: none; // 移除右側的箭頭圖示
-  }
-
-  // 當 Header 被展開時
-  &.collapsed {
-    background-color: #ae2323 !important; // 設置收起狀態的背景色
-  }
-}
-
-.order {
-  background-color: pink;
-  .order-header {
-    background-color: #bca9de !important;
-    font-size: 1.2rem !important;
-    padding: 20px;
-  }
-}
-
-.order-content {
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: $gray-100;
-  padding: 15px 25px;
-  .pic {
-    width: 150px;
-    height: 150px;
-    img {
+.order-box .order-header {
+  button {
+    padding: 50px 30px;
+    background-color: $gray-100 !important;
+    color: black !important;
+    &:focus {
+      background-color: $gray-200 !important;
+      box-shadow: none !important;
+      color: black !important;
+    }
+    .order-detail {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 100%;
     }
-  }
-  button {
-    border: none;
   }
 }
 
 //點擊後，訂單表細節內容
 .order-list {
-  margin-top: 10px;
   background-color: $gray-100;
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 5px;
   table {
     width: 100%;
     border-collapse: collapse;
@@ -68,7 +38,7 @@
   }
   th,
   td {
-    padding: 15px 30px 10px 30px;
+    padding: 10px 10px 10px 10px;
     text-align: left;
     color: $gray-300;
   }

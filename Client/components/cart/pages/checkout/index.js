@@ -2,13 +2,27 @@ import React, { useState } from 'react'
 import CheckoutBox from '@/components/cart/common/checkoutbox/index'
 import style from './checkout.module.scss'
 import Image from 'next/image'
-
+import { Form, Row, Col } from 'react-bootstrap'
 import { useRouter } from 'next/router'
+import BuyRule from '../../common/buyrule'
 import OrderBox from '../../common/orderbox'
 
 export default function Checkout() {
-  //按鈕路由
+  //----------按鈕路由
   const router = useRouter()
+
+  //----------物流
+  const [deliveryMethod, setDeliveryMethod] = useState('宅配') // 預設選擇宅配
+
+  //----------付款方式
+  const [paymentMethod, setPaymentMethod] = useState('credit_card') // 預設付款方式為信用卡
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardExpiry, setCardExpiry] = useState('')
+  const [cardCVC, setCardCVC] = useState('')
+
+  const handlePaymentChange = (event) => {
+    setPaymentMethod(event.target.value)
+  }
 
   return (
     <>
@@ -23,299 +37,270 @@ export default function Checkout() {
             className="img-fluid d-none d-lg-block"
           />
         </div>
-
         <div className={style.outer}>
           {/* 填寫訂單box */}
           <div className={style.list}>
             {/* 以下為表單(配送&付款方式) */}
-            <form action="" method="post">
-              {/* 查看訂單box */}
 
-              <div className={style.order}>
-                <div className={`h5 ${style['order-topic']}`}>填寫訂購資料</div>
-
-                <div className={style['order-box']}>
-                  <OrderBox />
-
-                  {/* 配送方式 */}
-                  <div className={style.shipping}>
-                    <div className={`h5 ${style['shipping-topic']}`}>
-                      配送方式
-                    </div>
-                    <div className="mb-3 ms-2">
-                      <div
-                        className={`d-flex justify-content-between mb-3 ${style['home_delivery']}`}
-                      >
-                        <div>
-                          <input
-                            type="radio"
-                            id="home_delivery"
-                            name="shipping"
-                            defaultValue="宅配"
-                          />
-                          <label htmlFor="home_delivery">宅配</label>
+            {/* 查看訂單box */}
+            <div className={style.order}>
+              <div className={`h5 ${style['order-topic']}`}>填寫訂購資料</div>
+              <div className={style['order-box']}>
+                <OrderBox />
+                {/* 配送方式 */}
+                <div className={style.shipping}>
+                  <Form className="p-4">
+                    <Form.Group className="mb-3">
+                      <Form.Label>
+                        <div className={`h5 ${style['shipping-topic']}`}>
+                          配送方式 <span>*</span>
                         </div>
-                        <div className="ps">
-                          <input
-                            className={`me-1 ${style['form-check-input:checked']}`}
-                            type="checkbox"
-                            defaultValue=""
-                            id="user"
-                          />
-                          <label htmlFor="user">同會員資料</label>
-                        </div>
-                      </div>
+                      </Form.Label>
+                      <Form.Check
+                        className="mb-3"
+                        type="radio"
+                        label="宅配"
+                        name="deliveryMethod"
+                        id="deliveryMethod宅配"
+                        value="宅配"
+                        checked={deliveryMethod === '宅配'}
+                        onChange={() => setDeliveryMethod('宅配')}
+                      />
+                      <Form.Check
+                        type="radio"
+                        label="超商"
+                        name="deliveryMethod"
+                        id="deliveryMethod超商"
+                        value="超商"
+                        checked={deliveryMethod === '超商'}
+                        onChange={() => setDeliveryMethod('超商')}
+                      />
+                    </Form.Group>
 
-                      {/* 填寫宅配資料 */}
-                      <div className="p-4">
-                        <div className="mb-3">
-                          <label
-                            htmlFor="recipient-name"
-                            className="form-label"
-                          >
-                            收件人
-                          </label>
-                          <input
+                    {/* 根據選擇的配送方式顯示不同的表單內容 */}
+                    {deliveryMethod === '宅配' ? (
+                      <div className={style['shipping-form']}>
+                        {/* 宅配資料表單 */}
+                        <Form.Group className="mb-3" controlId="recipient-name">
+                          <Form.Label>收件人</Form.Label>
+                          <Form.Control
                             type="text"
-                            className="form-control"
-                            id="recipient-name"
-                            name="recipient_name"
                             placeholder="填寫姓名"
+                            name="recipient_name"
                           />
-                        </div>
-                        <div className="mb-3">
-                          <label
-                            htmlFor="recipient-phone"
-                            className="form-label"
-                          >
-                            電話
-                          </label>
-                          <input
+                        </Form.Group>
+
+                        <Form.Group
+                          className="mb-3"
+                          controlId="recipient-phone"
+                        >
+                          <Form.Label>電話</Form.Label>
+                          <Form.Control
                             type="text"
-                            className="form-control"
-                            id="recipient-phone"
-                            name="recipient_phone"
                             placeholder="例 : 0912345678"
+                            name="recipient_phone"
                           />
-                        </div>
-                        <div className="mb-3">
-                          <label
-                            htmlFor="recipient-email"
-                            className="form-label"
-                          >
-                            信箱
-                          </label>
-                          <input
+                        </Form.Group>
+
+                        <Form.Group
+                          className="mb-3"
+                          controlId="recipient-email"
+                        >
+                          <Form.Label>信箱</Form.Label>
+                          <Form.Control
                             type="email"
-                            className="form-control"
-                            id="recipient-email"
-                            name="recipient_email"
                             placeholder="填寫信箱"
+                            name="recipient_email"
                           />
-                        </div>
-                        {/* 縣市下拉選框 */}
-                        <div className="delivery-details mb-3">
-                          <div className="row">
-                            <div className="col-md-6 mb-2">
-                              <label
-                                htmlFor="recipient-city"
-                                className="form-label"
-                              >
-                                縣市
-                              </label>
-                              <select
-                                className="form-select"
-                                id="recipient-city"
-                                name="recipient_city"
-                              >
-                                <option selected="">選擇縣市</option>
+                        </Form.Group>
+
+                        <Row className="mb-3">
+                          <Col md={6}>
+                            <Form.Group controlId="recipient-city">
+                              <Form.Label>縣市</Form.Label>
+                              <Form.Select name="recipient_city">
+                                <option value="" disabled selected>
+                                  選擇縣市
+                                </option>
                                 <option value="taipei">台北市</option>
                                 <option value="taichung">台中市</option>
                                 <option value="kaohsiung">高雄市</option>
                                 <option value="taoyuan">桃園市</option>
-                              </select>
-                            </div>
-                            <div className="col-md-6 mb-2">
-                              <label
-                                htmlFor="recipient-district"
-                                className="form-label"
-                              >
-                                區
-                              </label>
-                              <select
-                                className="form-select"
-                                id="recipient-district"
-                                name="recipient_district"
-                              >
-                                <option selected="">選擇區</option>
+                              </Form.Select>
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group controlId="recipient-district">
+                              <Form.Label>區</Form.Label>
+                              <Form.Select name="recipient_district">
+                                <option value="" disabled selected>
+                                  選擇區
+                                </option>
                                 <option value="zhongzheng">中正區</option>
                                 <option value="daan">大安區</option>
                                 <option value="xinyi">信義區</option>
                                 <option value="neihu">內湖區</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        {/* 居住地址 */}
-                        <div className=" mb-3">
-                          <label
-                            htmlFor="recipient-address"
-                            className="form-label"
-                          >
-                            居住地址
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="recipient-address"
-                            name="recipient_address"
-                            placeholder="填寫地址"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mb-2 ms-3">
-                      <input
-                        type="radio"
-                        id="convenience_store"
-                        name="shipping"
-                        defaultValue="超商"
-                      />
-                      <label htmlFor="convenience_store">超商</label>
-                    </div>
-                  </div>
-                  {/* 配送方式結束 */}
+                              </Form.Select>
+                            </Form.Group>
+                          </Col>
+                        </Row>
 
+                        <Form.Group
+                          className="mb-3"
+                          controlId="recipient-address"
+                        >
+                          <Form.Label>居住地址</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="填寫地址"
+                            name="recipient_address"
+                          />
+                        </Form.Group>
+                      </div>
+                    ) : (
+                      <div className={style['shipping-form']}>
+                        {/* 超商店名選擇 */}
+                        <Form.Group
+                          className="mb-3"
+                          controlId="convenience-store"
+                        >
+                          <Form.Label>選擇超商</Form.Label>
+                          <Form.Select name="convenience_store">
+                            <option value="" disabled selected>
+                              選擇超商店名
+                            </option>
+                            <option value="familyMart">全家便利商店</option>
+                            <option value="711">7-Eleven</option>
+                            <option value="okMart">OK便利商店</option>
+                          </Form.Select>
+                        </Form.Group>
+                      </div>
+                    )}
+                  </Form>
+                </div>
+                {/* 配送方式結束 */}
+
+                {/* 付款方式 */}
+                <Form className="p-4">
                   {/* 付款方式 */}
                   <div className={style.payment}>
                     <div className={`h5 ${style['payment-topic']}`}>
-                      付款方式
+                      付款方式 <span>*</span>
                     </div>
                     {/* 信用卡選項 */}
-                    <div className="mb-3 ms-3">
-                      <input
+                    <div className="mb-3">
+                      <Form.Check
                         type="radio"
                         id="credit_card"
                         name="payment"
-                        defaultValue="信用卡"
+                        label="信用卡"
+                        value="credit_card"
+                        checked={paymentMethod === 'credit_card'}
+                        onChange={handlePaymentChange}
                       />
-                      <label htmlFor="credit_card">信用卡</label>
                     </div>
                     {/* 填寫信用卡資料 */}
-                    <div className="p-4">
-                      <div className="mb-3">
-                        <label htmlFor="card-number" className="form-label">
-                          信用卡卡號
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="card-number"
-                          name="card_number"
-                          placeholder="0000 0000 0000 0000"
-                        />
-                      </div>
-                      {/* 信用卡年月日 */}
-                      <div className="mb-1">
-                        <div className="row">
-                          <div className="col-md-6 mb-2">
-                            <label htmlFor="card-expiry" className="form-label">
-                              有效年月
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              id="card-expiry"
-                              name="card_expiry"
-                              placeholder="MM/YY"
-                              maxLength={5}
-                            />
-                          </div>
-                          <div className="col-md-6">
-                            <label htmlFor="card-cvc" className="form-label">
-                              CVC
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              id="card-cvc"
-                              name="card_cvc"
-                              placeholder="三位數安全碼"
-                              maxLength={3}
-                            />
+                    {paymentMethod === 'credit_card' && (
+                      <div className={style['credit-card']}>
+                        <Form.Group className="mb-3">
+                          <Form.Label htmlFor="card-number">
+                            信用卡卡號
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            id="card-number"
+                            name="card_number"
+                            placeholder="0000 0000 0000 0000"
+                            value={cardNumber}
+                            onChange={(e) => setCardNumber(e.target.value)}
+                          />
+                        </Form.Group>
+                        {/* 信用卡年月日 */}
+                        <div className="mb-1">
+                          <div className="row">
+                            <div className="col-md-6 mb-2">
+                              <Form.Group>
+                                <Form.Label htmlFor="card-expiry">
+                                  有效年月
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  id="card-expiry"
+                                  name="card_expiry"
+                                  placeholder="MM/YY"
+                                  maxLength={5}
+                                  value={cardExpiry}
+                                  onChange={(e) =>
+                                    setCardExpiry(e.target.value)
+                                  }
+                                />
+                              </Form.Group>
+                            </div>
+                            <div className="col-md-6">
+                              <Form.Group>
+                                <Form.Label htmlFor="card-cvc">CVC</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  id="card-cvc"
+                                  name="card_cvc"
+                                  placeholder="三位數安全碼"
+                                  maxLength={3}
+                                  value={cardCVC}
+                                  onChange={(e) => setCardCVC(e.target.value)}
+                                />
+                              </Form.Group>
+                            </div>
                           </div>
                         </div>
+                        <p className="ps-phone mb-3">
+                          注意事項：本公司採用TapPay
+                          SSL交易系統，通過PCI-DSS國際信用卡組織Ｖisa、MasterCard等資料安全認證，以確保您的信用卡資料安全。
+                        </p>
                       </div>
-                      <p className="ps-phone mb-4">
-                        注意事項：本公司採用TapPay
-                        SSL交易系統，通過PCI-DSS國際信用卡組織Ｖisa、MasterCard等資料安全認證，以確保您的信用卡資料安全
-                      </p>
-                    </div>
+                    )}
                     {/* 其他付款選項 */}
-                    <div className="mb-3 ms-3">
-                      <input
+                    <div className="mb-3">
+                      <Form.Check
                         type="radio"
                         id="cod"
                         name="payment"
-                        defaultValue="貨到付款"
+                        label="貨到付款"
+                        value="cod"
+                        checked={paymentMethod === 'cod'}
+                        onChange={handlePaymentChange}
                       />
-                      <label htmlFor="cod">貨到付款</label>
                     </div>
-                    <div className="mb-3 ms-3">
-                      <input
+                    <div className="mb-3">
+                      <Form.Check
                         type="radio"
                         id="linepay"
                         name="payment"
-                        defaultValue="LinePay"
+                        label="Line Pay"
+                        value="linepay"
+                        checked={paymentMethod === 'linepay'}
+                        onChange={handlePaymentChange}
                       />
-                      <label htmlFor="linepay">Line Pay</label>
                     </div>
-                    <div className="mb-4 ms-3">
-                      <input
+                    <div className="mb-4">
+                      <Form.Check
                         type="radio"
                         id="green_world"
                         name="payment"
-                        defaultValue="綠界"
+                        label="綠界"
+                        value="green_world"
+                        checked={paymentMethod === 'green_world'}
+                        onChange={handlePaymentChange}
                       />
-                      <label htmlFor="green_world">綠界</label>
                     </div>
                   </div>
-                  {/* 付款方式結束 */}
-                </div>
-                {/* 填寫訂單box-end */}
-
-                {/* 購買須知 */}
-                <div className={style['buy-rule']}>
-                  <p className="h6">Beautique官方網站購物須知 :</p>
-                  <p>
-                    1.
-                    訂單確認後，我們會於1-3個工作日內進行處理並安排出貨。如有課程預訂，我們將於預訂後發送課程確認信。
-                    <br />
-                    2. 訂單成立後將無法變更，請依照需求下單。 <br />
-                    3.
-                    課程則為線下授課，詳細地點與時間將依您選擇的課程而定，下單前請詳閱課程須知。
-                    <br />
-                    4. 若遇缺貨或商品無法出貨，客服人員將電話聯繫說明。
-                    <br />
-                    5. 恕不接受海外信用卡。
-                    <br />
-                    6.請仔細閱讀並同意本條款後使用本服務。
-                    <br />
-                    感謝您的閱讀，祝您購物愉快!
-                  </p>
-                  <div>
-                    <input
-                      className="form-check-input me-1"
-                      type="checkbox"
-                      defaultValue=""
-                      defaultChecked=""
-                    />
-                    <span> 我已閱讀並同意以上購買須知 </span>
-                  </div>
-                </div>
-                {/* 結帳總計 */}
+                </Form>
+                {/* 付款方式結束 */}
               </div>
-            </form>
+              {/* 填寫訂單box-end */}
+              {/* 購買須知 */}
+              <BuyRule />
+              {/* 結帳總計 */}
+            </div>
           </div>
 
           {/* 總計box */}
