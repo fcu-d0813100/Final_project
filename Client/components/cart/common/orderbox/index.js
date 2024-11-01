@@ -1,37 +1,27 @@
 import React from 'react'
 import Accordion from 'react-bootstrap/Accordion'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import style from './order-box.module.scss'
+import { useCartProduct } from '@/hooks/use-cartP'
 import Image from 'next/image'
 
 export default function OrderBox() {
+  // 從use-cartP鉤子取得商品內容
+  const { productItems = [], pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
+  console.log(productItems)
   return (
-    <>
+    <div className={style['order-box']}>
       <Accordion>
-        <Accordion.Item className={`${style['order']} ${style['order-header']}`} eventKey="0">
+        <Accordion.Item eventKey="0">
           <Accordion.Header className={style['order-header']}>
-            <div className={style['order-header']}>
-              <h5>訂單細節</h5>
-              <h6> 查看訂單</h6>
+            <div className={style['order-detail']}>
+              <div>圖片</div>
+              <div>訂單編號：11011124</div>
+              <div>查看訂單</div>
             </div>
-            {/* <div className={style['order-content']}>
-              <div className={style.pic}>
-                <Image
-                  src="/cart/LANCOME_LG01_M_888.webp"
-                  alt="訂單主圖片"
-                  width={100}
-                  height={100}
-                  className="img-fluid"
-                />
-              </div>
-              <div className={style.number}>
-                訂單編號：<span>A20241022</span>
-              </div>
-              <div className={style.content}></div>
-            </div> */}
           </Accordion.Header>
-          <Accordion.Body>
-            {/* 訂單細節box */}
-            <div className={style['order-list']}>
+          <Accordion.Body className={style['order-list']}>
+            <div>
               <table>
                 <thead>
                   <tr>
@@ -42,15 +32,23 @@ export default function OrderBox() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>高級奢華訂製唇膏</td>
-                    <td>春日私語</td>
-                    <td>1</td>
-                    <td>
-                      <span className={style['old-price']}>NT$1,200</span>
-                      <span className={style['new-price']}>NT$900</span>
-                    </td>
-                  </tr>
+                  {/* 商品資料 */}
+                  {productItems.map((v, i) => (
+                    <tr key={i}>
+                      <td>{v.product_name}</td>
+                      <td>{v.color}</td>
+                      <td>{v.qty}</td>
+                      <td>
+                        <span className={style['old-price']}>
+                          NT${(v.price * v.qty).toLocaleString()}
+                        </span>
+                        <span className={style['new-price']}>
+                          NT${(v.price * v.qty * 0.8).toLocaleString()}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {/* 課程資料 */}
                   <tr>
                     <td>F19時尚攝影彩妝班</td>
                     <td>2024/10/3 (四) 9:00 - 12:00 | 3hr</td>
@@ -63,6 +61,6 @@ export default function OrderBox() {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-    </>
+    </div>
   )
 }
