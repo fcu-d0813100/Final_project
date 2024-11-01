@@ -1,7 +1,13 @@
 import React from 'react'
 import style from './checkout-box.module.scss'
 import DiscountBox from '../discountbox'
-export default function CheckoutBox({ pTotal, wTotal }) {
+import { useCartProduct } from '@/hooks/use-cartP'
+
+export default function CheckoutBox() {
+  // 從use-cartP鉤子取得商品內容
+  const { pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
+
+  
   return (
     <>
       {/* 優惠券 */}
@@ -15,15 +21,15 @@ export default function CheckoutBox({ pTotal, wTotal }) {
           </div>
           <div className={style.item}>
             <span>彩妝商品</span>
-            <span>NT${pTotal}</span>
+            <span>NT${(pTotalPrice * 0.8).toLocaleString()}</span>
           </div>
           <div className={style.item}>
             <span>課程商品</span>
-            <span>NT${wTotal}</span>
+            <span>NT${}</span>
           </div>
           <div className={`${style.item} ${style['discount_item']}`}>
-            <span>全站9折</span>
-            <span>-NT$100</span>
+            <span>全站8折</span>
+            <span>-NT${(pTotalPrice - pTotalPrice * 0.8).toLocaleString()}</span>
           </div>
           <div className={`${style.item} ${style['discount_item']}`}>
             <span>Nars全館20%off</span>

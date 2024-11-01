@@ -1,8 +1,9 @@
-// 測試從資料庫拉資料出來
 import React, { useState, useEffect } from 'react'
+import { useCartProduct } from '@/hooks/use-cartP'
 
 export default function Products(props) {
   const [products, setProducts] = useState([])
+  const { onAddProduct } = useCartProduct()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,6 +14,7 @@ export default function Products(props) {
         }
         const data = await response.json()
         setProducts(data)
+        console.log(data)
       } catch (err) {
         console.log(err)
       }
@@ -26,8 +28,19 @@ export default function Products(props) {
       <ul>
         {products.map((product) => (
           <li key={product.id}>
-            {product.product_name} <br />
+            <br />
+            {product.brand_name}
+            <br />
+            {product.product_name}
+            <br />
             {'price: $' + product.price}
+            <br />
+            {product.color}
+            <br />
+            {product.mainimage}
+            <br />
+            {/* 傳入商品資訊到 onAddProduct */}
+            <button onClick={() => onAddProduct(product)}>加入</button>
           </li>
         ))}
       </ul>
