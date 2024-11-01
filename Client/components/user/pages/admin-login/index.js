@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import { PiEyeClosed } from "react-icons/pi";
+import { PiEyeClosed } from 'react-icons/pi'
 import Link from 'next/link'
-
-
 
 export default function UserLogin(props) {
   return (
@@ -21,12 +19,12 @@ export default function UserLogin(props) {
                 className={`d-flex flex-column align-items-center justify-content-center ${styles['card-img']}`}
               >
                 <h2 className={styles['logo']}>Beautique</h2>
-                <h3 className={styles['slogan']}>
-                  WELCOME！Admin                </h3>
+                <h3 className={styles['slogan']}>WELCOME！Admin </h3>
                 <h6 className={`h6 ${styles['text']}`}>
-                  歡迎回到 Beautique 管理介面！<br />
-                  請輸入您的帳號與密碼，立即進入，開啟今日的管理任務。                </h6>
-
+                  歡迎回到 Beautique 管理介面！
+                  <br />
+                  請輸入您的帳號與密碼，立即進入，開啟今日的管理任務。{' '}
+                </h6>
               </div>
               {/* 登入表單區塊 */}
 
@@ -45,7 +43,9 @@ export default function UserLogin(props) {
                     className={styles['line-input']}
                     placeholder="請輸入帳號/信箱"
                   />
-                  <div className={`${styles['input-area']} ${styles['line-input-pw']}`}>
+                  <div
+                    className={`${styles['input-area']} ${styles['line-input-pw']}`}
+                  >
                     <label htmlFor="password" className={styles['text-input']}>
                       密碼
                     </label>
@@ -59,9 +59,13 @@ export default function UserLogin(props) {
                   </div>
 
                   <div className="d-grid col-12 pt-4">
-                    <button className={`btn-primary h6 ${styles['btn-primary']}`}>
-                      登入
-                    </button>
+                    <Link href="/admin/activity">
+                      <button
+                        className={`btn-primary h6 ${styles['btn-primary']}`}
+                      >
+                        登入
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -74,7 +78,7 @@ export default function UserLogin(props) {
             </p>
           </div>
         </div>
-      </div >
+      </div>
     </>
   )
 }
