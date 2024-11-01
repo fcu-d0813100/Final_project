@@ -1,6 +1,5 @@
 @import '@/styles/_variant.scss';
 
-
 .section01 {
   height: 700px;
   background: url(/workshop/workshop_01_bg.jpg) center no-repeat;
@@ -101,6 +100,7 @@
       }
     }
     transition: 0.3s, background 0.4s;
+
     &:hover {
       color: white;
       background: black url(/workshop/cart_bg.jpg) center no-repeat;
@@ -125,6 +125,50 @@
       }
     }
   }
+
+  .checkDateActive {
+    color: white;
+    height: 230px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    background: black url(/workshop/cart_bg.jpg) center no-repeat;
+    background-size: cover;
+    text-align: center;
+
+    .wDate {
+      padding-bottom: 12px;
+      padding-inline: 20px;
+       border-bottom: solid 1px rgb(255, 255, 255);
+      font-size: 36px;
+      font-family: Noto Sans;
+      font-weight: 600;
+      margin: 0;
+      word-wrap: break-word;
+    }
+
+    .wTime {
+      padding: 15px;
+      width: 300px;
+    }
+    .wPerson {
+      width: 290px;
+      height: 28px;
+      border: 1.5px solid white;
+      color: white;
+      border-radius: 20px;
+      text-align: center;
+      margin: auto;
+      .pMax {
+        height: 100%;
+        padding-top: 2px;
+        color: rgb(0, 0, 0);
+        background-color: white;
+        border-radius: 20px;
+        transition: 0.4s;
+      }
+    }
+   
+  }
+  
   //-------------
   .checkDateDisable {
     height: 230px;
@@ -164,7 +208,7 @@
   //-------------
   .cName {
     font-size: 32px;
-    font-family: "Noto Sans";
+    font-family: 'Noto Sans';
     font-weight: 400px;
     margin: 0px;
   }
@@ -192,7 +236,7 @@
     align-items: center;
     justify-content: center;
     transition: 0.3s;
-    
+
     &:hover {
       background: rgb(0, 0, 0);
       color: white;
@@ -249,7 +293,7 @@
   .leftSide {
     width: 50%;
     padding-inline: 90px;
-  margin-top: -100px;
+    margin-top: -100px;
     color: white;
     border-left: 1px solid #90957a;
     p {

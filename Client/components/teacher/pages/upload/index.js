@@ -1,4 +1,5 @@
 'use client'
+import { PiPlus } from 'react-icons/pi'
 import Sidebar from '@/components/teacher/common/T-dashboard-side-bar'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
 import styles from '@/components/teacher/common/upload.module.scss'
@@ -18,11 +19,26 @@ export default function Upload(props) {
 
         <div className={styles.main}>
           <DashboardTitle chTitle="課程上架" enTitle="New workshop" />
-          <div className={styles.section1}>
-            <div className={styles.uploadCover}>
 
+          <div className={`${styles.section1} d-flex`}>
+            <div className={styles.uploadCover}>
+              <div className="text-center">
+                <PiPlus className={styles.plus} />
+                <p className={`${styles.picUploadText} h4 mt-3`}>
+                  新增封面圖
+                  <br /> <span className="p">(必填)</span>
+                </p>
+              </div>
+            </div>
+
+            <div className={`${styles.X} flex-grow-1`}>
+              <div className={styles.uploadMainInfo}>
+                <h4>主要資訊</h4>
+              </div>
             </div>
           </div>
+
+          <hr className="opacity-75" />
         </div>
       </div>
       <Footer />
