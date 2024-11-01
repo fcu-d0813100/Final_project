@@ -1,4 +1,5 @@
 'use client'
+import { useCartWorkshop } from '@/hooks/use-cartW'
 import Footer from '@/components/home/common/footer'
 import TopBar from '@/components/home/common/header'
 import styles from '@/components/workshop/common/workshop-detail.module.scss'
@@ -10,7 +11,89 @@ import WorkshopAddCartInfo from '@/components/workshop/common/workshop-addcart-i
 import { PiMinus, PiPlus, PiPlusCircle, PiHandbagSimple } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
+const workshop = [
+  {
+    id: 1,
+    date: '2024/9/28',
+    beginTime: '13:00',
+    endTime: '16:00',
+    hours: 3,
+    min: 4,
+    max: 12,
+    disabled: false,
+    count: 0,
+  },
+  {
+    id: 2,
+    date: '2024/9/29',
+    beginTime: '13:00',
+    endTime: '16:00',
+    hours: 3,
+    min: 4,
+    max: 12,
+    disabled: false,
+    count: 0,
+  },
+  {
+    id: 3,
+    date: '2024/9/30',
+    beginTime: '13:00',
+    endTime: '16:00',
+    hours: 3,
+    min: 4,
+    max: 12,
+    disabled: true,
+    count: 0,
+  },
+  {
+    id: 4,
+    date: '2024/10/01',
+    beginTime: '13:00',
+    endTime: '16:00',
+    hours: 3,
+    min: 2,
+    max: 12,
+    disabled: true,
+    count: 0,
+  },
+  {
+    id: 5,
+    date: '2024/10/02',
+    beginTime: '13:00',
+    endTime: '16:00',
+    hours: 3,
+    min: 5,
+    max: 12,
+    disabled: false,
+    count: 0,
+  },
+]
+
 export default function WorkshopDetail(props) {
+
+  // const [selectedId, setSelectedId] = useState(null) // 用於追蹤選中的 ID
+
+  // const handleSelectTime = (id) => {
+  //   setSelectedId(id) // 更新選中的 ID
+  // }
+
+  const { onAdd = () => {} } = useCartWorkshop
+  const [classTime, setClassTime] = useState(workshop)
+
+  const handleIncrease = (classTimeId) => {
+    const nextClassTime = classTime.map((v) =>
+      v.id === classTimeId ? { ...v, count: v.count + 1 } : v
+    )
+    setClassTime(nextClassTime)
+  }
+
+  const handleDecrease = (classTimeId) => {
+    const nextClassTime = classTime.map((v) =>
+      v.id === classTimeId && v.count > 0 ? { ...v, count: v.count - 1 } : v
+    )
+    setClassTime(nextClassTime)
+  }
+
   return (
     <>
       <TopBar />
@@ -39,7 +122,23 @@ export default function WorkshopDetail(props) {
         <h4 className="h4 text-center mb-5">開課時程</h4>
 
         <div className="row row-cols-3 g-4">
-          <TimeSelect
+          {workshop.map((classTime) => (
+            <TimeSelect
+              key={classTime.id}
+              date={classTime.date}
+              beginTime={classTime.beginTime}
+              endTime={classTime.endTime}
+              hours={classTime.hours}
+              min={classTime.min}
+              max={classTime.max}
+              disabled={classTime.disabled}
+              //isActive={selectedId === classTime.id} // 傳遞是否為選中的狀態
+              //onSelect={() => handleSelectTime(classTime.id)} // 傳遞選擇函數
+            />
+          ))}
+
+          {/* <TimeSelect
+            key={1}
             date="2024/9/28"
             beginTime="13:00"
             endTime="16:00"
@@ -49,6 +148,7 @@ export default function WorkshopDetail(props) {
           />
 
           <TimeSelect
+            key={2}
             disabled={true}
             date="2024/9/28"
             beginTime="13:00"
@@ -56,7 +156,7 @@ export default function WorkshopDetail(props) {
             hours={3}
             min={4}
             max={12}
-          />
+          /> */}
         </div>
 
         <hr className="border-2 my-5" />
@@ -71,16 +171,29 @@ export default function WorkshopDetail(props) {
 
           <div>
             <div className="mb-4 d-flex align-items-center justify-content-end">
-              <button className={`${styles.btnSm} ph`}>
+              <button
+                className={`${styles.btnSm} ph`}
+                onClick={() => handleDecrease(classTime[0].id)} // 修改為 onClick 並傳入第一項的 id 作範例
+              >
                 <PiMinus />
               </button>
-              <span className="px-3 h6">1</span>
-              <button className={`${styles.btnSm} ph`}>
+              <span className="px-3 h6">
+                <b>{classTime[0].count}</b> {/* 範例顯示第一項的 count 值 */}
+              </span>
+              <button
+                className={`${styles.btnSm} ph`}
+                onClick={() => handleIncrease(classTime[0].id)} // 修改為 onClick 並傳入第一項的 id 作範例
+              >
                 <PiPlus />
               </button>
             </div>
             <div>
-              <button className="btn-primary h6">
+              <button
+                className="btn-primary h6"
+                onClick={() => {
+                  onAdd(workshop)
+                }}
+              >
                 <PiPlusCircle className="me-2 ph" />
                 加入購物車
               </button>

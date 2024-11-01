@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 import { FaHeart, FaRegHeart, FaMinus, FaPlus, FaChevronUp, FaChevronDown, FaPlusCircle, FaShoppingBag } from 'react-icons/fa';
 import { Tab, Nav } from 'react-bootstrap';
+import CommentBoard from '@/components/product/common/CommentBoard'
 
 const ProductPage = () => {
   const [quantity, setQuantity] = useState(0);
@@ -106,9 +107,9 @@ const ProductPage = () => {
                   className={styles['zoom-lens']}
                   style={{
                     backgroundImage: `url(${selectedImage})`,
-                    backgroundPosition: `-${zoomPosition.x}% -${zoomPosition.y}%`,
-                    top: `${zoomPosition.y - 50}px`,
-                    left: `${zoomPosition.x - 50}px`,
+                    backgroundPosition: `-${zoomPosition.x * 2}px -${zoomPosition.y * 2}px`,
+                    top: `${zoomPosition.y}px`,
+                    left: `${zoomPosition.x}px`,
                   }}
                 ></div>
               )}
@@ -167,17 +168,17 @@ const ProductPage = () => {
 
       {/* 導覽行區域 */}
       <div className={styles['nav-section-bg']}> {/* 外層的灰色背景區域 */}
-        <div className=  'container mt-5'>
+        <div className= {`${styles['detail-lowercontainer']} container mt-5`}>
           <Tab.Container defaultActiveKey="description">
             <div className={`${styles['post-navbar']} border-bottom`}>
               <Nav variant="underline" className={`justify-content-center ${styles['post-nav']}`}>
                 <Nav.Item className={styles['nav-item']}>
-                  <Nav.Link eventKey="description" className={`${styles['nav-link']} ${styles['custom-link']}`}>
+                  <Nav.Link eventKey="description" className={`${styles['nav-link']} ${styles['custom-link']} h5`}>
                     商品描述
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item className={styles['nav-item']}>
-                  <Nav.Link eventKey="reviews" className={`${styles['nav-link']} ${styles['custom-link']}`}>
+                  <Nav.Link eventKey="reviews" className={`${styles['nav-link']} ${styles['custom-link']} h5`}>
                     顧客評論
                   </Nav.Link>
                 </Nav.Item>
@@ -186,14 +187,88 @@ const ProductPage = () => {
             <Tab.Content className="mt-4">
               <Tab.Pane eventKey="description">
                 <div className={styles['description-content']}>
-                  <h4>商品描述</h4>
-                  <p>這裡是商品的詳細描述內容。你可以放置更多文字來描述產品的特點、功能和用途。</p>
+                  <div className={styles['description-content-context']}>最輕滑保濕的霧面唇膏！
+                    革命性「3D半球型微米粉體」打造彷若裸唇最輕柔霧感，保濕全新升級！添加「玻尿酸」長效滋潤雙唇不乾澀。頂級精華注入！黃金玫瑰瞬效複方x玫瑰潤澤唇粹x普拉絲鏈
+                    全面修護美唇，柔焦滑順零唇紋
+                  </div>
+                  <div className={styles['description-content-imgs']}>
+                    <Image width={528}
+                      height={528}
+                      src={'/product/LANCOME_LS01_l_01.jpg'}
+                      alt="Main Product"
+                      className={styles['image']}>
+                    </Image>
+                    <Image width={528}
+                      height={528}
+                      src={'/product/LANCOME_LS01_l_02.jpg'}
+                      alt="Main Product"
+                      className={styles['image']}>
+                    </Image>
+                    <Image width={528}
+                      height={528}
+                      src={'/product/LANCOME_LS01_l_03.jpg'}
+                      alt="Main Product"
+                      className={styles['image']}>
+                    </Image>
+                    <Image width={528}
+                      height={528}
+                      src={'/product/LANCOME_LS01_l_04.jpg'}
+                      alt="Main Product"
+                      className={styles['image']}>
+                    </Image>
+                    <Image width={528}
+                      height={528}
+                      src={'/product/LANCOME_LS01_l_05.jpg'}
+                      alt="Main Product"
+                      className={styles['image']}>
+                    </Image>
+                    <div className={styles['description-content-notice']}>
+                    <h2>購買與使用美妝產品須知：</h2>
+                    <ol>
+                      <li>
+                        <strong className={styles['notice-title']}>成分過敏測試</strong>
+                        <ul>
+                          <li>
+                            <strong>過敏測試：</strong>在使用新產品前，尤其是敏感肌膚或有過敏史的人，應先進行局部過敏測試。可以少量產品塗在耳後或手腕內側，觀察 24 小時內是否有過敏反應。
+                          </li>
+                          <li>
+                            <strong>避免過敏成分：</strong>注意查看成分表，避免使用自己過敏的成分，例如酒精、香精、人工色素等。
+                          </li>
+                        </ul>
+                      </li>
+                      
+                      <li>
+                        <strong className={styles['notice-title']}>產品的保存期限與保存方式</strong>
+                        <ul>
+                          <li>
+                            <strong>保存期限：</strong>美妝產品有一定的保質期，過期產品的功效可能會下降，甚至可能導致皮膚刺激或感染。在開封前注意查看日期和保存期限，尤其是開封後的使用期限 (PAO, Period After Opening)。
+                          </li>
+                          <li>
+                            <strong>保存方式：</strong>部分產品需避光濕、遠離高溫，例如防曬霜、精華液等應存放在陰涼乾燥處，避免陽光直射。
+                          </li>
+                        </ul>
+                      </li>
+                      
+                      <li>
+                        <strong className={styles['notice-title']}>產品的真偽辨識</strong>
+                        <ul>
+                          <li>
+                            正品產品建議應：應從可信賴的渠道（如品牌官方網站或授權）購買，避免購買假冒商品。假冒產品含有不明成分，對皮膚造成危害。
+                          </li>
+                          <li>
+                            辨別購買來源：注意產品上的防偽標籤或 QR 碼，並可在官網上查詢產品的真偽。
+                          </li>
+                        </ul>
+                      </li>
+                    </ol>
+                    <p>感謝您的關注，祝您購物愉快！</p>
+                    </div>
+                  </div>
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="reviews">
                 <div className={styles['reviews-content']}>
-                  <h4>顧客評論</h4>
-                  <p>這裡是顧客評論區域。顯示用戶的評價和反饋，幫助其他用戶了解產品的實際表現。</p>
+                  <CommentBoard />
                 </div>
               </Tab.Pane>
             </Tab.Content>

@@ -1,0 +1,184 @@
+@import '@/styles/_variant.scss';
+
+.commentBoard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  .commentupper{
+    display: flex;
+    // justify-content: space-between;
+    margin: 5% 0;
+    max-width: 100%;
+    flex: 1;
+  }
+  // 評分概覽
+  .ratingOverview {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 0;
+    border-right: 1px solid $green-500;
+    flex: 1;
+    .averageRating {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .ratingScore {
+        font-size: 75px;
+        font-weight: bold;
+      }
+    }
+
+    // 評論長條圖
+    .ratingDistribution { 
+      font-size: 14px;
+      color: gray;
+      padding-left: 15%;
+      // padding-right: 46px;
+      .ratingRow{
+        display: flex;
+        align-items: center;
+        gap: 8px; // 控制文字、長條圖和百分比之間的間距
+        box-sizing: border-box;
+        margin-block: 7px;
+      }
+      .ratingRectangle{
+        display: inline-block;
+        width: 212px;
+        height: 12px;
+        background-color: #e0e0e0; // 背景顏色，例如灰色
+        position: relative;
+      }
+
+      .ratingFill {
+        height: 100%;
+        background-color: #90957a; // 填滿顏色
+        transition: width 0.3s ease; // 讓動畫效果更平滑
+      }
+
+      .percentage {
+        width: 50px; // 設定固定寬度，確保百分比顯示對齊
+        text-align: left; // 文字靠右對齊
+      }
+    }
+  }
+
+  .filterButtons {
+    display: flex;
+    padding: 0;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    .button {
+      border: 1px solid #ddd;
+      background-color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 180px;
+      height: 80px;
+      padding: 0 20px;
+    }
+  }
+
+  // 評論條
+  .commentList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    .commentItem {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #ffffff;
+      opacity: 0.85;
+      position: relative; // 為了定位「編輯」和「刪除」按鈕
+
+      .userInfo {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .avatar {
+          border-radius: 50%;
+        }
+        
+        // 將時間和有幫助顯示在同一行
+        .userDetails {
+          display: flex;
+          flex-direction: column;
+          
+          .userHeader {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            
+            .username {
+              font-weight: bold;
+            }
+
+            .timestamp {
+              font-size: 14px;
+              color: gray;
+            }
+            
+            .helpful {
+              margin-left: 10px;
+              color: gray;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+
+      .rating {
+        color: gold;
+        font-size: 18px;
+      }
+
+      .commentText {
+        margin-top: 10px;
+        font-size: 16px;
+      }
+
+      .commentImages {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+
+        .commentImage {
+          width: 60px;
+          height: 60px;
+          border-radius: 4px;
+        }
+      }
+
+      // 將編輯和刪除按鈕置於右下角
+      .commentFooter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        margin-top: 10px;
+        color: gray;
+        
+        .actions {
+          position: absolute;
+          bottom: 10px;
+          right: 20px;
+
+          .edit, .delete {
+            cursor: pointer;
+            margin-left: 10px;
+            color: #555;
+          }
+        }
+      }
+    }
+  }
+}

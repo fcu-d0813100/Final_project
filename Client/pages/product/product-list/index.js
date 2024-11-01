@@ -1,6 +1,10 @@
 // pages/card-home/index.js
 import React from 'react'
 import ProductPage from '@/components/product/common/product-list'
+import React, { useState, useEffect } from 'react'
+
+
+
 
 const products = [
   {
@@ -27,6 +31,25 @@ const products = [
 ]
 
 const ProductList = () => {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3005/api/product/product-list')
+        if (!response.ok) {
+          throw new Error('網路回應不成功：' + response.status)
+        }
+        const data = await response.json()
+        setProducts(data)
+        console.log(data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchData()
+  }, [])
+
+
   return (
     <div>
       <ProductPage products={products} />
