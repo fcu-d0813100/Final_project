@@ -10,11 +10,13 @@ export function ProductCartProvider({ children }) {
 
   //商品新增到購物車
   const onAddProduct = (product) => {
-    const foundIndex = productItems.findIndex((v) => v.id === product.id)
+    const foundIndex = productItems.findIndex(
+      (v) => v.product_id === product.product_id && v.color === product.color
+    )
 
     if (foundIndex !== -1) {
       const nextProductItems = productItems.map((v, i) => {
-        if (v.id === product.id) {
+        if (v.product_id === product.product_id && v.color === product.color) {
           return { ...v, qty: v.qty + 1 }
         } else {
           return v
@@ -27,9 +29,9 @@ export function ProductCartProvider({ children }) {
   }
 
   // 處理遞增
-  const onIncreaseProduct = (productId) => {
+  const onIncreaseProduct = (productId, color) => {
     const nextProductItems = productItems.map((v, i) => {
-      if (v.id === productId) {
+      if (v.product_id === productId && v.color === color) {
         return { ...v, qty: v.qty + 1 }
       } else {
         return v
@@ -39,9 +41,9 @@ export function ProductCartProvider({ children }) {
   }
 
   // 處理遞減
-  const onDecreaseProduct = (productId) => {
+  const onDecreaseProduct = (productId, color) => {
     const nextProductItems = productItems.map((v, i) => {
-      if (v.id === productId) {
+      if (v.product_id === productId && v.color === color) {
         return { ...v, qty: v.qty - 1 }
       } else {
         return v
@@ -51,8 +53,12 @@ export function ProductCartProvider({ children }) {
   }
 
   // 處理刪除
-  const onRemoveProduct = (productId) => {
-    setProductItems(productItems.filter((v) => v.id !== productId))
+  const onRemoveProduct = (productId, color) => {
+    setProductItems(
+      productItems.filter(
+        (v) => v.product_id !== productId || v.color !== color
+      )
+    )
   }
 
   // 計算總數量與總金額

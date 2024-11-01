@@ -2,18 +2,13 @@ import React, { useState } from 'react'
 import CheckoutBox from '@/components/cart/common/checkoutbox/index'
 import style from './checkout.module.scss'
 import Image from 'next/image'
-import { CaretUp, CaretDown } from '@phosphor-icons/react'
+
 import { useRouter } from 'next/router'
+import OrderBox from '../../common/orderbox'
 
 export default function Checkout() {
   //按鈕路由
   const router = useRouter()
-
-  //切換顯示訂單內容
-  const [isVisible, setIsVisible] = useState(false)
-  const toggleVisibility = () => {
-    setIsVisible((prev) => !prev)
-  }
 
   return (
     <>
@@ -38,60 +33,10 @@ export default function Checkout() {
 
               <div className={style.order}>
                 <div className={`h5 ${style['order-topic']}`}>填寫訂購資料</div>
+
                 <div className={style['order-box']}>
-                  <div className={style['order-content']}>
-                    <div className={style.pic}>
-                      <Image
-                        src="/cart/LANCOME_LG01_M_888.webp"
-                        alt="訂單主圖片"
-                        width={100}
-                        height={100}
-                        className="img-fluid"
-                      />
-                    </div>
-                    <div className={style.number}>
-                      訂單編號：<span>A20241022</span>
-                    </div>
-                    <div className={style.content}>
-                      <button type="button" onClick={toggleVisibility}>
-                        查看訂單內容 {isVisible ? <CaretDown /> : <CaretUp />}
-                      </button>
-                    </div>
-                  </div>
-                  <div style={{ display: isVisible ? 'block' : 'none' }}>
-                    {/* 訂單細節box */}
-                    <div className={style['order-list']}>
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>商品</th>
-                            <th>內容</th>
-                            <th>數量</th>
-                            <th>價格</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>高級奢華訂製唇膏</td>
-                            <td>春日私語</td>
-                            <td>1</td>
-                            <td>
-                              <span className={style['old-price']}>
-                                NT$1,200
-                              </span>
-                              <span className={style['new-price']}>NT$900</span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>F19時尚攝影彩妝班</td>
-                            <td>2024/10/3 (四) 9:00 - 12:00 | 3hr</td>
-                            <td>2</td>
-                            <td>NT$6,000</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                  <OrderBox />
+
                   {/* 配送方式 */}
                   <div className={style.shipping}>
                     <div className={`h5 ${style['shipping-topic']}`}>
@@ -107,7 +52,6 @@ export default function Checkout() {
                             id="home_delivery"
                             name="shipping"
                             defaultValue="宅配"
-                            onclick="toggleLine()"
                           />
                           <label htmlFor="home_delivery">宅配</label>
                         </div>
@@ -254,7 +198,6 @@ export default function Checkout() {
                         id="credit_card"
                         name="payment"
                         defaultValue="信用卡"
-                        onclick="toggleLine()"
                       />
                       <label htmlFor="credit_card">信用卡</label>
                     </div>
