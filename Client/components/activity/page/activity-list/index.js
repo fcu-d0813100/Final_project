@@ -11,7 +11,6 @@ import { PiMagnifyingGlass } from 'react-icons/pi'
 import Dropdown from '@/components/shared/dropdownList/sample'
 import ListCarousel from '@/components/activity/common/ListCarousel/actCarousel'
 
-
 export default function Activity(props) {
   // 使用 useEffect 確保 Bootstrap JavaScript 僅在客戶端加載
   useEffect(() => {
@@ -126,7 +125,7 @@ export default function Activity(props) {
           <div className={`${Styles['cardLeft']} d-flex`}>
             <div className={Styles['cardL']}>
               {/* 卡片內圖片 */}
-              <Link href="#">
+              <Link href="/activity/activity-det">
                 <div className={Styles['card-img']}>
                   <div className={`${Styles['card-text']} d-flex`}>
                     <div className="currentR">
