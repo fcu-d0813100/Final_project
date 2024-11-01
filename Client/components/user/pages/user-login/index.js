@@ -30,7 +30,7 @@ export default function UserLogin(props) {
                   註冊成為Beautique會員，第一時間掌握最新美妝潮流！
                 </h6>
                 <div className="col-12 d-flex justify-content-center align-items-center">
-                  <Link href="/user/signup">
+                  <Link href="/user/register">
                     <button className={`btn-outline h6 ${styles['btn-outline']}`}>
                       立即註冊
                     </button>

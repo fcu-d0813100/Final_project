@@ -1,0 +1,91 @@
+@import '@/styles/_variant.scss';
+
+.title {
+    width: 100%;
+    /* 容器寬度 */
+    height: auto;
+    /* 高度自動 */
+    overflow: hidden;
+    /* 隱藏溢出部分 */
+    display: flex;
+    justify-content: center;
+    /* 置中 */
+    align-items: center;
+    /* 垂直置中 */
+}
+.img {
+    max-width: 100%;
+    /* 使圖片最大寬度為容器的寬度 */
+    height: auto;
+    /* 高度自動調整 */
+}
+.nav {
+    padding-top: 20px;
+
+    a {
+        color: $green-500; // 確保 $green-500 變數已定義
+    }
+}
+.section {
+    padding-top: 20px;
+    padding-bottom: 50px;
+
+    .article {
+        display: flex; // 將 d-flex 實現
+        flex-direction: column; // 將 flex-column 實現
+        padding-top: 10%;
+        gap: 40px;
+    }
+}
+.sub-title {
+    line-height: 2rem;
+}
+
+
+
+@media (max-width: 1460px) {
+
+    .sub-title {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .section {
+        .title {
+            font-size: 32px;
+        }
+    }
+}
+
+
+@media (max-width: 540px) {
+
+    // 可以根據需要添加樣式
+    .nav {
+        display: none; // 確保使用 .nav
+    }
+
+    .section {
+        padding-top: 30px;
+
+        .title {
+            font-size: 20px;
+        }
+    }
+
+    .article {
+        padding-top: 40px;
+
+        .sub-title {
+
+            font-size: 14px;
+
+            span {
+                font-size: 16px;
+            }
+        }
+    }
+
+}
