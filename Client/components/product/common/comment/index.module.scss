@@ -1,0 +1,127 @@
+@import '@/styles/_variant.scss';
+
+.container {
+  max-width: 700px;
+  margin: auto;
+
+  .commentrow {
+    p {
+      display: inline-block;
+    }
+  }
+
+  .order-detail {
+    h5{
+      margin-bottom: 1% ;
+    }
+    .productname{
+      margin-bottom: 1%  !important;
+    }
+  }
+
+  .color {
+    display: flex;
+    align-items: center; // 讓顏色文字垂直居中
+    width: 169px;
+    gap: 100px; // 設置顏色方塊和文字之間的間距
+  }
+
+  .color-swatch {
+    display: inline-block;
+    background-color: #9b3931;
+    width: 30px;
+    height: 30px;
+    border: 5px solid #ffffff;
+    box-shadow: 0 0 0 1px lightgray;
+    
+    &:hover {
+      box-shadow: 0 0 0 3px $green-500;
+      cursor: pointer;
+    }
+  }
+
+  .color-text{
+    display: inline-block;
+    transform: translate(0, -50%);
+    margin-left: 5%;
+    color: $green-500;
+  }
+
+
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+  
+    &:hover .remove-button {
+      display: flex;
+    }
+  }
+  
+  .remove-button {
+    display: none;  // 初始狀態為隱藏
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: $green-500 ; // 半透明的紅色背景
+    color: #fff;       // 半透明的紅色字體
+    border: none;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+
+  // 增加圖片框
+  .add-image {
+    width: 98px;
+    height: 98px;
+    border: 1px dashed $green-500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    cursor: pointer;
+  
+    &:hover {
+      border-color: #666;
+      color: #666;
+    }
+  }
+  
+  // +號
+  .add-icon {
+    font-size: 32px; // 調整 "+" 號大小
+    line-height: 1;
+  }
+  
+  // 增加圖片的文字
+  .add-text {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  // 評論輸入框
+  .editable-comment {
+    border: 1px solid #ddd;
+    padding: 8px;
+    min-height: 120px;
+    border-radius: 4px;
+    overflow-y: auto;
+  
+    &:focus {
+      outline: none; // 移除黑色邊框
+      border-color: #90957a; // 可選：自定義獲取焦點時的邊框顏色
+    }
+  }
+  
+}
+
+
