@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { MdOutlineArrowBack } from 'react-icons/md';
-import { GoArrowLeft } from 'react-icons/go';
+import React, { useState, useEffect } from 'react'
+import { MdOutlineArrowBack } from 'react-icons/md'
+import { GoArrowLeft } from 'react-icons/go'
 
-import PostCard from '@/components/post/common/post-card';
-import WallCard from '@/components/post/common/wall-card';
-import Header from '@/components/home/common/header';
-import styles from './index.module.scss';
-import Link from 'next/link';
+import PostCard from '@/components/post/common/post-card'
+import WallCard from '@/components/post/common/wall-card'
+import Header from '@/components/home/common/header'
+import styles from './index.module.scss'
+import Link from 'next/link'
 export default function Explore(props) {
   return (
     <>
@@ -38,5 +38,5 @@ export default function Explore(props) {
         </div>
       </div>
     </>
-  );
+  )
 }
