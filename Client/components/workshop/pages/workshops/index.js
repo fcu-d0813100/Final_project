@@ -9,34 +9,16 @@ import WorkshopCardLg from '@/components/shared/workshop-card-lg'
 import React, { useState, useEffect } from 'react'
 
 export default function WorkshopAll(props) {
-  const [workshop, setWorkshop] = useState([])
-
-  // const getWorkshop = async () => {
-  //   try {
-  //     const res = await fetch('http://localhost:3005/api/workshop', {
-  //       method: 'GET',
-  //     })
-  //     const data = await res.json()
-  //     setWorkshop(data) // 將資料存入狀態
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error)
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getWorkshop() // 呼叫函式獲取資料
-  // }, [])
+  const [Workshop, setWorkshop] = useState([])
 
   useEffect(() => {
     async function getWorkshop() {
       try {
-        let response = await axios.get(
-          `http://localhost:3005/api/workshop/workshop`,
-          {
-            withCredentials: true,
-          }
-        )
-        setWorkshop(response.data)
+        let response = await axios.get(`http://localhost:3005/api/workshop`, {
+          withCredentials: true,
+        })
+        const data = await response.json()
+        setWorkshop(data)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
@@ -75,15 +57,26 @@ export default function WorkshopAll(props) {
             status="報名中"
           /> */}
 
-          {workshop.map((workshop) => (
+          {/* <WorkshopCardLg
+            key={workshop.id}
+            imgCover="/workshop/workshop_img/1-2-c.jpg"
+            name={workshop.name}
+            teacher="Terry Barber 老師"
+            beginDate="2024/09/30"
+            endDate="2024/10/30"
+            price={workshop.price}
+            status="報名中"
+          /> */}
+
+          {Workshop.map((item) => (
             <WorkshopCardLg
-              key={workshop.id}
+              key={item.id}
               imgCover="/workshop/workshop_img/1-2-c.jpg"
-              name={workshop.name}
+              name={item.name}
               teacher="Terry Barber 老師"
               beginDate="2024/09/30"
               endDate="2024/10/30"
-              price={workshop.price}
+              price={item.price}
               status="報名中"
             />
           ))}

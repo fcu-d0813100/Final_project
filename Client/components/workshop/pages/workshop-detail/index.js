@@ -1,4 +1,5 @@
 'use client'
+import { useCartWorkshop } from '@/hooks/use-cartW'
 import Footer from '@/components/home/common/footer'
 import TopBar from '@/components/home/common/header'
 import styles from '@/components/workshop/common/workshop-detail.module.scss'
@@ -69,6 +70,14 @@ const workshop = [
 ]
 
 export default function WorkshopDetail(props) {
+
+  // const [selectedId, setSelectedId] = useState(null) // 用於追蹤選中的 ID
+
+  // const handleSelectTime = (id) => {
+  //   setSelectedId(id) // 更新選中的 ID
+  // }
+
+  const { onAdd = () => {} } = useCartWorkshop
   const [classTime, setClassTime] = useState(workshop)
 
   const handleIncrease = (classTimeId) => {
@@ -123,6 +132,8 @@ export default function WorkshopDetail(props) {
               min={classTime.min}
               max={classTime.max}
               disabled={classTime.disabled}
+              //isActive={selectedId === classTime.id} // 傳遞是否為選中的狀態
+              //onSelect={() => handleSelectTime(classTime.id)} // 傳遞選擇函數
             />
           ))}
 
@@ -177,7 +188,12 @@ export default function WorkshopDetail(props) {
               </button>
             </div>
             <div>
-              <button className="btn-primary h6">
+              <button
+                className="btn-primary h6"
+                onClick={() => {
+                  onAdd(workshop)
+                }}
+              >
                 <PiPlusCircle className="me-2 ph" />
                 加入購物車
               </button>
