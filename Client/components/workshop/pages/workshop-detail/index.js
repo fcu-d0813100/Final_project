@@ -38,27 +38,42 @@ export default function WorkshopDetail(props) {
     }
   }, [router.isReady])
 
-  const [classTime, setClassTime] = useState()
+  // const [classTime, setClassTime] = useState()
 
-  const handleIncrease = (classTimeId) => {
-    const nextClassTime = classTime.map((v) =>
-      v.id === classTimeId ? { ...v, count: v.count + 1 } : v
-    )
-    setClassTime(nextClassTime)
-  }
+  // const handleIncrease = (classTimeId) => {
+  //   const nextClassTime = classTime.map((v) =>
+  //     v.id === classTimeId ? { ...v, count: v.count + 1 } : v
+  //   )
+  //   setClassTime(nextClassTime)
+  // }
 
-  const handleDecrease = (classTimeId) => {
-    const nextClassTime = classTime.map((v) =>
-      v.id === classTimeId && v.count > 0 ? { ...v, count: v.count - 1 } : v
-    )
-    setClassTime(nextClassTime)
-  }
+  // const handleDecrease = (classTimeId) => {
+  //   const nextClassTime = classTime.map((v) =>
+  //     v.id === classTimeId && v.count > 0 ? { ...v, count: v.count - 1 } : v
+  //   )
+  //   setClassTime(nextClassTime)
+  // }
 
-    // 分割資料
-  const dates = tworkshop.dates ? tworkshop.dates.split(',') : [];
-  const startTimes = tworkshop.start_times ? tworkshop.start_times.split(',') : [];
-  const endTimes = tworkshop.end_times ? tworkshop.end_times.split(',') : [];
+  // 分割資料
+  const dates = tworkshop.dates ? tworkshop.dates.split(',') : []
+  const startTimes = tworkshop.start_times
+    ? tworkshop.start_times.split(',')
+    : []
+  const endTimes = tworkshop.end_times ? tworkshop.end_times.split(',') : []
   const timeId = tworkshop.time_id ? tworkshop.time_id.split(',') : []
+  const registered = tworkshop.workshop_time_registered
+    ? tworkshop.workshop_time_registered.split(',')
+    : []
+  const maxStudents = tworkshop.max_students
+    ? tworkshop.max_students.split(',')
+    : []
+  // 計算時數的函數
+  const calculateHours = (beginTime, endTime) => {
+    const start = new Date(`1970-01-01T${beginTime}Z`)
+    const end = new Date(`1970-01-01T${endTime}Z`)
+    const diffMs = end - start
+    return diffMs / (1000 * 60 * 60) // 將毫秒轉換為小時
+  }
 
   return (
     <>
@@ -94,19 +109,13 @@ export default function WorkshopDetail(props) {
               date={date}
               beginTime={startTimes[index]} // 對應的開始時間
               endTime={endTimes[index]} // 對應的結束時間
+              hours={calculateHours(startTimes[index], endTimes[index])} // 計算時數並傳遞
+              registered={registered[index]}
+              max={maxStudents[index]}
+              disabled={Number(registered[index]) >= Number(maxStudents[index])}
             />
           ))}
         </div>
-
-        {/* <TimeSelect
-              key={item.workshop_time_id}
-              date={item.date}
-              beginTime={item.beginTime}
-              endTime={item.endTime}
-              hours={item.hours}
-              min={item.min}
-              max={item.max}
-              disabled={item.disabled}></TimeSelect> */}
 
         <hr className="border-2 my-5" />
 
@@ -120,21 +129,21 @@ export default function WorkshopDetail(props) {
 
           <div>
             <div className="mb-4 d-flex align-items-center justify-content-end">
-              <button
+              {/* <button
                 className={`${styles.btnSm} ph`}
                 onClick={() => handleDecrease(classTime[0].id)} // 修改為 onClick 並傳入第一項的 id 作範例
               >
                 <PiMinus />
               </button>
               <span className="px-3 h6">
-                {/* <b>{classTime[0].count}</b> 範例顯示第一項的 count 值  */}
+               <b>{classTime[0].count}</b> 範例顯示第一項的 count 值  
               </span>
               <button
                 className={`${styles.btnSm} ph`}
                 onClick={() => handleIncrease(classTime[0].id)} // 修改為 onClick 並傳入第一項的 id 作範例
               >
                 <PiPlus />
-              </button>
+              </button> */}
             </div>
             <div>
               <button className="btn-primary h6">

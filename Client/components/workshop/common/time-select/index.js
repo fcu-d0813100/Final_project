@@ -16,7 +16,7 @@ export default function TimeSelect({
   beginTime = '',
   endTime = '',
   hours = 0,
-  min = 0,
+  registered = 0,
   max = 0,
 }) {
   return (
@@ -62,7 +62,7 @@ export default function TimeSelect({
                 <p className={`m-0 ${styles.pMaxDisable} p-0`}>已額滿</p>
               ) : (
                 <>
-                  <p className="flex-grow-1 m-0"> 至少 {min} 人</p>
+                  <p className="flex-grow-1 m-0"> 已報名 {registered} 人</p>
                   <p className={`flex-grow-1 m-0 ${styles.pMax}`}>
                     {max} 人額滿
                   </p>
