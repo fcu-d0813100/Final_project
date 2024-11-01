@@ -33,55 +33,8 @@
           color: #fff;
         }
       }
-  //     .post-nav {
-  //       background-color: #531616;
-  //       display: flex;
-  //   .nav-item {
-  //     flex: 1 1 50% !important;
-  //     background-color: #c73f3f;
-  //     // width: 700px !important; // 設定固定寬度，您可以調整這個值
-  //     text-align: center; // 讓文字在內部居中對齊
-  //   }
-    
-  //   .nav-link {
-  //     font-size: 16px;
-  //     color: #6c757d;
-  //     font-weight: bold;
-  //     padding: 8px 0;
-  //     border: none;
-  //     border-bottom: 2px solid transparent;
-      
-  //     &.active {
-  //       color: #000;
-  //       border-bottom-color: #000;
-  //     }
-
-  //     &:hover {
-  //       color: #000;
-  //       text-decoration: none;
-  //     }
-  //   }
-  // }
     }
 
-    .nav-section-bg{
-      background-color: #d3d1d1;
-    }
-    // 導航
-    .post-nav{
-      display: flex !important;
-      // flex-direction: ;
-      .nav-item {
-        display: inline-block;
-        flex: 0 0 49.1% !important;
-        // background-color: #c73f3f;
-        // width: 700px !important; // 設定固定寬度，您可以調整這個值
-        text-align: center; // 讓文字在內部居中對齊
-      }
-      a{
-        // display: inline-block !important;
-      }
-    }
     
 
     .main-image {
@@ -241,4 +194,68 @@
       }
     }
   }
+  
+  .nav-section-bg{
+    // background-color: #885a5a;
+    background-image: url('/product/product-detail-bgc.png');
+    background-repeat: no-repeat;
+    background-size:  cover ;
+    background-attachment: fixed;
+    .detail-lowercontainer{
+      width: auto;
+    }
+    // 導航
+    .post-nav{
+      display: flex;
+      max-width: 100%;
+      justify-content: center;
+      gap: 0;
+      .nav-item {
+        display: inline-block;
+        width: 50%;
+        text-align: center; // 讓文字在內部居中對齊
+        margin: 50px 0 0 0;
+        .nav-link {
+          color: $green-700;
+          // width: 700px;
+        }
+      }
+    }
+    // 商品描述
+    .description-content{
+        text-align: center;
+        .description-content-context{
+          text-align: left;
+          margin: 10% auto;
+          width: 70%;
+          font-size: 24px;
+          border-left: 700;
+        }
+        .description-content-imgs {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .description-content-notice{
+          width: 70%;
+          text-align: left;
+          margin: 50px auto;
+          border: 2px solid $green-500;
+          padding: 20px;
+          color: $green-700;
+          .notice-title{
+            font-size: 28px;
+          }
+          ul{
+            font-size: 24px;
+          }
+          p{
+            text-align: end;
+            font-size: 24px;
+          }
+        }
+    }
+  }
+
+  
   
