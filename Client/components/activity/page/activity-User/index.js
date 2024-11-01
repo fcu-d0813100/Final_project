@@ -7,7 +7,7 @@ import UserSection from '@/components/user/common/user-section'
 export default function Index(props) {
   return (
     <>
-      <UserSection titleCN="我的收藏" titleENG="favorite">
+      <UserSection titleCN="活動紀錄" titleENG="Activity favorite">
         <Tab.Container defaultActiveKey="/pdlike">
           <div className={styles['post-navbar']}>
             <Nav variant="underline" className={`${styles['nav-item']} h6`}>
@@ -16,7 +16,7 @@ export default function Index(props) {
                   className={`${styles['link-style']} `}
                   eventKey="/pdlike"
                 >
-                  最愛商品
+                  活動收藏
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item className={`${styles['nav-link']} `}>
@@ -24,7 +24,7 @@ export default function Index(props) {
                   className={`${styles['link-style']} `}
                   eventKey="/classlike"
                 >
-                  課程追蹤
+                  報名活動
                 </Nav.Link>
               </Nav.Item>
             </Nav>
@@ -35,40 +35,40 @@ export default function Index(props) {
                 <div
                   className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center `}
                 >
-                  <h5 className="h5">目前沒有收藏商品</h5>
+                  <h5 className="h5">目前沒有收藏活動</h5>
                 </div>
                 <div className="col-12 d-flex justify-content-center align-items-center mt-5">
                   <h5 className="p">點擊愛心按鈕，將喜歡的商品加入收藏</h5>
                 </div>
                 <div className="col-12 d-flex justify-content-center align-items-center mt-5">
-                  <Link href="/product/home" passHref>
+                  <Link href="/activity" passHref>
                     <button className="btn-primary h6">前往收藏</button>
                   </Link>
                 </div>
               </div>
-              <div className={`row ${styles.interested}`}>
+              {/* <div className={`row ${styles.interested}`}>
                 <h6 className="h4">猜你可能感興趣</h6>
-              </div>
+              </div> */}
             </Tab.Pane>
             <Tab.Pane eventKey="/classlike">
               <div className={`row ${styles.line} `}>
                 <div
                   className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center `}
                 >
-                  <h5 className="h5">目前沒有收藏課程</h5>
+                  <h5 className="h5">目前沒有報名活動</h5>
                 </div>
                 <div className="col-12 d-flex justify-content-center align-items-center mt-5">
-                  <h5 className="p">點擊愛心按鈕，將喜歡的課程加入收藏</h5>
+                  <h5 className="p">請先至活動頁面完成報名</h5>
                 </div>
                 <div className="col-12 d-flex justify-content-center align-items-center mt-5">
-                  <Link href="/workshop" passHref>
-                    <button className="btn-primary h6">前往收藏</button>
+                  <Link href="/activity" passHref>
+                    <button className="btn-primary h6">前往報名</button>
                   </Link>
                 </div>
               </div>
-              <div className={`row ${styles.interested}`}>
+              {/* <div className={`row ${styles.interested}`}>
                 <h6 className="h4">猜你可能感興趣</h6>
-              </div>
+              </div> */}
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>
