@@ -12,36 +12,37 @@ import ProductCarousel from './ProductCarousel' // 引入新的轮播图组件
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import Image from 'next/image'
 
-const ProductPage = () => {
-  const products = [
-    {
-      id: 1,
-      brand: 'YSL',
-      name: '時尚印記唇釉',
-      originalPrice: 2080,
-      salePrice: 1580,
-      imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-      color: '#e3a790',
-    },
-    {
-      id: 2,
-      brand: 'NARS',
-      name: '唇膏',
-      originalPrice: 1900,
-      salePrice: 1400,
-      imageUrl: '/product/NARS_LS01_M_133.webp',
-      color: '#732111',
-    },
-    {
-      id: 3,
-      brand: 'LANCOME',
-      name: '絕對完美柔霧唇膏',
-      originalPrice: 2500,
-      salePrice: 2200,
-      imageUrl: '/product/LANCOME_LS01_M_196.webp',
-      color: '#8f352d',
-    },
-  ]
+const ProductPage = ({ products }) => {
+  console.log("Received products:", products);
+  // const products = [
+  //   {
+  //     id: 1,
+  //     brand: 'YSL',
+  //     name: '時尚印記唇釉',
+  //     originalPrice: 2080,
+  //     salePrice: 1580,
+  //     imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
+  //     color: '#e3a790',
+  //   },
+  //   {
+  //     id: 2,
+  //     brand: 'NARS',
+  //     name: '唇膏',
+  //     originalPrice: 1900,
+  //     salePrice: 1400,
+  //     imageUrl: '/product/NARS_LS01_M_133.webp',
+  //     color: '#732111',
+  //   },
+  //   {
+  //     id: 3,
+  //     brand: 'LANCOME',
+  //     name: '絕對完美柔霧唇膏',
+  //     originalPrice: 2500,
+  //     salePrice: 2200,
+  //     imageUrl: '/product/LANCOME_LS01_M_196.webp',
+  //     color: '#8f352d',
+  //   },
+  // ]
 
   // 狀態管理價格和品牌下拉菜單是否顯示
   const [isPriceDropdownOpen, setIsPriceDropdownOpen] = useState(false)
@@ -306,7 +307,7 @@ const ProductPage = () => {
               className={`${styles['row']} ${styles['product-card-container']}`}
               id="product-card-container"
             >
-              {Array.from({ length: 20 }).map((_, index) => {
+              {products.map((_, index) => {
                 const product = products[index % products.length]
                 return (
                   <div
@@ -346,7 +347,7 @@ const ProductPage = () => {
                     <Image
                       width={200}
                       height={200}
-                      src={product.imageUrl}
+                      src={`/product/mainimage/${product.mainimage}`}
                       className={styles['product-cardimg-w']}
                       alt={product.name}
                     />
@@ -355,7 +356,7 @@ const ProductPage = () => {
                         {product.brand}
                       </h5>
                       <h5 className={`${styles['product-cardtitle-w']} p`}>
-                        {product.name}
+                        {product.product_name}
                       </h5>
                       <span
                         className={`${styles['product-price-w']} h6`}
