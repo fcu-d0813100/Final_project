@@ -19,7 +19,6 @@ export default function TimeSelect({
   min = 0,
   max = 0,
 }) {
-
   return (
     <>
       <div className="col">
@@ -27,6 +26,18 @@ export default function TimeSelect({
           className={`${disabled ? styles.checkDateDisable : styles.checkDate}
                  d-flex align-items-center justify-content-center`}
         >
+          {/* <div
+          className={`${
+            disabled
+              ? styles.checkDateDisable
+              : isActive
+              ? styles.checkDateActive
+              : styles.checkDate
+          }
+            d-flex align-items-center justify-content-center`}
+          onClick={!disabled ? onSelect : undefined}
+        > */}
+
           <div>
             <p
               className={disabled ? `${styles.wDateDisable} h3` : styles.wDate}
@@ -34,7 +45,9 @@ export default function TimeSelect({
               {date}
             </p>
             <p
-              className={disabled ? `${styles.wTimeDisable} h5` : `${styles.wTime} h5`}
+              className={
+                disabled ? `${styles.wTimeDisable} h5` : `${styles.wTime} h5`
+              }
             >
               {beginTime} - {endTime} | {hours}hr
             </p>

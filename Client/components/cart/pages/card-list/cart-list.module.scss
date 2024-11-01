@@ -189,40 +189,4 @@
       }
     }
   }
-
-  .checkout_total {
-    .checkout_total_box {
-      padding: 20px 30px;
-      border: 1px solid $gray-200;
-      border-radius: 5px 5px 0 0;
-      .item {
-        display: flex;
-        justify-content: space-between;
-        padding: 3px 0;
-      }
-      .discount_item {
-        color: $red-500;
-      }
-      .total {
-        background-color: $gray-100;
-        border: 1px solid $gray-200;
-        border-radius: 0 0 5px 5px;
-        text-align: end;
-      }
-    }
-    .total {
-      background-color: $gray-100;
-      border-left: 1px solid $gray-200;
-      border-right: 1px solid $gray-200;
-      border-bottom: 1px solid $gray-200;
-      border-radius: 0 0 5px 5px;
-      padding: 20px 30px;
-      text-align: end;
-      margin-bottom: 20px;
-      span {
-        font-size: 20px;
-        color: $red-500;
-      }
-    }
-  }
 }

@@ -1,0 +1,261 @@
+@import '@/styles/_variant.scss';
+.product-page {
+    // display: flex;
+    justify-content: center;
+    padding-top: 50px;
+  
+    .row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      width: 1440px;
+    }
+
+    .thumbnail-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-sizing: border-box;
+      .thumbnail {
+        // width: 10px;
+        border: 1px solid #ddd;
+        &:hover{
+          border: 1px solid $green-500;
+          cursor: pointer;
+        }
+      }
+      .arrow-button{
+        border: none;
+        background-color: #fff;
+        color: $green-500;
+        &:hover{
+          background-color: $green-500;
+          color: #fff;
+        }
+      }
+    }
+
+    
+
+    .main-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      img {
+        width: 100%;
+        height: auto;
+      }
+      .zoom-lens {
+        position: absolute;
+        width: 200px;  // 放大鏡的寬度
+        height: 200px; // 放大鏡的高度
+        border: 2px solid #ddd;
+        border-radius: 50%; // 圓形放大鏡效果
+        background-repeat: no-repeat;
+        background-size: 200%; // 根據放大倍率調整
+        pointer-events: none; // 避免影響滑鼠事件
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .product-details {
+      // max-width: 500px;
+      box-sizing: border-box;
+      padding-top: 15%;
+      padding-left: 10%;
+      // display: flex;
+      justify-content: center;
+      
+      .product-details-info{
+        padding-bottom: 5%;
+        border-bottom: 1px solid $green-500;
+        p{
+          margin: 0;
+        }
+      }
+      .favorite-button {
+        background: none;  // 去掉按钮背景色
+        border: none;      // 去掉按钮边框
+        padding: 0;        // 去掉按钮内边距
+        cursor: pointer;   // 鼠标样式变为手形
+        outline: none;     // 去掉点击后的边框
+      }
+      
+
+      .price {
+        display: flex;
+        align-items: center;
+        padding-top: 5%;
+        .current-price {
+          font-size: 20px;
+          color: #b12704;
+          margin-right: 10px;
+        }
+  
+        .original-price {
+          font-size: 16px;
+          color: #999;
+          text-decoration: line-through;
+        }
+      }
+  
+      .color-selector {
+        margin: 20px 0;
+  
+        .color-options {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+  
+          .color-swatch {
+            width: 40px;
+            height: 40px;
+            box-sizing: content-box;
+            // padding: 5px;
+            border: 5px solid #ffffff;
+            box-shadow: 0 0 0 1px lightgray; /* 設置外框線，顏色和寬度可調整 */
+            &:hover{
+              box-shadow: 0 0 0 3px $green-500; /* 設置外框線，顏色和寬度可調整 */
+              cursor: pointer;
+            }
+          }
+        }
+      }
+  
+      .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 20px 0;
+        span{
+          display: inline-block;
+          width: 50px;
+          text-align: center;
+        }
+        .btnSm {
+          width: 40px;
+          height: 40px;
+          border-radius: 3px;
+          border: 1px solid black;
+          text-align: center;
+          padding: 0;
+          background: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: 0.3s;
+          svg{
+            font-size: 12px;
+          }
+          &:hover {
+            background: rgb(0, 0, 0);
+            color: white;
+          }
+        }
+      }
+      
+      
+
+      .buttons {
+        display: flex;
+        gap: 20px;
+  
+        .add-to-cart,
+        .buy-now {
+          padding: 10px 20px;
+          font-size: 16px;
+        }
+  
+        .add-to-cart {
+          background-color: #000;
+          color: #fff;
+          border: none;
+          .icon {
+            box-sizing: content-box;
+            font-size: 1.2em;
+            color: #ffffff;
+            padding: 2% 5%;
+          }
+        }
+  
+        .buy-now {
+          background-color: #fff;
+          color: #000;
+          border: 1px solid #000;
+        }
+        .icon {
+          box-sizing: content-box;
+          font-size: 1.2em;
+          color: #000000;
+          padding: 2% 5%;
+          padding-bottom: 5.2%;
+        }
+      }
+    }
+  }
+  
+  .nav-section-bg{
+    // background-color: #885a5a;
+    background-image: url('/product/product-detail-bgc.png');
+    background-repeat: no-repeat;
+    background-size:  cover ;
+    background-attachment: fixed;
+    .detail-lowercontainer{
+      width: auto;
+    }
+    // 導航
+    .post-nav{
+      display: flex;
+      max-width: 100%;
+      justify-content: center;
+      gap: 0;
+      .nav-item {
+        display: inline-block;
+        width: 50%;
+        text-align: center; // 讓文字在內部居中對齊
+        margin: 50px 0 0 0;
+        .nav-link {
+          color: $green-700;
+          // width: 700px;
+        }
+      }
+    }
+    // 商品描述
+    .description-content{
+        text-align: center;
+        .description-content-context{
+          text-align: left;
+          margin: 10% auto;
+          width: 70%;
+          font-size: 24px;
+          border-left: 700;
+        }
+        .description-content-imgs {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .description-content-notice{
+          width: 70%;
+          text-align: left;
+          margin: 50px auto;
+          border: 2px solid $green-500;
+          padding: 20px;
+          color: $green-700;
+          .notice-title{
+            font-size: 28px;
+          }
+          ul{
+            font-size: 24px;
+          }
+          p{
+            text-align: end;
+            font-size: 24px;
+          }
+        }
+    }
+  }
+
+  
+  

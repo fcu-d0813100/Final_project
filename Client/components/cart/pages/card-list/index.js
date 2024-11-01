@@ -1,43 +1,64 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import style from './cart-list.module.scss'
 import { Minus, Plus, Trash } from '@phosphor-icons/react'
 import CheckoutBox from '@/components/cart/common/checkoutbox/index'
-import { useCart } from '@/components/hooks/use-cartP'
+import { useCartProduct } from '@/hooks/use-cartP'
+import { useCartWorkshop } from '@/hooks/use-cartW'
 import Image from 'next/image'
-
-const products = [
-  {
-    id: 1,
-    brand: 'LANCOME',
-    name: '玲瓏巧思五色眼影盤',
-    color: '來杯摩卡01',
-    image: '/cart/LANCOME_LG01_M_888.webp',
-    price: 900,
-    originalPrice: 1200,
-    quantity: 1,
-  },
-  {
-    id: 2,
-    brand: 'DIOR',
-    name: '魅惑變色潤唇膏',
-    color: '玫瑰粉紅',
-    image: '/cart/DIOR_LIP_PINK.webp',
-    price: 1100,
-    originalPrice: 1350,
-    quantity: 2,
-  },
-]
+import { useRouter } from 'next/router'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function CartList() {
-  // 從商品鉤子取得內容
+  //----------吐司訊息
+  //新增商品
+  const addPnotify = () =>
+    toast.success('新增1件商品', {
+      style: {
+        border: '1.2px solid #90957a',
+        padding: '12px 40px',
+        color: '#626553',
+      },
+      iconTheme: {
+        primary: '#626553',
+        secondary: '#fff',
+      },
+    })
+  //刪除商品
+  const delPnotify = () =>
+    toast.success('刪除1件商品', {
+      style: {
+        border: '1.2px solid #963827',
+        padding: '12px 40px',
+        color: '#963827',
+      },
+      iconTheme: {
+        primary: '#963827',
+        secondary: '#fff',
+      },
+    })
+
+  //-----------按鈕路由
+  const router = useRouter()
+
+  // 從use-cartP鉤子取得商品內容
   const {
-    itemd = [],
-    totalPrice = 0,
-    totalQty = 0,
-    onDecrease = () => {},
-    onIncrease = () => {},
-    onRemove = () => {},
-  } = useCart()
+    productItems = [],
+    pTotalPrice = 0,
+    pTotalQty = 0,
+    onIncreaseProduct = () => {},
+    onDecreaseProduct = () => {},
+    onRemoveProduct = () => {},
+  } = useCartProduct()
+
+  // 從use-cartW鉤子取得課程內容
+  const {
+    workshopItems = [],
+    wTotalPrice = 0,
+    wTotalQty = 0,
+    onIncreaseWorkshop = () => {},
+    onDecreaseWorkshop = () => {},
+    onRemoveWorkshop = () => {},
+  } = useCartWorkshop()
 
   return (
     <>
@@ -60,7 +81,7 @@ export default function CartList() {
               {/* 帶入資料 */}
               <div className={`d-xl-block ${style.cosmetic}`}>
                 <div className={` h5 ${style['cosmetic-topic']}`}>彩妝商品</div>
-                {products.map((product) => (
+                {productItems.map((product) => (
                   <div key={product.id} className={style['cosmetic-box']}>
                     <div className={` col-6 ${style['cosmetic-detail']}`}>
                       <div className={style['cosmetic-img']}>
@@ -73,8 +94,8 @@ export default function CartList() {
                         />
                       </div>
                       <div className={style['cosmetic-text']}>
-                        <div className="ps">{product.brand}</div>
-                        <div className="h6 mb-3">{product.name}</div>
+                        <div className="ps">{product.brand_name}</div>
+                        <div className="h6 mb-3">{product.product_name}</div>
                         <div className={style['sub_text']}>
                           顏色：{product.color}
                         </div>
@@ -85,31 +106,47 @@ export default function CartList() {
                     <div className="d-flex align-items-center justify-content-end">
                       <button
                         className={style['btn-sm']}
-                        onClick={() => pQtyChange(product.id, -1)}
+                        onClick={() => {
+                          const nextQty = product.qty - 1
+                          if (nextQty > 1) delPnotify()
+                          if (nextQty <= 0) {
+                            if (confirm('你確定要移除此商品嗎？')) {
+                              onRemoveProduct(product.product_id, product.color)
+                            }
+                          } else {
+                            onDecreaseProduct(product.product_id, product.color)
+                          }
+                        }}
                       >
                         <Minus size={20} />
                       </button>
-                      <span className="px-3 h6">{product.quantity}</span>
+                      <span className="px-3 h6">{product.qty}</span>
                       <button
                         className={style['btn-sm']}
-                        onClick={() => pQtyChange(product.id, 1)}
+                        onClick={() => {
+                          onIncreaseProduct(product.product_id, product.color)
+                          addPnotify()
+                        }}
                       >
                         <Plus size={20} />
                       </button>
+                      <Toaster position="top-center" reverseOrder={true} />
                     </div>
 
                     {/* 商品價格 */}
                     <div className={`h6 ${style.price}`}>
-                      NT${(product.price * product.quantity).toLocaleString()}
+                      NT${(product.price * product.qty * 0.8).toLocaleString()}
                       <div className={style['origin_price']}>
-                        NT$
-                        {(
-                          product.originalPrice * product.quantity
-                        ).toLocaleString()}
+                        NT${(product.price * product.qty).toLocaleString()}
                       </div>
                     </div>
                     <div className={style.trash}>
-                      <button type="button">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onRemoveProduct(product.product_id, product.color)
+                        }}
+                      >
                         <Trash size={28} />
                       </button>
                     </div>
@@ -117,7 +154,7 @@ export default function CartList() {
                 ))}
                 <div className={style['cosmetic_amount']}>
                   商品小計：
-                  <span>NT${}</span>
+                  <span>NT${(pTotalPrice * 0.8).toLocaleString()}</span>
                 </div>
               </div>
               {/* 彩妝品box-end */}
@@ -191,8 +228,18 @@ export default function CartList() {
                 <div
                   className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
                 >
-                  <button className="btn-primary">繼續購物</button>
-                  <button className="ms-2 btn-secondary">前往結賬</button>
+                  <button
+                    className="btn-primary"
+                    onClick={() => router.push('/')}
+                  >
+                    繼續購物
+                  </button>
+                  <button
+                    className="ms-2 btn-secondary"
+                    onClick={() => router.push('/cart/checkout')}
+                  >
+                    前往結賬
+                  </button>
                 </div>
               </div>
             </div>

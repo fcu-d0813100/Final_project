@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import UserSection from '@/components/user/common/user-section'
-// import UserHeaderSb from '@/components/user/common/user-header-sb'
-
+import React, { useState, useEffect } from 'react';
+import InfoUser from '@/components/user/pages/info-user';
 export default function Index(props) {
   return (
     <>
-      <UserSection />
+      <InfoUser />
     </>
-  )
+  );
 }
