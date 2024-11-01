@@ -1,21 +1,19 @@
 'use client'
+import Footer from '@/components/home/common/footer'
+import TopBar from '@/components/home/common/header'
 import styles from '@/components/workshop/common/workshop-detail.module.scss'
 import Image from 'next/image'
 import WorkshopDetailHeader from '@/components/workshop/common/workshop-detail-header'
 import TimeSelect from '@/components/workshop/common/time-select'
 import WorkshopDetailInfo from '@/components/workshop/common/workshop-detail-info'
 import WorkshopAddCartInfo from '@/components/workshop/common/workshop-addcart-info'
-import {
-  PiMinus,
-  PiPlus,
-  PiPlusCircle,
-  PiHandbagSimple,
-} from 'react-icons/pi'
+import { PiMinus, PiPlus, PiPlusCircle, PiHandbagSimple } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
 export default function WorkshopDetail(props) {
   return (
     <>
+      <TopBar />
       <WorkshopDetailHeader
         name="F19 時尚攝影彩妝班"
         description="時尚攝影彩妝班專注於培養學員掌握專業時尚彩妝與修容技巧，融合創意與流行元素，打造獨特的時尚造型。適合想進入時尚產業的學員，從基礎到高階全面提升。"
@@ -109,6 +107,8 @@ export default function WorkshopDetail(props) {
               ※ 本課程提供上妝刷具，學員上課時需「自備」習慣保養品、彩妝品、其他上妝工具。"
         imgS02="/workshop/workshop_img/1-1-s-2.jpg"
       />
+
+      <Footer />
     </>
   )
 }

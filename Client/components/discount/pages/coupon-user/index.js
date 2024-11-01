@@ -8,7 +8,7 @@ import Modal from '@/components/discount/common/mymodal';
 export default function UserCoupon() {
     const [modalShow, setModalShow] = useState(false);
     const [couponCode, setCouponCode] = useState('');
-    
+
 
 
     const coupons = [

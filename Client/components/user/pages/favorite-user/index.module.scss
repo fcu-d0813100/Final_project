@@ -1,0 +1,54 @@
+@import '@/styles/_variant.scss';
+
+.nav-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+
+
+}
+
+.nav-link .link-style {
+  color: black;
+  text-decoration: none;
+  padding-top: 10px;
+  margin: 0 10px;
+
+  &:hover {
+    border-bottom: 2px $red-500 solid;
+    color: black;
+
+  }
+
+  &:active {
+    color: black;
+    border-bottom: 2px $red-500 solid;
+
+  }
+
+
+}
+
+.line {
+  border-top: 1px solid $gray-200;
+}
+
+
+.favorite-area {
+  margin-top: 100px;
+}
+
+.interested {
+  margin-top: 200px;
+}
+
+@media (max-width: 768px) {
+  .interested {
+    margin-top: 100px;
+  }
+
+  // main {
+  //   justify-content: center;
+  // }
+}
