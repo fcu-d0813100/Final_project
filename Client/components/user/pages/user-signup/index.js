@@ -351,6 +351,21 @@ export default function RegisterForm() {
                         立即登入
                       </button>
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUser({
+                          name: 'test',
+                          email: 'test@gg.com',
+                          username: 'test',
+                          password: '111111',
+                          confirmPassword: '111111',
+                          agree: true, // checkbox 同意會員註冊條款
+                        })
+                      }}
+                    >
+                      一鍵輸入
+                    </button>
                   </div>
                 </div>
               </div>
