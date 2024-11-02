@@ -86,7 +86,7 @@ export default function CartList() {
                     <div className={` col-6 ${style['cosmetic-detail']}`}>
                       <div className={style['cosmetic-img']}>
                         <Image
-                          src={product.image}
+                          src={`/product/mainimage/${product.mainimage}`}
                           alt="cosmetic"
                           width={300}
                           height={300}
@@ -207,7 +207,8 @@ export default function CartList() {
 
                     {/* 課程價格 */}
                     <div className={`h6 ${style.price}`}>
-                      NT${(workshop.price * workshop.qty).toLocaleString()}
+                      NT$
+                      {(workshop.price * workshop.qty * 0.8).toLocaleString()}
                       <div className={style['origin_price']}>
                         NT$ {(workshop.price * workshop.qty).toLocaleString()}
                       </div>
@@ -224,7 +225,7 @@ export default function CartList() {
                   </div>
                 ))}
                 <div className={style['course_amount']}>
-                  商品小計： <span>NT</span>
+                  商品小計： <span>NT${wTotalPrice}</span>
                 </div>
               </div>
             </div>
