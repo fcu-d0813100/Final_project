@@ -60,9 +60,11 @@
 .section02 {
   .checkDate {
     height: 230px;
+    width: 100%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     background: #ffffff;
     text-align: center;
+    border: none;
 
     .wDate {
       padding-bottom: 12px;
@@ -128,11 +130,13 @@
 
   .checkDateActive {
     color: white;
+    width: 100%;
     height: 230px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     background: black url(/workshop/cart_bg.jpg) center no-repeat;
     background-size: cover;
     text-align: center;
+    border: none;
 
     .wDate {
       padding-bottom: 12px;
@@ -172,10 +176,12 @@
   //-------------
   .checkDateDisable {
     height: 230px;
+    width: 100%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     background: #ffffff;
     text-align: center;
     color: $gray-200;
+    border: none;
 
     .wDateDisable {
       padding-bottom: 12px;
