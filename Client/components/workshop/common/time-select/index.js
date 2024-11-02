@@ -38,7 +38,7 @@ export default function TimeSelect({
             disabled
               ? styles.checkDateDisable
               : isActive
-              ? styles.active
+              ? styles.checkDateActive
               : styles.checkDate
           }
                  d-flex align-items-center justify-content-center`}

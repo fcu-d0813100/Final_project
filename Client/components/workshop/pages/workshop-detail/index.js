@@ -1,4 +1,5 @@
 'use client'
+import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { useCartWorkshop } from '@/hooks/use-cartW'
@@ -58,8 +59,11 @@ export default function WorkshopDetail() {
   const handleSelectTime = (time) => {
     setSelectedTime(time)
   }
+  const notify = () => {
+    toast.success('已成功加入購物車!')
+  }
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (navigateToCart = false) => {
     if (selectedTime) {
       onAddWorkshop({
         id: tworkshop.id,
@@ -71,6 +75,10 @@ export default function WorkshopDetail() {
         classId: selectedTime.key,
         price: tworkshop.price,
       })
+      notify(tworkshop.name) // 顯示成功訊息
+      if (navigateToCart) {
+        router.push('/cart') // 只有當參數為 true 時才跳轉
+      }
     }
   }
 
@@ -95,6 +103,8 @@ export default function WorkshopDetail() {
     return diffMs / (1000 * 60 * 60) // 將毫秒轉換為小時
   }
 
+  const datesArray = tworkshop.dates ? tworkshop.dates.split(',') : []
+
   return (
     <>
       <TopBar />
@@ -102,8 +112,14 @@ export default function WorkshopDetail() {
       <WorkshopDetailHeader
         name={tworkshop.name}
         description={tworkshop.description}
-        beginDate="2024/09/30"
-        endDate="2024/10/20"
+        beginDate={
+          datesArray.length > 0 ? datesArray[0].replace(/-/g, '/') : ''
+        }
+        endDate={
+          datesArray.length > 0
+            ? datesArray[datesArray.length - 1].replace(/-/g, '/')
+            : ''
+        }
         address={tworkshop.address}
         type={tworkshop.workshop_type_type}
         teacher={tworkshop.teacher_name}
@@ -126,9 +142,9 @@ export default function WorkshopDetail() {
           {dates.map((date, index) => (
             <TimeSelect
               key={timeId[index]}
-              date={date}
-              beginTime={startTimes[index]} // 對應的開始時間
-              endTime={endTimes[index]} // 對應的結束時間
+              date={date.replace(/-/g, '/')}
+              beginTime={startTimes[index].slice(0, 5)} // 對應的開始時間
+              endTime={endTimes[index].slice(0, 5)} // 對應的結束時間
               hours={calculateHours(startTimes[index], endTimes[index])} // 計算時數並傳遞
               registered={registered[index]}
               max={maxStudents[index]}
@@ -168,11 +184,17 @@ export default function WorkshopDetail() {
             </div>
 
             <div>
-              <button className="btn-primary h6" onClick={handleAddToCart}>
+              <button
+                className="btn-primary h6"
+                onClick={() => handleAddToCart(false)}
+              >
                 <PiPlusCircle className="me-2 ph" />
                 加入購物車
               </button>
-              <button className="btn-secondary h6 ms-3">
+              <button
+                className="btn-secondary h6 ms-3"
+                onClick={() => handleAddToCart(true)}
+              >
                 <PiHandbagSimple className="me-2 ph" />
                 立即購買
               </button>
@@ -188,6 +210,7 @@ export default function WorkshopDetail() {
         imgS02={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-s-2.jpg`}
       />
       <Footer />
+      <Toaster />
     </>
   )
 }

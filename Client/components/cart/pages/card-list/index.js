@@ -208,10 +208,16 @@ export default function CartList() {
                     {/* 課程價格 */}
                     <div className={`h6 ${style.price}`}>
                       NT${(workshop.price * workshop.qty).toLocaleString()}
-                      <div className={style['origin_price']}>NT$ 金額</div>
+                      <div className={style['origin_price']}>
+                        NT$ {(workshop.price * workshop.qty).toLocaleString()}
+                      </div>
                     </div>
                     <div className={style.trash}>
-                      <button type="button" className={style.trash}>
+                      <button
+                        type="button"
+                        className={style.trash}
+                        onClick={() => onRemoveWorkshop(workshop.id)}
+                      >
                         <Trash size={28} />
                       </button>
                     </div>
