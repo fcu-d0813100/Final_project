@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import { GrGoogle } from "react-icons/gr";
-import { FaLine } from "react-icons/fa6";
-import { PiEyeClosed } from "react-icons/pi";
+import { GrGoogle } from 'react-icons/gr'
+import { FaLine } from 'react-icons/fa6'
+import { PiEyeClosed } from 'react-icons/pi'
 import Link from 'next/link'
+import { useAuth } from '@/hooks/use-auth'
 
+export default function UserLogin() {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
+  const { auth, login, logout } = useAuth()
 
-export default function UserLogin(props) {
   return (
     <>
       <div className={styles['bg-img']}>
@@ -31,7 +35,9 @@ export default function UserLogin(props) {
                 </h6>
                 <div className="col-12 d-flex justify-content-center align-items-center">
                   <Link href="/user/register">
-                    <button className={`btn-outline h6 ${styles['btn-outline']}`}>
+                    <button
+                      className={`btn-outline h6 ${styles['btn-outline']}`}
+                    >
                       立即註冊
                     </button>
                   </Link>
@@ -48,18 +54,26 @@ export default function UserLogin(props) {
                   </label>
                   <input
                     type="text"
-                    id="username"
+                    value={username}
+                    onChange={(e) => {
+                      setUsername(e.target.value)
+                    }}
                     className={styles['line-input']}
                     placeholder="請輸入帳號/信箱"
                   />
                 </div>
-                <div className={`${styles['input-area']} ${styles['line-input-pw']}`}>
+                <div
+                  className={`${styles['input-area']} ${styles['line-input-pw']}`}
+                >
                   <label htmlFor="password" className={styles['text-input']}>
                     密碼
                   </label>
                   <input
                     type="password"
-                    id="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value)
+                    }}
                     className={`${styles['line-input']} `}
                     placeholder="請輸入英文字母及數字"
                   />
@@ -73,10 +87,7 @@ export default function UserLogin(props) {
                       value=""
                       id="remember"
                     />
-                    <label
-                      className={`form-check-label ps`}
-                      htmlFor="remember"
-                    >
+                    <label className={`form-check-label ps`} htmlFor="remember">
                       記住帳密
                     </label>
                   </div>
@@ -85,10 +96,14 @@ export default function UserLogin(props) {
                   </a>
                 </div>
                 <div className="d-grid col-12 pt-4">
-                  <button className={`btn-primary h6 ${styles['btn-primary']}`}>
+                  <button
+                    onClick={() => {
+                      login(username, password)
+                    }}
+                    className={`btn-primary h6 ${styles['btn-primary']}`}
+                  >
                     登入
                   </button>
-
                 </div>
 
                 <div className="row pt-4 d-flex justify-content-end align-items-start">
