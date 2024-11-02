@@ -13,9 +13,11 @@ import WorkshopAddCartInfo from '@/components/workshop/common/workshop-addcart-i
 import { PiMinus, PiPlus, PiPlusCircle, PiHandbagSimple } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
-export default function WorkshopDetail(props) {
+export default function WorkshopDetail() {
+  const { onAddWorkshop } = useCartWorkshop()
   const router = useRouter()
   const [tworkshop, settWorkshop] = useState({})
+  const [selectedTime, setSelectedTime] = useState(null)
 
   const fetchData = async (wid) => {
     try {
@@ -53,6 +55,24 @@ export default function WorkshopDetail(props) {
   //   )
   //   setClassTime(nextClassTime)
   // }
+  const handleSelectTime = (time) => {
+    setSelectedTime(time)
+  }
+
+  const handleAddToCart = () => {
+    if (selectedTime) {
+      onAddWorkshop({
+        id: tworkshop.id,
+        name: tworkshop.name,
+        date: selectedTime.date,
+        beginTime: selectedTime.beginTime,
+        endTime: selectedTime.endTime,
+        typeId: tworkshop.type_id,
+        classId: selectedTime.key,
+        price: tworkshop.price,
+      })
+    }
+  }
 
   // 分割資料
   const dates = tworkshop.dates ? tworkshop.dates.split(',') : []
@@ -113,6 +133,7 @@ export default function WorkshopDetail(props) {
               registered={registered[index]}
               max={maxStudents[index]}
               disabled={Number(registered[index]) >= Number(maxStudents[index])}
+              onSelect={handleSelectTime}
             />
           ))}
         </div>
@@ -145,8 +166,9 @@ export default function WorkshopDetail(props) {
                 <PiPlus />
               </button> */}
             </div>
+
             <div>
-              <button className="btn-primary h6">
+              <button className="btn-primary h6" onClick={handleAddToCart}>
                 <PiPlusCircle className="me-2 ph" />
                 加入購物車
               </button>
