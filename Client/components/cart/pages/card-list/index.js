@@ -162,58 +162,67 @@ export default function CartList() {
               {/* 課程box */}
               <div className={style.course}>
                 <div className={`h5 ${style['course-topic']}`}>課程報名</div>
-                {/* {workshops.map((workshop) => ( */}
-                <div className={style['course-box']}>
-                  <div className={` col-6 ${style['course-detail']}`}>
-                    <div className={style['course-img']}>
-                      <Image
-                        src="/cart/course01.png"
-                        alt="cosmetic"
-                        width={300}
-                        height={300}
-                        className="img-fluid"
-                      />
-                    </div>
-                    <div className={style['course-text']}>
-                      <div className={`ps mb-1 ${style['sub_text']}`}>老師</div>
-                      <div className="h6 mb-3"> 課程名</div>
-                      <div className="ps">
-                        天
-                        <span className={`ms-2  ${style['sub_text']}`}>
-                          時間
-                        </span>
+
+                {workshopItems.map((workshop) => (
+                  <div key={workshop.id} className={style['course-box']}>
+                    <div className={` col-6 ${style['course-detail']}`}>
+                      <div className={style['course-img']}>
+                        <Image
+                          src={`/workshop/workshop_img/${workshop.typeId}-${workshop.id}-c.jpg`}
+                          alt="cosmetic"
+                          width={300}
+                          height={300}
+                          className="img-fluid"
+                        />
+                      </div>
+                      <div className={style['course-text']}>
+                        <div className={`ps mb-1 ${style['sub_text']}`}>
+                          {workshop.teacher}
+                        </div>
+                        <div className="h6 mb-3">{workshop.name}</div>
+                        <div className="ps">
+                          {workshop.date}
+                          <span className={`ms-2  ${style['sub_text']}`}>
+                            {workshop.beginTime}-{workshop.endTime}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {/* 數量加減按鈕 */}
-                  <div className="d-flex align-items-center justify-content-end">
-                    <button
-                      className={style['btn-sm']}
-                      onClick={() => wAmountChange(workshop.id, -1)}
-                    >
-                      <Minus size={20} />
-                    </button>
-                    <span className="px-3 h6"> 數量</span>
-                    <button
-                      className={style['btn-sm']}
-                      onClick={() => wAmountChange(workshop.id, 1)}
-                    >
-                      <Plus size={20} />
-                    </button>
-                  </div>
+                    {/* 數量加減按鈕 */}
+                    <div className="d-flex align-items-center justify-content-end">
+                      <button
+                        className={style['btn-sm']}
+                        onClick={() => onDecreaseWorkshop(workshop.id)}
+                      >
+                        <Minus size={20} />
+                      </button>
+                      <span className="px-3 h6">{workshop.qty}</span>
+                      <button
+                        className={style['btn-sm']}
+                        onClick={() => onIncreaseWorkshop(workshop.id)}
+                      >
+                        <Plus size={20} />
+                      </button>
+                    </div>
 
-                  {/* 課程價格 */}
-                  <div className={`h6 ${style.price}`}>
-                    NT$金額
-                    <div className={style['origin_price']}>NT$ 金額</div>
+                    {/* 課程價格 */}
+                    <div className={`h6 ${style.price}`}>
+                      NT${(workshop.price * workshop.qty).toLocaleString()}
+                      <div className={style['origin_price']}>
+                        NT$ {(workshop.price * workshop.qty).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className={style.trash}>
+                      <button
+                        type="button"
+                        className={style.trash}
+                        onClick={() => onRemoveWorkshop(workshop.id)}
+                      >
+                        <Trash size={28} />
+                      </button>
+                    </div>
                   </div>
-                  <div className={style.trash}>
-                    <button type="button" className={style.trash}>
-                      <Trash size={28} />
-                    </button>
-                  </div>
-                </div>
-                {/* ))} */}
+                ))}
                 <div className={style['course_amount']}>
                   商品小計： <span>NT</span>
                 </div>
