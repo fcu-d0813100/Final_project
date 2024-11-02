@@ -35,7 +35,6 @@ export default function RegisterForm() {
     if (e.target.name === 'agree') {
       nextUser = { ...user, agree: e.target.checked }
     }
-
     setUser(nextUser)
   }
   const checkError = (user) => {
@@ -105,6 +104,7 @@ export default function RegisterForm() {
 
     // 送到伺服器
     // 刪除不必要的欄位
+    // eslint-disable-next-line no-unused-vars
     const { confirmPassword, agree, ...newUser } = user
 
     // 向伺服器作fetch
@@ -172,26 +172,12 @@ export default function RegisterForm() {
                       className={`${styles['line-input']} `}
                       placeholder="請輸入英文字母及數字"
                     />
-                    {/* <input
-                    type="password"
-                    id="password"
-                    className={`${styles['line-input']} `}
-                    placeholder="請輸入英文字母及數字"
-                  /> */}
-                    {/* <input
-                      type="checkbox"
-                      checked={showPassword}
-                      onChange={(e) => {
-                        setShowPassword(!showPassword)
-                      }}
-                    />{' '}
-                    <PiEyeClosed className={styles.eyeiclosed} /> */}
-                    {/* <span
+                    <div
                       onClick={() => setShowPassword(!showPassword)}
-                      className={styles.icon}
+                      className={styles.eyeiclosed}
                     >
                       {showPassword ? <PiEye /> : <PiEyeClosed />}
-                    </span> */}
+                    </div>
                   </div>
                   <div
                     className={`${styles['input-area']} ${styles['line-input-pw']}`}
@@ -215,15 +201,15 @@ export default function RegisterForm() {
                       onChange={handleFieldChange}
                       className={`${styles['line-input']} `}
                       placeholder="請再次輸入密碼"
-                    />{' '}
-                    <input
-                      type="checkbox"
-                      checked={showConfirmPassword}
-                      onChange={(e) => {
+                    />
+                    <div
+                      onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
-                      }}
-                    />{' '}
-                    <PiEyeClosed className={styles.eyeiclosed} />
+                      }
+                      className={styles.eyeiclosed}
+                    >
+                      {showConfirmPassword ? <PiEye /> : <PiEyeClosed />}
+                    </div>
                   </div>
                   <div className="row p-0 m-0 d-flex justify-content-between">
                     <div
@@ -262,7 +248,6 @@ export default function RegisterForm() {
                         <option value="other">其他</option>
                       </select>
                     </div>
-
                     <div
                       className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-12 col-sm-6`}
                     >
