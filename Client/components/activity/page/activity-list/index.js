@@ -2,15 +2,16 @@ import Header from '@/components/home/common/header'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import Styles from '@/components/activity/page/index.module.scss'
+import Styles from '@/components/activity/page/activity-list/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
 import Footer from '@/components/home/common/footer'
 import { Heart } from 'phosphor-react'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Dropdown from '@/components/shared/dropdownList/sample'
+import ListCarousel from '@/components/activity/common/ListCarousel/actCarousel'
 
-export default function Activity() {
+export default function Activity(props) {
   // 使用 useEffect 確保 Bootstrap JavaScript 僅在客戶端加載
   useEffect(() => {
     typeof document !== undefined
@@ -23,12 +24,7 @@ export default function Activity() {
       <Header />
       {/* 輪播圖片 */}
       <div className={Styles['act-img-container']}>
-        <Image
-          src={'/activity/YSL4_1.png'}
-          width={1920}
-          height={700}
-          alt="YSL4_1"
-        />
+        <ListCarousel />
       </div>
 
       <div className={`${Styles['act-sec1']} container d-none d-lg-block`}>
@@ -129,7 +125,7 @@ export default function Activity() {
           <div className={`${Styles['cardLeft']} d-flex`}>
             <div className={Styles['cardL']}>
               {/* 卡片內圖片 */}
-              <Link href="#">
+              <Link href="/activity/activity-det">
                 <div className={Styles['card-img']}>
                   <div className={`${Styles['card-text']} d-flex`}>
                     <div className="currentR">
