@@ -102,6 +102,7 @@ export default function WorkshopAll(props) {
             return (
               <WorkshopCardLg
                 key={item.id}
+                wid={item.id}
                 imgCover={`/workshop/workshop_img/${item.type_id}-${item.id}-c.jpg`}
                 name={item.name}
                 teacher={item.teacher_name}

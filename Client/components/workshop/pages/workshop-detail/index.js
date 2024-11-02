@@ -56,6 +56,7 @@ export default function WorkshopDetail() {
   //   )
   //   setClassTime(nextClassTime)
   // }
+  
   const handleSelectTime = (time) => {
     setSelectedTime(time)
   }
@@ -203,6 +204,8 @@ export default function WorkshopDetail() {
         </div>
       </div>
       <WorkshopDetailInfo
+       
+        teacher={tworkshop.teacher_name}
         bn={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-f.jpg`}
         imgS01={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-s-1.jpg`}
         outline={tworkshop.outline}
