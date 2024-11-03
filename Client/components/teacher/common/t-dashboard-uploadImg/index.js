@@ -3,7 +3,7 @@ import styles from '@/components/teacher/common/t-dashboard-uploadImg/uploadImg.
 import { PiPlus } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
-export default function UploadImg({width,height}) {
+export default function UploadImg({width,height,bigText,smText}) {
      const [preview, setPreview] = useState(null)
 
      const handleFileChange = (event) => {
@@ -44,11 +44,11 @@ export default function UploadImg({width,height}) {
             <img src={preview} alt="預覽" className={styles.previewImage} />
           ) : (
             <div className={styles.picUploadText}>
-              <div >
+              <div>
                 <PiPlus className={styles.plus} />
                 <p className={`h4 mt-3`}>
-                  新增封面圖
-                  <br /> <span className="p">(必填)</span>
+                  {bigText}
+                  <br /> <span className="p">({smText})</span>
                 </p>
               </div>
             </div>
