@@ -1,7 +1,5 @@
 'use client'
 import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
-import Footer from '@/components/home/common/footer'
-import TopBar from '@/components/home/common/header'
 import TPersonalMoreInfo from '@/components/teacher/common/t-dashboard-personal-moreinfo'
 import TPersonalInfo from '@/components/teacher/common/t-dashboard-personal-info'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
@@ -12,7 +10,7 @@ import React, { useState, useEffect } from 'react'
 export default function TeacherInformation(props) {
   return (
     <>
-      <TopBar />
+     
       <TDashboardBN teacher="Gina Bettelli" />
 
       <div>
@@ -45,7 +43,7 @@ export default function TeacherInformation(props) {
           </div>
         </div>
       </div>
-      <Footer />
+    
     </>
   )
 }

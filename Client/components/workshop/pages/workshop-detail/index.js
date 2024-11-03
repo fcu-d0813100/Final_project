@@ -3,8 +3,6 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { useCartWorkshop } from '@/hooks/use-cartW'
-import Footer from '@/components/home/common/footer'
-import TopBar from '@/components/home/common/header'
 import styles from '@/components/workshop/common/workshop-detail.module.scss'
 import Image from 'next/image'
 import WorkshopDetailHeader from '@/components/workshop/common/workshop-detail-header'
@@ -108,7 +106,7 @@ export default function WorkshopDetail() {
 
   return (
     <>
-      <TopBar />
+    
 
       <WorkshopDetailHeader
         name={tworkshop.name}
@@ -224,7 +222,6 @@ export default function WorkshopDetail() {
         note={tworkshop.notes}
         imgS02={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-s-2.jpg`}
       />
-      <Footer />
       <Toaster />
     </>
   )
