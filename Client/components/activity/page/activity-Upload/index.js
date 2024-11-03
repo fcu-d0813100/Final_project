@@ -27,6 +27,29 @@ export default function Index(props) {
     })
   }
 
+import AdminSB from '@/components/admin/common/admin-side-bar'
+import UserTitle from '@/components/user/common/user-title'
+import Image from 'next/image'
+
+export default function Index(props) {
+  const [images, setImages] = useState([]) // 存储多张图片
+
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files) // 转换成数组以支持多文件
+    const newImages = []
+
+    files.forEach((file) => {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        newImages.push(reader.result)
+        if (newImages.length === files.length) {
+          setImages((prevImages) => [...prevImages, ...newImages]) // 添加到已有的图片中
+        }
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
   return (
     <>
       <header
