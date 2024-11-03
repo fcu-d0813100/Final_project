@@ -1,5 +1,5 @@
 'use client'
-import Sidebar from '@/components/teacher/common/T-dashboard-side-bar'
+import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import Footer from '@/components/home/common/footer'
 import TopBar from '@/components/home/common/header'
 import TPersonalMoreInfo from '@/components/teacher/common/t-dashboard-personal-moreinfo'

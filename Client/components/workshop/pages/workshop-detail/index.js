@@ -56,7 +56,7 @@ export default function WorkshopDetail() {
   //   )
   //   setClassTime(nextClassTime)
   // }
-  
+
   const handleSelectTime = (time) => {
     setSelectedTime(time)
   }
@@ -140,19 +140,32 @@ export default function WorkshopDetail() {
         <h4 className="h4 text-center mb-5">開課時程</h4>
 
         <div className="row row-cols-3 g-4">
-          {dates.map((date, index) => (
-            <TimeSelect
-              key={timeId[index]}
-              date={date.replace(/-/g, '/')}
-              beginTime={startTimes[index].slice(0, 5)} // 對應的開始時間
-              endTime={endTimes[index].slice(0, 5)} // 對應的結束時間
-              hours={calculateHours(startTimes[index], endTimes[index])} // 計算時數並傳遞
-              registered={registered[index]}
-              max={maxStudents[index]}
-              disabled={Number(registered[index]) >= Number(maxStudents[index])}
-              onSelect={handleSelectTime}
-            />
-          ))}
+          {dates.map((date, index) => {
+            // 將 date 轉換為當天午夜的 Date 物件進行比較
+            const workshopDate = new Date(date)
+            workshopDate.setHours(0, 0, 0, 0) // 將時間設為午夜，僅比較日期部分
+            const today = new Date()
+            today.setHours(0, 0, 0, 0) // 當天午夜
+
+            // 若日期在今日之前，則不顯示
+            if (workshopDate < today) return null
+
+            return (
+              <TimeSelect
+                key={timeId[index]}
+                date={date.replace(/-/g, '/')}
+                beginTime={startTimes[index].slice(0, 5)} // 對應的開始時間
+                endTime={endTimes[index].slice(0, 5)} // 對應的結束時間
+                hours={calculateHours(startTimes[index], endTimes[index])} // 計算時數並傳遞
+                registered={registered[index]}
+                max={maxStudents[index]}
+                disabled={
+                  Number(registered[index]) >= Number(maxStudents[index])
+                }
+                onSelect={handleSelectTime}
+              />
+            )
+          })}
         </div>
 
         <hr className="border-2 my-5" />
@@ -204,7 +217,6 @@ export default function WorkshopDetail() {
         </div>
       </div>
       <WorkshopDetailInfo
-       
         teacher={tworkshop.teacher_name}
         bn={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-f.jpg`}
         imgS01={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-s-1.jpg`}
