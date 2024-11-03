@@ -338,7 +338,7 @@ export default function RegisterForm() {
                         立即登入
                       </button>
                     </Link>
-                    {/* <button
+                    <button
                       type="button"
                       onClick={() => {
                         setUser({
@@ -352,7 +352,7 @@ export default function RegisterForm() {
                       }}
                     >
                       一鍵輸入
-                    </button> */}
+                    </button>
                   </div>
                 </div>
               </div>

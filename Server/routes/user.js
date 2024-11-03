@@ -5,6 +5,7 @@ const upload = multer()
 const router = express.Router()
 import { generateHash } from '#db-helpers/password-hash.js'
 
+// 註冊
 router.post('/', upload.none(), async (req, res, next) => {
   try {
     const { email, password, name, account } = req.body
@@ -30,16 +31,16 @@ router.post('/', upload.none(), async (req, res, next) => {
     console.log('準備插入的值:', [email, password, name, account])
     // 檢查是否已經有相同的email
     console.log('開始資料庫操作')
-
+    // 帳號密碼重複認證
     const [existingUser] = await db.query(
-      'SELECT * FROM user WHERE email = ?',
-      [email]
+      'SELECT * FROM user WHERE email = ? OR account = ?',
+      [email, account]
     )
 
     if (existingUser.length > 0) {
       return res.json({
         status: 'error',
-        message: '電子郵件已被註冊',
+        message: '電子郵件或帳號已被註冊',
       })
     }
 
@@ -81,6 +82,24 @@ router.post('/', upload.none(), async (req, res, next) => {
       message: error.message || '伺服器錯誤',
     })
   }
+})
+
+// 登入
+router.post('/login', async (req, res, next) => {
+  console.log(req.body)
+  const loginUser = req.body
+  const [rows] = await db.query(
+    'SELECT * FROM user WHERE account = ? AND password = ?',
+    [loginUser.account, loginUser.password]
+  )
+
+  if (rows.length === 0) {
+    return res.json({ status: 'error', message: '帳號或密碼錯誤' })
+  }
+  const dbUser = rows[0]
+  console.log(dbUser)
+
+  return res.json({ status: 'success', data: null })
 })
 
 export default router
