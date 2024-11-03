@@ -52,7 +52,7 @@ export default function Profile() {
                         <th>
                           生日<span> | birthday</span>
                         </th>
-                        <td>birthday</td>
+                        <td>{auth.userData.bityhday}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -65,19 +65,19 @@ export default function Profile() {
                         <th>
                           稱謂<span> | title</span>
                         </th>
-                        <td>gender</td>
+                        <td>{auth.userData.gender}</td>
                       </tr>
                       <tr>
                         <th>
                           手機<span> | phone</span>
                         </th>
-                        <td>phone</td>
+                        <td>{auth.userData.phone}</td>
                       </tr>
                       <tr>
                         <th>
                           地址<span> | address</span>
                         </th>
-                        <td>address</td>
+                        <td>{auth.userData.address}</td>
                       </tr>
                     </tbody>
                   </table>

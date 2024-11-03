@@ -39,7 +39,7 @@ router.get('/', authenticate, async function (req, res) {
 })
 
 // 註冊
-router.post('/', upload.none(), async (req, res, next) => {
+router.post('/register', upload.none(), async (req, res, next) => {
   try {
     const { email, password, name, account } = req.body
 
@@ -77,23 +77,25 @@ router.post('/', upload.none(), async (req, res, next) => {
       })
     }
 
-    const hashedPassword = await generateHash(password)
+    const hashedPassword = await generateHash(password)(password)
 
     const sql = `
       INSERT INTO user (
-      name , account, password, gender, phone, email, address, img, level, created_at, updated_at
+        name, account, password, email, gender, phone, address, img, level, created_at, updated_at
       ) VALUES (
-       ?, ?, ?,' ',' ', ?,' ',' ','1',Now(),'');
-    `
-    const params = [
-      name,
-      account,
-      email,
-      hashedPassword, // 使用加密後的密碼
-      // phone,
-      // birthdate || null,
-      // gender,
-    ]
+        ?, ?, ?, ?, ' ', ' ', ' ', ' ', '1', Now(), ''
+      )`
+    const params = [name, account, hashedPassword, email]
+
+    // const params = [
+    //   name,
+    //   account,
+    //   email,
+    //   hashedPassword, // 使用加密後的密碼
+    //   // phone,
+    //   // birthdate || null,
+    //   // gender,
+    // ]
 
     const [result] = await db.query(sql, params)
     console.log('插入結果:', result)

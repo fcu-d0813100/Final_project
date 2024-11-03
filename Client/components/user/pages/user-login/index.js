@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function UserLogin() {
-  const [account, setaccount] = useState('')
+  const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
 
   const { auth, login, logout } = useAuth()
@@ -113,7 +113,16 @@ export default function UserLogin() {
                     登入
                   </button>
                 </div>
-
+                {/*  */}
+                <button
+                  onClick={() => {
+                    setAccount('amy0524')
+                    setPassword('12345')
+                  }}
+                >
+                  一鍵輸入
+                </button>
+                {/*  */}
                 <div className="row pt-4 d-flex justify-content-end align-items-start">
                   <div className={`col-7 ${styles['signin-rwd']}`}>
                     還沒有帳號?{' '}

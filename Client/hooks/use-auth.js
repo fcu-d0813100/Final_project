@@ -50,34 +50,76 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // 註冊
   const register = async (user) => {
-    // 向伺服器作fetch
-    const res = await fetch('http://localhost:3005/api/user', {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(user),
-    })
+    try {
+      console.log('開始發送註冊請求:', user) // 調試輸出
 
-    const resData = await res.json()
+      const res = await fetch('http://localhost:3005/api/user/register', {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(user),
+      })
 
-    if (resData.status === 'success') {
-      confirm(
-        'success',
-        '歡迎',
-        '你已註冊成功，現在要進行登入嗎？',
-        '進行登入',
-        () => {
-          router.push('/user/login')
-        }
-      )
-    } else {
-      'error', '失敗', resData.message
+      const resData = await res.json()
+
+      console.log('伺服器響應:', resData) // 調試輸出
+
+      if (resData.status === 'success') {
+        confirm(
+          'success',
+          '註冊成功',
+          '你已成功註冊，現在要跳轉到登入頁面嗎？',
+          '去登入',
+          () => {
+            router.push('/user/login')
+          }
+        )
+      } else {
+        confirm('error', '失敗', resData.message, '重試', () => {
+          // 在這裡加入重新操作或其他處理邏輯
+        })
+      }
+    } catch (error) {
+      console.error('註冊過程中發生錯誤:', error) // 調試輸出
+      confirm('error', '失敗', '伺服器錯誤，請稍後重試', '重試', () => {
+        // 在這裡加入重新操作或其他處理邏輯
+      })
     }
   }
+
+  // // 註冊
+  // const register = async (user) => {
+  //   // 向伺服器作fetch
+  //   const res = await fetch('http://localhost:3005/api/user/register', {
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     method: 'POST',
+  //     body: JSON.stringify(user),
+  //   })
+
+  //   const resData = await res.json()
+
+  //   if (resData.status === 'success') {
+  //     confirm(
+  //       'success',
+  //       '登出成功',
+  //       '你已成功登出，現在要跳轉到登入頁面嗎？',
+  //       '去登入',
+  //       () => {
+  //         router.push('/user/login')
+  //       }
+  //     )
+  //   } else {
+  //     confirm('error', '失敗', resData.message, '重試', () => {
+  //       // 在這裡加入重新操作或其他處理邏輯
+  //     })
+  //   }
+  // }
 
   // 模擬會員登入
   const login = async (account, password) => {
@@ -136,7 +178,7 @@ export function AuthProvider({ children }) {
     const resData = await res.json()
 
     if (resData.status === 'success') {
-      alert('成功登出!')
+      alert('登出成功!')
 
       setAuth({
         isAuth: false,
