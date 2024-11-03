@@ -38,7 +38,7 @@ export default function Index(props) {
       <div className={Styles['user-section']}>
         <AdminSB />
         <div className={Styles['any-section']}>
-          <UserTitle CN="活動上架" ENG="New activity" />
+          <UserTitle CN="活動編輯" ENG="New activity" />
           <form className={`${Styles['form-container']} mt-5`}>
             <div className="row align-items-md-stretch">
               <div className="col-md-6">
@@ -105,13 +105,19 @@ export default function Index(props) {
                       <div className="row">
                         <div className="col-lg-4">
                           <label htmlFor="event-type">活動品牌 | type</label>
-                          <input
-                            type="text"
-                            id="event-type"
-                            placeholder="YSL"
-                            className="form-control"
-                          />
+                          <select id="event-type" className="form-control">
+                            <option value="" disabled selected>
+                              請選擇品牌
+                            </option>{' '}
+                            {/* 默认选项 */}
+                            <option value="1">YSL</option>
+                            <option value="2">Nars</option>
+                            <option value="3">LANCÔME</option>
+                            <option value="4">Bobbi Brown</option>
+                            <option value="5">Estee Lauder</option>
+                          </select>
                         </div>
+
                         <div className="col-lg-8">
                           <label htmlFor="event-address">
                             活動地點 | address
@@ -176,9 +182,11 @@ export default function Index(props) {
                   取消
                 </button>
               </Link>
-              <button type="submit" className={Styles['submit-button']}>
-                上架
-              </button>
+              <Link href="/admin/activity">
+                <button type="submit" className={Styles['submit-button']}>
+                  儲存
+                </button>
+              </Link>
             </div>
           </form>
         </div>
