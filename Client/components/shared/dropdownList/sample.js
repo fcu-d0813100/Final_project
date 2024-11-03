@@ -11,7 +11,13 @@ export default function Sample() {
         className="d-flex
     "
       >
-        <Dropdown name="狀態" items={['已報名', '已截止', '']} />
+        <Dropdown
+          name="狀態"
+          items={[
+            { option: '項目一', link: '/page1' },
+            { option: '項目二', link: '/page1' },
+          ]}
+        />
 
         <div className="mobile-drop d-block d-lg-none">
           {' '}

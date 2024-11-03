@@ -1,6 +1,6 @@
 'use client'
 import { PiPlus } from 'react-icons/pi'
-import Sidebar from '@/components/teacher/common/T-dashboard-side-bar'
+import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
 import styles from '@/components/teacher/common/upload.module.scss'
 import Footer from '@/components/home/common/footer'
