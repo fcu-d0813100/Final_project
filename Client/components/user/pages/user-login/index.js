@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styles from './index.module.scss'
 import { GrGoogle } from 'react-icons/gr'
 import { FaLine } from 'react-icons/fa6'
-import { PiEyeClosed } from 'react-icons/pi'
+import { PiEyeClosed, PiEye } from 'react-icons/pi'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 
@@ -11,6 +11,8 @@ export default function UserLogin() {
   const [password, setPassword] = useState('')
 
   const { auth, login, logout } = useAuth()
+  // checkbox 呈現密碼用
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <>
@@ -69,7 +71,7 @@ export default function UserLogin() {
                     密碼
                   </label>
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value)
@@ -77,7 +79,13 @@ export default function UserLogin() {
                     className={`${styles['line-input']} `}
                     placeholder="請輸入英文字母及數字"
                   />
-                  <PiEyeClosed className={styles.eyeiclosed} />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className={styles.eyeiclosed}
+                  >
+                    {showPassword ? <PiEye /> : <PiEyeClosed />}
+                  </button>
                 </div>
                 <div className={`form-check ${styles['form-area']} my-4 `}>
                   <div>

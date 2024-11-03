@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styles from './index.module.scss'
 import { PiEyeClosed, PiEye } from 'react-icons/pi'
 import Link from 'next/link'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function RegisterForm() {
+  // 從勾子的context得到註冊函式
+  const { register } = useAuth()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     account: '',
@@ -37,6 +40,7 @@ export default function RegisterForm() {
     }
     setUser(nextUser)
   }
+
   const checkError = (user) => {
     // 表單檢查--START---
     // 1. 建立一個全新的錯誤訊息用物件
@@ -106,19 +110,20 @@ export default function RegisterForm() {
     // 刪除不必要的欄位
     // eslint-disable-next-line no-unused-vars
     const { confirmPassword, agree, ...newUser } = user
+    // 呼叫register(useAuth勾子裡)
+    await register(newUser)
+    // // 向伺服器作fetch
+    // const res = await fetch('http://localhost:3005/api/user', {
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   method: 'POST',
+    //   body: JSON.stringify(newUser),
+    // })
 
-    // 向伺服器作fetch
-    const res = await fetch('http://localhost:3005/api/user', {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(newUser),
-    })
-
-    const resData = await res.json()
-    console.log(resData)
+    // const resData = await res.json()
+    // console.log(resData)
   }
   return (
     <>
