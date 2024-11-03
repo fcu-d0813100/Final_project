@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function UserLogin() {
-  const [username, setUsername] = useState('')
+  const [account, setaccount] = useState('')
   const [password, setPassword] = useState('')
 
   const { auth, login, logout } = useAuth()
@@ -49,14 +49,14 @@ export default function UserLogin() {
                   <h1 className={styles['login-title']}>LOGIN</h1>
                 </div>
                 <div className={styles['input-area']}>
-                  <label htmlFor="username" className={styles['text-input']}>
+                  <label htmlFor="account" className={styles['text-input']}>
                     帳號
                   </label>
                   <input
                     type="text"
-                    value={username}
+                    value={account}
                     onChange={(e) => {
-                      setUsername(e.target.value)
+                      setaccount(e.target.value)
                     }}
                     className={styles['line-input']}
                     placeholder="請輸入帳號/信箱"
@@ -98,7 +98,7 @@ export default function UserLogin() {
                 <div className="d-grid col-12 pt-4">
                   <button
                     onClick={() => {
-                      login(username, password)
+                      login(account, password)
                     }}
                     className={`btn-primary h6 ${styles['btn-primary']}`}
                   >

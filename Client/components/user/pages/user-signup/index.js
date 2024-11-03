@@ -6,12 +6,12 @@ import Link from 'next/link'
 export default function RegisterForm() {
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
-    username: '',
+    account: '',
     password: '',
     confirmPassword: '',
     name: '',
-    gender: '',
-    birthday: '',
+    // gender: '',
+    // birthday: '',
     email: '',
     agree: false, // checkbox 同意會員註冊條款
   })
@@ -19,7 +19,7 @@ export default function RegisterForm() {
   const [errors, setErrors] = useState({
     name: '',
     email: '',
-    username: '',
+    account: '',
     password: '',
     confirmPassword: '',
     agree: '', // 錯誤訊息用字串
@@ -43,7 +43,7 @@ export default function RegisterForm() {
     const newErrors = {
       name: '',
       email: '',
-      username: '',
+      account: '',
       password: '',
       confirmPassword: '',
       agree: '',
@@ -58,8 +58,8 @@ export default function RegisterForm() {
       newErrors.email = 'Email為必填'
     }
 
-    if (!user.username) {
-      newErrors.username = '帳號為必填'
+    if (!user.account) {
+      newErrors.account = '帳號為必填'
     }
 
     if (!user.agree) {
@@ -138,17 +138,17 @@ export default function RegisterForm() {
                     <h1 className={styles['login-title']}>SIGNUP</h1>
                   </div>
                   <div className={styles['input-area']}>
-                    <label htmlFor="username" className={styles['text-input']}>
+                    <label htmlFor="account" className={styles['text-input']}>
                       帳號:{' '}
                       <span className={`d-inline ${styles['text-red']} ps-1`}>
                         *
                       </span>{' '}
-                      <span className={styles.error}>{errors.username}</span>
+                      <span className={styles.error}>{errors.account}</span>
                     </label>
                     <input
                       type="text"
-                      name="username"
-                      value={user.username}
+                      name="account"
+                      value={user.account}
                       onChange={handleFieldChange}
                       className={styles['line-input']}
                       placeholder="請輸入帳號"
@@ -172,12 +172,13 @@ export default function RegisterForm() {
                       className={`${styles['line-input']} `}
                       placeholder="請輸入英文字母及數字"
                     />
-                    <div
+                    <button
+                      type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className={styles.eyeiclosed}
                     >
                       {showPassword ? <PiEye /> : <PiEyeClosed />}
-                    </div>
+                    </button>
                   </div>
                   <div
                     className={`${styles['input-area']} ${styles['line-input-pw']}`}
@@ -202,18 +203,19 @@ export default function RegisterForm() {
                       className={`${styles['line-input']} `}
                       placeholder="請再次輸入密碼"
                     />
-                    <div
+                    <button
+                      type="button"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
                       className={styles.eyeiclosed}
                     >
                       {showConfirmPassword ? <PiEye /> : <PiEyeClosed />}
-                    </div>
+                    </button>
                   </div>
                   <div className="row p-0 m-0 d-flex justify-content-between">
                     <div
-                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-6`}
+                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-sm-5 col-12`}
                     >
                       <label htmlFor="name" className={styles['text-input']}>
                         姓名:{' '}
@@ -230,7 +232,7 @@ export default function RegisterForm() {
                         className={`${styles['line-input']} `}
                       />
                     </div>
-                    <div
+                    {/* <div
                       className={` ${styles['input-area']} ${styles['line-input-pw']} ps-2 col-6`}
                     >
                       <label htmlFor="gender" className={styles['text-input']}>
@@ -247,9 +249,9 @@ export default function RegisterForm() {
                         <option value="female">女士</option>
                         <option value="other">其他</option>
                       </select>
-                    </div>
+                    </div> */}
                     <div
-                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-12 col-sm-6`}
+                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-12 col-sm-7`}
                     >
                       <label htmlFor="email" className={styles['text-input']}>
                         Email:{' '}
@@ -269,7 +271,7 @@ export default function RegisterForm() {
                         placeholder="請輸入Email"
                       />
                     </div>
-                    <div
+                    {/* <div
                       className={`${styles['input-area']} ${styles['line-input-pw']} ps-2 col-12 col-sm-6`}
                     >
                       <label
@@ -284,7 +286,7 @@ export default function RegisterForm() {
                         value={user.birthday}
                         className={`${styles['line-input']} `}
                       />
-                    </div>
+                    </div> */}
                   </div>
                   <div className={`form-check ${styles['form-area']} my-2 `}>
                     <div>
@@ -296,7 +298,7 @@ export default function RegisterForm() {
                           checked={user.agree}
                           onChange={handleFieldChange}
                         />{' '}
-                        我已閱讀並同意《會員權益聲明
+                        我已閱讀並同意《會員權益聲明》
                       </label>
                     </div>
                   </div>
@@ -336,13 +338,13 @@ export default function RegisterForm() {
                         立即登入
                       </button>
                     </Link>
-                    <button
+                    {/* <button
                       type="button"
                       onClick={() => {
                         setUser({
                           name: 'test',
                           email: 'test@gg.com',
-                          username: 'test',
+                          account: 'test',
                           password: '111111',
                           confirmPassword: '111111',
                           agree: true, // checkbox 同意會員註冊條款
@@ -350,7 +352,7 @@ export default function RegisterForm() {
                       }}
                     >
                       一鍵輸入
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
