@@ -58,7 +58,7 @@ export default function UserLogin() {
                     type="text"
                     value={account}
                     onChange={(e) => {
-                      setaccount(e.target.value)
+                      setAccount(e.target.value)
                     }}
                     className={styles['line-input']}
                     placeholder="請輸入帳號/信箱"

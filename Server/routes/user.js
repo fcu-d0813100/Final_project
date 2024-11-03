@@ -20,21 +20,18 @@ router.get('/', authenticate, async function (req, res) {
   const id = req.user.id
 
   // 檢查是否為授權會員，只有授權會員可以存取自己的資料
-  if (req.user.id !== id) {
-    return res.json({ status: 'error', message: '存取會員資料失敗' })
-  }
+  // if (req.user.id !== id) {
+  //   return res.json({ status: 'error', message: '存取會員資料失敗' })
+  // }
 
   const [rows] = await db.query('SELECT * FROM user WHERE id= ?', [id])
 
   if (rows.length === 0) {
     return res.json({ status: 'error', message: '沒有找到會員資料' })
   }
-
   const user = rows[0]
-
   // 不回傳密碼
   delete user.password
-
   return res.json({ status: 'success', data: { user } })
 })
 
@@ -163,6 +160,41 @@ router.post('/logout', authenticate, (req, res) => {
   // 清除cookie
   res.clearCookie('accessToken', { httpOnly: true })
   res.json({ status: 'success', data: null })
+})
+
+// 更新會員資料
+router.put('/', authenticate, async (req, res, next) => {
+  // id可以用jwt的存取令牌(accessToken)從authenticate中得到(如果有登入的話)
+  const id = req.user.id
+
+  // 這裡可以檢查
+  const updateUser = req.body
+
+  let result = null
+
+  // 這是一起更新密碼的寫法
+  // if (updateUser.password) {
+  //   result = await db.query(
+  //     'UPDATE `user` SET `name`=?,`password`=?,`email`=? WHERE `id`=?;',
+  //     [updateUser.name, updateUser.password, updateUser.email, id]
+  //   )
+  // } else {
+  //   result = await db.query(
+  //     'UPDATE `user` SET `name`=?,`email`=? WHERE `id`=?;',
+  //     [updateUser.name, updateUser.email, id]
+  //   )
+  // }
+
+  const [rows2] = result
+  console.log(rows2)
+
+  // 檢查是否有產生影響欄位affectedRows，代表新增成功
+  if (rows2.affectedRows) {
+    return res.json({ status: 'success', data: null })
+  } else {
+    return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    // 沒有更新
+  }
 })
 
 export default router

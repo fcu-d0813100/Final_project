@@ -20,9 +20,42 @@ import { useAuth } from '@/hooks/use-auth'
 //   updated_at = '2024.10.05',
 //   points = '100',
 // })
-export default function Profile() {
+
+export default function UserInfo() {
   const { auth } = useAuth()
 
+  // 從勾子的context得到註冊函式
+  // const { update, getUser } = useAuth()
+  // // 狀態為物件，屬性對應到表單的欄位名稱
+  // const [user, setUser] = useState({
+  //   name: '',
+  //   account: '',
+  //   // password: '',
+  //   // confirmPassword: '',
+  //   nickname: '',
+  //   gender: '',
+  //   birthday: '',
+  //   email: '',
+  //   Img: '',
+  //   phone: '',
+  //   address: '',
+  //   created_at: '',
+  //   updated_at: '',
+  //   // points: '',
+  // })
+  // const { auth } = useAuth()
+  // // 初始化會員資料
+  // const initUserData = async () => {
+  //   const user = await getUser()
+  //   // 這是要更改密碼才會有的欄位
+  //   // setUser({ ...member, password: '', confirmPassword: '' })
+  //   setUser(user)
+  // }
+
+  // // 本頁一開始render後就會設定到user狀態中
+  // useEffect(() => {
+  //   initUserData()
+  // }, [])
   return (
     <>
       <UserSection titleCN="個人資訊" titleENG="Information">
@@ -106,7 +139,7 @@ export default function Profile() {
                     <th>
                       創建時間<span> | created time</span>
                     </th>
-                    <td>created_at</td>
+                    <td>{auth.userData.created_at}</td>
                   </tr>
                 </tbody>
               </table>
@@ -118,7 +151,7 @@ export default function Profile() {
                     <th>
                       更新時間<span> | updated time</span>
                     </th>
-                    <td>updated_at</td>
+                    <td>{auth.userData.updated_at}</td>
                   </tr>
                 </tbody>
               </table>
@@ -187,9 +220,9 @@ export default function Profile() {
               </div>
             </div>
             <div className="col-10 pt-3 mt-3 justify-content-center  gap-5 d-flex align-items-center">
-              <Image src="/user/regular.svg" width={224} height={172} />
-              <Image src="/user/platinum.svg" width={224} height={172} />
-              <Image src="/user/diamond.svg" width={224} height={172} />
+              <Image src="/user/regular.svg" alt="" width={224} height={172} />
+              <Image src="/user/platinum.svg" alt="" width={224} height={172} />
+              <Image src="/user/diamond.svg" alt="" width={224} height={172} />
             </div>
           </div>
         </div>
