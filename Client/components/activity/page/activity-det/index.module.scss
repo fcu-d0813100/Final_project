@@ -478,7 +478,7 @@
       width: $card-width; // 每张卡片的宽度
       flex-shrink: 0;
       margin: 0;
-      transition: transform 0.5s ease, z-index 0.5s ease;
+      transition: transform 0.5s ease-in-out;
 
       &.active {
         transform: scale(1.05); // 放大中间卡片
@@ -487,6 +487,13 @@
         .card-content {
           display: flex; // 显示内容
         }
+      }
+      &.left {
+        transform: translateX(-100%); // 向左移动
+      }
+
+      &.right {
+        transform: translateX(100%); // 向右移动
       }
 
       &:not(.active) {
@@ -519,13 +526,6 @@
       }
 
       // 轮播卡片的状态样式
-      &.left {
-        transform: translateX(-100%); // 向左移动
-      }
-
-      &.right {
-        transform: translateX(100%); // 向右移动
-      }
 
       .cardL {
         position: relative;
@@ -620,7 +620,30 @@
 
   .btngrp {
     position: relative;
-    bottom: 200px;
+    top: 200px;
     z-index: 10;
+    .navButton {
+      background: none; // 无背景
+      border: none; // 无边框
+      cursor: pointer;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:focus {
+        outline: none; // 移除聚焦时的轮廓
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.281);
+        color: #555;
+      }
+
+      svg {
+        color: #333; // 图标颜色
+        font-size: 24px; // 图标大小
+      }
+    }
   }
 }
