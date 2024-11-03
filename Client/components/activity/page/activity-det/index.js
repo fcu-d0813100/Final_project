@@ -1,11 +1,11 @@
-import Header from '@/components/home/common/header'
+import Header from '@/components/layout/common/header/index'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Styles from '@/components/activity/page/activity-det/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
-import Footer from '@/components/home/common/footer'
+import Footer from '@/components/layout/common/footer-global/index'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Dropdown from '@/components/shared/dropdownList/sample'
 import FormToggle from '../../common/FormToggle'
@@ -70,7 +70,6 @@ export default function ActivityDet(props) {
   ]
   return (
     <>
-      <Header />
       <div>
         <div className={Styles['act-img-container']}>
           <Image
@@ -156,7 +155,6 @@ export default function ActivityDet(props) {
         </div>
       </div>
       <CardCarousel2 products={products} />
-      <Footer />
     </>
   )
 }
