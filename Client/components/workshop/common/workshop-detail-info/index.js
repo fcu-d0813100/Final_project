@@ -3,10 +3,23 @@ import styles from '@/components/workshop/common/workshop-detail.module.scss'
 import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 
-export default function WorkshopDetailInfo({ bn, imgS01, outline, note ,imgS02 }) {
+export default function WorkshopDetailInfo({
+  teacher,
+  bn,
+  imgS01,
+  outline,
+  note,
+  imgS02,
+}) {
   return (
     <>
       <div className={styles.section03}>
+        <div>
+          <h2 className="h2-L">
+            About Workshop <br />{' '}
+            <span className="h4"> Teacher | {teacher}</span>
+          </h2>
+        </div>
         <Image
           height={700}
           width={1920}
@@ -49,7 +62,7 @@ export default function WorkshopDetailInfo({ bn, imgS01, outline, note ,imgS02 }
               <h3 className="h3 mb-5 pb-4 border-bottom border-light-subtle">
                 注意事項
               </h3>
-              <p className="h6">{note}</p>
+              <p className={`${styles.noteContext} h6`}>{note}</p>
             </div>
 
             <div className={styles.smImg02}>

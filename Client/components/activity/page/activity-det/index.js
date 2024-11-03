@@ -1,11 +1,11 @@
-import Header from '@/components/home/common/header'
+import Header from '@/components/layout/common/header/index'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Styles from '@/components/activity/page/activity-det/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
-import Footer from '@/components/home/common/footer'
+import Footer from '@/components/layout/common/footer-global/index'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Dropdown from '@/components/shared/dropdownList/sample'
 import FormToggle from '../../common/FormToggle'
@@ -41,36 +41,40 @@ export default function ActivityDet(props) {
       color: '#8f352d',
     },
   ]
-  const items = [
+  const cardsData = [
     {
-      image: '/activity/YSL4_2.png',
-      title: '活動1',
-      date: '2024-01-01',
-      host: '主辦單位1',
-      location: '地點1',
-      people: '100',
+      title: '暮光派對1',
+      subtitle: 'YSL BEAUTY LIGHT CLUB',
+      imgSrc: '/activity/YSL1_1.png',
+      date: '2024-11-16 ~ 2024-11-17',
+      host: 'Yves Saint Laurent',
+      location: '110台北市信義區市府路45號',
+      attendees: '12 人',
+      status: '報名中',
     },
     {
-      image: '/activity/YSL4_2.png',
-      title: '活動1',
-      date: '2024-01-01',
-      host: '主辦單位1',
-      location: '地點1',
-      people: '100',
+      title: '暮光派對2',
+      subtitle: 'YSL BEAUTY LIGHT CLUB',
+      imgSrc: '/activity/BOBBI1_1.png',
+      date: '2024-11-16 ~ 2024-11-17',
+      host: 'Yves Saint Laurent',
+      location: '110台北市信義區市府路45號',
+      attendees: '12 人',
+      status: '報名中',
     },
     {
-      image: '/activity/YSL4_2.png',
-      title: '活動1',
-      date: '2024-01-01',
-      host: '主辦單位1',
-      location: '地點1',
-      people: '100',
+      title: '暮光派對3',
+      subtitle: 'YSL BEAUTY LIGHT CLUB',
+      imgSrc: '/activity/ESLD1_1.png',
+      date: '2024-11-16 ~ 2024-11-17',
+      host: 'Yves Saint Laurent',
+      location: '110台北市信義區市府路45號',
+      attendees: '12 人',
+      status: '報名中',
     },
-    // 其他活動項目...
   ]
   return (
     <>
-      <Header />
       <div>
         <div className={Styles['act-img-container']}>
           <Image
@@ -152,11 +156,10 @@ export default function ActivityDet(props) {
         </div>
         <div className={Styles['sec5']}>
           <FormToggle />
-          <Carousel items={items} />
+          <Carousel cardsData={cardsData} />
         </div>
       </div>
       <CardCarousel2 products={products} />
-      <Footer />
     </>
   )
 }

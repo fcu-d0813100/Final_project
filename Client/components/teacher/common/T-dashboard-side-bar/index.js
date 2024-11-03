@@ -11,6 +11,7 @@ import {
   PiClockCountdown,
   PiTicket,
 } from 'react-icons/pi'
+
 import styles from './index.module.scss'
 
 const navLinks = [
