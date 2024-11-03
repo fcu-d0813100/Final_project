@@ -1,4 +1,5 @@
 'use client'
+import AddWorkshopTime from '@/components/teacher/common/t-dashboard-add-worshopTime'
 import TimeSelect from '@/components/teacher/common/t-dashboard-time-select'
 import Textarea from '@/components/teacher/common/t-dashboard-textarea-style'
 import UploadImg from '@/components/teacher/common/t-dashboard-uploadImg'
@@ -55,10 +56,19 @@ export default function Upload(props) {
                   </div>
                   <div className="container d-flex gap-4 mb-3">
                     <SelectInput
+                      initName="類別"
                       addClass="col-5"
                       forText="type"
                       titleCh="課程類別"
-                      titleEn="type"
+                      titleEn=" | type"
+                      items={[
+                        { name: 'type_id', option: '基礎化妝' },
+                        { name: 'type_id', option: '新娘化妝' },
+                        { name: 'type_id', option: '時尚與攝影化妝' },
+                        { name: 'type_id', option: '韓系美妝' },
+                        { name: 'type_id', option: '特效化妝' },
+                        { name: 'type_id', option: '美妝產品知識' },
+                      ]}
                     />
 
                     <InputStyle
@@ -86,7 +96,7 @@ export default function Upload(props) {
                     </p>
 
                     <InputStyle
-                      addclass="col-5 ms-1"
+                      addclass="col- ms-1"
                       forText="price"
                       titleCh=""
                       titleEn=""
@@ -149,14 +159,7 @@ export default function Upload(props) {
                   min="2"
                   max="1"
                 />
-                <TimeSelect
-                  date="20202020"
-                  beginTime="12"
-                  endTime="12"
-                  hours="3"
-                  min="2"
-                  max="1"
-                />
+                <AddWorkshopTime />
               </div>
             </div>
             <div className="ms-auto d-flex justify-content-end mt-2">

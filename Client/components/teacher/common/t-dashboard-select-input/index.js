@@ -4,9 +4,16 @@ import styles from '@/components/teacher/common/t-dashboard-select-input/index.m
 import React, { useState, useEffect } from 'react'
 
 
-export default function SelectInput({ forText, titleCh, titleEn, addClass }) {
+export default function SelectInput({
+  initName,
+  forText,
+  titleCh,
+  titleEn,
+  addClass,
+  items = [],
+}) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState('類別') // 初始顯示文字
+  const [selectedOption, setSelectedOption] = useState(`${initName}`) // 初始顯示文字
 
   // 切換下拉選單的顯示狀態
   const toggleDropdown = () => setIsOpen(!isOpen)
@@ -21,7 +28,7 @@ export default function SelectInput({ forText, titleCh, titleEn, addClass }) {
     <div className={`${styles.selectArea} ${addClass}`}>
       <label htmlFor={forText} className="d-block p mb-2">
         {titleCh}
-        <span> | {titleEn}</span>
+        <span> {titleEn}</span>
       </label>
 
       <a
@@ -33,16 +40,15 @@ export default function SelectInput({ forText, titleCh, titleEn, addClass }) {
 
       {isOpen && (
         <ul className={styles.dropdownMenu}>
-          <li onClick={() => handleOptionClick('基礎化妝')}>基礎化妝</li>
-          <li onClick={() => handleOptionClick('新娘化妝')}>新娘化妝</li>
-          <li onClick={() => handleOptionClick('時尚與攝影化妝')}>
-            時尚與攝影化妝
-          </li>
-          <li onClick={() => handleOptionClick('韓系美妝')}>韓系美妝</li>
-          <li onClick={() => handleOptionClick('特效化妝')}>特效化妝</li>
-          <li onClick={() => handleOptionClick('美妝產品知識')}>
-            美妝產品知識
-          </li>
+          {items.map((item, index) => (
+            <li
+              key={index}
+              onClick={() => handleOptionClick(`${item.option}`)}
+              name={item.name}
+            >
+              {item.option}
+            </li>
+          ))}
         </ul>
       )}
     </div>

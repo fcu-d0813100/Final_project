@@ -44,7 +44,7 @@ export default function UploadImg({width,height}) {
             <img src={preview} alt="預覽" className={styles.previewImage} />
           ) : (
             <div className={styles.picUploadText}>
-              <div className>
+              <div >
                 <PiPlus className={styles.plus} />
                 <p className={`h4 mt-3`}>
                   新增封面圖
