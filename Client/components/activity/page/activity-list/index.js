@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Styles from '@/components/activity/page/activity-list/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
-
+import ListMobileCard from '@/components/activity/common/ListMobileCard/activity-mobile'
 import { Heart } from 'phosphor-react'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Dropdown from '@/components/shared/dropdownList/sample'
@@ -118,8 +118,16 @@ export default function Activity(props) {
       <div className={Styles['act-main']}>
         {/* 控制活動月份標籤 */}
         <div className={`${Styles['month-title']} container`}>2月活動</div>
+        {/* 控制手機板卡片 */}
+        <div className={`${Styles['act-MoBcard-sec']} container`}>
+          <Link href="/activity/activity-det">
+            <ListMobileCard />
+          </Link>
+        </div>
+
         <div className={`${Styles['act-card-sec']} container`}>
           {/* 左邊款卡片樣式 */}
+
           <div className={`${Styles['cardLeft']} d-flex`}>
             <div className={Styles['cardL']}>
               {/* 卡片內圖片 */}

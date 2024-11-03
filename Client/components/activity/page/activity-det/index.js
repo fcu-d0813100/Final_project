@@ -41,32 +41,37 @@ export default function ActivityDet(props) {
       color: '#8f352d',
     },
   ]
-  const items = [
+  const cardsData = [
     {
-      image: '/activity/YSL4_2.png',
-      title: '活動1',
-      date: '2024-01-01',
-      host: '主辦單位1',
-      location: '地點1',
-      people: '100',
+      title: '暮光派對1',
+      subtitle: 'YSL BEAUTY LIGHT CLUB',
+      imgSrc: '/activity/YSL1_1.png',
+      date: '2024-11-16 ~ 2024-11-17',
+      host: 'Yves Saint Laurent',
+      location: '110台北市信義區市府路45號',
+      attendees: '12 人',
+      status: '報名中',
     },
     {
-      image: '/activity/YSL4_2.png',
-      title: '活動1',
-      date: '2024-01-01',
-      host: '主辦單位1',
-      location: '地點1',
-      people: '100',
+      title: '暮光派對2',
+      subtitle: 'YSL BEAUTY LIGHT CLUB',
+      imgSrc: '/activity/BOBBI1_1.png',
+      date: '2024-11-16 ~ 2024-11-17',
+      host: 'Yves Saint Laurent',
+      location: '110台北市信義區市府路45號',
+      attendees: '12 人',
+      status: '報名中',
     },
     {
-      image: '/activity/YSL4_2.png',
-      title: '活動1',
-      date: '2024-01-01',
-      host: '主辦單位1',
-      location: '地點1',
-      people: '100',
+      title: '暮光派對3',
+      subtitle: 'YSL BEAUTY LIGHT CLUB',
+      imgSrc: '/activity/ESLD1_1.png',
+      date: '2024-11-16 ~ 2024-11-17',
+      host: 'Yves Saint Laurent',
+      location: '110台北市信義區市府路45號',
+      attendees: '12 人',
+      status: '報名中',
     },
-    // 其他活動項目...
   ]
   return (
     <>
@@ -151,7 +156,7 @@ export default function ActivityDet(props) {
         </div>
         <div className={Styles['sec5']}>
           <FormToggle />
-          <Carousel items={items} />
+          <Carousel cardsData={cardsData} />
         </div>
       </div>
       <CardCarousel2 products={products} />
