@@ -85,7 +85,7 @@ export default function UserInfo() {
               width={255}
               height={255}
               className={styles.img}
-              src="/user/img/avatar02.jpg"
+              src={`/user/img/${auth.userData.img}`}
               alt=""
             />
           </div>
@@ -181,9 +181,9 @@ export default function UserInfo() {
               </div>
             </div>
             <div className="col-10 pt-3 mt-3 justify-content-center  gap-5 d-flex align-items-center">
-              <Image src="/user/regular.svg" alt="" width={224} height={172} />
-              <Image src="/user/platinum.svg" alt="" width={224} height={172} />
-              <Image src="/user/diamond.svg" alt="" width={224} height={172} />
+              <Image src="/user/regular.svg" alt="" width={250} height={192} />
+              <Image src="/user/platinum.svg" alt="" width={250} height={192} />
+              <Image src="/user/diamond.svg" alt="" width={250} height={192} />
             </div>
           </div>
         </div>
