@@ -1,6 +1,9 @@
 @import '@/styles/_variant.scss';
 
+
 .nav {
+    margin-top: 3%;
+
     a {
         color: $green-500;
     }
@@ -27,33 +30,26 @@
 }
 
 @media (max-width: 576px) {
-
-    .carousel-indicators {
-        margin-bottom: 0px;
-    }
-
-    .carousel-indicators [data-bs-target] {
-        border-radius: 50%;
-        width: 5px;
-        height: 5px;
-    }
-
-    .phoneSize {
-        display: block;
-    }
-
-    .btn {
-        height: 5px !important;
-        width: 5px !important;
-        margin-inline: 5px !important;
-        border-radius: 50%;
+    .carouselContainer {
+        ul {
+            bottom: 10px;
+            li {
+                button:before {
+                    color: #fff !important;
+                }
+                &:active button:before{
+                    color: #fff !important;
+                }
+                
+            }
+        }
     }
 
     .nav {
         display: none;
     }
-
     .discount-group {
         display: none;
     }
 }
+
