@@ -1,195 +1,129 @@
-import React, { useState } from 'react'
+'use client'
+import TimeSelect from '@/components/teacher/common/t-dashboard-time-select'
+import Textarea from '@/components/teacher/common/t-dashboard-textarea-style'
+import UploadImg from '@/components/activity/common/uploadImg'
+import SelectInput from '@/components/activity/common/inputSelect'
+import InputStyle from '@/components/teacher/common/t-dashboard-input-style'
+import { PiPlus, PiArrowRight } from 'react-icons/pi'
+import Sidebar from '@/components/activity/common/Sidebar'
+import DashboardTitle from '@/components/shared/dashboard-title-y'
+import styles from '@/components/teacher/common/upload.module.scss'
+import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import Styles from './index.module.scss'
-import UserSection from '@/components/user/common/user-section'
-import { PiPlus } from 'react-icons/pi'
-import AdminSB from '@/components/admin/common/admin-side-bar'
-import UserTitle from '@/components/user/common/user-title'
-import Image from 'next/image'
-
-export default function Index(props) {
-  const [images, setImages] = useState([]) // 存储多张图片
-
-  const handleImageChange = (event) => {
-    const files = Array.from(event.target.files) // 转换成数组以支持多文件
-    const newImages = []
-
-    files.forEach((file) => {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        newImages.push(reader.result)
-        if (newImages.length === files.length) {
-          setImages((prevImages) => [...prevImages, ...newImages]) // 添加到已有的图片中
-        }
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
+export default function Upload(props) {
   return (
     <>
       <header
-        className={`${Styles.header} d-flex justify-content-between align-items-center px-5`}
+        className={`${styles.header} d-flex justify-content-between align-items-center px-5`}
       >
         <div className="h3-L">Beautique</div>
         <div className="h5">Admin</div>
       </header>
-      <div className={Styles['user-section']}>
-        <AdminSB />
-        <div className={Styles['any-section']}>
-          <UserTitle CN="活動編輯" ENG="New activity" />
-          <form className={`${Styles['form-container']} mt-5`}>
-            <div className="row align-items-md-stretch">
-              <div className="col-md-6">
-                <div className={Styles['form-image']}>
-                  {images.length > 0 ? (
-                    <div className={Styles['image-preview-container']}>
-                      {images.map((image, index) => (
-                        <div key={index} className={Styles['image-preview']}>
-                          <Image
-                            src={image}
-                            width={800}
-                            height={300}
-                            alt={`活動圖片 ${index + 1}`}
-                            style={{ width: '100%', height: '100%' }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className={Styles['placeholder']}></div>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className={Styles['upload-input']}
-                    style={{ display: 'none' }}
-                    id="image-upload"
-                    multiple
-                  />
-                  <label
-                    htmlFor="image-upload"
-                    className={Styles['upload-button']}
-                  >
-                    圖片上傳
-                  </label>
+
+      <div>
+        <Sidebar />
+
+        <form action="">
+          <div className={styles.main}>
+            <DashboardTitle chTitle="活動編輯" enTitle="Activity edit" />
+            <div className={`${styles.section1} d-flex align-items-end`}>
+              <UploadImg width="445px" height="320px" />
+
+              <div className={`${styles.uploadMainInfo} flex-grow-1`}>
+                <div className={styles.subtitle}>
+                  <h4 className="h4 pb-2">主要資訊</h4>
                 </div>
-              </div>
-              <div className="col-md-6">
-                <div className={Styles['form-content']}>
-                  <h2>主要資訊</h2>
-                  <div className={Styles['form-group']}>
-                    <div className="row">
-                      <div className="col-lg-8">
-                        <label htmlFor="event-name">活動名稱 | name</label>
-                        <input
-                          type="text"
-                          id="event-name"
-                          placeholder="A07 週年慶登記"
-                          className="form-control"
-                        />
-                      </div>
-                      <div className="col-lg-4">
-                        <label htmlFor="event-quota">活動名額 | quota</label>
-                        <input
-                          type="number"
-                          id="event-quota"
-                          placeholder={1}
-                          className="form-control"
-                        />
-                      </div>
-                    </div>
-                    <div className={Styles['form-group']}>
-                      <div className="row">
-                        <div className="col-lg-4">
-                          <label htmlFor="event-type">活動品牌 | type</label>
-                          <select id="event-type" className="form-control">
-                            <option value="" disabled selected>
-                              請選擇品牌
-                            </option>{' '}
-                            {/* 默认选项 */}
-                            <option value="1">YSL</option>
-                            <option value="2">Nars</option>
-                            <option value="3">LANCÔME</option>
-                            <option value="4">Bobbi Brown</option>
-                            <option value="5">Estee Lauder</option>
-                          </select>
-                        </div>
+                <div className={styles.inputArea}>
+                  <div className="container d-flex gap-4 mb-3">
+                    <InputStyle
+                      addclass="col-9"
+                      forText="name"
+                      titleCh="活動名稱"
+                      titleEn=" | name"
+                      typeText="text"
+                      placeholder="請輸入活動名稱"
+                      name=""
+                    />
+                    <InputStyle
+                      addclass="col-3"
+                      forText="price"
+                      titleCh="活動名額"
+                      titleEn=" | amount"
+                      typeText="text"
+                      placeholder="請填入活動名額"
+                      name=""
+                    />
+                  </div>
+                  <div className="container d-flex gap-4 mb-3">
+                    <SelectInput
+                      addClass="col-5"
+                      forText="type"
+                      titleCh="活動品牌"
+                      titleEn="brand"
+                    />
 
-                        <div className="col-lg-8">
-                          <label htmlFor="event-address">
-                            活動地點 | address
-                          </label>
-                          <input
-                            type="text"
-                            id="event-address"
-                            placeholder="台北市大同區重慶北路三段43號3樓"
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <InputStyle
+                      addclass="col-7"
+                      forText="address"
+                      titleCh="活動地點"
+                      titleEn=" | address"
+                      typeText="text"
+                      placeholder="請填入地址"
+                      name=""
+                    />
+                  </div>
+                  <div className="container d-flex align-items-end justify-content-between gap-2">
+                    <InputStyle
+                      addclass="col-6 me-1"
+                      forText="name"
+                      titleCh="報名時間"
+                      titleEn=" | registration period"
+                      typeText="date"
+                      placeholder="Beginning Date"
+                      name=""
+                    />
+                    <p className="col-1 d-flex justify-content-center align-items-center">
+                      <PiArrowRight className="ph" />
+                    </p>
 
-                    <div className={Styles['form-group']}>
-                      <label htmlFor="event-start">
-                        活動時期 | registration period
-                      </label>
-                      <div className="row">
-                        <div className="col-lg-5">
-                          <input
-                            type="date"
-                            id="event-start"
-                            className="form-control w-100"
-                          />
-                        </div>
-                        <div className="col-lg-2 d-flex align-items-center justify-content-center">
-                          <span> ---- </span>
-                        </div>
-                        <div className="col-lg-5">
-                          <input
-                            type="date"
-                            id="event-end"
-                            className="form-control w-100"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <InputStyle
+                      addclass="col-5 ms-1"
+                      forText="price"
+                      titleCh=""
+                      titleEn=""
+                      typeText="date"
+                      placeholder="End Date"
+                      name=""
+                    />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="py-3 mb-4 bg-body-tertiary rounded-3 mt-2">
-              <div className="container-fluid">
-                <div className={Styles['form-group']}>
-                  <label htmlFor="event-description" className="mb-2">
-                    活動簡介
-                  </label>
-                  <textarea
-                    id="event-description"
-                    rows="5"
-                    placeholder="活動描述..."
-                    className="form-control w-100"
-                  ></textarea>
-                </div>
+            <hr className="opacity-75" />
+            <div className={`${styles.section02}`}>
+              <div className={`${styles.workshopDetail} p-5`}>
+                <Textarea
+                  title="課程簡介"
+                  name="description"
+                  rows="5"
+                  width="100%"
+                  placeholder="最多輸入200字"
+                  addclass="mb-4"
+                />
               </div>
             </div>
-            <hr />
-            <div className={Styles['form-actions']}>
+
+            <div className="ms-auto d-flex justify-content-end mt-2">
               <Link href="/admin/activity">
-                <button type="button" className={Styles['cancel-button']}>
-                  取消
-                </button>
+                <button className="btn-secondary h6 me-3">取消</button>
               </Link>
-              <Link href="/admin/activity">
-                <button type="submit" className={Styles['submit-button']}>
-                  儲存
-                </button>
-              </Link>
+              <button className="btn-primary h6" type="submit">
+                儲存
+              </button>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </>
   )
