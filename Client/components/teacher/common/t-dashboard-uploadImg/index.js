@@ -3,24 +3,27 @@ import styles from '@/components/teacher/common/t-dashboard-uploadImg/uploadImg.
 import { PiPlus } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
-export default function UploadImg({width,height}) {
-     const [preview, setPreview] = useState(null)
+export default function UploadImg({width,height,bigText,smText}) {
+  const [preview, setPreview] = useState(null)
 
-     const handleFileChange = (event) => {
-       const file = event.target.files[0]
-       if (file) {
-         const reader = new FileReader()
-         reader.onload = () => {
-           setPreview(reader.result) // 將圖片預覽設定為上傳的圖片
-         }
-         reader.readAsDataURL(file)
-       }
-     }
+  // 動態生成 ID 碼
+  const uniqueId = `fileInput-${Math.random().toString(36).substr(2, 9)}`
 
-       const handleReSelect = () => {
-         // 觸發隱藏的 input 點擊事件以重新選取圖片
-         document.getElementById('fileInput').click()
-       }
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        setPreview(reader.result) // 將圖片預覽設定為上傳的圖片
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleReSelect = () => {
+    // 觸發隱藏的 input 點擊事件以重新選取圖片
+    document.getElementById('fileInput').click()
+  }
 
   return (
     <>
@@ -33,10 +36,10 @@ export default function UploadImg({width,height}) {
           accept="image/*"
           onChange={handleFileChange}
           style={{ display: 'none' }}
-          id="fileInput"
+          id={uniqueId} // 使用動態 ID
         />
         <label
-          htmlFor="fileInput"
+          htmlFor={uniqueId} // 確保 label 對應動態 ID
           className="text-center"
           style={{ width: `${width}`, height: `${height}` }}
         >
@@ -44,11 +47,11 @@ export default function UploadImg({width,height}) {
             <img src={preview} alt="預覽" className={styles.previewImage} />
           ) : (
             <div className={styles.picUploadText}>
-              <div className>
+              <div>
                 <PiPlus className={styles.plus} />
                 <p className={`h4 mt-3`}>
-                  新增封面圖
-                  <br /> <span className="p">(必填)</span>
+                  {bigText}
+                  <br /> <span className="p">({smText})</span>
                 </p>
               </div>
             </div>

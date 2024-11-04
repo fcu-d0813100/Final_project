@@ -1,0 +1,108 @@
+@import '@/styles/_variant.scss';
+.main {
+  padding: 70px 120px;
+  padding-left: 420px;
+  margin: auto;
+  .selectbar {
+    margin-block: 20px;
+    height: 65px;
+    background: $gray-100;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
+    .searchArea {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .searchInput {
+        height: 33px;
+        background-color: rgb(255, 255, 255);
+        border: 1.5px solid $green-600;
+        border-radius: 20px;
+        color: $green-500;
+        padding: 15px;
+        margin-left: 20px;
+      }
+      .searchInput:focus {
+        outline: none;
+        background-color: $gray-100;
+      }
+      .searchInput::placeholder {
+        color: rgb(200, 200, 200);
+      }
+    }
+  }
+  .filterBtn {
+   height: 32px;
+    button {
+      border: none;
+      background-color: white;
+      margin-inline: 8px;
+      &:hover {
+        border-bottom: 2px solid $green-600;
+      }
+    }
+    .active {
+      border-bottom: 2px solid $green-600;
+    }
+  }
+  .workshopArea {
+    padding-inline: 40px;
+    padding-bottom: 50px;
+
+    .myWorkshop {
+      background-color: #f5f5f5;
+      padding: 22px;
+      margin-block: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .imgArea{
+         width: 190px;
+         height: 190px;
+         background-color: rgb(97, 97, 97);
+         margin-right: 30px;
+      }
+      .infoText{
+         h4{
+            padding-block: 3px;
+            border-bottom: 1.5px solid black;
+            width: 280px;
+            margin-bottom: 50px;
+         }
+      }
+      .priceAndStatus{
+         display: flex;
+         align-items: center;
+         color:$green-600 ;
+         p{
+            border: 1.5px solid $green-600;
+            border-radius: 17px;
+            padding-inline: 18px;
+            padding-block: 1px;
+         }
+         .unUpload{
+            color: $green-600 ;
+            border: 1.5px solid $green-600;
+         }
+         .registering{
+            color: white;
+            background-color: $green-600;
+         }
+         .end{
+            color: white;
+            background-color: $red-500;
+            border: 1.5px solid $red-500;
+         }
+         .expired{
+            color: white;
+            background-color: $gray-200;
+            border: 1.5px solid $gray-200;
+         }
+      }
+    }
+  }
+}
