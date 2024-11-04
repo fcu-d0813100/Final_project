@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Nav, Navbar } from 'react-bootstrap';
-import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react'
+import { Nav, Navbar } from 'react-bootstrap'
+import { useRouter } from 'next/router'
 import {
   PiUser,
   PiLockOpen,
@@ -10,15 +10,15 @@ import {
   PiListPlus,
   PiClockCountdown,
   PiTicket,
-} from 'react-icons/pi';
-import styles from './index.module.scss';
+} from 'react-icons/pi'
+import styles from './index.module.scss'
 
 const navLinks = [
   {
     href: '/admin/activity',
     icon: <PiClockCountdown size={65} />,
     label: '活動管理',
-    key: 'activity',
+    key: 'activity/upload',
   },
   {
     href: '/admin/coupon',
@@ -26,41 +26,41 @@ const navLinks = [
     label: '優惠券管理',
     key: 'coupon',
   },
-];
+]
 
 export default function Index() {
-  const router = useRouter();
+  const router = useRouter()
 
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
-      acc[link.key] = { hover: false, active: router.pathname === link.href };
-      return acc;
+      acc[link.key] = { hover: false, active: router.pathname === link.href }
+      return acc
     }, {})
-  );
+  )
 
   useEffect(() => {
     setLinkState((prev) => {
-      const newLinkState = { ...prev };
+      const newLinkState = { ...prev }
       navLinks.forEach((link) => {
-        newLinkState[link.key].active = router.pathname === link.href;
-      });
-      return newLinkState;
-    });
-  }, [router.pathname]);
+        newLinkState[link.key].active = router.pathname === link.href
+      })
+      return newLinkState
+    })
+  }, [router.pathname])
 
   const handleMouseEnter = (key) => {
     setLinkState((prev) => ({
       ...prev,
       [key]: { ...prev[key], hover: true },
-    }));
-  };
+    }))
+  }
 
   const handleMouseLeave = (key) => {
     setLinkState((prev) => ({
       ...prev,
       [key]: { ...prev[key], hover: false },
-    }));
-  };
+    }))
+  }
 
   return (
     <Navbar expand="lg" className={styles['nav']}>
@@ -72,17 +72,18 @@ export default function Index() {
         id="basic-navbar-nav"
         className={`${styles['collapse']} justify-content-center`}
       >
-        <Nav >
+        <Nav>
           {navLinks.map((link) => (
             <Nav.Link
               key={link.key}
               href={link.href}
-              className={`${linkState[link.key].active
-                ? styles['active']
-                : linkState[link.key].hover
+              className={`${
+                linkState[link.key].active
+                  ? styles['active']
+                  : linkState[link.key].hover
                   ? styles['hover']
                   : ''
-                } h6`}
+              } h6`}
               onMouseEnter={() => handleMouseEnter(link.key)}
               onMouseLeave={() => handleMouseLeave(link.key)}
             >
@@ -94,5 +95,5 @@ export default function Index() {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
-  );
+  )
 }

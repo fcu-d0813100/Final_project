@@ -1,7 +1,5 @@
 'use client'
 import axios from 'axios'
-import Footer from '@/components/home/common/footer'
-import TopBar from '@/components/home/common/header'
 import styles from '@/components/workshop/common/workshops.module.scss'
 import WorkshopsBN from '@/components/workshop/common/workshop-bn'
 import WorkshopSelectbar from '@/components/workshop/common/workshop-selectbar'
@@ -59,7 +57,7 @@ export default function WorkshopAll(props) {
 
   return (
     <>
-      <TopBar />
+  
       <WorkshopsBN />
 
       <WorkshopSelectbar />
@@ -102,6 +100,7 @@ export default function WorkshopAll(props) {
             return (
               <WorkshopCardLg
                 key={item.id}
+                wid={item.id}
                 imgCover={`/workshop/workshop_img/${item.type_id}-${item.id}-c.jpg`}
                 name={item.name}
                 teacher={item.teacher_name}
@@ -114,7 +113,7 @@ export default function WorkshopAll(props) {
           })}
         </div>
       </div>
-      <Footer />
+
     </>
   )
 }

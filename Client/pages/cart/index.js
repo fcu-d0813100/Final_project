@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import FooterTwo from '@/components/home/common/footerTwo'
 import CartList from '@/components/cart/pages/card-list'
-import Header from '@/components/home/common/header'
+import Nobuy from '@/components/cart/pages/nobuy'
 
 export default function Index(props) {
-  return (
-    <>
-      <Header />
-      <CartList />
-      <FooterTwo />
-    </>
-  )
+  const [isEmptyCart, setIsEmptyCart] = useState(false)
+
+  useEffect(() => {
+    const productCart = JSON.parse(localStorage.getItem('productCart')) || []
+    const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart')) || []
+
+    setIsEmptyCart(productCart.length === 0 && Workshopcart.length === 0)
+  }, [])
+
+  return <>{isEmptyCart ? <Nobuy /> : <CartList />}</>
 }

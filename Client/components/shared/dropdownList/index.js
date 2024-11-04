@@ -20,10 +20,10 @@ export default function Dropdown({
       <div className="dropdown mx-3">
         <a
           href="#"
-          className={`${styles.dropdownTitle} p d-flex align-content-center justify-content-between`}
+          className={`${styles.dropdownTitle} p d-flex align-items-center justify-content-between pb-2`}
           data-bs-toggle="dropdown"
         >
-          <p>{name}</p>
+          <p className='m-0'>{name}</p>
           <PiCaretDown />
         </a>
 
@@ -31,8 +31,8 @@ export default function Dropdown({
           {items
             .filter((item) => item)
             .map((item, index) => (
-              <a href="#" className="dropdown-item my-1" key={index}>
-                {item}
+              <a href={item.link} className="dropdown-item my-1" key={index}>
+                {item.option}
               </a>
             ))}
         </div>

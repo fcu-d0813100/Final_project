@@ -3,7 +3,9 @@ import styles from '@/components/shared/workshop-card-lg/index.module.scss'
 import { PiArrowRight, PiHeartStraight } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 export default function WorkshopCardLg({
+  wid = '',
   imgCover = '',
   name = '',
   teacher = '',
@@ -14,7 +16,10 @@ export default function WorkshopCardLg({
 }) {
   return (
     <>
-      <a href="#" className={`${styles.workshop} p-0`}>
+      <Link
+        href={`/workshop/detail/${wid}`}
+        className={`${styles.workshop} p-0`}
+      >
         <div className={styles.workshopImg}>
           <Image
             height={615}
@@ -27,9 +32,11 @@ export default function WorkshopCardLg({
         <div className={styles.wInformation}>
           <div className={styles.innerText}>
             <div>
-              <h4 className={`h4 ${styles.wTitle} d-flex align-items-center justify-content-between`}>
+              <h4
+                className={`h4 ${styles.wTitle} d-flex align-items-center justify-content-between`}
+              >
                 {name}
-                <PiHeartStraight className='me-3'/>
+                <PiHeartStraight className="me-3" />
               </h4>
             </div>
             <div className={styles.wDetail}>
@@ -56,7 +63,7 @@ export default function WorkshopCardLg({
             </div>
           </div>
         </div>
-      </a>
+      </Link>
     </>
   )
 }
