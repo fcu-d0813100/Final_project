@@ -1,11 +1,16 @@
 import express from 'express'
 const router = express.Router()
 import db from '#configs/db.js'
+<<<<<<< HEAD
+// import { rest } from 'lodash'
+// import { ne } from '@faker-js/faker'
+=======
 import multer from 'multer'
 // import { rest } from 'lodash'
 // import { ne } from '@faker-js/faker'
 
 const upload = multer()
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
 
 // render post-wall page
 router.get('/post_wall', async function (req, res, next) {
@@ -293,6 +298,8 @@ router.post('/', async function (req, res, next) {})
 // save post
 // like comment
 
+<<<<<<< HEAD
+=======
 // tags search
 router.get('/tags', async function (req, res, next) {
   // const sqlSelect = `SELECT name FROM post_tag`
@@ -306,6 +313,7 @@ router.get('/tags', async function (req, res, next) {
   const [result] = await db.query(sqlSelect)
   res.json(result)
 })
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
 // search 熱門排序
 // search 最新排序
 // search 指定關鍵字
