@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Coupon from '@/components/discount/common/coupon';
+import Coupon from '@/components/discount/common/coupon-use';
+import CouponEnd from '@/components/discount/common/coupon-end';
 import styles from './index.module.scss';
 import UserSection from '@/components/user/common/user-section';
 import Modal from '@/components/discount/common/mymodal';
@@ -94,12 +95,13 @@ export default function UserCoupon() {
                                 <Coupon 
                                     key={index}
                                     img={coupon.img} 
-                                    title={coupon.title} 
+                                    title={coupon.name} 
                                     discount={coupon.discount} 
                                     condition={coupon.condition} 
                                     expiration={coupon.expiration} 
                                 />
                             ))}
+                            <CouponEnd/>
                         </div>
                     </div>
                 </aside>

@@ -11,24 +11,52 @@ import styles from './index.module.scss'
 import Link from 'next/link'
 
 export default function Explore(props) {
+  const { post } = usePost()
   const [wallCard, setWallCard] = useState([])
+
+  // useEffect(() => {
+  //   async function getWallCard() {
+  //     let response = await axios.get(`http://localhost:3005/api/post/`, {
+  //       withCredentials: true,
+  //     })
+  //     setWallCard(response.data)
+  //   }
+  //   getWallCard()
+  // }, [])
+  const router = useRouter()
+  const { postId } = router.query
+  //render
   useEffect(() => {
-    async function getWallCard() {
-      let response = await axios.get(
-        `http://localhost:3005/api/post/post_wall`,
-        {
-          withCredentials: true,
-        }
-      )
-      setWallCard(response.data)
+    if (post && post.tags) {
+      fetchPosts(post.tags)
     }
-    getWallCard()
-  }, [])
-  let { post } = usePost()
+  }, [post])
+
+  //get data:related posts
+  const fetchPosts = async (tags) => {
+    const queryString = tags
+      .split(',')
+      .map((tag) => `tags=${encodeURIComponent(tag)}`)
+      .join('&')
+    const response = await fetch(
+      `http://localhost:3005/api/post/?${queryString}&postId=${postId}&order=DESC`,
+      {
+        credentials: 'include',
+      }
+    )
+    console.log(queryString)
+    const data = await response.json()
+    setWallCard(data)
+  }
+
   // 如果 post 尚未加載，顯示加載指示
   if (!post) {
-    return <p>Loading...</p>
+    return <p></p>
   }
+
+  // const tags = post && post.tags ? post.tags.split(',') : []
+  // console.log(tags)
+
   const breakpoint = {
     default: 5,
     1600: 4,
@@ -37,7 +65,6 @@ export default function Explore(props) {
   }
   return (
     <>
-      <Header />
       <div className={styles['post-container']}>
         <div className={styles['post-read']}>
           <Link href="/post">
@@ -49,8 +76,7 @@ export default function Explore(props) {
             content={post.content}
             tags={post.tags}
             postImages={post.post_imgs}
-            // authorAvatar={post.post_author_img}
-
+            authorAvatar={post.post_author_img}
             postCreateTime={post.created_at}
             likeCount={post.like_count}
             saveCount={post.save_count}

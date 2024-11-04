@@ -10,16 +10,16 @@ const SomePage = () => {
     const coupons = [
         {
             img: '/discount/coupon/brands/nars.svg',
-            title: 'GIFT COUPON',
+            name: 'GIFT COUPON',
             discount: '20% OFF',
-            condition: '滿$2000',
+            condition: 2000,
             expiration: '2024/10/5',
         },
         {
             img: '/discount/coupon/brands/nars.svg',
-            title: 'SPECIAL DISCOUNT',
+            name: 'SPECIAL DISCOUNT',
             discount: '15% OFF',
-            condition: '滿$1500',
+            condition: 1500,
             expiration: '2024/11/10',
         },
         // 可以添加更多優惠券
