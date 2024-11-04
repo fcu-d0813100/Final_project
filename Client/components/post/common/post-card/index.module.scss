@@ -32,7 +32,7 @@
     img {
       min-height: 650px;
       width: 100%;
-      height: 100%;
+      // height: 100%;
       object-fit: cover;
       object-position: center; // 保持图片居中
 
@@ -65,8 +65,6 @@
       font-size: 24px;
     }
     .user-image {
-      // width: 40px;
-      // height: 40px;
       border-radius: 50%;
       object-fit: cover;
     }
@@ -128,19 +126,6 @@
   }
 }
 
-// .reply-big {
-//   display: flex;
-//   gap: 16px;
-//   padding-bottom: 13px;
-
-//   .user-image {
-//     width: 40px;
-//     height: 40px;
-//     border-radius: 50%;
-//     object-fit: cover;
-//   }
-// }
-
 /* #endregion post-info-wrap */
 
 /* #region bottom */
@@ -170,6 +155,7 @@
       color: #666464ab;
     }
   }
+
   .reply-wrap {
     display: flex;
     // align-items: center;

@@ -13,9 +13,10 @@ import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
 
 import styles from './index.module.scss'
 import ReplyInfo from '../reply-info'
-import { ImageSquare } from '@phosphor-icons/react'
+import { Images, ImageSquare, SelectionSlash } from '@phosphor-icons/react'
 export default function PostCard1({
   postAuthor,
+  authorAvatar,
   title,
   content,
   tags,
@@ -26,6 +27,11 @@ export default function PostCard1({
   postCreateTime,
 }) {
   const [active, setActive] = useState({})
+  const [inputValue, setInputValue] = useState('')
+  const [focus, setFocus] = useState(false)
+  const [user, setUser] = useState('')
+  const [reply, setReply] = useState('')
+  const [index, setIndex] = useState(0)
   const icons = [
     {
       id: 1,
@@ -43,10 +49,6 @@ export default function PostCard1({
       active: <PiChatCircle size={26} fill="#8A8A8A" />,
     },
   ]
-  const [inputValue, setInputValue] = useState('')
-  const [focus, setFocus] = useState(false)
-  const [user, setUser] = useState('')
-  const [reply, setReply] = useState('')
 
   const formattedTime = postCreateTime
     ? format(new Date(postCreateTime), 'yyyy-MM-dd HH:mm')
@@ -58,13 +60,7 @@ export default function PostCard1({
     return <p>Loading...</p>
   }
   const { comments } = post
-  // const FocusHandle = (e) => {
-  //   setFocus(true);
-  //   // setInputValue(e.target.value);
-  //   // if (inputValue !== '') {
-  //   //   setFocus(true);
-  //   // }
-  // };
+
   const cancelHandle = (e) => {
     e.preventDefault()
     setInputValue('')
@@ -84,13 +80,23 @@ export default function PostCard1({
       [iconId]: !prevState[iconId],
     }))
   }
-
+  // const SelectHandle = (index, e) => {
+  //   const imagesCount = postImages.split(',').length
+  //   if (index === 0 && e?.direction === 'next' && index === imagesCount - 1) {
+  //     return
+  //   }
+  //   setIndex(index)
+  // }
   return (
     <>
       <div className={styles['post-card3']}>
         {/* post-img with Sw*/}
         <div className={styles['post-img']}>
-          <Carousel interval={null}>
+          <Carousel
+            interval={null}
+            // onSelect={SelectHandle}
+            // controls={postImages.split(',').length > 1}
+          >
             {postImages.split(',').map((image, index) => (
               <Carousel.Item key={index}>
                 <Image
@@ -112,10 +118,11 @@ export default function PostCard1({
           <div className={styles['post-user']}>
             <Image
               className={styles['user-image']}
-              src="/post/p2_1.webp"
+              src={`/user/${authorAvatar}`}
               alt="User Image"
               width={40}
               height={40}
+              priority
             />
             <div className={styles['user-name']}>{postAuthor}</div>
           </div>
