@@ -31,6 +31,7 @@ export default function Discount() {
 
   return (
     <>
+
       <Carousels />
       <div className={`container-sm ${styles.discountPage}`}>
         <div className={styles.nav}>
@@ -72,6 +73,7 @@ export default function Discount() {
           </Slider>
         </div>
       </div>
+
     </>
   );
 }
