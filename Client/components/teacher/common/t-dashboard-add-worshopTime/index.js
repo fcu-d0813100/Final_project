@@ -116,11 +116,11 @@ export default function AddWorkshopTime(props) {
                 name="max_students"
               />
             </div>
-            <p className={`${styles.note} ps my-3 mb-5 pb-4`}>
+            <p className={`${styles.note} ps my-3 mb-5 pb-5`}>
               *少於區間人數將自動通知不開班授課
             </p>
 
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-end pt-4">
               <button className="btn-success">確定</button>
             </div>
           </div>

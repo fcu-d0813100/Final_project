@@ -115,6 +115,7 @@ export default function Page1({ onNextPage }) {
                 width="100%"
                 placeholder="最多輸入200字"
                 addclass="mb-4"
+                value=""
               />
               <div className="d-flex justify-content-between p-0">
                 <Textarea
@@ -124,6 +125,7 @@ export default function Page1({ onNextPage }) {
                   width="93%"
                   placeholder="最多輸入120字"
                   addclass="w-100"
+                  value=""
                 />
                 <Textarea
                   title="注意事項"
@@ -132,6 +134,7 @@ export default function Page1({ onNextPage }) {
                   width="100%"
                   placeholder="最多輸入120字"
                   addclass="w-100"
+                  value=""
                 />
               </div>
             </div>

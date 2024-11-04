@@ -22,16 +22,16 @@ const navLinks = [
     key: 'user',
   },
   {
-    href: '/teacher/myworkshop',
-    icon: <PiLockOpen size={65} />,
-    label: '我的課程',
-    key: 'password',
-  },
-  {
     href: '/teacher/upload',
     icon: <PiListMagnifyingGlass size={65} />,
     label: '課程上架',
     key: 'order',
+  },
+  {
+    href: '/teacher/myworkshop',
+    icon: <PiLockOpen size={65} />,
+    label: '我的課程',
+    key: 'password',
   },
 ]
 

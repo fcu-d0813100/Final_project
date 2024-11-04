@@ -43,7 +43,7 @@ export default function Page2({ onPreviousPage }) {
               className="btn-primary h6"
               onClick={(e) => {
                 e.preventDefault()
-                onPreviousPage()
+                onPreviousPage() // 確保點擊時觸發
               }}
             >
               回前頁
