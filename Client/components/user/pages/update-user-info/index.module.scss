@@ -19,7 +19,7 @@
   }
 }
 
-.form-select2 {
+.info .form-select2 {
   border-radius: 5px;
   box-shadow: 5px #e9ecef;
   border: 1px solid $gray-200;
@@ -72,4 +72,8 @@
 
 .address-margin {
   margin-bottom: 100px;
+}
+
+.info .error{
+  color: $red-500;
 }

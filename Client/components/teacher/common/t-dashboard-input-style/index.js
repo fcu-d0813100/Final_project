@@ -1,5 +1,5 @@
 'use client'
-import styles from '@/components/teacher/common/upload.module.scss'
+import styles from '@/components/teacher/common/t-dashboard-input-style/input.module.scss'
 import React, { useState, useEffect } from 'react'
 
 export default function InputStyle({

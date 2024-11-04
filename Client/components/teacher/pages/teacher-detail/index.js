@@ -1,4 +1,6 @@
 'use client'
+import Dropdown from '@/components/workshop/common/dropdown'
+import { useRouter } from 'next/router'
 import styles from '@/components/teacher/common/teacher-detail.module.scss'
 import Image from 'next/image'
 import { PiMagnifyingGlass, PiCaretDown, PiArrowRight } from 'react-icons/pi'
@@ -10,29 +12,94 @@ import TeacherDetailText from '@/components/teacher/common/teacher-detail-text'
 import React, { useState, useEffect } from 'react'
 
 export default function TeacherDetail(props) {
+  const router = useRouter()
+  const [teacher, setTeacher] = useState({})
+  const [workshop, setWorkshop] = useState([]) 
+
+  const fetchData = async (tid) => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/teacher/${tid}`)
+      if (!response.ok) {
+        throw new Error('網路回應不成功：' + response.status)
+      }
+      const data = await response.json()
+      setTeacher(...data)
+      //console.log(data)
+
+      // 獲取該老師的工作坊數據
+      const workshopsResponse = await fetch(
+        `http://localhost:3005/api/teacher/${tid}`
+      )
+      if (!workshopsResponse.ok) {
+        throw new Error('網路回應不成功：' + workshopsResponse.status)
+      }
+      const workshopsData = await workshopsResponse.json()
+      setWorkshop(workshopsData) // 設置工作坊數據
+      console.log(workshopsData)
+
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // 用useEffect監聽router.isReady變動
+  useEffect(() => {
+    if (router.isReady) {
+      fetchData(router.query.tid)
+    }
+  }, [router.isReady])
+
+
+  const nationMap = {
+    臺灣: 'Taiwan',
+    美國: 'America',
+    日本: 'Japan',
+    英國: 'Britain',
+    新加坡: 'Singapore',
+    法國: 'France',
+    韓國: 'Korea',
+    西班牙: 'Spain',
+  }
+
+  const enNation = nationMap[teacher.nation] || ''; // 預設為空字串
+
+    const getStatus = (registrationStart, registrationEnd) => {
+      const currentDate = new Date()
+      const startDate = new Date(registrationStart)
+      const endDate = new Date(registrationEnd)
+
+      if (currentDate < startDate) {
+        return '報名中'
+      } else if (currentDate > endDate) {
+        return '已截止'
+      } else {
+        return '報名中' // 這裡可根據需要進行調整
+      }
+    }
+
   return (
     <>
       <TeacherDetailBn
-        imgBanner="/teacher/teachers_img/T_2_BN.jpg"
-        name="Terry Barber"
-        nation="Britain 英國"
-        years="17"
-        typeId="時尚攝影妝"
-        signImg="/teacher/teachers_img/T_2_S.png"
+        imgBanner={`/teacher/teachers_img/T_${teacher.id}_BN.jpg`}
+        name={teacher.name}
+        nation={`${teacher.nation} | ${enNation}`}
+        years={teacher.years}
+        typeId={teacher.workshop_type_type}
+        signImg={`/teacher/teachers_img/T_${teacher.id}_S.png`}
       />
 
       <TeacherDetailText
-        slogan="“ 我喜歡贈送口紅。口紅如此豐富多變，一旦你用過了它們，你就離不開了！”"
-        about=" 現任職彩妝藝術總監。身為一個表演者，我喜歡後台的能量和創造力，但無論在哪裡在世界各地教授彩妝大師班，在全球舉行活動或參與密集的時裝週活動品牌的多樣性仍然是我持續的靈感來源。"
-        experience=" 擔任 M.A.C 彩妝藝術總監17年。與 Grace Jones 一起合作，並由 Jean-Paul Goude
-              負責拍攝V雜誌封面。"
+        slogan={teacher.slogan}
+        about={teacher.about}
+        experience={teacher.experience}
       />
 
       <div className={styles.section03}>
         <div className="container">
           <div className={styles.tWorkshopTitle}>
             <h1 className="h1-L">Workshop</h1>
-            <h4 className="h4">Terry Barber</h4>
+            <h4 className="h4">{teacher.name}</h4>
           </div>
 
           <div className={styles.selectBar}>
@@ -51,70 +118,75 @@ export default function TeacherDetail(props) {
             </div>
 
             <div className="d-flex">
-              <div className="dropdown mx-3">
-                <a
-                  href="#"
-                  className={`${styles.dropdownTitle} p d-flex align-content-center justify-content-between`}
-                  data-bs-toggle="dropdown"
-                >
-                  <p>狀態</p>
-                  <PiCaretDown />
-                </a>
-                <div className={`dropdown-menu ${styles.dropdownMenu}`}>
-                  <a href="#" className="dropdown-item my-1">
-                    報名中
-                  </a>
-                  <a href="#" className="dropdown-item my-1">
-                    已截止
-                  </a>
-                </div>
-              </div>
+              <Dropdown
+                name="狀態"
+                items={[
+                  { option: '報名中', link: '' },
+                  { option: '已截止', link: '' },
+                ]}
+              />
 
-              <div className="dropdown mx-3">
-                <a
-                  href="#"
-                  className={`${styles.dropdownTitle} p d-flex align-content-center justify-content-between`}
-                  data-bs-toggle="dropdown"
-                >
-                  <p>排序</p>
-                  <PiCaretDown />
-                </a>
-                <div className={`dropdown-menu ${styles.dropdownMenu}`}>
-                  <a href="#" className="dropdown-item my-1">
-                    價錢 高 -- 低
-                  </a>
-                  <a href="#" className="dropdown-item my-1">
-                    價錢 低 -- 高
-                  </a>
-                  <a href="#" className="dropdown-item my-1">
-                    最新上架
-                  </a>
-                </div>
-              </div>
+              <Dropdown
+                name="排序"
+                items={[
+                  { option: '價錢 高 -- 低', link: '' },
+                  { option: '價錢 低 -- 高', link: '' },
+                  { option: '最新上架', link: '' },
+                ]}
+              />
             </div>
           </div>
 
           <div className={`${styles.tOwnWorkshops} row row-cols-3 my-5`}>
-            <WorkshopCardLg
-              imgCover="/workshop/workshop_img/1-1-c.jpg"
-              name="F19時尚攝影妝容班"
-              teacher="Terry Barber 老師"
-              beginDate="2024/09/30"
-              endDate="2024/10/30"
-              price="3200"
-              status="已截止"
-            />
-            <WorkshopCardLg
-              imgCover="/workshop/workshop_img/1-2-c.jpg"
-              name="F19時尚攝影妝容班"
-              teacher="Terry Barber 老師"
-              beginDate="2024/09/30"
-              endDate="2024/10/30"
-              price="3200"
-              status="報名中"
-            />
+            {workshop.map((item) => {
+              // 將 dates 字串轉換成陣列
+              const datesArray = item.dates ? item.dates.split(',') : []
+
+              // 取得第一個和最後一個日期，並格式化為 YYYY/MM/DD
+              const formatDate = (dateString) => {
+                const [year, month, day] = dateString.split('-')
+                return `${year}/${month}/${day}`
+              }
+
+              // 取得第一個和最後一個日期
+              const beginDate =
+                datesArray.length > 0 ? formatDate(datesArray[0]) : ''
+              const endDate =
+                datesArray.length > 0
+                  ? formatDate(datesArray[datesArray.length - 1])
+                  : ''
+
+              // 獲取報名狀態
+              const status = getStatus(
+                item.workshop_registration_start,
+                item.workshop_registration_end
+              )
+
+              // 檢查課程時間結束日期是否已過
+              const isEndDatePassed =
+                new Date(endDate.replace(/\//g, '-')) < new Date() // 檢查 endDate 是否已過
+
+              // 如果課程時間的 endDate 已過，則不顯示該工作坊
+              if (isEndDatePassed) {
+                return null // 不顯示該工作坊
+              }
+
+              return (
+                <WorkshopCardLg
+                  key={item.workshop_id}
+                  wid={item.workshop_id}
+                  imgCover={`/workshop/workshop_img/${item.type_id}-${item.workshop_id}-c.jpg`}
+                  name={item.workshop_name}
+                  teacher={item.name}
+                  beginDate={beginDate}
+                  endDate={endDate}
+                  price={item.workshop_price}
+                  status={status}
+                />
+              )
+            })}
+            
           </div>
-          
         </div>
       </div>
     </>

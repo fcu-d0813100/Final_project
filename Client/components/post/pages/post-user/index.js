@@ -8,7 +8,7 @@ import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import UserSection from '@/components/user/common/user-section'
-import PublishCard from '@/components/post/common/publish-card'
+import PublishCard from '@/components/post/common/publish-card/[index]'
 import WallCard from '@/components/post/common/wall-card'
 export default function Index(props) {
   const [publishCard, setPublishCard] = useState([])

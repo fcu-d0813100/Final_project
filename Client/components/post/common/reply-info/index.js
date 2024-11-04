@@ -41,46 +41,48 @@ export default function ReplyInfo({
     setShow(!show)
   }
   const isRootComment = comments.parent_id === null
+
   return (
     <>
       {/* 根評論渲染 */}
-      <div
-        className={`${styles['reply-wrap']} ${
-          isRootComment ? styles['root-comment'] : styles['children-comment']
-        }`}
-        style={
-          {
-            // marginLeft: comments?.depth ? comments.depth * 20 + 'px' : '0px',
-          }
-        }
-      >
-        <Image
-          className={styles['user-image']}
-          src={`/post/p3_1.webp`}
-          alt="User Image"
-          width={40}
-          height={40}
-        />
-        <div className={styles['reply-info']}>
-          <div className={styles['user-name']}>
-            <span ref={userRef}>{commentAuthor}</span>
-            <span>{formattedTime}</span>
-          </div>
-          <div className={styles['user-reply']} ref={replyRef}>
-            {commentContent}
-          </div>
-          <div className={styles['post-icons']}>
-            <div className={styles['like']}>
-              <div onClick={handle}>{active ? icon.hover : icon.default}</div>
-              <span>{commentLikeCount}</span>
+      {comments.comment_id === null ? (
+        <div>目前尚無評論</div>
+      ) : (
+        <div
+          className={`${styles['reply-wrap']} ${
+            isRootComment ? styles['root-comment'] : styles['children-comment']
+          }`}
+        >
+          <Image
+            className={styles['user-image']}
+            src={`/post/p3_1.webp`}
+            alt="User Image"
+            width={40}
+            height={40}
+          />
+          <div className={styles['reply-info']}>
+            <div className={styles['user-name']}>
+              <span ref={userRef}>{commentAuthor}</span>
+              <span>{formattedTime}</span>
             </div>
-            <div className={styles['reply']} onClick={replyHandle}>
-              <PiChatCircle size={24} fill="#8A8A8A" />
-              <span>{commentReplyCount > 0 ? commentReplyCount : `回覆`}</span>
+            <div className={styles['user-reply']} ref={replyRef}>
+              {commentContent}
+            </div>
+            <div className={styles['post-icons']}>
+              <div className={styles['like']}>
+                <div onClick={handle}>{active ? icon.hover : icon.default}</div>
+                <span>{commentLikeCount}</span>
+              </div>
+              <div className={styles['reply']} onClick={replyHandle}>
+                <PiChatCircle size={24} fill="#8A8A8A" />
+                <span>
+                  {commentReplyCount > 0 ? commentReplyCount : `回覆`}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 渲染第一條子評論 */}
       {comments.children && comments.children.length > 0 && (

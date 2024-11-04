@@ -4,22 +4,38 @@ import { PiNotePencilBold } from 'react-icons/pi'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Masonry from 'react-masonry-css'
 import WallCard from '@/components/post/common/wall-card'
-import axios from 'axios'
+// import axios from 'axios'
 import styles from './index.module.scss'
 export default function PostWall(props) {
   const [wallCard, setWallCard] = useState([])
+  const [search, setSearch] = useState('')
+  const [sort, setSort] = useState('total_count')
+
+  //render
   useEffect(() => {
-    async function getWallCard() {
-      let response = await axios.get(
-        `http://localhost:3005/api/post/post_wall`,
-        {
-          withCredentials: true,
-        }
-      )
-      setWallCard(response.data)
-    }
-    getWallCard()
-  }, [])
+    fetchPosts()
+  }, [sort, search])
+
+  //get data
+  const fetchPosts = async () => {
+    const response = await fetch(
+      `http://localhost:3005/api/post/?sort=${sort}&order=DESC&search=${search}`,
+      {
+        credentials: 'include',
+      }
+    )
+    const data = await response.json()
+    setWallCard(data)
+  }
+
+  // const searchHandle = async () => {
+  //   let response = await fetch()
+  // }
+  // const keyDownHandle = (e) => {
+  //   if (e.key === 'Enter') {
+  //     searchHandle()
+  //   }
+  // }
   const breakpoint = {
     default: 5,
     1600: 4,
@@ -42,14 +58,30 @@ export default function PostWall(props) {
               <span>建立</span>
             </Link>
             <div className={styles['post-search']}>
-              <input type="text" placeholder="任意關鍵字｜" />
+              <input
+                type="text"
+                placeholder="任意關鍵字｜"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                // onKeyDown={keyDownHandle}
+              />
               <PiMagnifyingGlass size={22} />
             </div>
           </div>
           <div className={styles['post-filter']}>
-            <button>熱門</button>
+            <button
+              onClick={() => setSort('total_count')}
+              className={sort === 'total_count' ? styles['active'] : ''}
+            >
+              熱門
+            </button>
             <div className={styles['filter-line']}></div>
-            <button>最新</button>
+            <button
+              onClick={() => setSort('created_at')}
+              className={sort === 'created_at' ? styles['active'] : ''}
+            >
+              最新
+            </button>
           </div>
         </div>
         <div className={styles['post-wall']}>

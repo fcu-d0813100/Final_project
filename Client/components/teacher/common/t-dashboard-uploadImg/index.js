@@ -3,6 +3,7 @@ import styles from '@/components/teacher/common/t-dashboard-uploadImg/uploadImg.
 import { PiPlus } from 'react-icons/pi'
 import React, { useState } from 'react'
 
+<<<<<<< HEAD
 export default function UploadImg({ width, height }) {
   const [previews, setPreviews] = useState([]) // 儲存所有圖片預覽
 
@@ -28,6 +29,29 @@ export default function UploadImg({ width, height }) {
   const handleRemoveImage = (index) => {
     setPreviews((prev) => prev.filter((_, i) => i !== index)) // 刪除指定的圖片
   }
+=======
+export default function UploadImg({width,height,bigText,smText}) {
+  const [preview, setPreview] = useState(null)
+
+  // 動態生成 ID 碼
+  const uniqueId = `fileInput-${Math.random().toString(36).substr(2, 9)}`
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        setPreview(reader.result) // 將圖片預覽設定為上傳的圖片
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleReSelect = () => {
+    // 觸發隱藏的 input 點擊事件以重新選取圖片
+    document.getElementById('fileInput').click()
+  }
+>>>>>>> 74b67fe3684b18041ebc8f25b7bc3b138d7e50c4
 
   return (
     <>
@@ -40,11 +64,15 @@ export default function UploadImg({ width, height }) {
           accept="image/*"
           onChange={handleFileChange}
           style={{ display: 'none' }}
+<<<<<<< HEAD
           id="fileInput"
           multiple // 支持多個檔案
+=======
+          id={uniqueId} // 使用動態 ID
+>>>>>>> 74b67fe3684b18041ebc8f25b7bc3b138d7e50c4
         />
         <label
-          htmlFor="fileInput"
+          htmlFor={uniqueId} // 確保 label 對應動態 ID
           className="text-center"
           style={{ width: `${width}`, height: `${height}` }}
         >
@@ -53,8 +81,8 @@ export default function UploadImg({ width, height }) {
               <div>
                 <PiPlus className={styles.plus} />
                 <p className={`h4 mt-3`}>
-                  新增封面圖
-                  <br /> <span className="p">(必填)</span>
+                  {bigText}
+                  <br /> <span className="p">({smText})</span>
                 </p>
               </div>
             </div>
