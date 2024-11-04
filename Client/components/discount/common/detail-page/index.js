@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Coupon from '@/components/discount/common/coupon';
+import Coupon from '@/components/discount/common/coupon-use';
 import Header from '@/components/home/common/header';
 import styles from './index.module.scss'; // 確保引入正確的樣式
 import Footer from '@/components/home/common/footer'
+import Link from 'next/link';
 
 
 export default function DiscountDetail({
@@ -41,7 +42,13 @@ export default function DiscountDetail({
 
             <main className="container">
                 <nav className={styles.nav}>
-                    <a className="text-decoration-none" href="">首頁</a> / 優惠活動
+                    <Link href="/" className="text-decoration-none">
+                        首頁 / 
+                    </Link>
+                    <Link href="/discount" className="text-decoration-none">
+                        <span> </span>優惠活動 
+                    </Link>
+                    {' / 活動詳情'}
                 </nav>
                 <section className={styles.section}>
                     <h1 className={`${styles.title} text-center h1`}>{title}</h1>
@@ -66,7 +73,7 @@ export default function DiscountDetail({
                                 <Coupon
                                     key={index}
                                     img={coupon.img}
-                                    title={coupon.title}
+                                    name={coupon.name}
                                     discount={coupon.discount}
                                     condition={coupon.condition}
                                     expiration={coupon.expiration}
@@ -76,7 +83,7 @@ export default function DiscountDetail({
                     </article>
                 </section>
             </main>
-            
+
             <Footer />
         </>
     );

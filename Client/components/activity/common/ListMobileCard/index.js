@@ -13,7 +13,7 @@ export default function ActMobileCard({
 }) {
   return (
     <>
-      <a href="#" className={`${styles.workshop} p-0`}>
+      <div className={`${styles.workshop} p-0`}>
         <div className={styles.workshopImg}>
           <Image
             height={615}
@@ -57,7 +57,7 @@ export default function ActMobileCard({
             </div>
           </div>
         </div>
-      </a>
+      </div>
     </>
   )
 }
