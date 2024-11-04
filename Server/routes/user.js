@@ -59,11 +59,13 @@ router.post('/register', upload.none(), async (req, res, next) => {
     const hashedPassword = await generateHash(password)
 
     const sql = `
-      INSERT INTO user (
-        name, account, password, email, gender, phone, address, img, level, created_at, updated_at
-      ) VALUES (
-        ?, ?, ?, ?, ' ', ' ', ' ', ' ', '1', Now(), ''
-      )`
+    INSERT INTO user (
+      name, account, password, email, gender, phone, address, img, level, created_at, updated_at
+    ) VALUES (
+      ?, ?, ?, ?, ' ', ' ', 'avatar01.jpg', ' ', '1', NOW(), NULL
+    )
+  `
+
     const params = [name, account, hashedPassword, email]
 
     const [result] = await db.query(sql, params)
