@@ -52,7 +52,7 @@
   position: absolute;
   text-align: center;
   bottom: 3%;
-  right: 45%;
+  right: 49%;
   z-index: 1;
   button {
     width: 8px;
@@ -85,4 +85,44 @@
 
 .swiper-pagination-bullet-active {
   background: #fff;
+}
+.car-img {
+  width: 100%;
+  position: relative; /* 使子元素相對於這個容器定位 */
+  overflow: hidden; /* 隱藏溢出的部分 */
+}
+
+.overlay {
+  position: absolute; /* 絕對定位，覆蓋在圖片上 */
+  top: 0; /* 顶部對齊 */
+  left: 0; /* 左側對齊 */
+  right: 0; /* 右側對齊 */
+  bottom: 680px; /* 底部對齊 */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0) 100%
+  ); /* 漸變效果 */
+  display: flex; /* 使用 Flexbox 使文字居中 */
+  flex-direction: column;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  opacity: 0; /* 初始不顯示 */
+  transition: opacity 0.3s ease; /* 添加過渡效果 */
+}
+
+.car-img:hover .overlay {
+  opacity: 1; /* 懸停時顯示遮罩 */
+}
+
+.overlay-text {
+  color: white; /* 文字顏色 */
+  font-size: 24px; /* 文字大小 */
+  text-align: center; /* 文字居中 */
+}
+.separator {
+  width: 80%; /* 分隔線的寬度 */
+  height: 2px; /* 分隔線的高度 */
+  background-color: white; /* 分隔線的顏色 */
+  margin: 10px 0; /* 分隔線的上下邊距 */
 }

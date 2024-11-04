@@ -1,5 +1,5 @@
 'use client'
-import styles from '@/components/teacher/common/t-dashboard-uploadImg/uploadImg.module.scss'
+import styles from '@/components/activity/common/uploadImg/index.module.scss'
 import { PiPlus } from 'react-icons/pi'
 import React, { useState } from 'react'
 
@@ -53,7 +53,7 @@ export default function UploadImg({ width, height }) {
               <div>
                 <PiPlus className={styles.plus} />
                 <p className={`h4 mt-3`}>
-                  新增封面圖
+                  新增圖片
                   <br /> <span className="p">(必填)</span>
                 </p>
               </div>
@@ -68,6 +68,7 @@ export default function UploadImg({ width, height }) {
                     className={styles.previewImage}
                   />
                   <button
+                    type="button" // 添加 type="button" 防止表單提交
                     className={styles.removeImageButton}
                     onClick={() => handleRemoveImage(index)}
                   >

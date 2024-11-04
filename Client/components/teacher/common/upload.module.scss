@@ -1,5 +1,10 @@
 @import '@/styles/_variant.scss';
 
+.header {
+  background-color: #626553;
+  height: 72px;
+  color: $gray-100;
+}
 .main {
   padding: 70px 120px;
   padding-left: 420px;
@@ -52,15 +57,13 @@
     .workshopDetail {
       background-color: #f8f8f8;
       border-radius: 5px;
-      
     }
   }
-  .section03{
+  .section03 {
     padding-inline: 80px;
     padding-block: 50px;
-     h4 {
-          color: $green-700;
-        }
+    h4 {
+      color: $green-700;
+    }
   }
-
 }
