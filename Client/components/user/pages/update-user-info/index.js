@@ -19,21 +19,53 @@ export default function UpdateInfo() {
     gender: '',
     birthday: '',
     email: '',
-    Img: '',
+    img: '',
     phone: '',
     address: '',
     create_at: '',
-    updated_at: '',
+    updated_at: 'Now()',
     // points: '',
   })
   // 錯誤訊息狀態
   const [errors, setErrors] = useState({
     name: '',
     email: '',
-    account: '',
-    password: '',
-    confirmPassword: '',
+    // account: '',
+    // password: '',
+    // confirmPassword: '',
   })
+
+  // 多欄位共用事件函式
+  const handleFieldChange = (e) => {
+    // ES6特性: 計算得來的物件屬性名稱(computed property name)
+    let nextUser = { ...user, [e.target.name]: e.target.value }
+
+    setUser(nextUser)
+  }
+
+  const checkError = (user) => {
+    // 表單檢查--START---
+    // 1. 建立一個全新的錯誤訊息用物件
+    const newErrors = {
+      name: '',
+      email: '',
+    }
+
+    // 2.開始作各欄位的表單檢查，如果有錯誤訊息就加到newErrors
+    if (!user.name) {
+      newErrors.name = '姓名為必填'
+    }
+
+    if (!user.email) {
+      newErrors.email = 'Email為必填'
+    }
+
+    // 如果newErrors中的物件值中其中有一個非空白字串，代表有錯誤發生
+    const hasErrors = Object.values(newErrors).some((v) => v)
+
+    // 表單檢查--END---
+    return { newErrors, hasErrors }
+  }
 
   const handleSubmit = async (e) => {
     // 固定的ajax/fetch的語法，會在表單submit觸發的第一行阻擋表單的預設行為
@@ -48,18 +80,32 @@ export default function UpdateInfo() {
       return // 跳出此函式，在下面的程式碼不會再執行
     }
 
-    // 送到伺服器
-    // 刪除不必要的欄位(不一定需要)
-    const { confirmPassword, ...newUser } = user
-    // 呼叫register(useAuth勾子裡)
-    await update(newUser)
+    // // 送到伺服器
+    // // 刪除不必要的欄位(不一定需要)
+    // const { confirmPassword, ...newUser } = user
+    // // 呼叫register(useAuth勾子裡)
+    // await update(newUser)
   }
-  const { auth } = useAuth()
+
+  // 初始化資料的狀態
+  // const [initialUser] = useState({
+  //   name: '',
+  //   account: '',
+  //   nickname: '',
+  //   gender: '',
+  //   birthday: '',
+  //   email: '',
+  //   img: '',
+  //   phone: '',
+  //   address: '',
+  //   create_at: '',
+  //   updated_at: 'Now()',
+  // })
+
   // 初始化會員資料
   const initUserData = async () => {
     const user = await getUser()
-    // 這是要更改密碼才會有的欄位
-    // setUser({ ...member, password: '', confirmPassword: '' })
+    // setUser({ ...user, password: '', confirmPassword: '' })
     setUser(user)
   }
 
@@ -67,75 +113,112 @@ export default function UpdateInfo() {
   useEffect(() => {
     initUserData()
   }, [])
+
   return (
     <>
       <UserSection titleCN="更新資訊" titleENG="Information">
-        <form action="" method="post" encType="multipart/form-data">
-          <div class="d-flex mt-4 container">
-            <div class="d-flex row justify-content-between align-items-center">
-              <div class="col-9 px-0   d-flex flex-wrap">
-                <div class={`col-4 mt-5 ${styles.info} `}>
+        <form
+          onSubmit={handleSubmit}
+          method="post"
+          encType="multipart/form-data"
+        >
+          <div className="d-flex mt-4 container">
+            <div className="d-flex row justify-content-between align-items-center">
+              <div className="col-9 px-0   d-flex flex-wrap">
+                <div className={`col-4 mt-5 ${styles.info} `}>
                   <label htmlFor="name" class="form-label pb-2">
                     姓名 <span class=" ps pe-4 ">| name</span>
                   </label>
+                  <span className={`ps ${styles.error} `}>{errors.name}</span>{' '}
                   <input
                     type="text"
                     name="name"
-                    class={`form-control ${styles['form-control2']} `}
+                    className={`form-control ${styles['form-control2']} `}
+                    onChange={handleFieldChange}
+                    value={user.name}
                   />
                 </div>
-                <div class={`col-4 mt-5 ${styles.info} `}>
-                  <label class="form-label pb-2">
-                    暱稱 <span class="ps pe-4">| nickname</span>
-                  </label>
+                <div className={`col-4 mt-5 ${styles.info} `}>
+                  <label htmlFor="nickname" class="form-label pb-2">
+                    暱稱 <span className="ps pe-4">| nickname</span>
+                  </label>{' '}
                   <input
+                    name="nickname"
+                    onChange={handleFieldChange}
+                    value={user.nickname}
+                    type="text"
+                    className={`form-control ${styles['form-control2']} `}
+                  />
+                </div>
+                <div className={`col-4 mt-5 ${styles.info} `}>
+                  <label htmlFor="title " className="form-label pb-2">
+                    稱謂 <span className=" ps pe-4">| title</span>
+                  </label>{' '}
+                  <select
+                    name="gender"
+                    value={user.gender}
+                    onChange={handleFieldChange}
+                    className={`form-select ${styles['form-select2']}`}
+                  >
+                    <option value="">請選擇</option> {/* 提供一個預設選項 */}
+                    <option value="1">男士</option> {/* 男性選項 */}
+                    <option value="2">女士</option> {/* 女性選項 */}
+                  </select>
+                  {/* <input
+                    name="title"
+                    value={
+                      user.gender === 1
+                        ? '男士'
+                        : user.gender === 2
+                        ? '女士'
+                        : ''
+                    }
+                    onChange={handleFieldChange}
                     type="text"
                     class={`form-control ${styles['form-control2']} `}
-                  />
+                  /> */}
                 </div>
-                <div class={`col-4 mt-5 ${styles.info} `}>
-                  <label class="form-label pb-2">
-                    稱謂 <span class=" ps pe-4">| title</span>
-                  </label>
+                <div className={`col-3 ${styles.info} mt-5`}>
+                  <label htmlFor="birthday" className="form-label pb-2">
+                    生日 <span className=" ps pe-4">| birthday</span>
+                  </label>{' '}
                   <input
-                    type="text"
-                    class={`form-control ${styles['form-control2']} `}
-                  />
-                </div>
-                <div class={`col-3 ${styles.info} mt-5`}>
-                  <label class="form-label pb-2">
-                    生日 <span class=" ps pe-4">| birthday</span>
-                  </label>
-                  <input
+                    value={user.birthday}
                     type="date"
-                    class={`form-control ${styles['form-control2']} `}
+                    className={`form-control ${styles['form-control2']} `}
                     name="birthday"
+                    onChange={handleFieldChange}
                   />
                 </div>
-                <div class={`col-3 ${styles.info} mt-5`}>
-                  <label class="form-label pb-2">
-                    手機 <span class=" ps pe-4">| phone</span>
-                  </label>
+                <div className={`col-3 ${styles.info} mt-5`}>
+                  <label htmlFor="phone" className="form-label pb-2">
+                    手機 <span className=" ps pe-4">| phone</span>
+                  </label>{' '}
                   <input
-                    type="tel"
-                    class={`form-control ${styles['form-control2']} `}
+                    value={user.phone}
+                    onChange={handleFieldChange}
+                    type="text"
+                    className={`form-control ${styles['form-control2']} `}
                     pattern="\d{10}"
                     name="phone"
                   />
                 </div>
-                <div class={`col-6 ${styles.info} mt-5`}>
-                  <label class="form-label pb-2">
-                    信箱 <span class=" ps pe-5">| email</span>
-                  </label>
+                <div className={`col-6 ${styles.info} mt-5`}>
+                  <label htmlFor="email" className="form-label pb-2">
+                    信箱 <span className=" ps pe-5">| email</span>
+                  </label>{' '}
+                  <span className={`ps ${styles.error} `}>{errors.email}</span>
                   <input
+                    value={user.email}
+                    onChange={handleFieldChange}
                     type="email"
-                    class={`form-control ${styles['form-control2']} `}
+                    className={`form-control ${styles['form-control2']} `}
                     name="email"
                   />
                 </div>
               </div>
-              <div class="col-3 d-flex align-items-center">
-                <div class="ratio ratio-1x1 w-75">
+              <div className="col-3 d-flex align-items-center">
+                <div className="ratio ratio-1x1 w-75">
                   <Image
                     width={255}
                     height={255}
@@ -159,7 +242,7 @@ export default function UpdateInfo() {
           >
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
               <label className={`form-label pb-2`}>
-                居住縣市{' '}
+                縣市{' '}
                 <span className={`ps ${styles['info-address']}`}>| city</span>
               </label>
               <select className={`form-select ${styles['form-select2']}`}>
@@ -171,7 +254,7 @@ export default function UpdateInfo() {
             </div>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
               <label className={`form-label pb-2`}>
-                居住區域{' '}
+                區域{' '}
                 <span className={` ps ${styles['info-address']}`}>| area</span>
               </label>
               <select className={`form-select ${styles['form-select2']}`}>
@@ -192,6 +275,8 @@ export default function UpdateInfo() {
                 className={`form-control ${styles['form-control2']}`}
                 name="streetAddress"
                 placeholder="請輸入完整地址"
+                value={user.address}
+                onChange={handleFieldChange}
               />
             </div>
           </div>
@@ -217,15 +302,18 @@ export default function UpdateInfo() {
           <div
             className={`${styles['submit-area']} d-flex justify-content-end align-items-center row`}
           >
-            <Link href="/user/information">
+            <Link href="/user">
               <button type="button" className={`btn-success h6 me-4`}>
                 上一頁
               </button>
             </Link>
-            <button type="button" className={`btn-secondary h6 me-4`}>
+            <button
+              type="button"
+              className="btn-secondary h6 me-4"
+              onClick={() => getUser(user)}
+            >
               取消
             </button>
-
             <button type="submit" className={`btn-primary h6`}>
               儲存
             </button>
