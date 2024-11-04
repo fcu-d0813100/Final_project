@@ -6,7 +6,7 @@ import styles from './index.module.scss'
 import UserCard from '../../common/userCard'
 import AdminSB from '@/components/admin/common/admin-side-bar'
 import UserTitle from '@/components/user/common/user-title'
-
+import Sidebar from '@/components/activity/common/Sidebar'
 export default function Index(props) {
   return (
     <>
@@ -18,7 +18,7 @@ export default function Index(props) {
       </header>
 
       <div className={styles['user-section']}>
-        <AdminSB />
+        <Sidebar />
         <div className={styles['any-section']}>
           <UserTitle CN="活動管理" ENG="Activity Management" />
 

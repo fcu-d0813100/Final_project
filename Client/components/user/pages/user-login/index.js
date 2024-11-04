@@ -38,6 +38,7 @@ export default function UserLogin() {
                 <div className="col-12 d-flex justify-content-center align-items-center">
                   <Link href="/user/register">
                     <button
+                      type="button"
                       className={`btn-outline h6 ${styles['btn-outline']}`}
                     >
                       立即註冊
@@ -116,7 +117,7 @@ export default function UserLogin() {
                 {/*  */}
                 <button
                   onClick={() => {
-                    setAccount('amy0524')
+                    setAccount('Bella')
                     setPassword('12345')
                   }}
                 >

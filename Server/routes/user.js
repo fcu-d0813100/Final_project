@@ -59,11 +59,13 @@ router.post('/register', upload.none(), async (req, res, next) => {
     const hashedPassword = await generateHash(password)
 
     const sql = `
-      INSERT INTO user (
-        name, account, password, email, gender, phone, address, img, level, created_at, updated_at
-      ) VALUES (
-        ?, ?, ?, ?, ' ', ' ', ' ', ' ', '1', Now(), ''
-      )`
+    INSERT INTO user (
+      name, account, password, email, gender, phone, address, img, level, created_at, updated_at
+    ) VALUES (
+      ?, ?, ?, ?, ' ', ' ', 'avatar01.jpg', ' ', '1', NOW(), NULL
+    )
+  `
+
     const params = [name, account, hashedPassword, email]
 
     const [result] = await db.query(sql, params)
@@ -165,18 +167,18 @@ router.put('/', authenticate, async (req, res, next) => {
   //   )
   // }
 
-  // 更新除了密碼以外的資料的寫法
+  // 更新除了帳號密碼以外的資料的寫法
   result = await db.query(
-    'UPDATE `user` SET `name`=?,`email`=? `account`=? `nickname`=? `img`=? `gender`=? `phone`=? `address`=? ` updated_at`=? WHERE `id`=?;',
+    'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?,birthday=? ,`updated_at`=? WHERE `id`=?;',
     [
       updateUser.name,
       updateUser.email,
-      updateUser.account,
       updateUser.nickname,
       updateUser.img,
       updateUser.gender,
       updateUser.phone,
       updateUser.address,
+      updateUser.birthday,
       new Date(),
       id,
     ]
