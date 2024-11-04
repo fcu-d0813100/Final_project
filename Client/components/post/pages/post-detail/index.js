@@ -1,56 +1,70 @@
 import React, { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/router'
 import { GoArrowLeft } from 'react-icons/go'
-<<<<<<< HEAD
-=======
 import Masonry from 'react-masonry-css'
->>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
 import axios from 'axios'
 import { usePost } from '@/hooks/post/use-post'
 import PostCard from '@/components/post/common/post-card'
 import WallCard from '@/components/post/common/wall-card'
-<<<<<<< HEAD
-import Header from '@/components/home/common/header'
-=======
 import Header from '@/components/layout/common/header'
->>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
 import styles from './index.module.scss'
 import Link from 'next/link'
 
 export default function Explore(props) {
-<<<<<<< HEAD
-=======
+  const { post } = usePost()
   const [wallCard, setWallCard] = useState([])
+
+  // useEffect(() => {
+  //   async function getWallCard() {
+  //     let response = await axios.get(`http://localhost:3005/api/post/`, {
+  //       withCredentials: true,
+  //     })
+  //     setWallCard(response.data)
+  //   }
+  //   getWallCard()
+  // }, [])
+  const router = useRouter()
+  const { postId } = router.query
+  //render
   useEffect(() => {
-    async function getWallCard() {
-      let response = await axios.get(
-        `http://localhost:3005/api/post/post_wall`,
-        {
-          withCredentials: true,
-        }
-      )
-      setWallCard(response.data)
+    if (post && post.tags) {
+      fetchPosts(post.tags)
     }
-    getWallCard()
-  }, [])
->>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
-  let { post } = usePost()
+  }, [post])
+
+  //get data:related posts
+  const fetchPosts = async (tags) => {
+    const queryString = tags
+      .split(',')
+      .map((tag) => `tags=${encodeURIComponent(tag)}`)
+      .join('&')
+    const response = await fetch(
+      `http://localhost:3005/api/post/?${queryString}&postId=${postId}&order=DESC`,
+      {
+        credentials: 'include',
+      }
+    )
+    console.log(queryString)
+    const data = await response.json()
+    setWallCard(data)
+  }
+
   // 如果 post 尚未加載，顯示加載指示
   if (!post) {
-    return <p>Loading...</p>
+    return <p></p>
   }
-<<<<<<< HEAD
-=======
+
+  // const tags = post && post.tags ? post.tags.split(',') : []
+  // console.log(tags)
+
   const breakpoint = {
     default: 5,
     1600: 4,
     1200: 3,
     700: 2,
   }
->>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
   return (
     <>
-      <Header />
       <div className={styles['post-container']}>
         <div className={styles['post-read']}>
           <Link href="/post">
@@ -62,8 +76,7 @@ export default function Explore(props) {
             content={post.content}
             tags={post.tags}
             postImages={post.post_imgs}
-            // authorAvatar={post.post_author_img}
-
+            authorAvatar={post.post_author_img}
             postCreateTime={post.created_at}
             likeCount={post.like_count}
             saveCount={post.save_count}

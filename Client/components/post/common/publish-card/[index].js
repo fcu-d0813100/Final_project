@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { PiChatCircle } from 'react-icons/pi'
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
-<<<<<<< HEAD
-=======
 import DeleteModal from '@/components/shared/modal-delete'
->>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
 import styles from './index.module.scss'
 export default function Index({
+  postId,
   imageSrc,
   title,
   content,
@@ -15,11 +14,8 @@ export default function Index({
   likeCount,
   commentCount,
 }) {
-<<<<<<< HEAD
-=======
   const [showModal, setShowModal] = useState(false)
 
->>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
   return (
     <>
       {showModal && (
@@ -41,7 +37,7 @@ export default function Index({
             <div className={`${styles['post-main-title']} ${styles['h5']}`}>
               {title}
               <div className={styles['ps']}>
-                <button>編輯</button>
+                <Link href={`/user/post/edit/${postId}`}>編輯</Link>
                 <button onClick={() => setShowModal(true)}>刪除</button>
               </div>
             </div>
