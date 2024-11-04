@@ -126,8 +126,8 @@ export default function UpdateInfo() {
             <div className="d-flex row justify-content-between align-items-center">
               <div className="col-9 px-0   d-flex flex-wrap">
                 <div className={`col-4 mt-5 ${styles.info} `}>
-                  <label htmlFor="name" class="form-label pb-2">
-                    姓名 <span class=" ps pe-4 ">| name</span>
+                  <label htmlFor="name" className="form-label pb-2">
+                    姓名 <span className=" ps pe-4 ">| name</span>
                   </label>
                   <span className={`ps ${styles.error} `}>{errors.name}</span>{' '}
                   <input
@@ -139,7 +139,7 @@ export default function UpdateInfo() {
                   />
                 </div>
                 <div className={`col-4 mt-5 ${styles.info} `}>
-                  <label htmlFor="nickname" class="form-label pb-2">
+                  <label htmlFor="nickname" className="form-label pb-2">
                     暱稱 <span className="ps pe-4">| nickname</span>
                   </label>{' '}
                   <input
@@ -160,23 +160,10 @@ export default function UpdateInfo() {
                     onChange={handleFieldChange}
                     className={`form-select ${styles['form-select2']}`}
                   >
-                    <option value="">請選擇</option> {/* 提供一個預設選項 */}
-                    <option value="1">男士</option> {/* 男性選項 */}
-                    <option value="2">女士</option> {/* 女性選項 */}
+                    <option value=" "></option>
+                    <option value="1">男士</option>
+                    <option value="2">女士</option>
                   </select>
-                  {/* <input
-                    name="title"
-                    value={
-                      user.gender === 1
-                        ? '男士'
-                        : user.gender === 2
-                        ? '女士'
-                        : ''
-                    }
-                    onChange={handleFieldChange}
-                    type="text"
-                    class={`form-control ${styles['form-control2']} `}
-                  /> */}
                 </div>
                 <div className={`col-3 ${styles.info} mt-5`}>
                   <label htmlFor="birthday" className="form-label pb-2">
@@ -236,7 +223,6 @@ export default function UpdateInfo() {
           >
             <h3 className={`h4 ${styles['center-title']} pb-2`}>收件資訊</h3>
           </div>
-
           <div
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
           >
@@ -246,9 +232,7 @@ export default function UpdateInfo() {
                 <span className={`ps ${styles['info-address']}`}>| city</span>
               </label>
               <select className={`form-select ${styles['form-select2']}`}>
-                <option value="" disabled selected>
-                  請選擇縣市
-                </option>
+                <option value="">請選擇縣市</option>
                 {/* Options omitted for brevity */}
               </select>
             </div>
@@ -258,9 +242,7 @@ export default function UpdateInfo() {
                 <span className={` ps ${styles['info-address']}`}>| area</span>
               </label>
               <select className={`form-select ${styles['form-select2']}`}>
-                <option value="" disabled selected>
-                  請選擇區域
-                </option>
+                <option value="">請選擇區域</option>
               </select>
             </div>
             <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
