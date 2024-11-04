@@ -167,13 +167,12 @@ router.put('/', authenticate, async (req, res, next) => {
   //   )
   // }
 
-  // 更新除了密碼以外的資料的寫法
+  // 更新除了帳號密碼以外的資料的寫法
   result = await db.query(
-    'UPDATE `user` SET `name`=?,`email`=? `account`=? `nickname`=? `img`=? `gender`=? `phone`=? `address`=? ` updated_at`=? WHERE `id`=?;',
+    'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?, `updated_at`=? WHERE `id`=?;',
     [
       updateUser.name,
       updateUser.email,
-      updateUser.account,
       updateUser.nickname,
       updateUser.img,
       updateUser.gender,
