@@ -111,6 +111,8 @@ export default function UpdateInfo() {
     initUserData()
   }, [])
 
+  // 生日、地址無法更新
+
   return (
     <>
       <UserSection titleCN="更新資訊" titleENG="Information">
@@ -207,7 +209,7 @@ export default function UpdateInfo() {
                     width={255}
                     height={255}
                     className={styles.avatar}
-                    src="/user/img/avatar02.jpg"
+                    src={`/user/img/${user.img}`}
                     alt=""
                   />
                 </div>
@@ -269,12 +271,14 @@ export default function UpdateInfo() {
             className={`row d-flex justify-content-between align-items-center mt-3`}
           >
             <div className={`col-6`}>
-              <p className="ps">※請填寫完整的個人資訊，以享有更多會員權益。</p>
+              <p className={`ps ${styles.explain}`}>
+                ※請填寫完整的個人資訊，以享有更多會員權益。
+              </p>
             </div>
             <div
               className={`col-3 d-flex justify-content-end align-items-center`}
             >
-              <a href="" className={`p fw-bold ${styles['delete-account']}`}>
+              <a href="" className={`p ${styles['delete-account']}`}>
                 停用會員帳戶
               </a>
             </div>
@@ -283,17 +287,11 @@ export default function UpdateInfo() {
           <div
             className={`${styles['submit-area']} d-flex justify-content-end align-items-center row`}
           >
-            <Link href="/user">
-              <button type="button" className={`btn-success h6 me-4`}>
-                上一頁
-              </button>
-            </Link>
             <button
               type="button"
               className="btn-secondary h6 me-4"
               onClick={() => setUser(user)}
             >
-              {/* 還沒調整 */}
               取消
             </button>
             <button type="submit" className={`btn-primary h6`}>
