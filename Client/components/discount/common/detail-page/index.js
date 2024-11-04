@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Coupon from '@/components/discount/common/coupon-use';
-import Header from '@/components/home/common/header';
 import styles from './index.module.scss'; // 確保引入正確的樣式
-import Footer from '@/components/home/common/footer'
 import Link from 'next/link';
 
 
@@ -35,7 +33,6 @@ export default function DiscountDetail({
 
     return (
         <>
-            <Header />
             <header className={styles.title}>
                 <img className={styles.img} src={currentImageSrc} alt="NARS 優惠" />
             </header>
@@ -83,8 +80,6 @@ export default function DiscountDetail({
                     </article>
                 </section>
             </main>
-
-            <Footer />
         </>
     );
 }
