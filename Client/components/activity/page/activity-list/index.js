@@ -32,7 +32,7 @@ export default function Activity(props) {
           {/* 在小於992px時隱藏 */}
           <ul className="d-flex justify-content-around">
             <li>
-              <a href="#">ALL</a>
+              <a href="/activity/activity-det">ALL</a>
             </li>
             <li>
               <a href="#">1 月</a>

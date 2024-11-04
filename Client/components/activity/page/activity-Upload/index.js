@@ -2,30 +2,30 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Styles from './index.module.scss'
-import UserSection from '@/components/user/common/user-section'
-import { PiPlus } from 'react-icons/pi'
-import AdminSB from '@/components/admin/common/admin-side-bar'
-import UserTitle from '@/components/user/common/user-title'
-import Image from 'next/image'
+// import UserSection from '@/components/user/common/user-section'
+// import { PiPlus } from 'react-icons/pi'
+// import AdminSB from '@/components/admin/common/admin-side-bar'
+// import UserTitle from '@/components/user/common/user-title'
+// import Image from 'next/image'
 
-export default function Index(props) {
-  const [images, setImages] = useState([]) // 存储多张图片
+// export default function Index(props) {
+//   const [images, setImages] = useState([]) // 存储多张图片
 
-  const handleImageChange = (event) => {
-    const files = Array.from(event.target.files) // 转换成数组以支持多文件
-    const newImages = []
+//   const handleImageChange = (event) => {
+//     const files = Array.from(event.target.files) // 转换成数组以支持多文件
+//     const newImages = []
 
-    files.forEach((file) => {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        newImages.push(reader.result)
-        if (newImages.length === files.length) {
-          setImages((prevImages) => [...prevImages, ...newImages]) // 添加到已有的图片中
-        }
-      }
-      reader.readAsDataURL(file)
-    })
-  }
+//     files.forEach((file) => {
+//       const reader = new FileReader()
+//       reader.onloadend = () => {
+//         newImages.push(reader.result)
+//         if (newImages.length === files.length) {
+//           setImages((prevImages) => [...prevImages, ...newImages]) // 添加到已有的图片中
+//         }
+//       }
+//       reader.readAsDataURL(file)
+//     })
+//   }
 
 import AdminSB from '@/components/admin/common/admin-side-bar'
 import UserTitle from '@/components/user/common/user-title'
