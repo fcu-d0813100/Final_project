@@ -12,7 +12,7 @@ export default function UpdateInfo() {
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     name: '',
-    account: '',
+    // account: '',
     // password: '',
     // confirmPassword: '',
     nickname: '',
@@ -68,23 +68,20 @@ export default function UpdateInfo() {
   }
 
   const handleSubmit = async (e) => {
-    // 固定的ajax/fetch的語法，會在表單submit觸發的第一行阻擋表單的預設行為
     e.preventDefault()
-
-    // 檢查錯誤
     const { newErrors, hasErrors } = checkError(user)
-    // 呈現錯誤訊息
+    console.log('錯誤檢查:', newErrors, hasErrors) // 檢查錯誤狀態
     setErrors(newErrors)
-    // 有錯誤，不送到伺服器，跳出此函式
     if (hasErrors) {
-      return // 跳出此函式，在下面的程式碼不會再執行
+      return
     }
-
-    // // 送到伺服器
-    // // 刪除不必要的欄位(不一定需要)
-    // const { confirmPassword, ...newUser } = user
-    // // 呼叫register(useAuth勾子裡)
-    // await update(newUser)
+    try {
+      console.log('發送用戶資料:', user) // 確認發送的資料
+      await update(user)
+      console.log('更新成功')
+    } catch (error) {
+      console.error('更新失敗:', error)
+    }
   }
 
   // 初始化資料的狀態
@@ -126,8 +123,8 @@ export default function UpdateInfo() {
             <div className="d-flex row justify-content-between align-items-center">
               <div className="col-9 px-0   d-flex flex-wrap">
                 <div className={`col-4 mt-5 ${styles.info} `}>
-                  <label htmlFor="name" className="form-label pb-2">
-                    姓名 <span className=" ps pe-4 ">| name</span>
+                  <label htmlFor="name" className="form-label pb-2 fw-bold ">
+                    姓名 <span className=" ps pe-4 fw-bold ">| name</span>
                   </label>
                   <span className={`ps ${styles.error} `}>{errors.name}</span>{' '}
                   <input
@@ -139,8 +136,8 @@ export default function UpdateInfo() {
                   />
                 </div>
                 <div className={`col-4 mt-5 ${styles.info} `}>
-                  <label htmlFor="nickname" className="form-label pb-2">
-                    暱稱 <span className="ps pe-4">| nickname</span>
+                  <label htmlFor="nickname" className="form-label pb-2 fw-bold">
+                    暱稱 <span className="ps pe-4 fw-bold">| nickname</span>
                   </label>{' '}
                   <input
                     name="nickname"
@@ -151,8 +148,8 @@ export default function UpdateInfo() {
                   />
                 </div>
                 <div className={`col-4 mt-5 ${styles.info} `}>
-                  <label htmlFor="title " className="form-label pb-2">
-                    稱謂 <span className=" ps pe-4">| title</span>
+                  <label htmlFor="title " className="form-label pb-2 fw-bold">
+                    稱謂 <span className=" ps pe-4 fw-bold">| title</span>
                   </label>{' '}
                   <select
                     name="gender"
@@ -166,8 +163,8 @@ export default function UpdateInfo() {
                   </select>
                 </div>
                 <div className={`col-3 ${styles.info} mt-5`}>
-                  <label htmlFor="birthday" className="form-label pb-2">
-                    生日 <span className=" ps pe-4">| birthday</span>
+                  <label htmlFor="birthday" className="form-label pb-2 fw-bold">
+                    生日 <span className=" ps pe-4 fw-bold">| birthday</span>
                   </label>{' '}
                   <input
                     value={user.birthday}
@@ -178,8 +175,8 @@ export default function UpdateInfo() {
                   />
                 </div>
                 <div className={`col-3 ${styles.info} mt-5`}>
-                  <label htmlFor="phone" className="form-label pb-2">
-                    手機 <span className=" ps pe-4">| phone</span>
+                  <label htmlFor="phone" className="form-label pb-2 fw-bold">
+                    手機 <span className=" ps pe-4 fw-bold">| phone</span>
                   </label>{' '}
                   <input
                     value={user.phone}
@@ -191,8 +188,8 @@ export default function UpdateInfo() {
                   />
                 </div>
                 <div className={`col-6 ${styles.info} mt-5`}>
-                  <label htmlFor="email" className="form-label pb-2">
-                    信箱 <span className=" ps pe-5">| email</span>
+                  <label htmlFor="email" className="form-label pb-2 fw-bold">
+                    信箱 <span className=" ps pe-5 fw-bold">| email</span>
                   </label>{' '}
                   <span className={`ps ${styles.error} `}>{errors.email}</span>
                   <input
@@ -227,28 +224,32 @@ export default function UpdateInfo() {
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
           >
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2`}>
+              <label className={`form-label pb-2 fw-bold`}>
                 縣市{' '}
-                <span className={`ps ${styles['info-address']}`}>| city</span>
+                <span className={`ps fw-bold ${styles['info-address']}`}>
+                  | city
+                </span>
               </label>
-              <select className={`form-select ${styles['form-select2']}`}>
+              <select className={`form-select  ${styles['form-select2']}`}>
                 <option value="">請選擇縣市</option>
                 {/* Options omitted for brevity */}
               </select>
             </div>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2`}>
+              <label className={`form-label pb-2 fw-bold`}>
                 區域{' '}
-                <span className={` ps ${styles['info-address']}`}>| area</span>
+                <span className={` ps fw-bold ${styles['info-address']}`}>
+                  | area
+                </span>
               </label>
               <select className={`form-select ${styles['form-select2']}`}>
                 <option value="">請選擇區域</option>
               </select>
             </div>
             <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2`}>
+              <label className={`form-label pb-2 fw-bold`}>
                 地址{' '}
-                <span className={`ps ${styles['info-address']}`}>
+                <span className={`ps ${styles['info-address']} fw-bold`}>
                   | address
                 </span>
               </label>
@@ -268,14 +269,12 @@ export default function UpdateInfo() {
             className={`row d-flex justify-content-between align-items-center mt-3`}
           >
             <div className={`col-6`}>
-              <p className={styles.ps}>
-                ※請填寫完整的個人資訊，以享有更多會員權益。
-              </p>
+              <p className="ps">※請填寫完整的個人資訊，以享有更多會員權益。</p>
             </div>
             <div
               className={`col-3 d-flex justify-content-end align-items-center`}
             >
-              <a href="" className={`p ${styles['delete-account']}`}>
+              <a href="" className={`p fw-bold ${styles['delete-account']}`}>
                 停用會員帳戶
               </a>
             </div>
@@ -292,8 +291,9 @@ export default function UpdateInfo() {
             <button
               type="button"
               className="btn-secondary h6 me-4"
-              onClick={() => getUser(user)}
+              onClick={() => setUser(user)}
             >
+              {/* 還沒調整 */}
               取消
             </button>
             <button type="submit" className={`btn-primary h6`}>

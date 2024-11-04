@@ -52,7 +52,7 @@ export function AuthProvider({ children }) {
 
   const register = async (user) => {
     try {
-      console.log('開始發送註冊請求:', user) // 調試輸出
+      console.log('開始發送註冊請求:', user)
 
       const res = await fetch('http://localhost:3005/api/user/register', {
         headers: {
@@ -164,7 +164,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // 模擬會員登出
+  // 會員登出
   const logout = async () => {
     // 向伺服器作fetch
     const res = await fetch('http://localhost:3005/api/user/logout', {
@@ -180,8 +180,9 @@ export function AuthProvider({ children }) {
     const resData = await res.json()
 
     if (resData.status === 'success') {
-      alert('登出成功!')
-
+      router.push('/')
+      console.log('登出成功')
+      // 導到首頁
       setAuth({
         isAuth: false,
         userData: {
