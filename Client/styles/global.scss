@@ -127,7 +127,7 @@ body {
   border: black solid 1px;
   background-color: black;
   color: white;
-
+  margin: 0;
   &:hover {
     border: black solid 1px;
     background-color: white;
@@ -145,7 +145,7 @@ body {
   background-color: white;
   color: black;
   box-sizing: border-box;
-
+  margin: 0;
   &:hover {
     background-color: black;
     color: white;
@@ -162,7 +162,7 @@ body {
   color: #fff;
   border-radius: 3px;
   border: $red-500 solid 1px;
-
+  margin: 0;
   &:hover {
     background-color: #6f2619;
     border: #6f2619 solid 1px;
@@ -179,7 +179,7 @@ body {
   color: #fff;
   border-radius: 3px;
   border: $green-500 solid 1px;
-
+  margin: 0;
   &:hover {
     background: $green-700;
     border: $green-700 solid 1px;
@@ -196,7 +196,7 @@ body {
   color: white;
   border: white solid 1px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-
+  margin: 0;
   &:hover {
     background-color: rgba(0, 0, 0, 0.4);
     transition: ease 0.3s;
@@ -211,7 +211,7 @@ body {
   border-radius: 3px;
   color: $green-700;
   border: white solid 1px;
-
+  margin: 0;
   &:hover {
     opacity: 0.8;
     transition: ease 0.3s;

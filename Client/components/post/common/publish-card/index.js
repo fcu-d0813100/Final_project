@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { PiChatCircle } from 'react-icons/pi'
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
+<<<<<<< HEAD
+=======
+import DeleteModal from '@/components/shared/modal-delete'
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
 import styles from './index.module.scss'
 export default function Index({
   imageSrc,
@@ -11,8 +15,24 @@ export default function Index({
   likeCount,
   commentCount,
 }) {
+<<<<<<< HEAD
+=======
+  const [showModal, setShowModal] = useState(false)
+
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
   return (
     <>
+      {showModal && (
+        <DeleteModal
+          title="刪除貼文"
+          content={`刪除後將無法恢復，\n確定要刪除這篇貼文嗎 ?`}
+          btnConfirm="確定刪除"
+          btnCancel="取消"
+          ConfirmFn={() => {}} //刪除的函數
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )}
       <div className={styles['post-card3']}>
         <Image src={imageSrc} alt="public image" width={200} height={200} />
 
@@ -22,7 +42,7 @@ export default function Index({
               {title}
               <div className={styles['ps']}>
                 <button>編輯</button>
-                <button>刪除</button>
+                <button onClick={() => setShowModal(true)}>刪除</button>
               </div>
             </div>
             <div className={styles['post-main-content']}>{content}</div>

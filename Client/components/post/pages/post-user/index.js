@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+<<<<<<< HEAD
 import Link from 'next/link'
 import { Tab, Nav } from 'react-bootstrap'
 import { PiNotePencilBold } from 'react-icons/pi'
+=======
+import { Tab, Nav } from 'react-bootstrap'
+import { PiNotePencilBold } from 'react-icons/pi'
+import Link from 'next/link'
+import Masonry from 'react-masonry-css'
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
@@ -12,7 +19,11 @@ import WallCard from '@/components/post/common/wall-card'
 export default function Index(props) {
   const [publishCard, setPublishCard] = useState([])
   const [wallCard, setWallCard] = useState([])
+<<<<<<< HEAD
 
+=======
+  const [showModal] = useState(false)
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
   const router = useRouter()
   const { userId } = router.query
   useEffect(() => {
@@ -53,6 +64,15 @@ export default function Index(props) {
     console.log(userId)
     getWallCard()
   }, [userId])
+<<<<<<< HEAD
+=======
+  const breakpoint = {
+    default: 4,
+    1600: 3,
+    1200: 3,
+    700: 2,
+  }
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
   return (
     <>
       <UserSection titleCN="我的貼文" titleENG="My Post">
@@ -86,6 +106,10 @@ export default function Index(props) {
                   {publishCard.map((post) => (
                     <PublishCard
                       key={post.id}
+<<<<<<< HEAD
+=======
+                      postId={post.id}
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
                       imageSrc={`/post/${post.post_img}`}
                       title={post.title}
                       content={post.content}
@@ -99,6 +123,7 @@ export default function Index(props) {
               </Tab.Pane>
               <Tab.Pane eventKey="/save">
                 <div className={styles['save-all']}>
+<<<<<<< HEAD
                   {wallCard.map((post) => (
                     <WallCard
                       key={post.id}
@@ -109,6 +134,24 @@ export default function Index(props) {
                       likeCount={post.like_count}
                     />
                   ))}
+=======
+                  <Masonry
+                    breakpointCols={breakpoint}
+                    className={styles['my-masonry-grid']}
+                    columnClassName={styles['my-masonry-grid_column']}
+                  >
+                    {wallCard.map((post) => (
+                      <WallCard
+                        key={post.id}
+                        imageSrc={`/post/${post.post_img}`}
+                        title={post.title}
+                        username={post.nickname}
+                        avatarSrc="/post/p1_1.webp"
+                        likeCount={post.like_count}
+                      />
+                    ))}
+                  </Masonry>
+>>>>>>> 813f3e1bab3fd999ee5d56364c1058051a4d2cbb
                 </div>
               </Tab.Pane>
             </Tab.Content>

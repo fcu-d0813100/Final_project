@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { PiNotePencilBold } from 'react-icons/pi'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import Masonry from 'react-masonry-css'
-import Header from '@/components/home/common/header'
 import WallCard from '@/components/post/common/wall-card'
 import axios from 'axios'
 import styles from './index.module.scss'
@@ -29,7 +28,6 @@ export default function PostWall(props) {
   }
   return (
     <>
-      <Header />
       <div className={styles['post-banner']}>
         <div className={styles['post-banner-text']}>
           <span>— Share & Save —</span>
@@ -63,10 +61,11 @@ export default function PostWall(props) {
             {wallCard.map((post) => (
               <WallCard
                 key={post.id}
+                href={`/post/${post.id}`}
                 imageSrc={`/post/${post.post_img}`}
                 title={post.title}
                 username={post.nickname}
-                avatarSrc={`/user/${post.user_img}` || '/post/user-img.png'}
+                avatarSrc={`/user/${post.user_img}`}
                 likeCount={post.like_count}
               />
             ))}

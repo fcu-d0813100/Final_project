@@ -37,7 +37,7 @@ export default function WorkshopCardLg({
               <h6 className="h6 mb-3">
                 開課時間
                 <br />
-                {beginDate}-{endDate}
+                {beginDate} - {endDate}
               </h6>
               <h4 className="h4 mb-3">NT${price}</h4>
               <div className={styles.wStatus}>
