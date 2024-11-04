@@ -121,17 +121,17 @@ router.post('/:postId/:userId/like', async (req, res) => {
 
   try {
     // 檢查是否已按讚
-    const sqlCheck = `SELECT * FROM post_like WHERE post_id = ? AND user_id = ?`
+    const sqlCheck = `SELECT * FROM post_like WHERE post_id = ${postId} AND user_id = ${userId}`
     const [rows] = await db.query(sqlCheck, [postId, userId])
 
     if (rows.length > 0) {
       // 已按讚 → 取消按讚
-      const sqlDelete = `DELETE FROM post_like WHERE post_id = ? AND user_id = ?`
+      const sqlDelete = `DELETE FROM post_like WHERE post_id = ${postId} AND user_id = ${userId}`
       await db.query(sqlDelete, [postId, userId])
       res.json({ status: 'success', message: '取消按讚成功' })
     } else {
       // 未按讚 → 加入按讚
-      const sqlInsert = `INSERT INTO post_like (post_id, user_id) VALUES (?, ?)`
+      const sqlInsert = `INSERT INTO post_like (post_id, user_id) VALUES (${postId}, ${userId})`
       await db.query(sqlInsert, [postId, userId])
       res.json({ status: 'success', message: '按讚成功' })
     }
@@ -147,7 +147,7 @@ router.get('/:postId/:userId/isSaved', async (req, res) => {
   // const userId = req.user.id // 中間件取得當前使用者的 userId
   try {
     const existingSave = await db.query(
-      'SELECT * FROM post_save WHERE user_id = (?) AND post_id = (?)',
+      `SELECT * FROM post_save WHERE user_id = ${userId} AND post_id = ${postId}`,
       [userId, postId]
     )
 
@@ -157,7 +157,7 @@ router.get('/:postId/:userId/isSaved', async (req, res) => {
 
     // 插入收藏
     await db.query(
-      'INSERT INTO post_save (user_id, post_id, created_at) VALUES (?, ?, NOW())',
+      `INSERT INTO post_save (user_id, post_id, created_at) VALUES ( ${postId}, ${postId}, NOW())`,
       [userId, postId]
     )
   } catch (err) {
@@ -171,12 +171,12 @@ router.post('/:postId/:userId/save', async (req, res) => {
 
   try {
     // 檢查是否已收藏
-    const sqlCheck = `SELECT * FROM post_save WHERE post_id = ? AND user_id = ?`
+    const sqlCheck = `SELECT * FROM post_save WHERE post_id =  ${postId} AND user_id =  ${userId}`
     const [rows] = await db.query(sqlCheck, [postId, userId])
 
     if (rows.length > 0) {
       // 已收藏 → 取消收藏
-      const sqlDelete = `DELETE FROM post_save WHERE post_id = ? AND user_id = ?`
+      const sqlDelete = `DELETE FROM post_save WHERE post_id = ${postId} AND user_id = ?`
       await db.query(sqlDelete, [postId, userId])
       res.json({ status: 'success', message: '取消收藏成功' })
     } else {
