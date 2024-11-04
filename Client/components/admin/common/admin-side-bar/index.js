@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks/use-auth'
+
 import {
   PiUser,
   PiLockOpen,
@@ -14,11 +16,12 @@ import {
 import styles from './index.module.scss'
 
 const navLinks = [
+  
   {
     href: '/admin/activity',
     icon: <PiClockCountdown size={65} />,
     label: '活動管理',
-    key: 'activity/upload',
+    key: 'activity',
   },
   {
     href: '/admin/coupon',
@@ -30,7 +33,7 @@ const navLinks = [
 
 export default function Index() {
   const router = useRouter()
-
+  const { logout } = useAuth()
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
       acc[link.key] = { hover: false, active: router.pathname === link.href }
@@ -91,7 +94,14 @@ export default function Index() {
               {link.label}
             </Nav.Link>
           ))}
-          <button className={`btn-logout h6 ${styles.out}`}>登出</button>
+          <button
+            className="btn-logout h6"
+            onClick={() => {
+              logout()
+            }}
+          >
+            登出
+          </button>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

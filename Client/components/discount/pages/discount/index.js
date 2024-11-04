@@ -1,25 +1,44 @@
 import React, { useEffect } from 'react';
-import Header from '@/components/home/common/header';
 import Image from 'next/image';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss'; // 確保引入正確的樣式
 import Link from 'next/link';
-import Footer from '@/components/home/common/footer'
+import Carousels from '@/components/discount/common/carousels'
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
+
+
 
 export default function Discount() {
-
-  useEffect(() => {
-    import('bootstrap/dist/js/bootstrap.bundle.min.js');
-  }, []);
+  const images = [
+    { src: '/discount/phone-size/beautique.svg', alt: 'Beautique 優惠', link: '/discount/nars2' },
+    { src: '/discount/phone-size/nars.svg', alt: 'NARS 優惠', link: '/discount/nars2' },
+    { src: '/discount/phone-size/nars1.svg', alt: 'NARS 優惠 1', link: '/discount/nars' },
+    { src: '/discount/phone-size/ysl.svg', alt: 'YSL 優惠', link: '/discount/ysl' },
+    { src: '/discount/phone-size/bb.svg', alt: 'BB 優惠', link: '/discount/bb' },
+  ];
+  const settings = {
+    dots: true, // 顯示指示器
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true, // 啟用自動播放
+    autoplaySpeed: 3000,
+    arrows: false, // 隱藏箭頭
+  };
 
   return (
     <>
-      <Header />
+
+      <Carousels />
       <div className={`container-sm ${styles.discountPage}`}>
         <div className={styles.nav}>
-          <a className="text-decoration-none" href="#">首頁</a> / 優惠活動
+          <Link href="/" className="text-decoration-none">
+            首頁
+          </Link> / 優惠活動
         </div>
-
         <section className={styles["discount-group"]}>
           <Link className={styles.discount} href="/discount/nars2">
             <img className={styles.img} src='/discount/nars-discount2.svg' alt="NARS 優惠" />
@@ -35,77 +54,26 @@ export default function Discount() {
           </Link>
         </section>
 
-        <div id="carouselExampleIndicators" className={`${styles.phoneSize} carousel slide`} data-bs-ride="carousel">
-          <div className={`carousel-indicators `}>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className={`active indicator ${styles.btn}`} aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" className={`indicator ${styles.btn}`} aria-label="Slide 2" />
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" className={`indicator ${styles.btn}`} aria-label="Slide 3" />
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" className={`indicator ${styles.btn}`} aria-label="Slide 4" />
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" className={`indicator ${styles.btn}`} aria-label="Slide 5" />
-          </div>
-          <div className='carousel-inner'>
-            <div className="carousel-item active">
-              <Link className={styles.discount} href="/discount/nars2">
-                <Image src="/discount/phone-size/beautique.svg"
-                  width={390}
-                  height={442}
-                  style={{ width: '100%', height: 'auto' }}
-                  className="d-block "
-                  alt="Beautique 優惠" />
-              </Link>
-            </div>
-
-            <div className="carousel-item">
-              <Link className={styles.discount} href="/discount/nars2">
-                <Image src="/discount/phone-size/nars.svg"
-                  width={390}
-                  height={442}
-                  style={{ width: '100%', height: 'auto' }}
-                  className="d-block "
-                  alt="NARS 優惠" />
-              </Link>
-            </div>
-            <div className="carousel-item">
-              <Link className={styles.discount} href="/discount/nars">
-                <Image src="/discount/phone-size/nars1.svg"
-                  width={390} height={442}
-                  style={{ width: '100%', height: 'auto' }}
-                  className="d-block "
-                  alt="NARS 優惠 1" />
-              </Link>
-            </div>
-            <div className="carousel-item">
-              <Link className={styles.discount} href="/discount/ysl">
-                <Image src="/discount/phone-size/ysl.svg"
-                  width={390}
-                  height={442}
-                  style={{ width: '100%', height: 'auto' }}
-                  className="d-block"
-                  alt="YSL 優惠" />
-              </Link>
-            </div>
-            <div className="carousel-item">
-              <Link className={styles.discount} href="/discount/bb">
-                <Image src="/discount/phone-size/bb.svg"
-                  width={390}
-                  height={442}
-                  style={{ width: '100%', height: 'auto' }}
-                  className="d-block"
-                  alt="BB 優惠" />
-              </Link>
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
+        <div className={`${styles.carouselContainer}`}>
+          <Slider {...settings}>
+            {images.map((image, idx) => (
+              <div key={idx} className={styles.carouselItem}>
+                <Link href={image.link}>
+                  <Image
+                    src={image.src}
+                    width={390}
+                    height={442}
+                    style={{ width: '100%', height: 'auto' }}
+                    alt={image.alt}
+                    className="d-block"
+                  />
+                </Link>
+              </div>
+            ))}
+          </Slider>
         </div>
       </div>
-      <Footer />
+
     </>
   );
 }
