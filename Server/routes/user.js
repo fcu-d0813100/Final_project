@@ -3,11 +3,10 @@ import db from '##/configs/mysql.js'
 import multer from 'multer'
 const upload = multer()
 const router = express.Router()
-import { generateHash } from '#db-helpers/password-hash.js'
 import jsonwebtoken from 'jsonwebtoken'
 // 中介軟體，存取隱私會員資料用
 import authenticate from '#middlewares/authenticate.js'
-
+import { generateHash, compareHash } from '##/db-helpers/password-hash.js'
 // 檢查空物件, 轉換req.params為數字
 import { getIdParam } from '#db-helpers/db-tool.js'
 
@@ -40,23 +39,6 @@ router.post('/register', upload.none(), async (req, res, next) => {
   try {
     const { email, password, name, account } = req.body
 
-    // 2. 看解構後的值
-    console.log('解構後的值:', {
-      email,
-      password,
-      name,
-      account,
-    })
-
-    // 3. 特別檢查 password
-    console.log('password 型別:', typeof password)
-    console.log('password 長度:', password ? password.length : 'undefined')
-
-    // 如果有值就執行插入
-    if (!password) {
-      throw new Error('密碼未接收到')
-    }
-
     // 4. 看要執行的 SQL 值
     console.log('準備插入的值:', [email, password, name, account])
     // 檢查是否已經有相同的email
@@ -74,7 +56,7 @@ router.post('/register', upload.none(), async (req, res, next) => {
       })
     }
 
-    const hashedPassword = await generateHash(password)(password)
+    const hashedPassword = await generateHash(password)
 
     const sql = `
       INSERT INTO user (
@@ -84,25 +66,14 @@ router.post('/register', upload.none(), async (req, res, next) => {
       )`
     const params = [name, account, hashedPassword, email]
 
-    // const params = [
-    //   name,
-    //   account,
-    //   email,
-    //   hashedPassword, // 使用加密後的密碼
-    //   // phone,
-    //   // birthdate || null,
-    //   // gender,
-    // ]
-
     const [result] = await db.query(sql, params)
     console.log('插入結果:', result)
 
     if (result.affectedRows === 1) {
-      // 成功插入
       return res.json({
         status: 'success',
         message: '註冊成功',
-        userId: result.insertId, // 取得新插入的 id
+        userId: result.insertId,
       })
     } else {
       throw new Error('資料插入失敗')
@@ -120,15 +91,24 @@ router.post('/register', upload.none(), async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   console.log(req.body)
   const loginUser = req.body
-  const [rows] = await db.query(
-    'SELECT * FROM user WHERE account = ? AND password = ?',
-    [loginUser.account, loginUser.password]
-  )
+  // 1.先用account查詢該會員
+
+  const [rows] = await db.query('SELECT * FROM user WHERE account = ?', [
+    loginUser.account,
+  ])
 
   if (rows.length === 0) {
-    return res.json({ status: 'error', message: '帳號或密碼錯誤' })
+    return res.json({ status: 'error', message: '該會員不存在' })
   }
+
   const dbUser = rows[0]
+
+  // 2. 比對密碼hash是否相同(返回true代表密碼正確)
+  const isValid = await compareHash(loginUser.password, dbUser.password)
+
+  if (!isValid) {
+    return res.json({ status: 'error', message: '密碼錯誤' })
+  }
   // console.log(dbUser)
   // 存取令牌(access token)只需要id和username就足夠，其它資料可以再向資料庫查詢
   // 不會修改的資料，避免使用者修改後又要重發
@@ -184,6 +164,23 @@ router.put('/', authenticate, async (req, res, next) => {
   //     [updateUser.name, updateUser.email, id]
   //   )
   // }
+
+  // 更新除了密碼以外的資料的寫法
+  result = await db.query(
+    'UPDATE `user` SET `name`=?,`email`=? `account`=? `nickname`=? `img`=? `gender`=? `phone`=? `address`=? ` updated_at`=? WHERE `id`=?;',
+    [
+      updateUser.name,
+      updateUser.email,
+      updateUser.account,
+      updateUser.nickname,
+      updateUser.img,
+      updateUser.gender,
+      updateUser.phone,
+      updateUser.address,
+      new Date(),
+      id,
+    ]
+  )
 
   const [rows2] = result
   console.log(rows2)
