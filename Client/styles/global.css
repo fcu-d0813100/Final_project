@@ -130,6 +130,7 @@ body {
   border: black solid 1px;
   background-color: black;
   color: white;
+  margin: 0;
 }
 .btn-primary:hover {
   border: black solid 1px;
@@ -146,6 +147,7 @@ body {
   background-color: white;
   color: black;
   box-sizing: border-box;
+  margin: 0;
 }
 .btn-secondary:hover {
   background-color: black;
@@ -161,6 +163,7 @@ body {
   color: #fff;
   border-radius: 3px;
   border: #963827 solid 1px;
+  margin: 0;
 }
 .btn-danger:hover {
   background-color: #6f2619;
@@ -175,6 +178,7 @@ body {
   color: #fff;
   border-radius: 3px;
   border: #90957a solid 1px;
+  margin: 0;
 }
 .btn-success:hover {
   background: #626553;
@@ -190,6 +194,7 @@ body {
   color: white;
   border: white solid 1px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  margin: 0;
 }
 .btn-outline:hover {
   background-color: rgba(0, 0, 0, 0.4);
@@ -203,6 +208,7 @@ body {
   border-radius: 3px;
   color: #626553;
   border: white solid 1px;
+  margin: 0;
 }
 .btn-logout:hover {
   opacity: 0.8;

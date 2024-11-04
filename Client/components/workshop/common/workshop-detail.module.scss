@@ -60,9 +60,11 @@
 .section02 {
   .checkDate {
     height: 230px;
+    width: 100%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     background: #ffffff;
     text-align: center;
+    border: none;
 
     .wDate {
       padding-bottom: 12px;
@@ -128,16 +130,18 @@
 
   .checkDateActive {
     color: white;
+    width: 100%;
     height: 230px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     background: black url(/workshop/cart_bg.jpg) center no-repeat;
     background-size: cover;
     text-align: center;
+    border: none;
 
     .wDate {
       padding-bottom: 12px;
       padding-inline: 20px;
-       border-bottom: solid 1px rgb(255, 255, 255);
+      border-bottom: solid 1px rgb(255, 255, 255);
       font-size: 36px;
       font-family: Noto Sans;
       font-weight: 600;
@@ -166,16 +170,17 @@
         transition: 0.4s;
       }
     }
-   
   }
-  
+
   //-------------
   .checkDateDisable {
     height: 230px;
+    width: 100%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     background: #ffffff;
     text-align: center;
     color: $gray-200;
+    border: none;
 
     .wDateDisable {
       padding-bottom: 12px;
@@ -246,11 +251,30 @@
 
 //----------------------------------------------
 .section03 {
-  height: 700px;
+  height: 550px;
+  filter: grayscale(80%);
+
   .fImg {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  div {
+    background-color: rgba(0, 0, 0, 0.433);
+    height: 550px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    h2 {
+      border-inline: 1px solid white;
+      padding: 20px 120px;
+    }
   }
 }
 
@@ -281,6 +305,7 @@
       border-right: 1px solid black;
       .context {
         line-height: 2.5rem;
+        white-space: pre-line;
       }
     }
   }
@@ -309,4 +334,7 @@
       object-fit: cover;
     }
   }
+}
+.noteContext {
+  white-space: pre-line;
 }

@@ -11,9 +11,7 @@ const ProductCarousel = () => {
   const images = [
     { src: '/activity/YSL4_1.png', alt: 'Image 1' },
     { src: '/activity/YSL2_1.png', alt: 'Image 2' },
-    // { src: '/product/ysl.png', alt: 'Image 3' },
     { src: '/activity/YSL3_1.png', alt: 'Image 4' },
-    // { src: '/activity/YSL1_1.png', alt: 'Image 5' },
   ]
 
   const goToSlide = (index) => {
@@ -25,14 +23,12 @@ const ProductCarousel = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (swiperRef.current) {
-        const nextIndex = (activeIndex + 1) % images.length
-        swiperRef.current.slideTo(nextIndex)
-        setActiveIndex(nextIndex)
+        swiperRef.current.slideNext()
       }
     }, 3000) // 每 3 秒切換一次
 
     return () => clearInterval(interval)
-  }, [activeIndex])
+  }, [])
 
   return (
     <div className={styles['carousel-container']}>
@@ -51,6 +47,7 @@ const ProductCarousel = () => {
               src={image.src}
               alt={image.alt}
               className={styles['carousel-image']}
+              priority={index === 0}
             />
           </SwiperSlide>
         ))}
@@ -69,3 +66,5 @@ const ProductCarousel = () => {
     </div>
   )
 }
+
+export default ProductCarousel
