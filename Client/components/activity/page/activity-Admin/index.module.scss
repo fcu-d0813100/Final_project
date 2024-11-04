@@ -1,0 +1,112 @@
+@import '@/styles/_variant.scss';
+
+.header {
+  background-color: $green-700;
+  height: 72px;
+  color: $gray-100;
+}
+.user-section {
+  display: flex;
+  // position: relative;
+  width: 100%;
+}
+
+.any-section {
+  // max-width: 100%;
+  padding: 70px 120px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.nav-link .link-style {
+  color: black;
+  text-decoration: none;
+  padding-top: 10px;
+  margin: 0 10px;
+
+  &:hover {
+    border-bottom: 2px $red-500 solid;
+    color: black;
+  }
+
+  &:active {
+    color: black;
+    border-bottom: 2px $red-500 solid;
+  }
+}
+
+.line {
+  border-top: 1px solid $gray-200;
+}
+
+.favorite-area {
+  margin-top: 100px;
+}
+
+.interested {
+  margin-top: 200px;
+}
+
+@media (max-width: 768px) {
+  .interested {
+    margin-top: 100px;
+  }
+
+  // main {
+  //   justify-content: center;
+  // }
+}
+
+// ------------------------------------
+.card-Area {
+  display: flex;
+
+  a {
+    text-decoration: none;
+  }
+
+  .new-act {
+    width: 270px;
+    height: 393px;
+    border: 3px dotted #b4b7a5;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .plus {
+      font-size: 60px;
+      padding: 10px;
+      border: 2.5px dashed $green-200;
+      color: $green-600;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .picUploadText {
+      color: $green-600;
+      span {
+        color: $gray-200;
+        transition: all 0.2s;
+      }
+    }
+    transition: all 0.2s;
+    &:hover {
+      background: rgb(209, 209, 209);
+      border: 3px dashed $green-400;
+      .plus {
+        border: 2.5px dashed $green-400;
+      }
+      span {
+        color: $gray-300;
+      }
+    }
+  }
+}

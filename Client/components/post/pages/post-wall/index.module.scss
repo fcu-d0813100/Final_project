@@ -59,6 +59,11 @@
     justify-content: center;
     flex-wrap: wrap;
     // gap: 25px;
+    a {
+      text-decoration: none;
+      color: #000;
+      // padding-bottom: 20px;
+    }
   }
 }
 .post-navbar {

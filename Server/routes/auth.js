@@ -11,7 +11,7 @@ import 'dotenv/config.js'
 // 資料庫使用
 import { QueryTypes } from 'sequelize'
 import sequelize from '#configs/db.js'
-const { User } = sequelize.models
+const { Users } = sequelize.models
 
 // 驗証加密密碼字串用
 import { compareHash } from '#db-helpers/password-hash.js'
@@ -22,13 +22,13 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 // 檢查登入狀態用
 router.get('/check', authenticate, async (req, res) => {
   // 查詢資料庫目前的資料
-  const user = await User.findByPk(req.user.id, {
+  const users = await Users.findByPk(req.users.id, {
     raw: true, // 只需要資料表中資料
   })
 
   // 不回傳密碼值
-  delete user.password
-  return res.json({ status: 'success', data: { user } })
+  delete users.password
+  return res.json({ status: 'success', data: { users } })
 })
 
 router.post('/login', async (req, res) => {
@@ -36,41 +36,41 @@ router.post('/login', async (req, res) => {
   const loginUser = req.body
 
   // 檢查從前端來的資料哪些為必要
-  if (!loginUser.username || !loginUser.password) {
+  if (!loginUser.account || !loginUser.password) {
     return res.json({ status: 'fail', data: null })
   }
 
   // 查詢資料庫，是否有這帳號與密碼的使用者資料
   // 方式一: 使用直接查詢
-  // const user = await sequelize.query(
-  //   'SELECT * FROM user WHERE username=? LIMIT 1',
-  //   {
-  //     replacements: [loginUser.username], //代入問號值
-  //     type: QueryTypes.SELECT, //執行為SELECT
-  //     plain: true, // 只回傳第一筆資料
-  //     raw: true, // 只需要資料表中資料
-  //     logging: console.log, // SQL執行呈現在console.log
-  //   }
-  // )
+  const users = await sequelize.query(
+    'SELECT * FROM users WHERE account=? LIMIT 1',
+    {
+      replacements: [loginUser.account], //代入問號值
+      type: QueryTypes.SELECT, //執行為SELECT
+      plain: true, // 只回傳第一筆資料
+      raw: true, // 只需要資料表中資料
+      logging: console.log, // SQL執行呈現在console.log
+    }
+  )
 
   // 方式二: 使用模型查詢
-  const user = await User.findOne({
-    where: {
-      username: loginUser.username,
-    },
-    raw: true, // 只需要資料表中資料
-  })
+  // const users = await Users.findOne({
+  //   where: {
+  //     account: loginUser.username,
+  //   },
+  //   raw: true, // 只需要資料表中資料
+  // })
 
-  // console.log(user)
+  // console.log(users)
 
-  // user=null代表不存在
-  if (!user) {
+  // users=null代表不存在
+  if (!users) {
     return res.json({ status: 'error', message: '使用者不存在' })
   }
 
   // compareHash(登入時的密碼純字串, 資料庫中的密碼hash) 比較密碼正確性
   // isValid=true 代表正確
-  const isValid = await compareHash(loginUser.password, user.password)
+  const isValid = await compareHash(loginUser.password, users.password)
 
   // isValid=false 代表密碼錯誤
   if (!isValid) {
@@ -78,11 +78,12 @@ router.post('/login', async (req, res) => {
   }
 
   // 存取令牌(access token)只需要id和username就足夠，其它資料可以再向資料庫查詢
+  // 不會修改的資料，避免使用者修改後又要重發
   const returnUser = {
-    id: user.id,
-    username: user.username,
-    google_uid: user.google_uid,
-    line_uid: user.line_uid,
+    id: users.id,
+    account: users.account,
+    google_uid: users.google_uid,
+    line_uid: users.line_uid,
   }
 
   // 產生存取令牌(access token)，其中包含會員資料

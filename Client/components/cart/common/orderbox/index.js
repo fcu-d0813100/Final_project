@@ -1,37 +1,71 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Accordion from 'react-bootstrap/Accordion'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import style from './order-box.module.scss'
+import { useCartProduct } from '@/hooks/use-cartP'
+import { useCartWorkshop } from '@/hooks/use-cartW'
 import Image from 'next/image'
 
 export default function OrderBox() {
+  // 從use-cartP鉤子取得商品內容
+  const { productItems = [] } = useCartProduct()
+  // 從use-cartW鉤子取得課程內容
+  const { workshopItems = [] } = useCartWorkshop()
+
+  // 取得商品圖片或課程圖片
+  const firstProductImage =
+    productItems.length > 0
+      ? `/product/mainimage/${productItems[0].mainimage}`
+      : null
+  const firstWorkshopImage =
+    workshopItems.length > 0
+      ? `/workshop/workshop_img/${workshopItems[0].typeId}-${workshopItems[0].id}-c.jpg`
+      : null
+
+  //生成時間戳記訂單編碼
+  const [orderNumber, setOrderNumber] = useState('')
+
+  const generateOrderNumber = () => {
+    const now = new Date()
+    const timestamp = now.toISOString().replace(/\D/g, '').slice(0, 14)
+    const randomCode = Math.floor(10 + Math.random() * 90)
+    return `${timestamp}-${randomCode}`
+  }
+  useEffect(() => {
+    setOrderNumber(generateOrderNumber())
+  }, [])
+
   return (
-    <>
+    <div className={style['order-box']}>
       <Accordion>
-        <Accordion.Item className={`${style['order']} ${style['order-header']}`} eventKey="0">
+        <Accordion.Item eventKey="0">
           <Accordion.Header className={style['order-header']}>
-            <div className={style['order-header']}>
-              <h5>訂單細節</h5>
-              <h6> 查看訂單</h6>
+            <div className={style['order-detail']}>
+              <div>
+                {firstProductImage ? (
+                  <Image
+                    src={firstProductImage}
+                    alt="First Product Image"
+                    width={140} // 設定圖片寬度
+                    height={140} // 設定圖片高度
+                  />
+                ) : firstWorkshopImage ? (
+                  <Image
+                    src={firstWorkshopImage}
+                    alt="First Workshop Image"
+                    width={100} // 設定圖片寬度
+                    height={100} // 設定圖片高度
+                  />
+                ) : (
+                  <span>無圖片</span>
+                )}
+              </div>
+              <div>訂單編號：{orderNumber}</div>
+              <div>查看訂單</div>
             </div>
-            {/* <div className={style['order-content']}>
-              <div className={style.pic}>
-                <Image
-                  src="/cart/LANCOME_LG01_M_888.webp"
-                  alt="訂單主圖片"
-                  width={100}
-                  height={100}
-                  className="img-fluid"
-                />
-              </div>
-              <div className={style.number}>
-                訂單編號：<span>A20241022</span>
-              </div>
-              <div className={style.content}></div>
-            </div> */}
           </Accordion.Header>
-          <Accordion.Body>
-            {/* 訂單細節box */}
-            <div className={style['order-list']}>
+          <Accordion.Body className={style['order-list']}>
+            <div>
               <table>
                 <thead>
                   <tr>
@@ -42,27 +76,44 @@ export default function OrderBox() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>高級奢華訂製唇膏</td>
-                    <td>春日私語</td>
-                    <td>1</td>
-                    <td>
-                      <span className={style['old-price']}>NT$1,200</span>
-                      <span className={style['new-price']}>NT$900</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>F19時尚攝影彩妝班</td>
-                    <td>2024/10/3 (四) 9:00 - 12:00 | 3hr</td>
-                    <td>2</td>
-                    <td>NT$6,000</td>
-                  </tr>
+                  {/* 商品資料 */}
+                  {productItems.map((v, i) => (
+                    <tr key={i}>
+                      <td>{v.product_name}</td>
+                      <td>{v.color}</td>
+                      <td>{v.qty}</td>
+                      <td>
+                        <span className={style['old-price']}>
+                          NT${(v.price * v.qty).toLocaleString()}
+                        </span>
+                        <span className={style['new-price']}>
+                          NT${(v.price * v.qty * 0.8).toLocaleString()}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {/* 課程資料 */}
+                  {workshopItems.map((v, i) => (
+                    <tr key={i}>
+                      <td>{v.name}</td>
+                      <td>{v.date}</td>
+                      <td>{v.qty}</td>
+                      <td>
+                        <span className={style['old-price']}>
+                          NT${(v.price * v.qty).toLocaleString()}
+                        </span>
+                        <span className={style['new-price']}>
+                          NT${(v.price * v.qty * 0.8).toLocaleString()}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-    </>
+    </div>
   )
 }

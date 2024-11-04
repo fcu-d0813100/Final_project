@@ -57,8 +57,8 @@ export function WorkshopCartProvider({ children }) {
   }
 
   // 計算課程總數量與總金額
-  const WtotalQty = workshopItems.reduce((acc, v) => acc + v.qty, 0)
-  const WtotalPrice = workshopItems.reduce((acc, v) => acc + v.qty * v.price, 0)
+  const wTotalQty = workshopItems.reduce((acc, v) => acc + v.qty, 0)
+  const wTotalPrice = workshopItems.reduce((acc, v) => acc + v.qty * v.price, 0)
 
   // 從localStorage中讀取資料，設定到items狀態中
   useEffect(() => {
@@ -78,8 +78,8 @@ export function WorkshopCartProvider({ children }) {
     <WorkshopCartContext.Provider
       value={{
         workshopItems,
-        WtotalPrice,
-        WtotalQty,
+        wTotalPrice,
+        wTotalQty,
         onAddWorkshop,
         onDecreaseWorkshop,
         onIncreaseWorkshop,
