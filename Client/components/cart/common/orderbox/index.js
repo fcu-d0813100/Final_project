@@ -32,7 +32,10 @@ export default function OrderBox() {
     return `${timestamp}-${randomCode}`
   }
   useEffect(() => {
-    setOrderNumber(generateOrderNumber())
+    const newOrderNumber = generateOrderNumber()
+    setOrderNumber(newOrderNumber)
+    // 將訂單編號存儲到localStorage
+    localStorage.setItem('orderNumber', newOrderNumber)
   }, [])
 
   return (
