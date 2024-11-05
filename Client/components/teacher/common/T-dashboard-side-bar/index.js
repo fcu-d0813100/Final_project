@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
+import { useTeacherAuth } from '@/hooks/use-teacher-auth'
 import {
   PiUser,
   PiLockOpen,
@@ -37,6 +38,7 @@ const navLinks = [
 
 export default function Sidebar() {
   const router = useRouter()
+  const { teacherLogout } = useTeacherAuth()
 
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
@@ -100,7 +102,14 @@ export default function Sidebar() {
           ))}
         </Nav>
       </Navbar.Collapse>
-      <button className="btn-logout">登出</button>
+      <button
+        onClick={() => {
+          teacherLogout()
+        }}
+        className="btn-logout"
+      >
+        登出
+      </button>
     </Navbar>
   )
 }

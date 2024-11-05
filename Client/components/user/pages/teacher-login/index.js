@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import { PiEyeClosed } from "react-icons/pi";
-import Link from 'next/link'
+// import { PiEyeClosed } from 'react-icons/pi'
+import { useTeacherAuth } from '@/hooks/use-teacher-auth'
 
 export default function TeacherLogin(props) {
+  const [account, setAccount] = useState('')
+  const [password, setPassword] = useState('')
+
+  const { teacherLogin } = useTeacherAuth()
+  // checkbox 呈現密碼用
+  // const [showPassword, setShowPassword] = useState(false)
+
   return (
     <>
       <div className={styles['bg-img']}>
@@ -19,12 +26,14 @@ export default function TeacherLogin(props) {
                 className={`d-flex flex-column align-items-center justify-content-center ${styles['card-img']}`}
               >
                 <h2 className={styles['logo']}>Beautique</h2>
-                <h3 className={styles['slogan']}>
-                  WELCOME！Makeup Artist              </h3>
+                <h3 className={styles['slogan']}>WELCOME！Makeup Artist </h3>
                 <h6 className={`h6 ${styles['text']}`}>
-                  我們的專業，成就您的美麗。<br />
-                  課程由業界資深化妝師親自授課，擁有豐富的經驗和技巧，<br />將前沿的化妝技術傳授給學員。</h6>
-
+                  我們的專業，成就您的美麗。
+                  <br />
+                  課程由業界資深化妝師親自授課，擁有豐富的經驗和技巧，
+                  <br />
+                  將前沿的化妝技術傳授給學員。
+                </h6>
               </div>
               {/* 登入表單區塊 */}
 
@@ -39,28 +48,51 @@ export default function TeacherLogin(props) {
                   </label>
                   <input
                     type="text"
-                    id="username"
+                    value={account}
+                    onChange={(e) => {
+                      setAccount(e.target.value)
+                    }}
                     className={styles['line-input']}
-                    placeholder="請輸入帳號/信箱"
+                    placeholder="請輸入教師帳號"
                   />
-                  <div className={`${styles['input-area']} ${styles['line-input-pw']}`}>
+                  <div
+                    className={`${styles['input-area']} ${styles['line-input-pw']}`}
+                  >
                     <label htmlFor="password" className={styles['text-input']}>
                       密碼
                     </label>
                     <input
                       type="password"
-                      id="password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value)
+                      }}
                       className={`${styles['line-input']} `}
-                      placeholder="請輸入英文字母及數字"
+                      placeholder="請輸入教師密碼"
                     />
-                    <PiEyeClosed className={styles.eyeiclosed} />
+                    {/* <PiEyeClosed className={styles.eyeiclosed} /> */}
                   </div>
 
                   <div className="d-grid col-12 pt-4">
-                    <button className={`btn-primary h6 ${styles['btn-primary']}`}>
+                    <button
+                      onClick={() => {
+                        teacherLogin(account, password)
+                      }}
+                      className={`btn-primary h6 ${styles['btn-primary']}`}
+                    >
                       登入
                     </button>
                   </div>
+                  {/*  */}
+                  <button
+                    onClick={() => {
+                      setAccount('Terry-Barber')
+                      setPassword('12345')
+                    }}
+                  >
+                    一鍵輸入
+                  </button>
+                  {/*  */}
                 </div>
               </div>
             </div>
