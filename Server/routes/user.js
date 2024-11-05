@@ -8,7 +8,7 @@ import jsonwebtoken from 'jsonwebtoken'
 import authenticate from '#middlewares/authenticate.js'
 import { generateHash, compareHash } from '##/db-helpers/password-hash.js'
 // 檢查空物件, 轉換req.params為數字
-import { getIdParam } from '#db-helpers/db-tool.js'
+// import { getIdParam } from '#db-helpers/db-tool.js'
 
 // 定義安全的私鑰字串
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
@@ -35,7 +35,7 @@ router.get('/', authenticate, async function (req, res) {
 })
 
 // 註冊
-router.post('/register', upload.none(), async (req, res, next) => {
+router.post('/register', upload.none(), async (req, res) => {
   try {
     const { email, password, name, account } = req.body
 
@@ -90,7 +90,7 @@ router.post('/register', upload.none(), async (req, res, next) => {
 })
 
 // 登入
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res) => {
   console.log(req.body)
   const loginUser = req.body
   // 1.先用account查詢該會員
@@ -145,7 +145,7 @@ router.post('/logout', authenticate, (req, res) => {
 })
 
 // 更新會員資料
-router.put('/', authenticate, async (req, res, next) => {
+router.put('/', authenticate, async (req, res) => {
   // id可以用jwt的存取令牌(accessToken)從authenticate中得到(如果有登入的話)
   const id = req.user.id
 

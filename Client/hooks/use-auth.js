@@ -90,7 +90,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // 模擬會員登入
+  // 會員登入
   const login = async (account, password) => {
     // 向伺服器作fetch
     const res = await fetch('http://localhost:3005/api/user/login', {
