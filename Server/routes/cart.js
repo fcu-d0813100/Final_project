@@ -2,6 +2,7 @@ import express from 'express'
 const router = express.Router()
 import db from '#configs/db.js'
 
+//訂單提交路由
 router.post('/checkout', async function (req, res, next) {
   try {
     console.log(req.body) // 應該會顯示接收到的 JSON 資料
@@ -12,6 +13,9 @@ router.post('/checkout', async function (req, res, next) {
       deliveryMethod,
       orderNumber,
       totalDiscountPrice,
+      recipient_city,
+      recipient_district,
+      recipient_address,
       storename,
       storeaddress,
       productCart,
@@ -19,17 +23,15 @@ router.post('/checkout', async function (req, res, next) {
     } = req.body
 
     //確認分解資料正確
-    console.log(paymentMethod, deliveryMethod, orderNumber, totalDiscountPrice)
+    // console.log(paymentMethod, deliveryMethod, orderNumber, totalDiscountPrice)
+    let shippingAddress;
+    if (deliveryMethod == 1) {
+      shippingAddress = `${recipient_city} ${recipient_district} ${recipient_address}`;
+    } else {
+      shippingAddress = `${storename} ${storeaddress}`;
+    }
     const shippingId = deliveryMethod
     const paymentId = paymentMethod
-    const shippingAddress = `${storename} ${storeaddress}`
-    console.log(
-      orderNumber,
-      totalDiscountPrice,
-      shippingAddress,
-      shippingId,
-      paymentId
-    )
 
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
@@ -84,7 +86,7 @@ router.post('/checkout', async function (req, res, next) {
 
 export default router
 
-//測試
+//測試訂單提交
 // import express from 'express'
 // const router = express.Router()
 // import db from '#configs/db.js'
