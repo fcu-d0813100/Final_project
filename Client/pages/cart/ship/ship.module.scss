@@ -1,0 +1,20 @@
+@import '@/styles/_variant.scss';
+
+.button {
+  background-color: $green-500;
+  border: none;
+  padding: 5px 20px;
+  color: #fff;
+  border-radius: 3px;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.text {
+  margin-block: 20px;
+}
+
+.title {
+  color: $green-600;
+}

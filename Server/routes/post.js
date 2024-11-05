@@ -2,32 +2,278 @@ import express from 'express'
 const router = express.Router()
 import db from '#configs/db.js'
 import multer from 'multer'
-// import { rest } from 'lodash'
-// import { ne } from '@faker-js/faker'
+import path from 'path'
+// import { post } from 'request'
 
-const upload = multer()
+// upload image
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads')
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
+  },
+})
+const upload = multer({ storage: storage })
+router.use(
+  '/public/post',
+  express.static(path.join(import.meta.dirname, 'post'))
+)
 
-// render post-wall page
-router.get('/post_wall', async function (req, res, next) {
-  const sqlSelect = `SELECT 
-        post.id, 
-        post.title, 
-        user.id AS user_id,
-        user.nickname, 
-        user.img AS user_img, 
-        COUNT(post_like.id) AS like_count,
-        (SELECT pic FROM post_image WHERE post_image.post_id = post.id LIMIT 1) AS post_img
-      FROM 
-        post
-      JOIN 
-        user ON post.user_id = user.id
-      LEFT JOIN 
-        post_like ON post.id = post_like.post_id
-      GROUP BY    
-        post.id, user.id, user.img, user.nickname`
-  const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
+// create post  put
+router.post(
+  '/post_create',
+  upload.array('file'),
+  async function (req, res, next) {
+    const { user_id, title, content, tags } = req.body
+    const uploadedFiles = req.files.map((file) => file.filename)
+
+    // post table
+    const sqlInsertPost = `
+      INSERT INTO post (user_id, title, content, created_at) VALUES (?, ?, ?, NOW())
+    `
+
+    const [postResult] = await db.query(sqlInsertPost, [
+      user_id,
+      title,
+      content,
+    ])
+    const postId = postResult.insertId
+
+    // post_tag table  Set去重
+    const existingTags = await db.query(
+      'SELECT id,name FROM post_tag WHERE name IN (?)',
+      [tags]
+    )
+    const existingTagsIds = existingTags[0].map((tag) => tag.id)
+    const existingTagsNames = new Set(existingTags[0].map((tag) => tag.name))
+
+    const newTags = tags.filter((tag) => !existingTagsNames.has(tag))
+    let newTagIds = []
+
+    if (newTags.length > 0) {
+      const sqlInsertTag = `
+        INSERT INTO post_tag (name) VALUES ${newTags.map(() => '(?)').join(', ')}
+      `
+      const [newTagsResult] = await db.query(sqlInsertTag, newTags)
+      const firstNewTagId = newTagsResult.insertId
+      newTagIds = Array.from(
+        { length: newTags.length },
+        (_, i) => firstNewTagId + i
+      )
+    }
+    const tagIds = [...existingTagsIds, ...newTagIds]
+
+    // post_tag_relation table
+    const sqlInsertTagRelation = `
+      INSERT INTO post_tag_relation (post_id, tag_id) VALUES ${tagIds
+        .map(() => '(?, ?)')
+        .join(', ')} `
+    const relationValues = tagIds.flatMap((tagId) => [postId, tagId])
+    await db.query(sqlInsertTagRelation, relationValues)
+    // post_image table
+    if (uploadedFiles.length > 0) {
+      const sqlInsertImage = `
+        INSERT INTO post_image (post_id, user_id, pic, uploaded_at) VALUES ${uploadedFiles
+          .map(() => '(?, ?, ?, NOW())')
+          .join(', ')}
+      `
+      const imageValues = uploadedFiles.flatMap((pic) => [postId, user_id, pic])
+      await db.query(sqlInsertImage, imageValues)
+    }
+    res.json({
+      status: 'success',
+      message: `ID:${postId}貼文、圖片和標籤插入成功 `,
+    })
+  }
+)
+
+// update post - post
+
+// delete post - delete
+
+// check if post is liked - render
+router.get('/:postId/:userId/isLiked', async (req, res) => {
+  const { postId, userId } = req.params
+
+  try {
+    // 檢查是否已按讚
+    const existingLike = await db.query(
+      `SELECT * FROM post_like WHERE user_id = ${userId} AND post_id = ${postId}`,
+      [userId, postId]
+    )
+
+    if (existingLike.length > 0) {
+      return res.status(200).json({ isLiked: true, message: '已按讚此貼文' })
+    } else {
+      return res.status(200).json({ isLiked: false, message: '尚未按讚此貼文' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法檢查按讚狀態' })
+  }
+})
+
+// like post - toggle
+router.post('/:postId/:userId/like', async (req, res) => {
+  const { postId, userId } = req.params
+
+  try {
+    // 檢查是否已按讚
+    const sqlCheck = `SELECT * FROM post_like WHERE post_id = ? AND user_id = ?`
+    const [rows] = await db.query(sqlCheck, [postId, userId])
+
+    if (rows.length > 0) {
+      // 已按讚 → 取消按讚
+      const sqlDelete = `DELETE FROM post_like WHERE post_id = ? AND user_id = ?`
+      await db.query(sqlDelete, [postId, userId])
+      res.json({ status: 'success', message: '取消按讚成功' })
+    } else {
+      // 未按讚 → 加入按讚
+      const sqlInsert = `INSERT INTO post_like (post_id, user_id) VALUES (?, ?)`
+      await db.query(sqlInsert, [postId, userId])
+      res.json({ status: 'success', message: '按讚成功' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法更新按讚狀態' })
+  }
+})
+
+// check if post is saved post - render
+router.get('/:postId/:userId/isSaved', async (req, res) => {
+  const { postId, userId } = req.params
+  // const userId = req.user.id // 中間件取得當前使用者的 userId
+  try {
+    const existingSave = await db.query(
+      'SELECT * FROM post_save WHERE user_id = (?) AND post_id = (?)',
+      [userId, postId]
+    )
+
+    if (existingSave.length > 0) {
+      return res.status(400).json({ message: '已收藏此貼文' })
+    }
+
+    // 插入收藏
+    await db.query(
+      'INSERT INTO post_save (user_id, post_id, created_at) VALUES (?, ?, NOW())',
+      [userId, postId]
+    )
+  } catch (err) {
+    console.error(err)
+    res.json(500).json({ error: '伺服器錯誤，無法檢查收藏狀態' })
+  }
+})
+// save post - toggle
+router.post('/:postId/:userId/save', async (req, res) => {
+  const { postId, userId } = req.params
+
+  try {
+    // 檢查是否已收藏
+    const sqlCheck = `SELECT * FROM post_save WHERE post_id = ? AND user_id = ?`
+    const [rows] = await db.query(sqlCheck, [postId, userId])
+
+    if (rows.length > 0) {
+      // 已收藏 → 取消收藏
+      const sqlDelete = `DELETE FROM post_save WHERE post_id = ? AND user_id = ?`
+      await db.query(sqlDelete, [postId, userId])
+      res.json({ status: 'success', message: '取消收藏成功' })
+    } else {
+      // 未收藏 → 加入收藏
+      const sqlInsert = `INSERT INTO post_save (post_id, user_id) VALUES (?, ?)`
+      await db.query(sqlInsert, [postId, userId])
+      res.json({ status: 'success', message: '收藏成功' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法更新收藏狀態' })
+  }
+})
+
+// like comment - render
+// like comment - toggle
+
+router.post('/', async function (req, res, next) {})
+// render post-wall page sort/order/search/tags
+router.get('/', async function (req, res, next) {
+  const {
+    sort = 'total_count',
+    order = 'DESC',
+    search = '',
+    tags = '',
+    postId = '',
+  } = req.query
+
+  // console.log(tags)
+
+  let sqlSelect = `  SELECT 
+      post.*, 
+      user.id AS user_id,
+      user.nickname, 
+      user.img AS user_img, 
+      GROUP_CONCAT(DISTINCT post_tag.name) AS tags,
+      COUNT(DISTINCT post_like.id) AS like_count,
+      COUNT(DISTINCT post_comment.id) AS comment_count,
+      (COUNT(DISTINCT post_like.id) + COUNT(DISTINCT post_comment.id)) AS total_count,
+      (SELECT pic FROM post_image WHERE post_image.post_id = post.id LIMIT 1) AS post_img
+    FROM 
+      post
+    JOIN 
+      user ON post.user_id = user.id
+    LEFT JOIN 
+      post_like ON post.id = post_like.post_id
+    LEFT JOIN
+      post_comment ON post.id = post_comment.post_id
+    LEFT JOIN
+      post_tag_relation ON post.id = post_tag_relation.post_id
+    LEFT JOIN
+        post_tag ON post_tag_relation.tag_id = post_tag.id
+  `
+  const conditions = []
+  const params = []
+
+  //
+  if (postId) {
+    conditions.push(`post.id != '${postId}'`)
+  }
+  // search
+  if (search) {
+    conditions.push(
+      `post.title LIKE '%${search}%' OR post.content LIKE '%${search}%' OR post_tag.name LIKE '%${search}%'`
+    )
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`)
+    // sqlSelect += `WHERE post.title LIKE '%${search}%' OR post.content LIKE '%${search}%' OR post_tag.name LIKE '%${search}%'`
+  }
+  //tags
+  if (tags.length > 0) {
+    const tagsArray = Array.isArray(tags) ? tags : [tags]
+    const tagsConditions = tagsArray
+      .map((tag) => `post_tag.name LIKE '%${tag}%'`)
+      .join(' OR ')
+    conditions.push(`(${tagsConditions})`)
+    tagsArray.forEach((tag) => params.push(`%${tag}%`))
+  }
+  //條件
+  if (conditions.length > 0) {
+    sqlSelect += ` WHERE ${conditions.join(' AND ')} `
+  }
+
+  sqlSelect += `
+    GROUP BY
+      post.id, user.id, user.img, user.nickname
+    ORDER BY
+      ${sort === 'created_at' ? 'post.created_at' : 'total_count'} ${order},post.created_at DESC; 
+    `
+
+  // console.log('SQL Query:', sqlSelect)
+  // console.log('Parameters:', params)
+  const [result] = await db
+    .query(sqlSelect, params)
+    .catch((e) => console.log(e))
   res.json(result)
 })
+
 // render post-detail 指定id
 const nestComments = (comments) => {
   const map = {}
@@ -47,11 +293,13 @@ const nestComments = (comments) => {
 
   return roots
 }
-/* RECURSIVE :第1次查詢的結果賦值給 CommentHierarchy */
-/* 第1次基礎查詢:查詢根評論->沒有parent_id的comment.id */
-/* 第2次遞迴查詢:查詢子評論->查找根評論是否有子評論 */
-/* 重複遞迴查詢:以最新的CommentHierarchy 更新ch.comment_id，找出新加入的子評論 */
-/* ch:表示CommentHierarchy父評論  pc:表示post_comment子評論*/
+/* 
+RECURSIVE :第1次查詢的結果賦值給 CommentHierarchy 
+第1次基礎查詢:查詢根評論->沒有parent_id的comment.id 
+第2次遞迴查詢:查詢子評論->查找根評論是否有子評論 
+重複遞迴查詢:以最新的CommentHierarchy 更新ch.comment_id，找出新加入的子評論 
+ch:表示CommentHierarchy父評論  pc:表示post_comment子評論
+*/
 router.get('/post_wall/:postId', async function (req, res, next) {
   const sqlSelect = `
     WITH RECURSIVE CommentHierarchy AS (
@@ -165,6 +413,7 @@ router.get('/post_wall/:postId', async function (req, res, next) {
       ...others
     }) => others
   )
+
   // console.log(nextPostData)
   const nestedComments = nestComments(flatComments)
   const post = {
@@ -174,7 +423,7 @@ router.get('/post_wall/:postId', async function (req, res, next) {
   res.json({ status: 'success', post })
 })
 
-// render user-post-publish 指定id count是錯的
+// render user-post-publish 指定id的user
 router.get('/post_publish/:userId', async function (req, res, next) {
   const sqlSelect = `SELECT 
         post.id, 
@@ -208,7 +457,7 @@ router.get('/post_publish/:userId', async function (req, res, next) {
   res.json(result)
 })
 
-// 獲取 特定ID user-post-save
+// render user-post-save 特定ID
 router.get('/post_save/:userId', async function (req, res, next) {
   const sqlSelect = `SELECT 
         post.id, 
@@ -270,28 +519,21 @@ router.get('/post_publish/:userId/:postId', async function (req, res, next) {
   res.json(result)
 })
 
-// create post  put
-router.put('/post_create', async function (req, res, next) {
-  const sqlInert = ``
-  const [result] = await db.query(sqlInert).catch((e) => console.log(e))
-  res.json(result)
-})
-// update post  put
-// delete 特定ID delete
-
 // create comment
-router.put('/post_create', async function (req, res, next) {
-  const sqlInert = ``
-  const [result] = await db.query(sqlInert).catch((e) => console.log(e))
-  res.json(result)
-})
-// update comment
-router.post('/', async function (req, res, next) {})
-// delete comment
+router.post('/comment_create', async function (req, res, next) {
+  const { userId, postId, content, parentId, created_at } = req.body
+  const sqlInsert = `INSERT INTO post_comment 
+    (post_id, user_id, content, parent_id, created_at)
+    VALUES (${postId}, ${userId}, '${content}', ${parentId}, '${created_at}')`
 
-// like post
-// save post
-// like comment
+  const [result] = await db.query(sqlInsert, [
+    postId,
+    userId,
+    content,
+    parentId || null,
+  ])
+  res.json({ status: 'success', message: '留言成功' }, result)
+})
 
 // tags search
 router.get('/tags', async function (req, res, next) {
@@ -306,7 +548,9 @@ router.get('/tags', async function (req, res, next) {
   const [result] = await db.query(sqlSelect)
   res.json(result)
 })
-// search 熱門排序
-// search 最新排序
-// search 指定關鍵字
+
 export default router
+
+// update comment
+
+// delete comment

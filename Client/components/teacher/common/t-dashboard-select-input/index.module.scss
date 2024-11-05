@@ -1,7 +1,7 @@
 @import '@/styles/_variant.scss';
 
 .selectArea {
-     position: relative;
+  position: relative;
   span {
     color: $green-500;
     font-size: 14px;
@@ -17,19 +17,16 @@
     background: white;
     text-decoration: none;
     color: black;
-
   }
   button:focus {
     outline: none;
     border: 2px solid $green-500;
     background: $gray-100;
   }
-  ul{
+  ul {
     list-style: none;
   }
 }
-
-
 
 .dropdownMenu {
   position: absolute;
@@ -44,16 +41,16 @@
   padding: 0;
   margin: 0;
   list-style: none;
+
+  max-height: 200px; /* 設置最大高度 */
+  overflow-y: auto; /* 超出範圍時顯示垂直滾動條 */
+
   li {
-  padding: 8px 12px;
-  cursor: pointer;
-  &:hover{
-    background-color: $green-600;
-    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    &:hover {
+      background-color: $green-600;
+      color: white;
+    }
   }
 }
-}
-
-
-
-

@@ -6,56 +6,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 
-// export default function index({
-
-//   name = '王美美',
-//   nickname = 'Bella',
-//   email = 'bella32@gmail.com',
-//   birthday = '2001.05.05',
-//   gender = '女士',
-//   phone = '0912345678',
-//   address = '台北市信義區市府路1號',
-//   Img = '',
-//   created_at = '2023.05.05',
-//   updated_at = '2024.10.05',
-//   points = '100',
-// })
-
 export default function UserInfo() {
   const { auth } = useAuth()
+  // 從勾子的 context 獲取更新和獲取用戶資訊的函式
 
-  // 從勾子的context得到註冊函式
-  // const { update, getUser } = useAuth()
-  // // 狀態為物件，屬性對應到表單的欄位名稱
-  // const [user, setUser] = useState({
-  //   name: '',
-  //   account: '',
-  //   // password: '',
-  //   // confirmPassword: '',
-  //   nickname: '',
-  //   gender: '',
-  //   birthday: '',
-  //   email: '',
-  //   Img: '',
-  //   phone: '',
-  //   address: '',
-  //   created_at: '',
-  //   updated_at: '',
-  //   // points: '',
-  // })
-  // const { auth } = useAuth()
-  // // 初始化會員資料
-  // const initUserData = async () => {
-  //   const user = await getUser()
-  //   // 這是要更改密碼才會有的欄位
-  //   // setUser({ ...member, password: '', confirmPassword: '' })
-  //   setUser(user)
-  // }
-
-  // // 本頁一開始render後就會設定到user狀態中
-  // useEffect(() => {
-  //   initUserData()
-  // }, [])
   return (
     <>
       <UserSection titleCN="個人資訊" titleENG="Information">
@@ -85,7 +39,7 @@ export default function UserInfo() {
                         <th>
                           生日<span> | birthday</span>
                         </th>
-                        <td>{auth.userData.bityhday}</td>
+                        <td>{auth.userData.birthday}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -98,7 +52,14 @@ export default function UserInfo() {
                         <th>
                           稱謂<span> | title</span>
                         </th>
-                        <td>{auth.userData.gender}</td>
+                        <td>
+                          {' '}
+                          {auth.userData.gender === 1
+                            ? '男士'
+                            : auth.userData.gender === 2
+                            ? '女士'
+                            : ''}
+                        </td>
                       </tr>
                       <tr>
                         <th>
@@ -124,7 +85,7 @@ export default function UserInfo() {
               width={255}
               height={255}
               className={styles.img}
-              src="/user/img/avatar02.jpg"
+              src={`/user/img/${auth.userData.img}`}
               alt=""
             />
           </div>
@@ -220,9 +181,9 @@ export default function UserInfo() {
               </div>
             </div>
             <div className="col-10 pt-3 mt-3 justify-content-center  gap-5 d-flex align-items-center">
-              <Image src="/user/regular.svg" alt="" width={224} height={172} />
-              <Image src="/user/platinum.svg" alt="" width={224} height={172} />
-              <Image src="/user/diamond.svg" alt="" width={224} height={172} />
+              <Image src="/user/regular.svg" alt="" width={250} height={192} />
+              <Image src="/user/platinum.svg" alt="" width={250} height={192} />
+              <Image src="/user/diamond.svg" alt="" width={250} height={192} />
             </div>
           </div>
         </div>

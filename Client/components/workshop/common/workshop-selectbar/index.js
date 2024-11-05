@@ -1,4 +1,5 @@
 'use client'
+import Dropdown from '@/components/workshop/common/dropdown'
 import styles from '@/components/workshop/common/workshops.module.scss'
 import Image from 'next/image'
 import { PiMagnifyingGlass, PiCaretDown, PiArrowRight } from 'react-icons/pi'
@@ -25,96 +26,55 @@ export default function WorkshopSelectbar(props) {
           </div>
 
           <div className="d-flex">
-            <div className="dropdown mx-3">
-              <a
-                href="#"
-                className={`${styles.dropdownTitle} p d-flex align-content-center justify-content-between`}
-                data-bs-toggle="dropdown"
-              >
-                <p>老師</p>
-                <PiCaretDown className="ph" />
-              </a>
-              <div className={`dropdown-menu ${styles.dropdownMenu}`}>
-                <a href="#" className="dropdown-item my-1">
-                  老師名
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  老師名
-                </a>
-              </div>
-            </div>
+            <Dropdown
+              name="老師"
+              items={[
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+                { option: '老師名', link: '' },
+              ]}
+            />
 
-            <div className="dropdown mx-3">
-              <a
-                href="#"
-                className={`${styles.dropdownTitle} p d-flex align-content-center justify-content-between`}
-                data-bs-toggle="dropdown"
-              >
-                <p>狀態</p>
-                <PiCaretDown className="ph" />
-              </a>
-              <div className={`dropdown-menu ${styles.dropdownMenu}`}>
-                <a href="#" className="dropdown-item my-1">
-                  報名中
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  已截止
-                </a>
-              </div>
-            </div>
+            <Dropdown
+              name="狀態"
+              items={[
+                { option: '報名中', link: '' },
+                { option: '已截止', link: '' },
+              ]}
+            />
 
-            <div className="dropdown mx-3">
-              <a
-                href="#"
-                className={`${styles.dropdownTitle} p d-flex align-content-center justify-content-between`}
-                data-bs-toggle="dropdown"
-              >
-                <p>類型</p>
-                <PiCaretDown className="ph" />
-              </a>
-              <div className={`dropdown-menu ${styles.dropdownMenu}`}>
-                <a href="#" className="dropdown-item my-1">
-                  基礎化妝
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  新娘化妝
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  時尚與攝影化妝
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  韓系美妝
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  特效化妝
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  美妝產品知識
-                </a>
-              </div>
-            </div>
+            <Dropdown
+              name="類型"
+              items={[
+                { option: '基礎化妝', link: '' },
+                { option: '新娘化妝', link: '' },
+                { option: '時尚與攝影化妝', link: '' },
+                { option: '韓系美妝', link: '' },
+                { option: '特效化妝', link: '' },
+                { option: '美妝產品知識', link: '' },
+              ]}
+            />
 
-            <div className="dropdown mx-3">
-              <a
-                href="#"
-                className={`${styles.dropdownTitle} p d-flex align-content-center justify-content-between`}
-                data-bs-toggle="dropdown"
-              >
-                <p>排序</p>
-                <PiCaretDown className="ph" />
-              </a>
-              <div className={`dropdown-menu ${styles.dropdownMenu}`}>
-                <a href="#" className="dropdown-item my-1">
-                  價錢 高 -- 低
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  價錢 低 -- 高
-                </a>
-                <a href="#" className="dropdown-item my-1">
-                  最新上架
-                </a>
-              </div>
-            </div>
+            <Dropdown
+              name="排序"
+              items={[
+                { option: '價錢 高 -- 低', link: '' },
+                { option: '價錢 低 -- 高', link: '' },
+                { option: '最新上架', link: '' },
+               
+              ]}
+            />
+
+  
           </div>
         </div>
       </div>

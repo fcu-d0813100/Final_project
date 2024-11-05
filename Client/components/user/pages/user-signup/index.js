@@ -338,6 +338,7 @@ export default function RegisterForm() {
                   <div className="col-12 d-flex justify-content-center align-items-center">
                     <Link href="/user/login">
                       <button
+                        type="button"
                         className={`btn-outline h6 ${styles['btn-outline']}`}
                       >
                         立即登入
@@ -350,8 +351,8 @@ export default function RegisterForm() {
                           name: 'test',
                           email: 'test@gg.com',
                           account: 'test',
-                          password: '111111',
-                          confirmPassword: '111111',
+                          password: '12345',
+                          confirmPassword: '12345',
                           agree: true, // checkbox 同意會員註冊條款
                         })
                       }}

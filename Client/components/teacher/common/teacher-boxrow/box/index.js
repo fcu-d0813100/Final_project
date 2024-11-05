@@ -5,10 +5,10 @@ import styles from '@/components/teacher/common/teachers.module.scss'
 import Image from 'next/image'
 import { PiArrowRight } from 'react-icons/pi'
 
-export default function TeacherBox({ blackImg, colorImg, name, type, nation, years }) {
+export default function TeacherBox({ tid,blackImg, colorImg, name, type, nation, years }) {
   return (
     <>
-      <a href="#" className="flex-grow-1">
+      <a href={`/teacher/detail/${tid}`} className="flex-grow-1 ">
         <div className={`${styles.tBlack} d-flex`}>
           <div className={`${styles.blackImg} flex-grow-1`}>
             <Image
@@ -29,8 +29,12 @@ export default function TeacherBox({ blackImg, colorImg, name, type, nation, yea
             src={colorImg}
             alt=""
           />
-          <div className={styles.textContent}>
-            <h1 className={`h3-L ${styles.tName}`}>{name}</h1>
+          <div
+            className={`${styles.textContent} d-flex flex-column align-items-end`}
+          >
+            <div>
+              <h1 className={`h3-L ${styles.tName}`}>{name}</h1>
+            </div>
             <div className={styles.information}>
               <div className="h5">Main skills</div>
               <div className={styles.tDetail}>
