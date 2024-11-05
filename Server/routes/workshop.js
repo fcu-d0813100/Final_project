@@ -43,6 +43,30 @@ LEFT JOIN
   //console.log(result)
 })
 
+router.get('/', async function (req, res, next) {
+  const { search = '' } = req.query
+  const sqlSelect = `
+    SELECT 
+    workshop.name,
+    teachers.name AS teachers_name,
+    workshop_type.type AS workshop_type_type
+
+    FROM
+      workshop
+    JOIN
+      teachers ON  workshop.teachers_id = teachers.id 
+    LEFT JOIN
+      workshop_type ON workshop.type_id = workshop_type.id
+    WHERE 
+      workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%' AND workshop.valid = 1
+  `
+  const result = await db
+    .query(sqlSelect, [`%${search}%`, `%${search}%`, `%${search}%`])
+    .catch((e) => console.log(e))
+  res.json(result)
+  console.log(result)
+})
+
 router.get('/:wid', async function (req, res, next) {
   //   const { wid } = req.params
   const sqlSelect = `SELECT
