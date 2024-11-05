@@ -23,7 +23,7 @@ export default function Checkout() {
   const totalDiscountPrice = discountedPTotalPrice + discountedWTotalPrice
 
   //----------物流
-  const [deliveryMethod, setDeliveryMethod] = useState('宅配') // 預設選擇宅配
+  const [deliveryMethod, setDeliveryMethod] = useState('home') // 預設選擇宅配
 
   //----------付款方式
   const [paymentMethod, setPaymentMethod] = useState('cod') // 預設付款方式為貨到付款
@@ -40,22 +40,22 @@ export default function Checkout() {
       setPaymentMethod(savedPaymentMethod)
     }
 
-    // 檢查 URL 中是否有 deliveryMethod 查詢參數
+    // 檢查 URL 中是否有 deliveryMethod 查詢參數(711的)
     if (router.query.deliveryMethod) {
-      // 清除查詢參數
       router.replace(router.pathname, undefined, { shallow: true })
     }
   }, [router.query])
 
+  // 儲存到 localStorage
   const handleDeliveryChange = (method) => {
     setDeliveryMethod(method)
-    localStorage.setItem('deliveryMethod', method) // 儲存到 localStorage
+    localStorage.setItem('deliveryMethod', method)
   }
-
+  // 儲存到 localStorage
   const handlePaymentChange = (event) => {
     const method = event.target.value
     setPaymentMethod(method)
-    localStorage.setItem('paymentMethod', method) // 儲存到 localStorage
+    localStorage.setItem('paymentMethod', method)
   }
 
   //------------送出預設訂單
@@ -67,7 +67,7 @@ export default function Checkout() {
     const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
     const orderNumber = localStorage.getItem('orderNumber')
 
-    if (deliveryMethod === '宅配') {
+    if (deliveryMethod === 'home') {
       orderData = {
         deliveryMethod: 1,
         recipient_name: document.querySelector('input[name="recipient_name"]')
@@ -93,11 +93,8 @@ export default function Checkout() {
       const store711 = JSON.parse(localStorage.getItem('store711'))
       orderData = {
         deliveryMethod: 2,
-        storeid: store711.storeid,
         storename: store711.storename,
         storeaddress: store711.storeaddress,
-        outside: store711.outside,
-        ship: store711.ship,
         productCart,
         Workshopcart,
         orderNumber,
@@ -107,7 +104,7 @@ export default function Checkout() {
 
     // 根據付款方式進行處理
     if (paymentMethod === 'cod') {
-      orderData.paymentMethod = '1'
+      orderData.paymentMethod = 1
       // 直接插入訂單到資料庫
       try {
         const response = await axios.post(
@@ -121,6 +118,7 @@ export default function Checkout() {
         console.error('提交訂單失敗', error)
       }
     } else if (paymentMethod === 'ecPay') {
+      orderData.paymentMethod = 2
       // 在此處理串接金流的邏輯
       // 可能需要引導用戶到支付頁面
       console.log('請求綠界支付...')
@@ -160,10 +158,10 @@ export default function Checkout() {
                         type="radio"
                         label="宅配"
                         name="deliveryMethod"
-                        id="deliveryMethod宅配"
-                        value="宅配"
-                        checked={deliveryMethod === '宅配'}
-                        onChange={() => handleDeliveryChange('宅配')}
+                        id="deliveryMethodhome"
+                        value="home"
+                        checked={deliveryMethod === 'home'}
+                        onChange={() => handleDeliveryChange('home')}
                       />
                       <Form.Check
                         type="radio"
@@ -176,7 +174,7 @@ export default function Checkout() {
                       />
                     </Form.Group>
 
-                    {deliveryMethod === '宅配' ? (
+                    {deliveryMethod === 'home' ? (
                       <div className={style['shipping-form']}>
                         {/* 宅配資料表單 */}
                         <Form.Group className="mb-3" controlId="recipient-name">
@@ -220,10 +218,10 @@ export default function Checkout() {
                                 <option value="" disabled selected>
                                   選擇縣市
                                 </option>
-                                <option value="taipei">台北市</option>
-                                <option value="taichung">台中市</option>
-                                <option value="kaohsiung">高雄市</option>
-                                <option value="taoyuan">桃園市</option>
+                                <option value="台北市">台北市</option>
+                                <option value="台中市">台中市</option>
+                                <option value="高雄市">高雄市</option>
+                                <option value="桃園市">桃園市</option>
                               </Form.Select>
                             </Form.Group>
                           </Col>
@@ -234,10 +232,10 @@ export default function Checkout() {
                                 <option value="" disabled selected>
                                   選擇區
                                 </option>
-                                <option value="zhongzheng">中正區</option>
-                                <option value="daan">大安區</option>
-                                <option value="xinyi">信義區</option>
-                                <option value="neihu">內湖區</option>
+                                <option value="中正區">中正區</option>
+                                <option value="大安區">大安區</option>
+                                <option value="信義區">信義區</option>
+                                <option value="內湖區">內湖區</option>
                               </Form.Select>
                             </Form.Group>
                           </Col>
