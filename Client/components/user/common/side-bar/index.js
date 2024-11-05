@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Nav, Navbar } from 'react-bootstrap';
-import { useRouter } from 'next/router';
-import { useAuth } from '@/hooks/use-auth';
+import React, { useState, useEffect } from 'react'
+import { Nav, Navbar } from 'react-bootstrap'
+import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks/use-auth'
 
 import {
   PiUser,
@@ -12,8 +12,8 @@ import {
   PiListPlus,
   PiClockCountdown,
   PiTicket,
-} from 'react-icons/pi';
-import styles from './index.module.scss';
+} from 'react-icons/pi'
+import styles from './index.module.scss'
 
 const navLinks = [
   {
@@ -64,54 +64,61 @@ const navLinks = [
     label: '優惠券',
     key: 'coupon',
   },
-];
+]
 
 export default function Index() {
-  const router = useRouter();
-  const { logout, auth } = useAuth(); // 使用 useAuth 获取登录状态和 userId
+  const router = useRouter()
+  const { logout, auth } = useAuth() // 使用 useAuth 获取登录状态和 userId
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
-      acc[link.key] = { hover: false, active: router.pathname === link.href };
-      return acc;
+      acc[link.key] = { hover: false, active: router.pathname === link.href }
+      return acc
     }, {})
-  );
+  )
 
-  const userId = auth.isAuth ? auth.userData.id : null; // 从 useAuth 获取 userId
+  const userId = auth.isAuth ? auth.userData.id : null // 从 useAuth 获取 userId
 
   useEffect(() => {
     setLinkState((prev) => {
-      const newLinkState = { ...prev };
+      const newLinkState = { ...prev }
       navLinks.forEach((link) => {
-        newLinkState[link.key].active = router.pathname === link.href;
-      });
-      return newLinkState;
-    });
-  }, [router.pathname]);
+        newLinkState[link.key].active = router.pathname === link.href
+      })
+      return newLinkState
+    })
+  }, [router.pathname])
 
   const handleMouseEnter = (key) => {
     setLinkState((prev) => ({
       ...prev,
       [key]: { ...prev[key], hover: true },
-    }));
-  };
+    }))
+  }
 
   const handleMouseLeave = (key) => {
     setLinkState((prev) => ({
       ...prev,
       [key]: { ...prev[key], hover: false },
-    }));
-  };
+    }))
+  }
 
   return (
     <Navbar expand="lg" className={styles['nav']}>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" className={styles['toggle-btn']} />
-      <Navbar.Collapse id="basic-navbar-nav" className={`${styles['collapse']} justify-content-center`}>
+      <Navbar.Toggle
+        aria-controls="basic-navbar-nav"
+        className={styles['toggle-btn']}
+      />
+      <Navbar.Collapse
+        id="basic-navbar-nav"
+        className={`${styles['collapse']} justify-content-center`}
+      >
         <Nav>
           {navLinks.map((link) => {
             // 动态更新所有链接，基于 userId 动态拼接路径
-            const updatedHref = userId && link.href.includes('/user/')
-              ? `${link.href}/${userId}`  // 如果是 '/user' 开头的链接，动态加上 userId
-              : link.href; // 否则保持原路径不变
+            const updatedHref =
+              userId && link.href.includes('/user/')
+                ? `${link.href}/${userId}` // 如果是 '/user' 开头的链接，动态加上 userId
+                : link.href // 否则保持原路径不变
 
             return (
               <Nav.Link
@@ -130,12 +137,12 @@ export default function Index() {
                 {link.icon}
                 {link.label}
               </Nav.Link>
-            );
+            )
           })}
           <button
             className="btn-logout h6"
             onClick={() => {
-              logout();
+              logout()
             }}
           >
             登出
@@ -143,5 +150,5 @@ export default function Index() {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
-  );
+  )
 }
