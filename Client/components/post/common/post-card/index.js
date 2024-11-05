@@ -8,12 +8,11 @@ import {
   PiHeartStraightFill,
   PiChatCircle,
 } from 'react-icons/pi'
-import { usePost } from '@/hooks/post/use-post'
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
-
+import { usePost } from '@/hooks/post/use-post'
+import { useAuth } from '@/hooks/use-auth'
 import styles from './index.module.scss'
 import ReplyInfo from '../reply-info'
-import { Images, ImageSquare, SelectionSlash } from '@phosphor-icons/react'
 export default function PostCard1({
   postAuthor,
   authorAvatar,
@@ -26,12 +25,33 @@ export default function PostCard1({
   commentCount,
   postCreateTime,
 }) {
-  const [active, setActive] = useState({})
+  const { postId } = usePost()
+  const { auth } = useAuth()
+  const [active, setActive] = useState({ 1: null, 2: null, 3: false })
   const [inputValue, setInputValue] = useState('')
   const [focus, setFocus] = useState(false)
   const [user, setUser] = useState('')
   const [reply, setReply] = useState('')
-  const [index, setIndex] = useState(0)
+  const userId = auth.userData.id
+
+  // const [index, setIndex] = useState(0)
+  // const [isSaved, setIsSaved] = useState(false)
+  // Like Init (only if user is logged in)
+  useEffect(() => {
+    if (auth.isAuth) {
+      fetch(`/api/post/${postId}/${userId}/isLiked`)
+        .then((res) => res.json())
+        .then((data) => {
+          setActive((prevState) => ({
+            ...prevState,
+            1: data.isLiked, // icon id 1 是按赞
+          }))
+          console.log(data.isLiked)
+        })
+        .catch((err) => console.error(err))
+    }
+  }, [postId, userId, auth.isAuth])
+
   const icons = [
     {
       id: 1,
@@ -55,9 +75,8 @@ export default function PostCard1({
     : ''
   // console.log(postImages)
   let { post } = usePost()
-
   if (!post) {
-    return <p>Loading...</p>
+    return <p></p>
   }
   const { comments } = post
 
@@ -73,13 +92,14 @@ export default function PostCard1({
     setReply(text)
     setFocus(true)
   }
-  const iconHandle = (iconId) => {
-    //先複製原本的狀態 然後動態搜尋 改相反
-    setActive((prevState) => ({
-      ...prevState,
-      [iconId]: !prevState[iconId],
-    }))
-  }
+  // const iconHandle = (iconId) => {
+  //   //先複製原本的狀態 然後動態搜尋 改相反
+  //   setActive((prevState) => ({
+  //     ...prevState,
+  //     [iconId]: !prevState[iconId],
+  //   }))
+  // }
+
   // const SelectHandle = (index, e) => {
   //   const imagesCount = postImages.split(',').length
   //   if (index === 0 && e?.direction === 'next' && index === imagesCount - 1) {
@@ -118,7 +138,7 @@ export default function PostCard1({
           <div className={styles['post-user']}>
             <Image
               className={styles['user-image']}
-              src={`/user/${authorAvatar}`}
+              src={`/user/img/${authorAvatar}`}
               alt="User Image"
               width={40}
               height={40}
@@ -151,6 +171,7 @@ export default function PostCard1({
                     onReplyClick={replyHandle}
                     comments={comment}
                     commentAuthor={comment.comment_author_nickname}
+                    commentAuthorAvatar={comment.comment_author_img}
                     commentCreateTime={comment.created_at}
                     commentContent={comment.comment_content}
                     commentLikeCount={comment.comment_like_count}
@@ -179,9 +200,8 @@ export default function PostCard1({
                 <div className={styles['comment-icons']}>
                   {icons.map((icon) => (
                     <div key={icon.id}>
-                      <div onClick={(e) => iconHandle(icon.id)}>
-                        {active[icon.id] ? icon.active : icon.default}
-                      </div>
+                      {/* onClick={(e) => iconHandle(icon.id)} */}
+                      <div>{active[icon.id] ? icon.active : icon.default}</div>
                       <span>
                         {icon.id === 1
                           ? likeCount

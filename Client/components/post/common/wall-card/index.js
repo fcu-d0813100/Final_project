@@ -5,6 +5,7 @@ import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
 
 import styles from './index.module.scss'
 export default function Index({
+  postId,
   href,
   imageSrc,
   title,
@@ -12,6 +13,20 @@ export default function Index({
   username,
   likeCount,
 }) {
+  const [isSaved, setIsSaved] = useState(null)
+  useEffect(() => {
+    // 發送 API 請求取得收藏狀態
+    fetch(`/api/posts/${postId}/isSaved`)
+      .then((res) => res.json())
+      .then((data) => {
+        // 根據 API 返回的狀態更新 isSaved，假設返回的狀態為布林值
+        setIsSaved(data.isSaved)
+      })
+      .catch((err) => {
+        console.error(err)
+        setIsSaved(false) // 若發生錯誤，設定為未收藏
+      })
+  }, [postId])
   return (
     <>
       <div className={styles['post-card1']}>

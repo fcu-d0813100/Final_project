@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { format } from 'date-fns'
+import { useRouter } from 'next/router'
 import { PiChatCircle } from 'react-icons/pi'
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
 import DeleteModal from '@/components/shared/modal-delete'
@@ -15,7 +17,10 @@ export default function Index({
   commentCount,
 }) {
   const [showModal, setShowModal] = useState(false)
-
+  const formattedTime = createTime
+    ? format(new Date(createTime), 'yyyy-MM-dd HH:mm')
+    : ''
+  const router = useRouter()
   return (
     <>
       {showModal && (
@@ -34,10 +39,12 @@ export default function Index({
 
         <div className={styles['post-info']}>
           <div className={styles['post-info-main']}>
-            <div className={`${styles['post-main-title']} ${styles['h5']}`}>
+            <div className={`${styles['post-main-title']} h5`}>
               {title}
               <div className={styles['ps']}>
-                <Link href={`/user/post/edit/${postId}`}>編輯</Link>
+                <button onClick={() => router.push('/user/post/edit')}>
+                  編輯
+                </button>
                 <button onClick={() => setShowModal(true)}>刪除</button>
               </div>
             </div>
@@ -55,7 +62,7 @@ export default function Index({
               </div>
             </div>
             <div className={styles['post-date']}>
-              <span>{createTime}</span>
+              <span>{formattedTime}</span>
             </div>
           </div>
         </div>
