@@ -10,6 +10,7 @@ export default function ReplyInfo({
   onReplyClick = () => {},
   comments,
   commentAuthor,
+  commentAuthorAvatar,
   commentCreateTime,
   commentContent,
   commentLikeCount,
@@ -55,7 +56,7 @@ export default function ReplyInfo({
         >
           <Image
             className={styles['user-image']}
-            src={`/post/p3_1.webp`}
+            src={`/user/img/${commentAuthorAvatar}`}
             alt="User Image"
             width={40}
             height={40}
@@ -92,6 +93,7 @@ export default function ReplyInfo({
             onReplyClick={onReplyClick}
             comments={comments.children[0]}
             commentAuthor={comments.children[0].comment_author_nickname}
+            commentAuthorAvatar={comments.children[0].comment_author_img}
             commentCreateTime={comments.children[0].created_at}
             commentContent={comments.children[0].comment_content}
             commentLikeCount={comments.children[0].comment_like_count}
@@ -114,6 +116,7 @@ export default function ReplyInfo({
               onReplyClick={onReplyClick}
               comments={childComment}
               commentAuthor={childComment.comment_author_nickname}
+              commentAuthorAvatar={childComment.comment_author_img}
               commentCreateTime={childComment.created_at}
               commentContent={childComment.comment_content}
               commentLikeCount={childComment.comment_like_count}

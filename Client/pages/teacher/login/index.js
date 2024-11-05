@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import TeacherLogin from '@/components/user/pages/teacher-login'
+import { TeacherAuthProvider } from '@/hooks/use-teacher-auth'
 
-export default function Index(props) {
+const TeacherLoginPage = () => {
   return (
-    <>
+    <TeacherAuthProvider>
       <TeacherLogin />
-    </>
+    </TeacherAuthProvider>
   )
 }
+
+export default TeacherLoginPage

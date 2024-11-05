@@ -221,3 +221,11 @@ body {
 .ph {
   font-size: 24px;
 }
+
+.form-check-input {
+  border: 1px solid black;
+  &:checked {
+    background-color: $green-500;
+    border-color: $green-500;
+  }
+}

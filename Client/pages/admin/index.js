@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import AdimSection from '@/components/admin/pages/admin-section'
-export default function Index(props) {
+import AdminSection from '@/components/admin/pages/admin-section'
+import { AdminAuthProvider } from '@/hooks/use-admin'
+
+const AdminLoginPage = () => {
   return (
     <>
-     <AdimSection/>
+      <AdminAuthProvider>
+        <AdminSection />
+      </AdminAuthProvider>
     </>
   )
 }
+export default AdminLoginPage

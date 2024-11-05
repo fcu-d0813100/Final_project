@@ -1,14 +1,32 @@
 import express from 'express'
 import db from '##/configs/mysql.js'
 import multer from 'multer'
-const upload = multer()
-const router = express.Router()
+
 import jsonwebtoken from 'jsonwebtoken'
 // 中介軟體，存取隱私會員資料用
 import authenticate from '#middlewares/authenticate.js'
 import { generateHash, compareHash } from '##/db-helpers/password-hash.js'
+
+const upload = multer()
+const router = express.Router()
 // 檢查空物件, 轉換req.params為數字
-import { getIdParam } from '#db-helpers/db-tool.js'
+// import { getIdParam } from '#db-helpers/db-tool.js'
+
+// // multer的設定值 - START
+// const storage = multer.diskStorage({
+//   destination: function (req, file, callback) {
+//     // 存放目錄
+//     callback(null, 'public/avatar/')
+//   },
+//   filename: function (req, file, callback) {
+//     // 經授權後，req.user帶有會員的id
+//     const newFilename = req.user.id
+//     // 新檔名由表單傳來的req.body.newFilename決定
+//     callback(null, newFilename + path.extname(file.originalname))
+//   },
+// })
+// const upload = multer({ storage: storage })
+// // multer的設定值 - END
 
 // 定義安全的私鑰字串
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
@@ -35,14 +53,14 @@ router.get('/', authenticate, async function (req, res) {
 })
 
 // 註冊
-router.post('/register', upload.none(), async (req, res, next) => {
+router.post('/register', upload.none(), async (req, res) => {
   try {
     const { email, password, name, account } = req.body
 
     // 4. 看要執行的 SQL 值
-    console.log('準備插入的值:', [email, password, name, account])
+    // console.log('準備插入的值:', [email, password, name, account])
     // 檢查是否已經有相同的email
-    console.log('開始資料庫操作')
+    // console.log('開始資料庫操作')
     // 帳號密碼重複認證
     const [existingUser] = await db.query(
       'SELECT * FROM user WHERE email = ? OR account = ?',
@@ -90,7 +108,7 @@ router.post('/register', upload.none(), async (req, res, next) => {
 })
 
 // 登入
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res) => {
   console.log(req.body)
   const loginUser = req.body
   // 1.先用account查詢該會員
@@ -145,55 +163,83 @@ router.post('/logout', authenticate, (req, res) => {
 })
 
 // 更新會員資料
-router.put('/', authenticate, async (req, res, next) => {
-  // id可以用jwt的存取令牌(accessToken)從authenticate中得到(如果有登入的話)
-  const id = req.user.id
+router.put(
+  '/',
+  authenticate,
+  // upload.single('img'), // 上傳來的檔案(這是單個檔案，表單欄位名稱為avatar)
+  async (req, res) => {
+    // id可以用jwt的存取令牌(accessToken)從authenticate中得到(如果有登入的話)
+    const id = req.user.id
 
-  // 這裡可以檢查
-  const updateUser = req.body
+    // 這裡可以檢查
+    const updateUser = req.body
 
-  let result = null
+    let result = null
 
-  // 這是一起更新密碼的寫法
-  // if (updateUser.password) {
-  //   result = await db.query(
-  //     'UPDATE `user` SET `name`=?,`password`=?,`email`=? WHERE `id`=?;',
-  //     [updateUser.name, updateUser.password, updateUser.email, id]
-  //   )
-  // } else {
-  //   result = await db.query(
-  //     'UPDATE `user` SET `name`=?,`email`=? WHERE `id`=?;',
-  //     [updateUser.name, updateUser.email, id]
-  //   )
-  // }
+    // 這是一起更新密碼的寫法
+    // if (updateUser.password) {
+    //   result = await db.query(
+    //     'UPDATE `user` SET `name`=?,`password`=?,`email`=? WHERE `id`=?;',
+    //     [updateUser.name, updateUser.password, updateUser.email, id]
+    //   )
+    // } else {
+    //   result = await db.query(
+    //     'UPDATE `user` SET `name`=?,`email`=? WHERE `id`=?;',
+    //     [updateUser.name, updateUser.email, id]
+    //   )
+    // }
 
-  // 更新除了帳號密碼以外的資料的寫法
-  result = await db.query(
-    'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?,birthday=? ,`updated_at`=? WHERE `id`=?;',
-    [
-      updateUser.name,
-      updateUser.email,
-      updateUser.nickname,
-      updateUser.img,
-      updateUser.gender,
-      updateUser.phone,
-      updateUser.address,
-      updateUser.birthday,
-      new Date(),
-      id,
-    ]
-  )
+    // const imgFileName = req.file ? req.file.filename : updateUser.img
 
-  const [rows2] = result
-  console.log(rows2)
+    // 更新除了帳號密碼以外的資料的寫法
+    result = await db.query(
+      'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?,birthday=? ,`updated_at`=? WHERE `id`=?;',
+      [
+        updateUser.name,
+        updateUser.email,
+        updateUser.nickname,
+        updateUser.img,
+        // imgFileName, // 使用上傳的檔案名稱
+        updateUser.gender,
+        updateUser.phone,
+        updateUser.address,
+        updateUser.birthday,
+        new Date(),
+        id,
+      ]
+    )
 
-  // 檢查是否有產生影響欄位affectedRows，代表新增成功
-  if (rows2.affectedRows) {
-    return res.json({ status: 'success', data: null })
-  } else {
-    return res.json({ status: 'error', message: '更新到資料庫失敗' })
-    // 沒有更新
+    const [rows2] = result
+    console.log(rows2)
+
+    // 檢查是否有產生影響欄位affectedRows，代表新增成功
+    if (rows2.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+      // 沒有更新
+    }
   }
-})
+)
+
+// // DELETE - 刪除會員資料
+// router.delete('/:id', async function (req, res) {
+//   const affectedRows = await User.destroy({
+//     where: {
+//       id,
+//     },
+//   })
+
+//   // 沒有刪除到任何資料 -> 失敗或沒有資料被刪除
+//   if (!affectedRows) {
+//     return res.json({
+//       status: 'fail',
+//       message: 'Unable to detele.',
+//     })
+//   }
+
+//   // 成功
+//   return res.json({ status: 'success', data: null })
+// })
 
 export default router

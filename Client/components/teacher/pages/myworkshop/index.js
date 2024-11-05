@@ -13,6 +13,7 @@ import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
 import React, { useState, useEffect } from 'react'
+import { Link } from 'phosphor-react'
 
 export default function MyWorkshop(props) {
   return (
@@ -81,7 +82,7 @@ export default function MyWorkshop(props) {
             <button>垃圾桶</button>
           </div>
           <div className={`${styles.workshopArea}`}>
-            <div className={`${styles.myWorkshop}`}>
+            <button className={`${styles.myWorkshop}`}>
               <div className="d-flex">
                 <div className={styles.imgArea}>
                   <Image
@@ -89,6 +90,7 @@ export default function MyWorkshop(props) {
                     width={190}
                     className={styles.coverImg}
                     src="/workshop/workshop_img/1-1-c.jpg"
+                    alt=""
                   />
                 </div>
                 <div className={styles.infoText}>
@@ -99,24 +101,27 @@ export default function MyWorkshop(props) {
               </div>
 
               <div className={styles.priceAndStatus}>
-                <h4 className="h4 m-0 me-4">NT$3200</h4>
+                <h4 className="h4 m-0 me-3">NT$3200</h4>
                 {/* <p className={`ps ${styles.unUpload}`}>未發布</p> */}
                 {/* <p className={`ps ${styles.registering}`}>報名中</p> */}
                 {/* <p className={`ps ${styles.end}`}>已截止</p> */}
                 <p className={`ps ${styles.expired}`}>已過期</p>
               </div>
 
-              <div className="ph">
-                <PiTrash />
-                <PiExport />
-                <button className="h6">編輯</button>
+              <div href="#" className="ph d-flex gap-1">
+                <button className={styles.trash}>
+                  <PiTrash />
+                </button>
+                <button className={styles.upload}>
+                  <PiExport className="ph" />
+                </button>
+                <button className={`${styles.editBtn} h6 mx-2`}>
+                  編輯 <PiArrowRight className={`${styles.arrow} ph ms-2`}/>
+                </button>
               </div>
-            </div>
+            </button>
 
-            <div className={`${styles.myWorkshop}`}></div>
-            <div className={`${styles.myWorkshop}`}></div>
-            <div className={`${styles.myWorkshop}`}></div>
-            <div className={`${styles.myWorkshop}`}></div>
+          
           </div>
         </div>
       </div>
