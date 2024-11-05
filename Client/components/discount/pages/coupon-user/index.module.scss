@@ -1,13 +1,5 @@
 @import '@/styles/_variant.scss';
 
-.history {
-    color: $green-500;
-
-    &:hover {
-        color: $green-800;
-    }
-}
-
 .right {
     .btn {
         background-color: transparent;
@@ -26,6 +18,7 @@
         background-color: #000;
         color: #fff;
         align-content: center;
+        border: #000 solid 1px;
 
         &:hover {
             background: transparent;
