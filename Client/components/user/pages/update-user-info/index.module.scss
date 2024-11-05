@@ -7,6 +7,9 @@
   object-fit: cover;
 
 }
+.center-title{
+  color:$green-800;
+}
 
 .info .form-control2 {
   border-radius: 5px;
@@ -19,7 +22,7 @@
   }
 }
 
-.form-select2 {
+.info .form-select2 {
   border-radius: 5px;
   box-shadow: 5px #e9ecef;
   border: 1px solid $gray-200;
@@ -72,4 +75,12 @@
 
 .address-margin {
   margin-bottom: 100px;
+}
+
+.info .error{
+  color: $red-500;
+}
+
+.explain{
+  color: $green-800;
 }

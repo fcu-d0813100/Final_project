@@ -1,0 +1,82 @@
+@import '@/styles/_variant.scss';
+
+.nav {
+  width: 300px;
+  background-color: $green-800;
+  //flex-direction: column;
+  position: sticky; /* 使用 sticky 定位 */
+  top: 0; /* 到達視窗頂部時固定 */
+  height: 100vh;
+  overflow-y: auto;
+  float: left;
+  //position: relative;
+
+  .collapse {
+    width: 100%;
+    padding-bottom: 500px;
+
+    & > div {
+      flex-direction: column;
+      flex: 1;
+      gap: 30px;
+      padding-top: 0px;
+      text-align: center;
+
+      & > a {
+        position: relative;
+        color: $gray-100;
+        padding: 20px 114px;
+        // margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+          display: none;
+        }
+
+        &.active {
+          border-bottom: 1.5px solid $gray-100;
+          color: $gray-100;
+
+          svg {
+            position: absolute;
+            left: 0;
+            padding: 21.5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+            color: $green-700;
+            margin-right: 50px;
+            display: inline;
+          }
+        }
+
+        &.hover {
+          color: #fff;
+
+          svg {
+            position: absolute;
+            left: 0;
+            padding: 21.5px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+            // color: $green-700;
+            margin-right: 50px;
+            display: inline;
+            // display: none;
+          }
+        }
+      }
+    }
+  }
+
+  button {
+    //margin-block: 70px;
+    height: 50px;
+    position: absolute;
+    left: 50px;
+    bottom: 70px;
+  }
+}
