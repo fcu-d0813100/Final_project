@@ -47,9 +47,11 @@
         .ps {
           display: flex;
           visibility: hidden;
+          font-size: 16px;
           @media (max-width: 390px) {
             display: none;
           }
+          a,
           button {
             border: none;
             padding: 10px;

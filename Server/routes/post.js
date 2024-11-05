@@ -3,89 +3,106 @@ const router = express.Router()
 import db from '#configs/db.js'
 import multer from 'multer'
 import path from 'path'
+import { fileURLToPath } from 'url'
 // import { post } from 'request'
-
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 // upload image
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads')
+    cb(null, 'public/upload')
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-    cb(null, uniqueSuffix + path.extname(file.originalname))
+    cb(null, 'post-' + uniqueSuffix + path.extname(file.originalname))
   },
 })
 const upload = multer({ storage: storage })
-router.use(
-  '/public/post',
-  express.static(path.join(import.meta.dirname, 'post'))
-)
 
-// create post  put
+router.use('/upload', express.static(path.join(__dirname, 'public/upload')))
+// router.use(
+//   '/public/post',
+//   express.static(path.join(import.meta.dirname, 'post'))
+// )
+
+// create post put
 router.post(
   '/post_create',
-  upload.array('file'),
+  upload.array('files'),
   async function (req, res, next) {
-    const { user_id, title, content, tags } = req.body
-    const uploadedFiles = req.files.map((file) => file.filename)
+    try {
+      const { userId, title, content, tags } = req.body
+      const uploadedFiles = req.files.map((file) => file.filename)
+      console.log('Uploaded files:', req.files)
 
-    // post table
-    const sqlInsertPost = `
-      INSERT INTO post (user_id, title, content, created_at) VALUES (?, ?, ?, NOW())
-    `
-
-    const [postResult] = await db.query(sqlInsertPost, [
-      user_id,
-      title,
-      content,
-    ])
-    const postId = postResult.insertId
-
-    // post_tag table  Set去重
-    const existingTags = await db.query(
-      'SELECT id,name FROM post_tag WHERE name IN (?)',
-      [tags]
-    )
-    const existingTagsIds = existingTags[0].map((tag) => tag.id)
-    const existingTagsNames = new Set(existingTags[0].map((tag) => tag.name))
-
-    const newTags = tags.filter((tag) => !existingTagsNames.has(tag))
-    let newTagIds = []
-
-    if (newTags.length > 0) {
-      const sqlInsertTag = `
-        INSERT INTO post_tag (name) VALUES ${newTags.map(() => '(?)').join(', ')}
+      // post table 插入貼文
+      const sqlInsertPost = `
+        INSERT INTO post (user_id, title, content, created_at) VALUES (${userId}, '${title}', '${content}', NOW())
       `
-      const [newTagsResult] = await db.query(sqlInsertTag, newTags)
-      const firstNewTagId = newTagsResult.insertId
-      newTagIds = Array.from(
-        { length: newTags.length },
-        (_, i) => firstNewTagId + i
-      )
-    }
-    const tagIds = [...existingTagsIds, ...newTagIds]
+      const [postResult] = await db.query(sqlInsertPost)
+      const postId = postResult
+      // console.log(postResult)
 
-    // post_tag_relation table
-    const sqlInsertTagRelation = `
-      INSERT INTO post_tag_relation (post_id, tag_id) VALUES ${tagIds
-        .map(() => '(?, ?)')
-        .join(', ')} `
-    const relationValues = tagIds.flatMap((tagId) => [postId, tagId])
-    await db.query(sqlInsertTagRelation, relationValues)
-    // post_image table
-    if (uploadedFiles.length > 0) {
-      const sqlInsertImage = `
-        INSERT INTO post_image (post_id, user_id, pic, uploaded_at) VALUES ${uploadedFiles
-          .map(() => '(?, ?, ?, NOW())')
+      // post_tag table 查詢已有標籤並去重
+      if (tags) {
+        const tagsArray = Array.isArray(tags)
+          ? tags
+          : tags.split(',').map((tag) => tag.trim())
+        const sqlSelectExistingTags = `
+        SELECT id, name FROM post_tag WHERE name IN (${tagsArray.map((tag) => `'${tag}'`).join(', ')})
+      `
+        const [existingTags] = await db.query(sqlSelectExistingTags)
+        const existingTagsIds = existingTags.map((tag) => tag.id)
+        const existingTagsNames = new Set(existingTags.map((tag) => tag.name))
+
+        const newTags = tagsArray.filter((tag) => !existingTagsNames.has(tag))
+        let newTagIds = []
+
+        // 插入新標籤
+        if (newTags.length > 0) {
+          const sqlInsertTag = `
+          INSERT INTO post_tag (name) VALUES ${newTags.map((tag) => `('${tag}')`).join(', ')}
+        `
+          const [newTagsResult] = await db.query(sqlInsertTag)
+          const firstNewTagId = newTagsResult
+          newTagIds = Array.from(
+            { length: newTags.length },
+            (_, i) => firstNewTagId + i
+          )
+        }
+
+        const tagIds = [...existingTagsIds, ...newTagIds]
+
+        // post_tag_relation table 插入標籤關係
+        const sqlInsertTagRelation = `
+        INSERT INTO post_tag_relation (post_id, tag_id) VALUES ${tagIds
+          .map((tagId) => `(${postId}, ${tagId})`)
           .join(', ')}
       `
-      const imageValues = uploadedFiles.flatMap((pic) => [postId, user_id, pic])
-      await db.query(sqlInsertImage, imageValues)
+        await db.query(sqlInsertTagRelation)
+      }
+      // post_image table 插入圖片
+      if (uploadedFiles.length > 0) {
+        const sqlInsertImage = `
+          INSERT INTO post_image (post_id, user_id, pic, uploaded_at) VALUES ${uploadedFiles
+            .map((pic) => `(${postId}, ${userId}, '${pic}', NOW())`)
+            .join(', ')}
+        `
+        await db.query(sqlInsertImage)
+        console.log(sqlInsertImage)
+      }
+
+      res.json({
+        status: 'success',
+        message: `ID:${postId} 貼文、圖片和標籤插入成功`,
+      })
+    } catch (error) {
+      console.error('Error creating post:', error)
+      res.status(500).json({
+        status: 'error',
+        message: '貼文創建失敗',
+      })
     }
-    res.json({
-      status: 'success',
-      message: `ID:${postId}貼文、圖片和標籤插入成功 `,
-    })
   }
 )
 
@@ -99,7 +116,7 @@ router.get('/:postId/:userId/isLiked', async (req, res) => {
 
   try {
     // 檢查是否已按讚
-    const existingLike = await db.query(
+    const [existingLike] = await db.query(
       `SELECT * FROM post_like WHERE user_id = ${userId} AND post_id = ${postId}`,
       [userId, postId]
     )
@@ -115,26 +132,25 @@ router.get('/:postId/:userId/isLiked', async (req, res) => {
   }
 })
 
-// like post - toggle
+// like post - like 未按讚 → 加入按讚
 router.post('/:postId/:userId/like', async (req, res) => {
   const { postId, userId } = req.params
-
   try {
-    // 檢查是否已按讚
-    const sqlCheck = `SELECT * FROM post_like WHERE post_id = ${postId} AND user_id = ${userId}`
-    const [rows] = await db.query(sqlCheck, [postId, userId])
-
-    if (rows.length > 0) {
-      // 已按讚 → 取消按讚
-      const sqlDelete = `DELETE FROM post_like WHERE post_id = ${postId} AND user_id = ${userId}`
-      await db.query(sqlDelete, [postId, userId])
-      res.json({ status: 'success', message: '取消按讚成功' })
-    } else {
-      // 未按讚 → 加入按讚
-      const sqlInsert = `INSERT INTO post_like (post_id, user_id) VALUES (${postId}, ${userId})`
-      await db.query(sqlInsert, [postId, userId])
-      res.json({ status: 'success', message: '按讚成功' })
-    }
+    const sqlInsert = `INSERT INTO post_like (post_id, user_id) VALUES (${postId}, ${userId})`
+    await db.query(sqlInsert, [postId, userId])
+    res.json({ status: 'success', message: '按讚成功' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法更新按讚狀態' })
+  }
+})
+// like post - unlike 已按讚 → 取消按讚
+router.delete('/:postId/:userId/dislike', async (req, res) => {
+  const { postId, userId } = req.params
+  try {
+    const sqlDelete = `DELETE FROM post_like WHERE post_id = ${postId} AND user_id = ${userId}`
+    await db.query(sqlDelete, [postId, userId])
+    res.json({ status: 'success', message: '取消按讚成功' })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: '伺服器錯誤，無法更新按讚狀態' })
@@ -144,7 +160,6 @@ router.post('/:postId/:userId/like', async (req, res) => {
 // check if post is saved post - render
 router.get('/:postId/:userId/isSaved', async (req, res) => {
   const { postId, userId } = req.params
-  // const userId = req.user.id // 中間件取得當前使用者的 userId
   try {
     const existingSave = await db.query(
       `SELECT * FROM post_save WHERE user_id = ${userId} AND post_id = ${postId}`,
@@ -157,7 +172,7 @@ router.get('/:postId/:userId/isSaved', async (req, res) => {
 
     // 插入收藏
     await db.query(
-      `INSERT INTO post_save (user_id, post_id, created_at) VALUES ( ${postId}, ${postId}, NOW())`,
+      `INSERT INTO post_save (user_id, post_id, created_at) VALUES (${userId}, ${postId} NOW())`,
       [userId, postId]
     )
   } catch (err) {
@@ -166,17 +181,17 @@ router.get('/:postId/:userId/isSaved', async (req, res) => {
   }
 })
 // save post - toggle
-router.post('/:postId/:userId/save', async (req, res) => {
+router.get('/:postId/:userId/save', async (req, res) => {
   const { postId, userId } = req.params
 
   try {
     // 檢查是否已收藏
-    const sqlCheck = `SELECT * FROM post_save WHERE post_id =  ${postId} AND user_id =  ${userId}`
+    const sqlCheck = `SELECT * FROM post_save WHERE post_id = ? AND user_id = ?`
     const [rows] = await db.query(sqlCheck, [postId, userId])
 
     if (rows.length > 0) {
       // 已收藏 → 取消收藏
-      const sqlDelete = `DELETE FROM post_save WHERE post_id = ${postId} AND user_id = ?`
+      const sqlDelete = `DELETE FROM post_save WHERE post_id = ? AND user_id = ?`
       await db.query(sqlDelete, [postId, userId])
       res.json({ status: 'success', message: '取消收藏成功' })
     } else {
@@ -192,9 +207,9 @@ router.post('/:postId/:userId/save', async (req, res) => {
 })
 
 // like comment - render
-// like comment - toggle
 
 router.post('/', async function (req, res, next) {})
+
 // render post-wall page sort/order/search/tags
 router.get('/', async function (req, res, next) {
   const {

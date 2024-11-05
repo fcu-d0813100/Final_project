@@ -7,15 +7,18 @@ import Masonry from 'react-masonry-css'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
+import { useAuth } from '@/hooks/use-auth'
 import UserSection from '@/components/user/common/user-section'
-import PublishCard from '@/components/post/common/publish-card/[index]'
+import PublishCard from '@/components/post/common/publish-card'
 import WallCard from '@/components/post/common/wall-card'
 export default function Index(props) {
   const [publishCard, setPublishCard] = useState([])
   const [wallCard, setWallCard] = useState([])
   const [showModal] = useState(false)
-  const router = useRouter()
-  const { userId } = router.query
+
+  const { auth } = useAuth()
+  const userId = auth.userData.id
+
   useEffect(() => {
     async function getPublishCard() {
       if (userId) {
@@ -90,18 +93,27 @@ export default function Index(props) {
             <Tab.Content>
               <Tab.Pane eventKey="/publish">
                 <div className={styles['publish-all']}>
-                  {publishCard.map((post) => (
-                    <PublishCard
-                      key={post.id}
-                      postId={post.id}
-                      imageSrc={`/post/${post.post_img}`}
-                      title={post.title}
-                      content={post.content}
-                      createTime={post.created_at}
-                      likeCount={post.like_count}
-                      commentCount={post.comment_count}
-                    />
-                  ))}
+                  {/* 記得換網址 */}
+                  {/* http://localhost:3005/upload/${post.post_img} */}
+                  {publishCard.map((post) => {
+                    const imgSrc = post.post_img.startsWith('post')
+                      ? `/post/${post.post_img}` // 後端圖片路徑
+                      : `/post/${post.post_img}` // 前端靜態圖片路徑
+
+                    return (
+                      <PublishCard
+                        key={post.id}
+                        postId={post.id}
+                        imageSrc={imgSrc}
+                        title={post.title}
+                        content={post.content}
+                        createTime={post.created_at}
+                        likeCount={post.like_count}
+                        commentCount={post.comment_count}
+                      />
+                    )
+                  })}
+
                   <div className={styles['pagination']}></div>
                 </div>
               </Tab.Pane>
@@ -118,7 +130,7 @@ export default function Index(props) {
                         imageSrc={`/post/${post.post_img}`}
                         title={post.title}
                         username={post.nickname}
-                        avatarSrc="/post/p1_1.webp"
+                        avatarSrc={`/user/img/${post.user_img}`}
                         likeCount={post.like_count}
                       />
                     ))}
