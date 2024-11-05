@@ -120,6 +120,7 @@ export function TeacherAuthProvider({ children }) {
       })
     } else {
       alert('登出失敗!')
+      console.warn(resTeacherData)
     }
   }
 

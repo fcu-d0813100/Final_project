@@ -69,7 +69,7 @@ router.post('/teacher-login', async (req, res, next) => {
 })
 
 // 教師登出
-router.post('/teacher-logout', authenticate, (req, res) => {
+router.post('/teacher-logout', (req, res) => {
   // 清除cookie
   res.clearCookie('accessTeacherToken', { httpOnly: true })
   res.json({ status: 'success', data: null })
