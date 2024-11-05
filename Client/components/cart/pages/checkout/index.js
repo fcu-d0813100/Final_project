@@ -7,10 +7,20 @@ import { useRouter } from 'next/router'
 import BuyRule from '../../common/buyrule'
 import OrderBox from '../../common/orderbox'
 import Seven from '../../../../pages/cart/ship'
+import { useCartProduct } from '@/hooks/use-cartP'
+import { useCartWorkshop } from '@/hooks/use-cartW'
 import axios from 'axios'
 
 export default function Checkout() {
   const router = useRouter()
+
+  //鉤子帶入金額跟數量
+  const { pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
+  const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
+  //打折的價格
+  const discountedPTotalPrice = pTotalPrice * 0.8
+  const discountedWTotalPrice = wTotalPrice * 0.8
+  const totalDiscountPrice = discountedPTotalPrice + discountedWTotalPrice
 
   //----------物流
   const [deliveryMethod, setDeliveryMethod] = useState('宅配') // 預設選擇宅配
@@ -53,9 +63,13 @@ export default function Checkout() {
   const handleCheckout = async () => {
     // 獲取宅配或7-11的資料
     let orderData = {}
+    const productCart = JSON.parse(localStorage.getItem('productCart'))
+    const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
+    const orderNumber = localStorage.getItem('orderNumber')
 
     if (deliveryMethod === '宅配') {
       orderData = {
+        deliveryMethod: 1,
         recipient_name: document.querySelector('input[name="recipient_name"]')
           .value,
         recipient_phone: document.querySelector('input[name="recipient_phone"]')
@@ -70,29 +84,38 @@ export default function Checkout() {
         recipient_address: document.querySelector(
           'input[name="recipient_address"]'
         ).value,
+        productCart,
+        Workshopcart,
+        orderNumber,
+        totalDiscountPrice,
       }
     } else if (deliveryMethod === '7-11') {
       const store711 = JSON.parse(localStorage.getItem('store711'))
       orderData = {
+        deliveryMethod: 2,
         storeid: store711.storeid,
         storename: store711.storename,
         storeaddress: store711.storeaddress,
         outside: store711.outside,
         ship: store711.ship,
+        productCart,
+        Workshopcart,
+        orderNumber,
+        totalDiscountPrice,
       }
     }
 
     // 根據付款方式進行處理
     if (paymentMethod === 'cod') {
+      orderData.paymentMethod = '1'
       // 直接插入訂單到資料庫
       try {
-        // const response = await axios.post('/api/orders', {
-        //   orderData,
-        //   paymentMethod,
-        // })
-        console.log('訂單已成功提交')
+        const response = await axios.post(
+          'http://localhost:3005/api/cart/checkout',
+          orderData
+        )
         console.log(orderData)
-        // console.log('訂單已成功提交', response.data)
+        console.log('訂單已成功提交', response.data)
         // 可以在此添加成功後的操作，比如重定向或顯示提示
       } catch (error) {
         console.error('提交訂單失敗', error)
