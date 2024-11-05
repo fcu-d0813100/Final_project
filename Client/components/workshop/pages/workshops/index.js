@@ -18,7 +18,7 @@ export default function WorkshopAll(props) {
     try {
       // 搜尋所有工作坊或依 `search` 查詢
       const response = await fetch(
-        `http://localhost:3005/api/workshop?search=${search}`
+        `http://localhost:3005/api/workshop/?search=${search}`
       )
       if (!response.ok) {
         throw new Error('網路回應不成功：' + response.status)
