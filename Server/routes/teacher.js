@@ -52,4 +52,17 @@ router.get('/:tid', async function (req, res, next) {
   console.log(req.params.tid)
 })
 
+router.get('/information/:tid', async function (req, res, next) {
+  const sqlSelect = `SELECT
+  teachers.*
+ FROM
+    teachers
+ WHERE
+    teachers.id=${req.params.tid}`
+
+  const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
+  res.json(result)
+  console.log(req.params.tid)
+})
+
 export default router

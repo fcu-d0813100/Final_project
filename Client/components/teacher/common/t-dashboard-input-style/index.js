@@ -8,9 +8,18 @@ export default function InputStyle({
   titleCh = '',
   titleEn = '',
   typeText = '',
-  placeholder='',
-  name='',
+  placeholder = '',
+  name = '',
+  value='',
+
 }) {
+
+    const [inputValue, setInputValue] = useState(value) // 使用 useState 管理輸入值
+
+    const handleInputChange = (e) => {
+      setInputValue(e.target.value) // 更新輸入值
+    }
+
   return (
     <>
       <div className={`${styles.inputstyle} ${addclass}`}>
@@ -18,7 +27,13 @@ export default function InputStyle({
           {titleCh}
           <span>{titleEn}</span>
         </label>
-        <input type={typeText} placeholder={placeholder} name={name} />
+        <input
+          type={typeText}
+          placeholder={placeholder}
+          name={name}
+          value={inputValue} // 設定 value 為狀態變數
+          onChange={handleInputChange} // 添加 onChange 事件
+        />
       </div>
     </>
   )

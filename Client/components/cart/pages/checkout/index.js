@@ -29,7 +29,13 @@ export default function Checkout() {
     if (savedPaymentMethod) {
       setPaymentMethod(savedPaymentMethod)
     }
-  }, [])
+
+    // 檢查 URL 中是否有 deliveryMethod 查詢參數
+    if (router.query.deliveryMethod) {
+      // 清除查詢參數
+      router.replace(router.pathname, undefined, { shallow: true })
+    }
+  }, [router.query])
 
   const handleDeliveryChange = (method) => {
     setDeliveryMethod(method)
