@@ -1,0 +1,39 @@
+.user-section {
+    display: flex;
+    // position: relative;
+    width: 100%;
+}
+
+.any-section {
+    // max-width: 100%;
+    padding: 70px 120px;
+    box-sizing: border-box;
+    flex: 1;
+
+}
+
+@media (max-width: 1100px) {
+    .any-section {
+        padding: 40px 15px;
+    }
+}
+
+
+@media (max-width: 575px) {
+    .any-section {
+        padding: 40px 20px 30px 20px;
+    }
+
+    .user-section {
+        display: inline;
+        // position: relative;
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 390px) {
+    .any-section {
+        padding: 20px 10px 30px 10px;
+    }
+}

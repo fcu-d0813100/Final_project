@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
+import Header from '@/components/home/common/header';
 import Image from 'next/image';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss'; // 確保引入正確的樣式
 import Link from 'next/link';
 import Carousels from '@/components/discount/common/carousels'
+import Footer from '@/components/home/common/footer'
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
@@ -31,7 +33,7 @@ export default function Discount() {
 
   return (
     <>
-
+      <Header />
       <Carousels />
       <div className={`container-sm ${styles.discountPage}`}>
         <div className={styles.nav}>
@@ -73,7 +75,7 @@ export default function Discount() {
           </Slider>
         </div>
       </div>
-
+      <Footer />
     </>
   );
 }

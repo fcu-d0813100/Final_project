@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './index.module.scss';
 
 const Coupon = ({
+    status = "已過期",
     img = '/discount/coupon/brands/bobbi.svg',
     name = 'GIFT COUPON',
     discount = '20% OFF',
@@ -10,7 +11,7 @@ const Coupon = ({
     return (
 
         <div className={`${styles['coupon-lg']} d-flex align-items-center justify-content-around px-2`}>
-            <div className={styles.overlay}><div className={`${styles.pass} h6`}>已過期</div></div>
+            <div className={styles.overlay}><div className={`${styles.pass} h6`}>{status}</div></div>
             <div className={styles.img}>
                 <img className={styles['coupon-image']} src={img} alt="Coupon Image" />
             </div>
