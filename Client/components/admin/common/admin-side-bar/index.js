@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
-import { useAuth } from '@/hooks/use-auth'
+import { useAdmin } from '@/hooks/use-admin'
 
-import {
-  PiUser,
-  PiLockOpen,
-  PiListMagnifyingGlass,
-  PiHeartStraight,
-  PiNotebook,
-  PiListPlus,
-  PiClockCountdown,
-  PiTicket,
-} from 'react-icons/pi'
+import { PiClockCountdown, PiTicket } from 'react-icons/pi'
 import styles from './index.module.scss'
 
 const navLinks = [
-  
   {
     href: '/admin/activity',
     icon: <PiClockCountdown size={65} />,
@@ -33,7 +23,7 @@ const navLinks = [
 
 export default function Index() {
   const router = useRouter()
-  const { logout } = useAuth()
+  const { adminLogout } = useAdmin()
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
       acc[link.key] = { hover: false, active: router.pathname === link.href }
@@ -97,7 +87,7 @@ export default function Index() {
           <button
             className="btn-logout h6"
             onClick={() => {
-              logout()
+              adminLogout()
             }}
           >
             登出

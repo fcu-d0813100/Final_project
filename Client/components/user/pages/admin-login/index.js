@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import { PiEyeClosed } from 'react-icons/pi'
-import Link from 'next/link'
+import { useAdmin } from '@/hooks/use-admin'
 
-export default function UserLogin(props) {
+export default function AdminLogin(props) {
+  const [account, setAccount] = useState('')
+  const [password, setPassword] = useState('')
+
+  const { adminLogin } = useAdmin()
   return (
     <>
       <div className={styles['bg-img']}>
@@ -39,7 +42,10 @@ export default function UserLogin(props) {
                   </label>
                   <input
                     type="text"
-                    id="username"
+                    value={account}
+                    onChange={(e) => {
+                      setAccount(e.target.value)
+                    }}
                     className={styles['line-input']}
                     placeholder="請輸入帳號/信箱"
                   />
@@ -51,22 +57,36 @@ export default function UserLogin(props) {
                     </label>
                     <input
                       type="password"
-                      id="password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value)
+                      }}
                       className={`${styles['line-input']} `}
                       placeholder="請輸入英文字母及數字"
                     />
-                    <PiEyeClosed className={styles.eyeiclosed} />
+                    {/* <PiEyeClosed className={styles.eyeiclosed} /> */}
                   </div>
 
                   <div className="d-grid col-12 pt-4">
-                    <Link href="/admin/activity">
-                      <button
-                        className={`btn-primary h6 ${styles['btn-primary']}`}
-                      >
-                        登入
-                      </button>
-                    </Link>
+                    <button
+                      onClick={() => {
+                        adminLogin(account, password)
+                      }}
+                      className={`btn-primary h6 ${styles['btn-primary']}`}
+                    >
+                      登入
+                    </button>
                   </div>
+                  {/*  */}
+                  <button
+                    onClick={() => {
+                      setAccount('admin')
+                      setPassword('12345')
+                    }}
+                  >
+                    一鍵輸入
+                  </button>
+                  {/*  */}
                 </div>
               </div>
             </div>

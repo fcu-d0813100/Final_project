@@ -9,6 +9,8 @@ import { useAuth } from '@/hooks/use-auth'
 export default function UserInfo() {
   const { auth } = useAuth()
   // 從勾子的 context 獲取更新和獲取用戶資訊的函式
+  // 未登入時，不會出現頁面內容
+  if (!auth.isAuth) return <></>
 
   return (
     <>
@@ -147,7 +149,14 @@ export default function UserInfo() {
                   className={`row ${styles['level-area']} ${styles['table-text']}`}
                 >
                   <div className="col-4 d-flex justify-content-center align-items-center">
-                    一般會員
+                    {' '}
+                    {auth.userData.level === 1
+                      ? '一般會員'
+                      : auth.userData.level === 2
+                      ? '白金會員'
+                      : auth.userData.level === 3
+                      ? '鑽石會員'
+                      : ''}
                   </div>
                   <div className="col-4 d-flex justify-content-center align-items-center">
                     points

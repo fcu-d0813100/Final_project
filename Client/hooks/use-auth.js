@@ -114,7 +114,7 @@ export function AuthProvider({ children }) {
       // 獲得會員其它個人資料(除了密碼之外)
       const user = await getUser(jwtData.id)
 
-      console.log(user)
+      // console.log(user)
 
       //   // 設定到狀態中
       setAuth({
