@@ -1,4 +1,5 @@
 'use client'
+import InputIME from '@/components/shared/input-ime.js'
 import styles from '@/components/workshop/common/workshops.module.scss'
 import { PiMagnifyingGlass, PiCaretDown, PiArrowRight } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
@@ -25,7 +26,7 @@ export default function WorkshopsBN(props) {
 
               <div className={styles.searchArea}>
                 <div className="d-flex align-items-center">
-                  <input
+                  <InputIME
                     type="text"
                     className={styles.searchInput}
                     placeholder="搜尋"
