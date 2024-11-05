@@ -29,10 +29,19 @@ export default function WorkshopsBN(props) {
                     type="text"
                     className={styles.searchInput}
                     placeholder="搜尋"
+                    value={props.search}
+                    onChange={(e) => props.setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        // 當用戶按下 Enter 鍵時觸發搜尋
+                        props.onSearch()
+                      }
+                    }}
                   />
                   <a
                     className="d-flex align-items-center text-decoration-none ms-3 text-white ph"
                     href="#"
+                    onClick={props.onSearch} // 點擊圖示時觸發搜尋
                   >
                     <PiMagnifyingGlass />
                   </a>
