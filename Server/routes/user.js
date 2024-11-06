@@ -10,8 +10,6 @@ import { generateHash, compareHash } from '##/db-helpers/password-hash.js'
 
 const upload = multer()
 const router = express.Router()
-// 檢查空物件, 轉換req.params為數字
-// import { getIdParam } from '#db-helpers/db-tool.js'
 
 // // multer的設定值 - START
 // const storage = multer.diskStorage({
@@ -79,9 +77,9 @@ router.post('/register', upload.none(), async (req, res) => {
 
     const sql = `
     INSERT INTO user (
-      name, account, password, email, gender, phone, address, img, level, created_at, updated_at
+      name, account, password, email, gender, phone, img, address, level,identity, created_at, updated_at
     ) VALUES (
-      ?, ?, ?, ?, ' ', ' ', 'avatar01.jpg', ' ', '1', NOW(), NULL
+      ?, ?, ?, ?, ' ', ' ', 'avatar01.jpg', ' ', '1','user', NOW(), NULL
     )
   `
 

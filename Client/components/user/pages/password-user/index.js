@@ -40,12 +40,32 @@ export default function Password() {
 
     // 表單驗証 - START
     if (!userPassword.new || !userPassword.origin || !userPassword.confirm) {
-      toast.error('密碼欄位為必填')
+      toast.error('密碼欄位為必填', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
       return // 跳出函式
     }
 
     if (userPassword.new !== userPassword.confirm) {
-      toast.error('新密碼與確認密碼不同')
+      toast.error('新密碼與確認密碼不同', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
       return // 跳出函式
     }
     // 表單驗証 - END
@@ -57,11 +77,30 @@ export default function Password() {
     console.log(res.data)
 
     if (res.data.status === 'success') {
-      toast.success('會員密碼修改成功')
-      // 密碼更新成功後清空表單
+      toast.success('密碼修改成功', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#626553',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
+      })
       setUserPassword(initUserPassword)
     } else {
-      toast.error('會員密碼修改失敗')
+      toast.error('密碼修改失敗', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
