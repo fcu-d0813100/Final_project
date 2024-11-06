@@ -4,32 +4,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 import { FaHeart, FaRegHeart, FaMinus, FaPlus, FaChevronUp, FaChevronDown, FaPlusCircle, FaShoppingBag } from 'react-icons/fa';
 import { Tab, Nav } from 'react-bootstrap';
-import CommentBoard from '@/components/product/common/CommentBoard'
+import CommentBoard from '@/components/product/common/CommentBoard';
 
-const ProductPage = () => {
+// productPage 此參數，為一個陣列
+const ProductPage = ({ productPage }) => {
+  console.log("productPage:", productPage);
+
+  if (!productPage || productPage.length === 0) {
+    return <div>Loading...</div>; // 確保資料存在後再顯示
+  }
+
   const [quantity, setQuantity] = useState(0);
-  const [selectedImage, setSelectedImage] = useState('/product/LANCOME_LS01_M_196.webp');
+  const [selectedProduct, setSelectedProduct] = useState(productPage[0]); // 預設顯示第一個色號
   const [isFavorite, setIsFavorite] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [currentThumbnailIndex, setCurrentThumbnailIndex] = useState(0);
-  const [startIndex, setStartIndex] = useState(0);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+  const [startIndex, setStartIndex] = useState(0);
 
   const handleIncrement = () => setQuantity(quantity + 1);
   const handleDecrement = () => setQuantity(quantity > 1 ? quantity - 1 : 0);
-
-  const thumbnails = [
-    '/product/LANCOME_LS01_M_196.webp',
-    '/product/LANCOME_LS01_M_218.webp',
-    '/product/LANCOME_LS01_M_274.webp',
-    '/product/LANCOME_LS01_M_289.webp',
-    '/product/LANCOME_LS01_M_299.webp',
-    '/product/LANCOME_LS01_M_330.webp',
-    '/product/LANCOME_LS01_M_505.webp',
-    '/product/LANCOME_LS01_M_888.webp'
-  ];
-
-  const colors = ['#91372f', '#9d3e3e', '#af4b46', '#8b3333', '#8c4238'];
 
   const handleMouseMove = (e) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -43,51 +36,60 @@ const ProductPage = () => {
 
   const toggleFavorite = () => setIsFavorite(!isFavorite);
 
-  const visibleThumbnails = thumbnails.slice(startIndex, startIndex + 4);
+ // 去重的縮圖列表
+ const uniqueThumbnails = [...new Map(
+  productPage.map((product) => [product.color_id, product]) // 使用 color_id 作為 Map 的 key，去重
+).values()];
 
-  const handleNext = () => {
-    if (startIndex + 4 < thumbnails.length) {
-      setStartIndex(startIndex + 1);
-    }
-  };
+// 過濾出相同 color_id 的所有介紹圖
+const selectedProductImages = productPage
+  .filter((product) => product.color_id === selectedProduct.color_id)
+  .map((product) => product.info_image);
 
-  const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 1);
-    }
-  };
+// 每次顯示 4 張圖片，從 startIndex 開始
+const visibleThumbnails = uniqueThumbnails.slice(startIndex, startIndex + 4);
+
+// 控制上下按鈕的顯示，避免超出範圍
+const handleNext = () => {
+  if (startIndex + 4 < uniqueThumbnails.length) {
+    setStartIndex(startIndex + 1);
+  }
+};
+
+const handlePrev = () => {
+  if (startIndex > 0) {
+    setStartIndex(startIndex - 1);
+  }
+};
 
   return (
     <div className={styles['product-page']}>
       <div className="container">
         <div className="row justify-content-center">
-          {/* 左側縮圖 */}
-          <div className="col-md-1 mt-5">
-            <div className={styles['thumbnail-gallery']}>
-              <button onClick={handlePrev} disabled={startIndex === 0} className={styles['arrow-button']}>
-                <FaChevronUp />
-              </button>
-              {visibleThumbnails.map((thumbnail, index) => (
-                <Image
-                  key={index}
-                  width={100}
-                  height={100}
-                  src={thumbnail}
-                  alt={`Thumbnail ${index + 1}`}
-                  className={`${styles.thumbnail} ${currentThumbnailIndex === startIndex + index ? styles['active-thumbnail'] : ''}`}
-                  onClick={() => {
-                    setSelectedImage(thumbnail);
-                    setCurrentThumbnailIndex(startIndex + index);
-                  }}
-                />
-              ))}
-              <button onClick={handleNext} disabled={startIndex + 4 >= thumbnails.length} className={styles['arrow-button']}>
-                <FaChevronDown />
-              </button>
-            </div>
-          </div>
+          {/* 左側縮圖選項 */}
+          <div className="col-md-1 mt-5 p-1">
+  <div className={styles['thumbnail-gallery']}>
+    <button onClick={handlePrev} disabled={startIndex === 0} className={styles['arrow-button']}>
+      <FaChevronUp />
+    </button>
+    {visibleThumbnails.map((product, index) => (
+      <Image
+        key={product.color_id}
+        width={100}
+        height={100}
+        src={`/product/mainimage/${product.mainimage}`}
+        alt={`Thumbnail ${index + 1}`}
+        className={`${styles.thumbnail} ${selectedProduct.color_id === product.color_id ? styles['active-thumbnail'] : ''}`}
+        onClick={() => setSelectedProduct(product)}
+      />
+    ))}
+    <button onClick={handleNext} disabled={startIndex + 4 >= productPage.length} className={styles['arrow-button']}>
+      <FaChevronDown />
+    </button>
+  </div>
+</div>
 
-          {/* 主圖 */}
+          {/* 主圖顯示區 */}
           <div className="col-md-6 d-flex justify-content-center">
             <div
               className={styles['main-image']}
@@ -98,7 +100,7 @@ const ProductPage = () => {
               <Image
                 width={528}
                 height={528}
-                src={selectedImage}
+                src={`/product/mainimage/${selectedProduct.mainimage}`}
                 alt="Main Product"
                 className={styles['image']}
               />
@@ -106,7 +108,7 @@ const ProductPage = () => {
                 <div
                   className={styles['zoom-lens']}
                   style={{
-                    backgroundImage: `url(${selectedImage})`,
+                    backgroundImage: `url(/product/mainimage/${selectedProduct.mainimage})`,
                     backgroundPosition: `-${zoomPosition.x * 2}px -${zoomPosition.y * 2}px`,
                     top: `${zoomPosition.y}px`,
                     left: `${zoomPosition.x}px`,
@@ -120,32 +122,43 @@ const ProductPage = () => {
           <div className="col-md-5 mt-2">
             <div className={styles['product-details']}>
               <div className="justify-content-between align-items-center">
-                <div className='h6'>LANCOME</div>
                 <div className="d-flex align-items-center mb-3 mt-3">
-                  <h3 className="mb-0">玲瓏巧思五色眼影盤</h3>
+                  <div className="h6">{selectedProduct.brand}</div>
                   <button onClick={toggleFavorite} className={`${styles['favorite-button']} ms-3`}>
                     {isFavorite ? <FaHeart color="#973929" size={24} /> : <FaRegHeart size={24} />}
                   </button>
                 </div>
+                <h3 className="mb-0">{selectedProduct.product_name}</h3>
               </div>
               <div className={styles['product-details-info']}>
-                <p>使用方法: 塗抹於眼部</p>
+                <p>{`使用方法: ${selectedProduct.usages}`}</p>
                 <p>更多詳細資訊</p>
               </div>
 
               <div className={styles.price}>
-                <span className={styles['current-price']}>NT$ 1,200</span>
-                <span className={styles['original-price']}>NT$ 1,200</span>
+                <span className={styles['current-price']}>{`NT$${selectedProduct.price}`}</span>
+                <span className={styles['original-price']}>{`NT$${selectedProduct.originalprice}`}</span>
               </div>
 
               <div className={styles['color-selector']}>
-                <span>顏色: 來杯摩卡-01</span>
+                <span>{`顏色: ${selectedProduct.color_name}`}</span>
                 <div className={styles['color-options']}>
-                  {colors.map((color, index) => (
-                    <span key={index} className={styles['color-swatch']} style={{ backgroundColor: color }}></span>
-                  ))}
+                  {[...new Map(
+                    productPage
+                      .filter((product) => product.product_id === selectedProduct.product_id) // 過濾出相同 product_id 的產品
+                      .map((product) => [product.color_id, product]) // 使用 color_id 作為 Map 的 key
+                      ).values()] // 獲取唯一的色號
+                      .map((product) => (
+                      <span
+                        key={product.color_id}
+                        className={`${styles['color-swatch']} ${selectedProduct.color_id === product.color_id ? styles['active-swatch'] : ''}`}
+                        style={{ backgroundColor: product.color }}
+                        onClick={() => setSelectedProduct(product)}
+                      ></span>
+                    ))}
                 </div>
               </div>
+
 
               <div className={styles['quantity-selector']}>
                 <button onClick={handleDecrement} className={`${styles.btnSm} ph`}><FaMinus /></button>
@@ -168,7 +181,7 @@ const ProductPage = () => {
 
       {/* 導覽行區域 */}
       <div className={styles['nav-section-bg']}> {/* 外層的灰色背景區域 */}
-        <div className= {`${styles['detail-lowercontainer']} container mt-5`}>
+        <div className={`${styles['detail-lowercontainer']} container mt-5`}>
           <Tab.Container defaultActiveKey="description">
             <div className={`${styles['post-navbar']} border-bottom`}>
               <Nav variant="underline" className={`justify-content-center ${styles['post-nav']}`}>
@@ -187,83 +200,19 @@ const ProductPage = () => {
             <Tab.Content className="mt-4">
               <Tab.Pane eventKey="description">
                 <div className={styles['description-content']}>
-                  <div className={styles['description-content-context']}>最輕滑保濕的霧面唇膏！
-                    革命性「3D半球型微米粉體」打造彷若裸唇最輕柔霧感，保濕全新升級！添加「玻尿酸」長效滋潤雙唇不乾澀。頂級精華注入！黃金玫瑰瞬效複方x玫瑰潤澤唇粹x普拉絲鏈
-                    全面修護美唇，柔焦滑順零唇紋
-                  </div>
-                  <div className={styles['description-content-imgs']}>
-                    <Image width={528}
-                      height={528}
-                      src={'/product/LANCOME_LS01_l_01.jpg'}
-                      alt="Main Product"
-                      className={styles['image']}>
-                    </Image>
-                    <Image width={528}
-                      height={528}
-                      src={'/product/LANCOME_LS01_l_02.jpg'}
-                      alt="Main Product"
-                      className={styles['image']}>
-                    </Image>
-                    <Image width={528}
-                      height={528}
-                      src={'/product/LANCOME_LS01_l_03.jpg'}
-                      alt="Main Product"
-                      className={styles['image']}>
-                    </Image>
-                    <Image width={528}
-                      height={528}
-                      src={'/product/LANCOME_LS01_l_04.jpg'}
-                      alt="Main Product"
-                      className={styles['image']}>
-                    </Image>
-                    <Image width={528}
-                      height={528}
-                      src={'/product/LANCOME_LS01_l_05.jpg'}
-                      alt="Main Product"
-                      className={styles['image']}>
-                    </Image>
-                    <div className={styles['description-content-notice']}>
-                    <h2>購買與使用美妝產品須知：</h2>
-                    <ol>
-                      <li>
-                        <strong className={styles['notice-title']}>成分過敏測試</strong>
-                        <ul>
-                          <li>
-                            <strong>過敏測試：</strong>在使用新產品前，尤其是敏感肌膚或有過敏史的人，應先進行局部過敏測試。可以少量產品塗在耳後或手腕內側，觀察 24 小時內是否有過敏反應。
-                          </li>
-                          <li>
-                            <strong>避免過敏成分：</strong>注意查看成分表，避免使用自己過敏的成分，例如酒精、香精、人工色素等。
-                          </li>
-                        </ul>
-                      </li>
-                      
-                      <li>
-                        <strong className={styles['notice-title']}>產品的保存期限與保存方式</strong>
-                        <ul>
-                          <li>
-                            <strong>保存期限：</strong>美妝產品有一定的保質期，過期產品的功效可能會下降，甚至可能導致皮膚刺激或感染。在開封前注意查看日期和保存期限，尤其是開封後的使用期限 (PAO, Period After Opening)。
-                          </li>
-                          <li>
-                            <strong>保存方式：</strong>部分產品需避光濕、遠離高溫，例如防曬霜、精華液等應存放在陰涼乾燥處，避免陽光直射。
-                          </li>
-                        </ul>
-                      </li>
-                      
-                      <li>
-                        <strong className={styles['notice-title']}>產品的真偽辨識</strong>
-                        <ul>
-                          <li>
-                            正品產品建議應：應從可信賴的渠道（如品牌官方網站或授權）購買，避免購買假冒商品。假冒產品含有不明成分，對皮膚造成危害。
-                          </li>
-                          <li>
-                            辨別購買來源：注意產品上的防偽標籤或 QR 碼，並可在官網上查詢產品的真偽。
-                          </li>
-                        </ul>
-                      </li>
-                    </ol>
-                    <p>感謝您的關注，祝您購物愉快！</p>
-                    </div>
-                  </div>
+                  <div className={styles['description-content-context']}>{selectedProduct.description}</div>
+                <div className={styles['description-content-imgs']}>
+                {selectedProductImages.map((image, index) => (
+      <Image
+        key={index}
+        width={528}
+        height={528}
+        src={`/product/info/${image}`}
+        alt={`Product Info Image ${index + 1}`}
+        className={styles['image']}
+      />
+    ))}
+              </div>
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="reviews">

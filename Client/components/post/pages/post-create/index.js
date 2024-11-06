@@ -177,14 +177,11 @@ export default function Index(props) {
 
     // Submit form
     try {
-      const response = await fetch(
-        'http://localhost:3005/api/post/post_create',
-        {
-          method: 'POST',
-          body: formData,
-          credentials: 'include',
-        }
-      )
+      const response = await fetch('http://localhost:3005/api/post/create', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      })
       if (response.ok) {
         // 成功處理後的操作
         showAlert('發布貼文成功', <RiCheckboxCircleFill color="#90957A" />)
