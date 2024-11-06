@@ -27,24 +27,6 @@ export default function WorkshopSelectbar(props) {
 
           <div className="d-flex">
             <Dropdown
-              name="老師"
-              items={[
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-                { option: '老師名', link: '' },
-              ]}
-            />
-
-            <Dropdown
               name="狀態"
               items={[
                 { option: '報名中', link: '' },
@@ -70,11 +52,8 @@ export default function WorkshopSelectbar(props) {
                 { option: '價錢 高 -- 低', link: '' },
                 { option: '價錢 低 -- 高', link: '' },
                 { option: '最新上架', link: '' },
-               
               ]}
             />
-
-  
           </div>
         </div>
       </div>

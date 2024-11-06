@@ -7,7 +7,8 @@ export default function TeacherLogin(props) {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
 
-  const { teacherLogin } = useTeacherAuth()
+  const { teacherAuth, setTeacherAuth, teacherLogin, teacherLogout } =
+    useTeacherAuth()
   // checkbox 呈現密碼用
   // const [showPassword, setShowPassword] = useState(false)
 
@@ -83,15 +84,15 @@ export default function TeacherLogin(props) {
                       登入
                     </button>
                   </div>
-                  {/*  */}
-                  <button
+
+                  {/* <button
                     onClick={() => {
-                      setAccount('Terry-Barber')
+                      setAccount('Gina-Bettelli')
                       setPassword('12345')
                     }}
                   >
                     一鍵輸入
-                  </button>
+                  </button> */}
                   {/*  */}
                 </div>
               </div>
