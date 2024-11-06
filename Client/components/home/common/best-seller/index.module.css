@@ -36,7 +36,7 @@
   height: auto;
   overflow: hidden;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: start;
 }
 .home-bestSeller .bestSeller-brand {
