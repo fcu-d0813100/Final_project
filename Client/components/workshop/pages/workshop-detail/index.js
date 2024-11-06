@@ -13,6 +13,20 @@ import { PiMinus, PiPlus, PiPlusCircle, PiHandbagSimple } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
 export default function WorkshopDetail() {
+  //------吐司訊息
+  const addPnotify = () =>
+    toast.success('新增1件商品', {
+      style: {
+        border: '1.2px solid #90957a',
+        padding: '12px 40px',
+        color: '#626553',
+      },
+      iconTheme: {
+        primary: '#626553',
+        secondary: '#fff',
+      },
+    })
+
   const { onAddWorkshop } = useCartWorkshop()
   const router = useRouter()
   const [tworkshop, settWorkshop] = useState({})
@@ -106,8 +120,6 @@ export default function WorkshopDetail() {
 
   return (
     <>
-    
-
       <WorkshopDetailHeader
         name={tworkshop.name}
         description={tworkshop.description}
