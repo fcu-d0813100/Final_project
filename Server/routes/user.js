@@ -126,16 +126,17 @@ router.post(`/login/:role`, async (req, res) => {
 
   const dbUser = rows[0]
   // 2. 檢查該會員的身份是否符合登入要求
-  console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
+  // console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
 
   if (dbUser.identity !== role) {
-    return res.json({ status: 'error', message: '身份不符合' })
+    if (role === 'teacher') {
+      return res.json({ status: 'error', message: '無教師權限' })
+    } else if (role === 'admin') {
+      return res.json({ status: 'error', message: '無管理員權限' })
+    } else {
+      return res.json({ status: 'error', message: '身份不符合' })
+    }
   }
-  // 1. 先判斷身分別是否為 user
-  // if (loginUser.identity !== 'user') {
-  //   return res.json({ status: 'error', message: '身份不符合' })
-  // }
-
   // 3. 比對密碼hash是否相同(返回true代表密碼正確)
   const isValid = await compareHash(loginUser.password, dbUser.password)
 

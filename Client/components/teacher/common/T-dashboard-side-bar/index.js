@@ -2,16 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
-import {
-  PiUser,
-  PiLockOpen,
-  PiListMagnifyingGlass,
-  PiHeartStraight,
-  PiNotebook,
-  PiListPlus,
-  PiClockCountdown,
-  PiTicket,
-} from 'react-icons/pi'
+import { PiUser, PiLockOpen, PiListMagnifyingGlass } from 'react-icons/pi'
 
 import styles from './index.module.scss'
 
@@ -38,7 +29,7 @@ const navLinks = [
 
 export default function Sidebar() {
   const router = useRouter()
-  const { Logout } = useAuth()
+  const { logout } = useAuth()
 
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
@@ -104,7 +95,7 @@ export default function Sidebar() {
       </Navbar.Collapse>
       <button
         onClick={() => {
-          Logout()
+          logout()
         }}
         className="btn-logout"
       >

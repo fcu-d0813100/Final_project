@@ -4,6 +4,7 @@ import '@/styles/global.scss'
 import { WorkshopCartProvider } from '@/hooks/use-cartW'
 import { ProductCartProvider } from '@/hooks/use-cartP'
 import { AuthProvider } from '@/hooks/use-auth'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function MyApp({ Component, pageProps }) {
   // 使用自訂在頁面層級的版面(layout)
@@ -15,6 +16,7 @@ export default function MyApp({ Component, pageProps }) {
       <ProductCartProvider>
         <WorkshopCartProvider>
           {getLayout(<Component {...pageProps} />)}
+          <Toaster position="top-center" reverseOrder={false} />
         </WorkshopCartProvider>
       </ProductCartProvider>
     </AuthProvider>
