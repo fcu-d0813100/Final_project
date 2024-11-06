@@ -17,6 +17,7 @@ import db from '#configs/db.js'
 // })
 
 router.get('/', async function (req, res, next) {
+  const { search = '' } = req.query
   const sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -28,20 +29,55 @@ router.get('/', async function (req, res, next) {
     workshop.registration_start,
     workshop.registration_end,
     workshop.isUpload,
-    workshop.valid
+    workshop.valid,
+    workshop_type.type AS workshop_type_type
  FROM
     workshop
  JOIN
     teachers ON  workshop.teachers_id = teachers.id 
-LEFT JOIN
+ LEFT JOIN
       workshop_time ON workshop_time.workshop_id = workshop.id
-    GROUP BY
-      workshop.id, teachers.id, workshop.isUpload, workshop.valid`
+ LEFT JOIN
+    workshop_type ON workshop.type_id = workshop_type.id
+ WHERE
+     (workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%')
+     AND workshop.valid = 1 
+     AND workshop.isUpload = 1
+ GROUP BY
+      workshop.id, teachers.id, workshop.isUpload, workshop.valid
+`
 
-  const result = await db.query(sqlSelect).catch((e) => console.log(e))
+  const result = await db
+    .query(sqlSelect, [`%${search}%`, `%${search}%`, `%${search}%`])
+    .catch((e) => console.log(e))
   res.json(result)
   //console.log(result)
 })
+
+// router.get('/search', async function (req, res, next) {
+//   const { search = '' } = req.query
+//   const sqlSelect = `
+//     SELECT
+//     workshop.name,
+//     teachers.name AS teachers_name,
+//     workshop_type.type AS workshop_type_type
+
+//     FROM
+//       workshop
+//     JOIN
+//       teachers ON  workshop.teachers_id = teachers.id
+//     LEFT JOIN
+//       workshop_type ON workshop.type_id = workshop_type.id
+
+//     WHERE
+//       workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%' AND workshop.valid = 1
+//   `
+//   const result = await db
+//     .query(sqlSelect, [`%${search}%`, `%${search}%`, `%${search}%`])
+//     .catch((e) => console.log(e))
+//   res.json(result)
+//   console.log(result)
+// })
 
 router.get('/:wid', async function (req, res, next) {
   //   const { wid } = req.params

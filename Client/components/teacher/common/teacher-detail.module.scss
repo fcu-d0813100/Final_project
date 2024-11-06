@@ -37,7 +37,7 @@
       width: auto;
       position: absolute;
       right: 0px;
-      top: 130px;
+      bottom: 80px;
     }
   }
 }
@@ -48,6 +48,7 @@
   .textContent {
     display: flex;
     margin-block: 80px;
+    
 
     > div {
       margin-inline: 40px;
@@ -61,6 +62,7 @@
 
   p {
     line-height: 2rem;
+    white-space: pre-line;
   }
 }
 // -------------------------------

@@ -1,47 +1,38 @@
 'use client'
-import { PiPlus } from 'react-icons/pi'
-import Sidebar from '@/components/teacher/common/T-dashboard-side-bar'
-import DashboardTitle from '@/components/shared/dashboard-title-y'
-import styles from '@/components/teacher/common/upload.module.scss'
-import Footer from '@/components/home/common/footer'
-import TopBar from '@/components/home/common/header'
+import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
+import Page1 from '@/components/teacher/pages/upload/page-1'
+import Page2 from '@/components/teacher/pages/upload/page-2'
 import React, { useState, useEffect } from 'react'
 
 export default function Upload(props) {
+  const [isPage2, setIsPage2] = useState(false) // 控制是否顯示第二頁
+
+  // 切換到下一頁並滾動到頂部
+  const handleNextPage = () => {
+    setIsPage2(true)
+    window.scrollTo(0, 580) // 滾動到頁面頂部
+  }
+
+  // 回到前一頁並滾動到頂部
+  const handlePreviousPage = () => {
+    setIsPage2(false)
+    window.scrollTo(0, 580) // 滾動到頁面頂部
+  }
+
   return (
     <>
-      <TopBar />
       <TDashboardBN teacher="Gina Bettelli" />
 
       <div>
         <Sidebar />
 
-        <div className={styles.main}>
-          <DashboardTitle chTitle="課程上架" enTitle="New workshop" />
-
-          <div className={`${styles.section1} d-flex`}>
-            <div className={styles.uploadCover}>
-              <div className="text-center">
-                <PiPlus className={styles.plus} />
-                <p className={`${styles.picUploadText} h4 mt-3`}>
-                  新增封面圖
-                  <br /> <span className="p">(必填)</span>
-                </p>
-              </div>
-            </div>
-
-            <div className={`${styles.X} flex-grow-1`}>
-              <div className={styles.uploadMainInfo}>
-                <h4>主要資訊</h4>
-              </div>
-            </div>
-          </div>
-
-          <hr className="opacity-75" />
-        </div>
+        {!isPage2 ? (
+          <Page1 onNextPage={handleNextPage} /> // 傳入切換頁面函數
+        ) : (
+          <Page2 onPreviousPage={handlePreviousPage} /> // 傳入返回頁面函數
+        )}
       </div>
-      <Footer />
     </>
   )
 }

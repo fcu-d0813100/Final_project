@@ -1,113 +1,135 @@
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Carousel from 'react-bootstrap/Carousel';
-// import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-
-// 在 index.js 或 App.js 文件中引入
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
+import { format } from 'date-fns'
+import Carousel from 'react-bootstrap/Carousel'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import {
   PiHeartStraight,
   PiHeartStraightFill,
   PiChatCircle,
-} from 'react-icons/pi';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/swiper-bundle.min.css';
-import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma';
+} from 'react-icons/pi'
+import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
+import { usePost } from '@/hooks/post/use-post'
+import { useAuth } from '@/hooks/use-auth'
+import styles from './index.module.scss'
+import ReplyInfo from '../reply-info'
+export default function PostCard1({
+  postAuthor,
+  authorAvatar,
+  title,
+  content,
+  tags,
+  postImages,
+  likeCount,
+  saveCount,
+  commentCount,
+  postCreateTime,
+}) {
+  const { postId } = usePost()
+  const { auth } = useAuth()
+  const [active, setActive] = useState({ 1: null, 2: null, 3: false })
+  const [inputValue, setInputValue] = useState('')
+  const [focus, setFocus] = useState(false)
+  const [user, setUser] = useState('')
+  const [reply, setReply] = useState('')
+  const userId = auth.userData.id
 
-import styles from './index.module.scss';
-import ReplyInfo from '../reply-info';
-export default function PostCard1(props) {
-  //有多icon 狀態初始化為物件
-  // const [hover, setHover] = useState({
-  //   1: false,
-  //   2: false,
-  //   3: false,
-  // });
-  const [active, setActive] = useState({});
+  // const [index, setIndex] = useState(0)
+  // const [isSaved, setIsSaved] = useState(false)
+  // Like Init (only if user is logged in)
+  useEffect(() => {
+    if (auth.isAuth) {
+      fetch(`/api/post/${postId}/${userId}/isLiked`)
+        .then((res) => res.json())
+        .then((data) => {
+          setActive((prevState) => ({
+            ...prevState,
+            1: data.isLiked, // icon id 1 是按赞
+          }))
+          console.log(data.isLiked)
+        })
+        .catch((err) => console.error(err))
+    }
+  }, [postId, userId, auth.isAuth])
+
   const icons = [
     {
       id: 1,
       default: <FgThumbsUp height="26" width="26" fill="#8A8A8A" />,
-      hover: <FgThumbUpFill height="26" width="26" fill="#8A8A8A" />,
-      // active: <RiThumbUpFill size={26} fill="red" />,
+      active: <FgThumbUpFill height="26" width="26" fill="#8A8A8A" />,
     },
     {
       id: 2,
       default: <PiHeartStraight size={26} fill="#8A8A8A" />,
-      hover: <PiHeartStraightFill size={26} fill="#963827" />,
+      active: <PiHeartStraightFill size={26} fill="#963827" />,
     },
     {
       id: 3,
       default: <PiChatCircle size={26} fill="#8A8A8A" />,
-      hover: <PiChatCircle size={26} fill="#8A8A8A" />,
+      active: <PiChatCircle size={26} fill="#8A8A8A" />,
     },
-  ];
-  const [inputValue, setInputValue] = useState('');
-  const [focus, setFocus] = useState(false);
-  const [user, setUser] = useState('');
-  const [reply, setReply] = useState('');
-  // const FocusHandle = (e) => {
-  //   setFocus(true);
-  //   // setInputValue(e.target.value);
-  //   // if (inputValue !== '') {
-  //   //   setFocus(true);
-  //   // }
-  // };
-  const cancelHandle = (e) => {
-    e.preventDefault();
-    setInputValue('');
-    setFocus(false);
-    setUser('');
-    setReply('');
-  };
-  const replyHandle = (text, user) => {
-    setUser(user);
-    setReply(text);
-    setFocus(true);
-  };
-  const iconHandle = (iconId) => {
-    //先複製原本的狀態 然後動態搜尋 改相反
-    setActive((prevState) => ({
-      ...prevState,
-      [iconId]: !prevState[iconId],
-    }));
-  };
+  ]
 
+  const formattedTime = postCreateTime
+    ? format(new Date(postCreateTime), 'yyyy-MM-dd HH:mm')
+    : ''
+  // console.log(postImages)
+  let { post } = usePost()
+  if (!post) {
+    return <p></p>
+  }
+  const { comments } = post
+
+  const cancelHandle = (e) => {
+    e.preventDefault()
+    setInputValue('')
+    setFocus(false)
+    setUser('')
+    setReply('')
+  }
+  const replyHandle = (text, user) => {
+    setUser(user)
+    setReply(text)
+    setFocus(true)
+  }
+  // const iconHandle = (iconId) => {
+  //   //先複製原本的狀態 然後動態搜尋 改相反
+  //   setActive((prevState) => ({
+  //     ...prevState,
+  //     [iconId]: !prevState[iconId],
+  //   }))
+  // }
+
+  // const SelectHandle = (index, e) => {
+  //   const imagesCount = postImages.split(',').length
+  //   if (index === 0 && e?.direction === 'next' && index === imagesCount - 1) {
+  //     return
+  //   }
+  //   setIndex(index)
+  // }
   return (
     <>
       <div className={styles['post-card3']}>
         {/* post-img with Sw*/}
         <div className={styles['post-img']}>
-          <Carousel interval={null}>
-            <Carousel.Item>
-              <Image
-                className={styles['user-image']}
-                src="/post/p2_1.webp"
-                alt="User Image"
-                width={600}
-                height={650}
-                objectFit="cover"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <Image
-                className={styles['user-image']}
-                src="/post/p1_1.webp"
-                alt="User Image"
-                width={600}
-                height={720}
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <Image
-                className={styles['user-image']}
-                src="/post/p2_1.webp"
-                alt="User Image"
-                width={600}
-                height={720}
-              />
-            </Carousel.Item>
+          <Carousel
+            interval={null}
+            // onSelect={SelectHandle}
+            // controls={postImages.split(',').length > 1}
+          >
+            {postImages.split(',').map((image, index) => (
+              <Carousel.Item key={index}>
+                <Image
+                  className={styles['user-image']}
+                  src={`/post/${image}`}
+                  alt="User Image"
+                  // fill
+                  // layout="responsive"
+                  width={600}
+                  height={650}
+                />
+              </Carousel.Item>
+            ))}
           </Carousel>
         </div>
         {/* post-text */}
@@ -116,80 +138,46 @@ export default function PostCard1(props) {
           <div className={styles['post-user']}>
             <Image
               className={styles['user-image']}
-              src="/post/p2_1.webp"
+              src={`/user/img/${authorAvatar}`}
               alt="User Image"
               width={40}
               height={40}
+              priority
             />
-            <div className={styles['user-name']}>Cleo</div>
+            <div className={styles['user-name']}>{postAuthor}</div>
           </div>
           {/* mid-content */}
           <div className={styles['post-info-wrap']}>
             <div className={styles['post-info']}>
-              <div className={`${styles['info-title']} h6`}>
-                近期愛用的粉底! 一整天都不會脫妝
-              </div>
+              <div className={`${styles['info-title']} h6`}>{title}</div>
               <div>
-                <span className={styles['info-content']}>
-                  不知不覺又到了一年最後一個月 NARS推出流金夜閃系列✨
-                  一起用最有氛圍感的派對妝容 來迎接年末派對時刻！
-                  不知不覺又到了一年最後一個月 NARS推出流金夜閃系列✨
-                  一起用最有氛圍感的派對妝容 來迎接年末派對時刻！
-                  起用最有氛圍感的派對妝容 來迎接年末派對時刻！
-                  不知不覺又到了一年最後一個月 NARS推出流金夜閃系列✨
-                  一起用最有氛圍感的派對妝容起用最有氛圍感的派對妝容
-                  來迎接年末派對時刻！ 不知不覺又到了一年最後一個月
-                  NARS推出流金夜閃系列✨ 一起用最有氛圍感的派對妝容
-                </span>
-                <span>#NARS</span>
-                <span>#聖誕派對</span>
+                <span className={styles['info-content']}>{content}</span>
+                {tags.split(',').map((tag, index) => (
+                  <span key={index}>#{tag}</span>
+                ))}
               </div>
-              <div className={styles['info-date']}>2024-06-11 18:45</div>
+              <div className={styles['info-date']}>{formattedTime}</div>
             </div>
             <hr className={styles['line']} />
             {/* reply */}
             <div className={styles['post-reply']}>
-              <div className={styles['reply-amount']}>共有2條評論</div>
-              <div className={styles['reply-wrap']}>
-                <div className={styles['reply-big-container']}>
-                  <div className={styles['reply-big']}>
-                    <Image
-                      className={styles['user-image']}
-                      src="/post/p2_1.webp"
-                      alt="User Image"
-                      width={40}
-                      height={40}
-                    />
-                    <ReplyInfo
-                      onReplyClick={replyHandle}
-                      username="Anna"
-                      datetime="2022-12-12 12:12:12"
-                      replyContent="新的遮瑕膏測評! 遮瑕力超強"
-                      likeCount={15}
-                      replyCount={10}
-                    />
-                  </div>
-                  <div className={styles['reply-small-container']}>
-                    <div className={styles['reply-small']}>
-                      <Image
-                        className={styles['user-image']}
-                        src="/post/p1_1.webp"
-                        alt="User Image"
-                        width={34}
-                        height={34}
-                      />
-                      <ReplyInfo
-                        onReplyClick={replyHandle}
-                        username="Anna"
-                        datetime="2022-12-12 12:12:12"
-                        replyContent="新的遮瑕膏測評! "
-                        likeCount={15}
-                        replyCount={10}
-                      />
-                    </div>
-                    <div className={styles['reply-more']}>展開 3 條回覆</div>
-                  </div>
-                </div>
+              <div className={styles['reply-amount']}>
+                共有{commentCount}條評論
+              </div>
+              <div className={styles['reply-container']}>
+                {comments.map((comment) => (
+                  <ReplyInfo
+                    key={comment.comment_id}
+                    onReplyClick={replyHandle}
+                    comments={comment}
+                    commentAuthor={comment.comment_author_nickname}
+                    commentAuthorAvatar={comment.comment_author_img}
+                    commentCreateTime={comment.created_at}
+                    commentContent={comment.comment_content}
+                    commentLikeCount={comment.comment_like_count}
+                    commentReplyCount={comment.comment_reply_count}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -212,10 +200,17 @@ export default function PostCard1(props) {
                 <div className={styles['comment-icons']}>
                   {icons.map((icon) => (
                     <div key={icon.id}>
-                      <div onClick={(e) => iconHandle(icon.id)}>
-                        {active[icon.id] ? icon.hover : icon.default}
-                      </div>
-                      <span>10</span>
+                      {/* onClick={(e) => iconHandle(icon.id)} */}
+                      <div>{active[icon.id] ? icon.active : icon.default}</div>
+                      <span>
+                        {icon.id === 1
+                          ? likeCount
+                          : icon.id === 2
+                          ? saveCount
+                          : icon.id === 3
+                          ? commentCount
+                          : 1}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -235,5 +230,5 @@ export default function PostCard1(props) {
         </div>
       </div>
     </>
-  );
+  )
 }

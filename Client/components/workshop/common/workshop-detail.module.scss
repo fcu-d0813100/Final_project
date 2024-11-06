@@ -141,7 +141,7 @@
     .wDate {
       padding-bottom: 12px;
       padding-inline: 20px;
-       border-bottom: solid 1px rgb(255, 255, 255);
+      border-bottom: solid 1px rgb(255, 255, 255);
       font-size: 36px;
       font-family: Noto Sans;
       font-weight: 600;
@@ -170,9 +170,8 @@
         transition: 0.4s;
       }
     }
-   
   }
-  
+
   //-------------
   .checkDateDisable {
     height: 230px;
@@ -252,11 +251,30 @@
 
 //----------------------------------------------
 .section03 {
-  height: 700px;
+  height: 550px;
+  filter: grayscale(80%);
+
   .fImg {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  div {
+    background-color: rgba(0, 0, 0, 0.433);
+    height: 550px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    h2 {
+      border-inline: 1px solid white;
+      padding: 20px 120px;
+    }
   }
 }
 
@@ -287,6 +305,7 @@
       border-right: 1px solid black;
       .context {
         line-height: 2.5rem;
+        white-space: pre-line;
       }
     }
   }
@@ -315,4 +334,7 @@
       object-fit: cover;
     }
   }
+}
+.noteContext {
+  white-space: pre-line;
 }

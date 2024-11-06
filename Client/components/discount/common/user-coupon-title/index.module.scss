@@ -1,0 +1,56 @@
+@import '@/styles/_variant.scss';
+
+.post-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px $green-500 solid;
+    box-sizing: border-box;
+    margin: 0;
+
+    & span:first-child {
+        color: $green-700;
+
+        @media (max-width:992px) {
+            // padding: 10px 0;
+            font-size: 28px;
+        }
+
+
+        @media (max-width:768px) {
+            // padding: 10px 0;
+            font-size: 24px;
+        }
+
+        @media (max-width: 390px) {
+            // padding: 10px 0;
+            font-size: 20px;
+        }
+
+    }
+}
+
+.history {
+    color: $green-700;
+   
+}
+/* 可选: 增加 hover 背景色变化 */
+.history:hover {
+    color: #fff;
+    transition: 0.5s;
+    padding-inline: 10px;
+    padding-block: 5px;
+    background-color: $green-700; /* 根据需要调整 */
+    border-radius: 20px;
+    .arrow {
+        display: block;
+        
+    }
+}
+
+.arrow {
+    font-size: 20px; /* 根据需要调整 */
+    color: #fff; /* 根据需要调整 */
+    display: none;
+}
+

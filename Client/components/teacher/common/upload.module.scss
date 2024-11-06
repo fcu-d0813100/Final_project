@@ -1,58 +1,50 @@
 @import '@/styles/_variant.scss';
 
-
+.header {
+  background-color: #626553;
+  height: 72px;
+  color: $gray-100;
+}
 .main {
   padding: 70px 120px;
   padding-left: 420px;
   margin: auto;
-  .section1{
+  .section1 {
     padding-inline: 80px;
     padding-block: 50px;
-  .uploadCover{
-    width: 400px;
-    height: 400px;
-    border:3px dashed $green-200 ;
-    border-radius: 10px;
-    background-color: #f8f8f8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    .plus{
-      font-size: 60px;
-      padding: 10px;
-      border: 2.5px dashed $green-200;
-      color: $green-600;
-      border-radius: 50%;
-      transition:all 0.2s;
-    }
-    .picUploadText{
-      color: $green-600;
-      span{
-        color: $gray-200;
-        transition:all 0.2s;
+    .uploadMainInfo {
+      margin-left: 80px;
+
+      .subtitle {
+        border-bottom: 1px solid $green-600;
+        padding-inline: 30px;
+        padding-block: 5px;
+        margin-bottom: 30px;
+        h4 {
+          color: $green-700;
+        }
       }
-    }
-    transition:all 0.2s;
-    &:hover{
-      background:rgb(209, 209, 209);
-      border:3px dashed $green-400 ;
-      .plus{
-        border: 2.5px dashed $green-400;
-      }
-       span{
-        color: $gray-300;
+      .inputArea {
+        padding-inline: 30px;
+        
       }
     }
   }
+  .section02 {
+    padding-inline: 80px;
+    padding-block: 50px;
 
-  .uploadMainInfo{
-    border-bottom: 1px solid $green-600;
-
-    
-
+    .workshopDetail {
+      background-color: #f8f8f8;
+      border-radius: 5px;
+    }
   }
+  .section03 {
+    padding-inline: 80px;
+    padding-block: 50px;
+    h4 {
+      color: $green-700;
+    }
   }
-  
-
 }

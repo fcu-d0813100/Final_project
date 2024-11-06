@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
+import { useTeacherAuth } from '@/hooks/use-teacher-auth'
 import {
   PiUser,
   PiLockOpen,
@@ -11,6 +12,7 @@ import {
   PiClockCountdown,
   PiTicket,
 } from 'react-icons/pi'
+
 import styles from './index.module.scss'
 
 const navLinks = [
@@ -21,21 +23,22 @@ const navLinks = [
     key: 'user',
   },
   {
-    href: '/teacher/myworkshop',
-    icon: <PiLockOpen size={65} />,
-    label: '我的課程',
-    key: 'password',
-  },
-  {
     href: '/teacher/upload',
     icon: <PiListMagnifyingGlass size={65} />,
     label: '課程上架',
     key: 'order',
   },
+  {
+    href: '/teacher/myworkshop',
+    icon: <PiLockOpen size={65} />,
+    label: '我的課程',
+    key: 'password',
+  },
 ]
 
 export default function Sidebar() {
   const router = useRouter()
+  const { teacherLogout } = useTeacherAuth()
 
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
@@ -99,7 +102,14 @@ export default function Sidebar() {
           ))}
         </Nav>
       </Navbar.Collapse>
-      <button className="btn-logout">登出</button>
+      <button
+        onClick={() => {
+          teacherLogout()
+        }}
+        className="btn-logout"
+      >
+        登出
+      </button>
     </Navbar>
   )
 }

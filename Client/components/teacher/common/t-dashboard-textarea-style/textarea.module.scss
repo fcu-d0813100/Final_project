@@ -1,0 +1,18 @@
+@import '@/styles/_variant.scss';
+
+.label {
+  color: $green-500;
+}
+.detailTextarea {
+  border-radius: 5px;
+  border: 1.5px solid $gray-200;
+  padding-inline: 15px;
+
+  &:focus {
+    outline: none;
+    border: 2px solid $green-500;
+  }
+  &::placeholder {
+    color: #cbcbcb;
+  }
+}

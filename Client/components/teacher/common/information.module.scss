@@ -1,6 +1,5 @@
 @import '@/styles/_variant.scss';
 
-
 .aside {
   height: 100vh;
   width: 300px;
@@ -83,9 +82,46 @@
         line-height: 2rem;
         padding-bottom: 20px;
       }
-
     }
-
   }
-
+  // --------edit-------------------
+  .basicInfoArea {
+    padding-inline: 80px;
+    padding-block: 50px;
+    .account {
+      display: flex;
+      align-items: end;
+      border-bottom: 1px solid $green-700;
+      padding-bottom: 10px;
+      color: $green-600;
+    }
+    .editImgArea {
+      width: 320px;
+      height: 320px;
+      .editImg {
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+    .inputArea {
+      padding-inline: 30px;
+      .radioLable {
+        span {
+          color: $green-500;
+        }
+      }
+     
+    }
+  }
+  .editMoreInfoArea{
+    padding-inline: 80px;
+    padding-block: 50px;
+    .editTextArea{
+      background:#f8f8f8 ;
+      padding: 50px;
+    }
+  }
+  
 }

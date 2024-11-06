@@ -1,22 +1,69 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Accordion from 'react-bootstrap/Accordion'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import style from './order-box.module.scss'
 import { useCartProduct } from '@/hooks/use-cartP'
+import { useCartWorkshop } from '@/hooks/use-cartW'
 import Image from 'next/image'
 
 export default function OrderBox() {
   // 從use-cartP鉤子取得商品內容
-  const { productItems = [], pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
-  console.log(productItems)
+  const { productItems = [] } = useCartProduct()
+  // 從use-cartW鉤子取得課程內容
+  const { workshopItems = [] } = useCartWorkshop()
+
+  // 取得商品圖片或課程圖片
+  const firstProductImage =
+    productItems.length > 0
+      ? `/product/mainimage/${productItems[0].mainimage}`
+      : null
+  const firstWorkshopImage =
+    workshopItems.length > 0
+      ? `/workshop/workshop_img/${workshopItems[0].typeId}-${workshopItems[0].id}-c.jpg`
+      : null
+
+  //生成時間戳記訂單編碼
+  const [orderNumber, setOrderNumber] = useState('')
+
+  const generateOrderNumber = () => {
+    const now = new Date()
+    const timestamp = now.toISOString().replace(/\D/g, '').slice(0, 14)
+    const randomCode = Math.floor(10 + Math.random() * 90)
+    return `${timestamp}-${randomCode}`
+  }
+  useEffect(() => {
+    const newOrderNumber = generateOrderNumber()
+    setOrderNumber(newOrderNumber)
+    // 將訂單編號存儲到localStorage
+    localStorage.setItem('orderNumber', newOrderNumber)
+  }, [])
+
   return (
     <div className={style['order-box']}>
       <Accordion>
         <Accordion.Item eventKey="0">
           <Accordion.Header className={style['order-header']}>
             <div className={style['order-detail']}>
-              <div>圖片</div>
-              <div>訂單編號：11011124</div>
+              <div>
+                {firstProductImage ? (
+                  <Image
+                    src={firstProductImage}
+                    alt="First Product Image"
+                    width={140} // 設定圖片寬度
+                    height={140} // 設定圖片高度
+                  />
+                ) : firstWorkshopImage ? (
+                  <Image
+                    src={firstWorkshopImage}
+                    alt="First Workshop Image"
+                    width={100} // 設定圖片寬度
+                    height={100} // 設定圖片高度
+                  />
+                ) : (
+                  <span>無圖片</span>
+                )}
+              </div>
+              <div>訂單編號：{orderNumber}</div>
               <div>查看訂單</div>
             </div>
           </Accordion.Header>
@@ -49,12 +96,21 @@ export default function OrderBox() {
                     </tr>
                   ))}
                   {/* 課程資料 */}
-                  <tr>
-                    <td>F19時尚攝影彩妝班</td>
-                    <td>2024/10/3 (四) 9:00 - 12:00 | 3hr</td>
-                    <td>2</td>
-                    <td>NT$6,000</td>
-                  </tr>
+                  {workshopItems.map((v, i) => (
+                    <tr key={i}>
+                      <td>{v.name}</td>
+                      <td>{v.date}</td>
+                      <td>{v.qty}</td>
+                      <td>
+                        <span className={style['old-price']}>
+                          NT${(v.price * v.qty).toLocaleString()}
+                        </span>
+                        <span className={style['new-price']}>
+                          NT${(v.price * v.qty * 0.8).toLocaleString()}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

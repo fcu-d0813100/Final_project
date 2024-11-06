@@ -1,68 +1,92 @@
 import React, { useState, useEffect } from 'react'
 import Styles from '@/components/activity/page/activity-det/index.module.scss'
-import Image from 'next/image' // 確保已導入 Image 組件
-import { Heart } from 'phosphor-react'
+import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 
-export default function Carousel({ items = [] }) {
+export default function Carousel({ cardsData = [] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const nextSlide = () => {
-    setCurrentIndex((currentIndex + 1) % items.length)
+  const updateCarousel = (index) => {
+    setCurrentIndex(index)
   }
 
-  const prevSlide = () => {
-    setCurrentIndex((currentIndex - 1 + items.length) % items.length)
+  const nextCard = () => {
+    setCurrentIndex((currentIndex + 1) % cardsData.length)
+  }
+
+  const prevCard = () => {
+    setCurrentIndex((currentIndex - 1 + cardsData.length) % cardsData.length)
   }
 
   useEffect(() => {
-    // 可以在這裡添加自動播放功能
-  }, [])
+    updateCarousel(currentIndex)
+  }, [currentIndex])
 
   return (
-    <div>
+    <div className={`${Styles['activity-carousel-text']} container`}>
+      <h2 className={Styles['section-title']}>相關活動</h2>
+      <div className={Styles['activity-name']}>
+        <h3 id="activityTitle">{cardsData[currentIndex].title}</h3>
+        <p id="activitySubtitle">{cardsData[currentIndex].subtitle}</p>
+      </div>
+
+      <div className={`${Styles['btngrp']} d-flex justify-content-between `}>
+        <button id="prev" onClick={prevCard} className={Styles['navButton']}>
+          <BsChevronLeft />
+        </button>
+        <button id="next" onClick={nextCard} className={Styles['navButton']}>
+          <BsChevronRight />
+        </button>
+      </div>
+
       <div className={Styles['activity-carousel']}>
-        {items.map((item, index) => (
+        {cardsData.map((card, index) => (
           <div
             key={index}
             className={`${Styles['cardLeft']} ${
-              index === currentIndex ? Styles['active'] : ''
+              index === currentIndex
+                ? Styles['active']
+                : index === (currentIndex + 1) % cardsData.length
+                ? Styles['right']
+                : index ===
+                  (currentIndex - 1 + cardsData.length) % cardsData.length
+                ? Styles['left']
+                : ''
             }`}
             style={{
-              transform: `translateX(${(index - currentIndex) * 100}%)`,
+              transform:
+                index === currentIndex
+                  ? index === 0
+                    ? 'translateX(40%)'
+                    : index === 1
+                    ? 'translateX(0)'
+                    : 'translateX(-40%)'
+                  : index === (currentIndex + 1) % cardsData.length
+                  ? 'translateX(300%)'
+                  : 'translateX(-350%)',
             }}
           >
             <div className={Styles['cardL']}>
               <a href="#">
                 <div className={Styles['card-img']}>
-                  <Image
-                    src={item.image}
-                    width={860}
-                    height={500}
-                    alt={item.title}
-                  />
+                  <img src={card.imgSrc} alt="Image" />
                 </div>
               </a>
               <div className={Styles['card-content']}>
-                <div className={Styles['card-date']}>{item.date}</div>
+                <div className={Styles['card-date']}>{card.date}</div>
                 <div className={Styles['card-info']}>
-                  <p className="title">主辦單位 | host</p>
-                  <p>{item.host}</p>
-                  <p className="title">活動地點 | location</p>
-                  <p>{item.location}</p>
+                  <p className={Styles['title']}>主辦單位 | host</p>
+                  <p>{card.host}</p>
+                  <p className={Styles['title']}>活動地點 | location</p>
+                  <p>{card.location}</p>
                 </div>
                 <div className={Styles['card-footer']}>
-                  <div className={Styles['badge']}>{item.people} 人</div>
-                  <div className={Styles['status']}>報名中</div>
-                  <Heart className={Styles['ph-heart']} size={24} color="red" />
+                  <div className={Styles['badge']}>{card.attendees}</div>
+                  <div className={Styles['status']}>{card.status}</div>
                 </div>
               </div>
             </div>
           </div>
         ))}
-      </div>
-      <div className={`${Styles['btngrp']} d-flex justify-content-between `}>
-        <button onClick={prevSlide}>Prev</button>
-        <button onClick={nextSlide}>Next</button>
       </div>
     </div>
   )
