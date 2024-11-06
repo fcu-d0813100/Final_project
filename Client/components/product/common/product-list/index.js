@@ -101,16 +101,22 @@ const ProductPage = ({
   //       // date: selectedTime.date,
   //     })
 
-  //     onAddProduct(cartProduct); // 添加商品到購物車
-  //     toast.success(`${product.product_name} 已加入購物車!`); // 顯示成功訊息
-  //     if (navigateToCart) {
-  //       router.push('/cart'); // 當 navigateToCart 為 true 時跳轉到購物車頁面
-  //     }
-  //   // }
-  // }
-
   //-------------加入購物車(chia)
   const { onAddProduct } = useCartProduct()
+
+  //------吐司訊息(新增商品)
+  const addPnotify = () =>
+    toast.success('新增1件商品', {
+      style: {
+        border: '1.2px solid #90957a',
+        padding: '12px 40px',
+        color: '#626553',
+      },
+      iconTheme: {
+        primary: '#626553',
+        secondary: '#fff',
+      },
+    })
 
   return (
     <div className={styles['container']}>
@@ -473,6 +479,7 @@ const ProductPage = ({
 
           {/* 商品列表區域 */}
           <section className={`${styles['product-list-w']} ms-3 col-lg-10`}>
+            <Toaster position="top-center" reverseOrder={true} />
             {/* 商品列表頂部 */}
             <div
               className={`${styles['row']} justify-content-between align-items-center mb-5`}
@@ -640,6 +647,7 @@ const ProductPage = ({
                       onClick={(e) => {
                         e.stopPropagation()
                         onAddProduct(product)
+                        addPnotify()
                       }}
                     >
                       加入購物車

@@ -283,7 +283,7 @@ export default function CartList() {
                 >
                   <button
                     className="btn-primary"
-                    onClick={() => router.push('/')}
+                    onClick={() => router.push('/product/product-list')}
                   >
                     繼續購物
                   </button>
