@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
 // import { PiEyeClosed } from 'react-icons/pi'
-import { useTeacherAuth } from '@/hooks/use-teacher-auth'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function TeacherLogin(props) {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
+  const role = 'teacher'
 
-  const { teacherAuth, setTeacherAuth, teacherLogin, teacherLogout } =
-    useTeacherAuth()
+  const { auth, login, logout } = useAuth()
+
   // checkbox 呈現密碼用
   // const [showPassword, setShowPassword] = useState(false)
-
+  const handleLogin = () => {
+    login(account, password, role)
+  }
   return (
     <>
       <div className={styles['bg-img']}>
@@ -76,9 +79,7 @@ export default function TeacherLogin(props) {
 
                   <div className="d-grid col-12 pt-4">
                     <button
-                      onClick={() => {
-                        teacherLogin(account, password)
-                      }}
+                      onClick={handleLogin}
                       className={`btn-primary h6 ${styles['btn-primary']}`}
                     >
                       登入
