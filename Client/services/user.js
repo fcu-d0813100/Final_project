@@ -59,7 +59,7 @@ export const logout = async () => {
  * 載入會員id的資料用，需要登入後才能使用。此API路由會檢查JWT中的id是否符合本會員，不符合會失敗。
  */
 export const getUserById = async (id = 0) => {
-  return await axiosInstance.get(`/users/${id}`)
+  return await axiosInstance.get(`/user/${id}`)
 }
 /**
  * 忘記密碼/OTP 要求一次性密碼
@@ -81,25 +81,25 @@ export const resetPassword = async (email = '', password = '', token = '') => {
  * 註冊用
  */
 export const register = async (user = {}) => {
-  return await axiosInstance.post('/users', user)
+  return await axiosInstance.post('/user', user)
 }
 /**
  * 修改會員一般資料用(排除password, username, email)
  */
 export const updateProfile = async (id = 0, user = {}) => {
-  return await axiosInstance.put(`/users/${id}/profile`, user)
+  return await axiosInstance.put(`/user/${id}/profile`, user)
 }
 /**
  * 修改會員頭像用，需要用FormData
  */
 export const updateProfileAvatar = async (formData) => {
-  return await axiosInstance.post(`/users/upload-avatar`, formData)
+  return await axiosInstance.post(`/user/upload-avatar`, formData)
 }
 /**
  * 修改會員密碼專用, password = { originPassword, newPassword }
  */
 export const updatePassword = async (id = 0, password = {}) => {
-  return await axiosInstance.put(`/users/${id}/password`, password)
+  return await axiosInstance.put(`/user/${id}/password`, password)
 }
 /**
  * 獲得會員有加在我的最愛的商品id，回傳為id陣列
