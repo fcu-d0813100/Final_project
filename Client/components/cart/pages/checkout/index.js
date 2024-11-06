@@ -7,26 +7,14 @@ import { useRouter } from 'next/router'
 import BuyRule from '../../common/buyrule'
 import OrderBox from '../../common/orderbox'
 import Seven from '../../../../pages/cart/ship'
-import { useCartProduct } from '@/hooks/use-cartP'
-import { useCartWorkshop } from '@/hooks/use-cartW'
 import axios from 'axios'
 
 export default function Checkout() {
   const router = useRouter()
 
-  //鉤子帶入金額跟數量
-  const { pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
-  const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
-  //打折的價格
-  const discountedPTotalPrice = pTotalPrice * 0.8
-  const discountedWTotalPrice = wTotalPrice * 0.8
-  const totalDiscountPrice = discountedPTotalPrice + discountedWTotalPrice
-
-  //----------物流
   const [deliveryMethod, setDeliveryMethod] = useState('home') // 預設選擇宅配
-
-  //----------付款方式
   const [paymentMethod, setPaymentMethod] = useState('cod') // 預設付款方式為貨到付款
+  const [orderData, setOrderData] = useState({}) // 保存訂單資料
 
   // 在組件加載時從 localStorage 獲取值
   useEffect(() => {
@@ -40,73 +28,67 @@ export default function Checkout() {
       setPaymentMethod(savedPaymentMethod)
     }
 
-    // 檢查 URL 中是否有 deliveryMethod 查詢參數(711的)
     if (router.query.deliveryMethod) {
       router.replace(router.pathname, undefined, { shallow: true })
     }
   }, [router.query])
 
-  // 儲存到 localStorage
   const handleDeliveryChange = (method) => {
     setDeliveryMethod(method)
     localStorage.setItem('deliveryMethod', method)
   }
-  // 儲存到 localStorage
+
   const handlePaymentChange = (event) => {
     const method = event.target.value
     setPaymentMethod(method)
     localStorage.setItem('paymentMethod', method)
   }
 
-  //------------送出預設訂單
+  const handleCheckout = () => {
+    const recipientName = document.getElementsByName('recipient_name')[0].value
+    const recipientPhone =
+      document.getElementsByName('recipient_phone')[0].value
+    const recipientEmail =
+      document.getElementsByName('recipient_email')[0].value
+    const recipientCity = document.getElementsByName('recipient_city')[0].value
+    const recipientDistrict =
+      document.getElementsByName('recipient_district')[0].value
+    const recipientAddress =
+      document.getElementsByName('recipient_address')[0].value
 
-  const handleCheckout = async () => {
-    // 獲取宅配或7-11的資料
+    // 檢查選擇的物流方式，並生成不同的 `orderData`
     let orderData = {}
-    const productCart = JSON.parse(localStorage.getItem('productCart'))
-    const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
-    const orderNumber = localStorage.getItem('orderNumber')
-
-    if (deliveryMethod === 'home') {
+    if (deliveryMethod === '7-11') {
       orderData = {
-        deliveryMethod: 1,
-        recipient_name: document.querySelector('input[name="recipient_name"]')
-          .value,
-        recipient_phone: document.querySelector('input[name="recipient_phone"]')
-          .value,
-        recipient_email: document.querySelector('input[name="recipient_email"]')
-          .value,
-        recipient_city: document.querySelector('select[name="recipient_city"]')
-          .value,
-        recipient_district: document.querySelector(
-          'select[name="recipient_district"]'
-        ).value,
-        recipient_address: document.querySelector(
-          'input[name="recipient_address"]'
-        ).value,
-        productCart,
-        Workshopcart,
-        orderNumber,
-        totalDiscountPrice,
+        deliveryMethod,
+        paymentMethod,
+        sevenInfo: {
+          // 假設 Seven 組件內有需要的字段 (例如 7-11 門市名稱或編號等)
+          storeName: '示例門市',
+          storeID: '7111234',
+        },
       }
-    } else if (deliveryMethod === '7-11') {
-      const store711 = JSON.parse(localStorage.getItem('store711'))
+    } else {
       orderData = {
-        deliveryMethod: 2,
-        storename: store711.storename,
-        storeaddress: store711.storeaddress,
-        productCart,
-        Workshopcart,
-        orderNumber,
-        totalDiscountPrice,
+        deliveryMethod,
+        paymentMethod,
+        recipient: {
+          name: recipientName,
+          phone: recipientPhone,
+          email: recipientEmail,
+          city: recipientCity,
+          district: recipientDistrict,
+          address: recipientAddress,
+        },
       }
     }
 
-    //
+    // 將 `orderData` 保存到 localStorage
+    localStorage.setItem('orderData', JSON.stringify(orderData))
+    alert('訂單成立')
+    // 跳轉到確認頁面或提交訂單
+    // router.push('/cart/confirmation')
   }
-
-  //------------送出預設訂單
-
   return (
     <>
       <div className="container">
@@ -236,6 +218,25 @@ export default function Checkout() {
                     ) : (
                       <div className={style['shipping-form']}>
                         <Seven />
+                        <Form.Group className="mb-3" controlId="recipient-name">
+                          <Form.Label className="mt-3">收件人</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="填寫姓名"
+                            name="recipient_name"
+                          />
+                        </Form.Group>
+                        <Form.Group
+                          className="mb-3"
+                          controlId="recipient-phone"
+                        >
+                          <Form.Label>電話</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="例 : 0912345678"
+                            name="recipient_phone"
+                          />
+                        </Form.Group>
                       </div>
                     )}
                   </Form>
@@ -288,7 +289,7 @@ export default function Checkout() {
                   返回
                 </button>
                 <button className="ms-2 btn-secondary" onClick={handleCheckout}>
-                  結賬
+                  確認
                 </button>
               </div>
             </div>
