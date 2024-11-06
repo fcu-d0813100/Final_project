@@ -36,6 +36,7 @@ export function TeacherAuthProvider({ children }) {
       method: 'GET',
     })
     const resTeacherData = await res.json()
+    console.log('伺服器回應:', resTeacherData)
 
     if (resTeacherData.status === 'success') {
       return resTeacherData.data.teacher

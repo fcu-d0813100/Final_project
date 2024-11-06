@@ -26,6 +26,7 @@ router.get('/', async function (req, res, next) {
     teachers.id AS teacher_id,
     teachers.name AS teacher_name,
     GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
+    workshop_time.date,
     workshop.registration_start,
     workshop.registration_end,
     workshop.isUpload,
@@ -47,7 +48,7 @@ router.get('/', async function (req, res, next) {
 
   // 若 min 和 max 存在，則加入日期範圍篩選條件
   if (min && max) {
-    sqlSelect += ` AND workshop.registration_start BETWEEN ? AND ?`
+    sqlSelect += ` AND workshop_time.date BETWEEN ? AND ?`
   }
 
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
