@@ -102,27 +102,7 @@ export default function Checkout() {
       }
     }
 
-    // 根據付款方式進行處理
-    if (paymentMethod === 'cod') {
-      orderData.paymentMethod = 1
-      // 直接插入訂單到資料庫
-      try {
-        const response = await axios.post(
-          'http://localhost:3005/api/cart/checkout',
-          orderData
-        )
-        console.log(orderData)
-        console.log('訂單已成功提交', response.data)
-        // 可以在此添加成功後的操作，比如重定向或顯示提示
-      } catch (error) {
-        console.error('提交訂單失敗', error)
-      }
-    } else if (paymentMethod === 'ecPay') {
-      orderData.paymentMethod = 2
-      // 在此處理串接金流的邏輯
-      // 可能需要引導用戶到支付頁面
-      console.log('請求綠界支付...')
-    }
+    //
   }
 
   //------------送出預設訂單

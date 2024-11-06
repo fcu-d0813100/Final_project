@@ -113,10 +113,10 @@ export default function CartList() {
                           />
                         </div>
                         <div className={style['cosmetic-text']}>
-                          <div className="ps">{product.brand_name}</div>
+                          <div className="ps">{product.brand}</div>
                           <div className="h6 mb-3">{product.product_name}</div>
                           <div className={style['sub_text']}>
-                            顏色：{product.color}
+                            顏色：{product.color_name}
                           </div>
                         </div>
                       </div>
@@ -161,9 +161,12 @@ export default function CartList() {
                       {/* 商品價格 */}
                       <div className={`h6 ${style.price}`}>
                         NT$
-                        {(product.price * product.qty * 0.8).toLocaleString()}
+                        {(product.price * product.qty).toLocaleString()}
                         <div className={style['origin_price']}>
-                          NT${(product.price * product.qty).toLocaleString()}
+                          NT$
+                          {(
+                            product.originalprice * product.qty
+                          ).toLocaleString()}
                         </div>
                       </div>
                       <div className={style.trash}>
@@ -180,7 +183,7 @@ export default function CartList() {
                   ))}
                   <div className={style['cosmetic_amount']}>
                     商品小計：
-                    <span>NT${(pTotalPrice * 0.8).toLocaleString()}</span>
+                    <span>NT${pTotalPrice.toLocaleString()}</span>
                   </div>
                 </div>
               )}
