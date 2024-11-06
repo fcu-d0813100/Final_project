@@ -172,25 +172,9 @@ router.put(
     // id可以用jwt的存取令牌(accessToken)從authenticate中得到(如果有登入的話)
     const id = req.user.id
 
-    // 這裡可以檢查
     const updateUser = req.body
 
     let result = null
-
-    // 這是一起更新密碼的寫法
-    // if (updateUser.password) {
-    //   result = await db.query(
-    //     'UPDATE `user` SET `name`=?,`password`=?,`email`=? WHERE `id`=?;',
-    //     [updateUser.name, updateUser.password, updateUser.email, id]
-    //   )
-    // } else {
-    //   result = await db.query(
-    //     'UPDATE `user` SET `name`=?,`email`=? WHERE `id`=?;',
-    //     [updateUser.name, updateUser.email, id]
-    //   )
-    // }
-
-    // const imgFileName = req.file ? req.file.filename : updateUser.img
 
     // 更新除了帳號密碼以外的資料的寫法
     result = await db.query(

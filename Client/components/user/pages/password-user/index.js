@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import UserSection from '@/components/user/common/user-section'
 import styles from './index.module.scss'
-import { PiLockLight } from 'react-icons/pi'
-import { PiEyeClosed } from 'react-icons/pi'
+import { PiEyeClosed, PiEye, PiLockLight } from 'react-icons/pi'
 import toast, { Toaster } from 'react-hot-toast'
 import { updatePassword } from '@/services/user'
 import { useAuth } from '@/hooks/use-auth'
@@ -13,17 +12,21 @@ const initUserPassword = {
   new: '', // 新密碼
   confirm: '', //確認新密碼用(前端檢查用，不送後端)
 }
+// checkbox 呈現密碼用
 
-export default function PasswordPassword() {
+export default function Password() {
   // 需要會員登入時的id
   const { auth } = useAuth()
   // 本頁狀態用
   const [userPassword, setUserPassword] = useState(initUserPassword)
-
   // 純粹觀察userPassword狀態變化用
   // useEffect(() => {
   //   console.log('userPassword狀態變化', userPassword)
   // }, [userPassword])
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   // 輸入資料用
   const handleFieldChange = (e) => {
@@ -55,6 +58,8 @@ export default function PasswordPassword() {
 
     if (res.data.status === 'success') {
       toast.success('會員密碼修改成功')
+      // 密碼更新成功後清空表單
+      setUserPassword(initUserPassword)
     } else {
       toast.error('會員密碼修改失敗')
     }
@@ -78,13 +83,19 @@ export default function PasswordPassword() {
               <PiLockLight className={`${styles['icon-lock']}`} />
               <input
                 name="origin"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 className={`form-control ${styles['form-focus']}`}
                 value={userPassword.origin}
                 onChange={handleFieldChange}
                 placeholder="請輸入原密碼"
               />
-              <PiEyeClosed className={`${styles['icon-eye']}`} />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={styles.eyeiclosed}
+              >
+                {showPassword ? <PiEye /> : <PiEyeClosed />}
+              </button>
             </div>
           </div>
           <div className="row mt-4 d-flex justify-content-center align-items-center">
@@ -96,14 +107,20 @@ export default function PasswordPassword() {
             <div className={`${styles['input-password']} col-11 col-xl-8 mb-3`}>
               <PiLockLight className={`${styles['icon-lock']}`} />
               <input
-                type="password"
+                type={showNewPassword ? 'text' : 'password'}
                 className={`form-control ${styles['form-focus']}`}
                 name="new"
                 value={userPassword.new}
                 onChange={handleFieldChange}
                 placeholder="請輸入新密碼"
               />
-              <PiEyeClosed className={`${styles['icon-eye']}`} />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className={styles.eyeiclosed}
+              >
+                {showNewPassword ? <PiEye /> : <PiEyeClosed />}
+              </button>
             </div>
           </div>
 
@@ -116,14 +133,20 @@ export default function PasswordPassword() {
             <div className={`${styles['input-password']} col-11 col-xl-8 mb-3`}>
               <PiLockLight className={`${styles['icon-lock']}`} />
               <input
-                type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 className={`form-control ${styles['form-focus']}`}
                 placeholder="請再次輸入新密碼"
                 name="confirm"
                 value={userPassword.confirm}
                 onChange={handleFieldChange}
               />
-              <PiEyeClosed className={`${styles['icon-eye']}`} />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className={styles.eyeiclosed}
+              >
+                {showConfirmPassword ? <PiEye /> : <PiEyeClosed />}
+              </button>
             </div>
           </div>
 

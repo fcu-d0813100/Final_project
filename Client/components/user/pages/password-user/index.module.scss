@@ -82,4 +82,13 @@
   }
 }
 
-@media (max-width: 450px) {}
+.eyeiclosed {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  bottom:30%;
+  background-color: transparent;
+  border: none;
+}
