@@ -109,22 +109,34 @@ router.post('/register', upload.none(), async (req, res) => {
 })
 
 // 登入
-router.post('/login', async (req, res) => {
+router.post(`/login/:role`, async (req, res) => {
   console.log(req.body)
   const loginUser = req.body
-  // 1.先用account查詢該會員
+  const role = req.params.role // 獲取路徑中的身份
 
-  const [rows] = await db.query('SELECT * FROM user WHERE account = ?', [
-    loginUser.account,
-  ])
+  // 1.先用account查詢該會員並判斷是否有軟刪除
+  const [rows] = await db.query(
+    'SELECT * FROM user WHERE account = ? AND valid = 1',
+    [loginUser.account]
+  )
 
   if (rows.length === 0) {
     return res.json({ status: 'error', message: '該會員不存在' })
   }
 
   const dbUser = rows[0]
+  // 2. 檢查該會員的身份是否符合登入要求
+  console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
 
-  // 2. 比對密碼hash是否相同(返回true代表密碼正確)
+  if (dbUser.identity !== role) {
+    return res.json({ status: 'error', message: '身份不符合' })
+  }
+  // 1. 先判斷身分別是否為 user
+  // if (loginUser.identity !== 'user') {
+  //   return res.json({ status: 'error', message: '身份不符合' })
+  // }
+
+  // 3. 比對密碼hash是否相同(返回true代表密碼正確)
   const isValid = await compareHash(loginUser.password, dbUser.password)
 
   if (!isValid) {
@@ -136,6 +148,7 @@ router.post('/login', async (req, res) => {
   const returnUser = {
     id: dbUser.id,
     account: dbUser.account,
+    identity: dbUser.identity,
     // google_uid: user.google_uid,
     // line_uid: user.line_uid,
   }
@@ -150,12 +163,10 @@ router.post('/login', async (req, res) => {
   res.cookie('accessToken', accessToken, { httpOnly: true })
 
   // 傳送access token回應(例如react可以儲存在state中使用)
-  return res.json({
-    status: 'success',
-    data: { accessToken },
-  })
+  res.json({ status: 'success', accessToken, user: returnUser })
   // return res.json({ status: 'success', data: null })
 })
+
 // 登出
 router.post('/logout', authenticate, (req, res) => {
   // 清除cookie

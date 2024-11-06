@@ -91,9 +91,9 @@ export function AuthProvider({ children }) {
   }
 
   // 會員登入
-  const login = async (account, password) => {
+  const login = async (account, password, role) => {
     // 向伺服器作fetch
-    const res = await fetch('http://localhost:3005/api/user/login', {
+    const res = await fetch(`http://localhost:3005/api/user/login/${role}`, {
       credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
       headers: {
         Accept: 'application/json',
@@ -107,27 +107,35 @@ export function AuthProvider({ children }) {
 
     if (resData.status === 'success') {
       // 可以得到id和username
-      const jwtData = parseJwt(resData.data.accessToken)
-
+      const jwtData = parseJwt(resData.accessToken)
       console.log(jwtData)
       // console.log(user)
       // 獲得會員其它個人資料(除了密碼之外)
       const user = await getUser(jwtData.id)
-
       // console.log(user)
-
       //   // 設定到狀態中
       setAuth({
         isAuth: true,
         userData: user,
       })
 
-      // 歡迎訊息與詢問是否要到個人資料頁
-      if (confirm('你好，是否要前往個人資料頁?')) {
-        router.push('/user')
+      switch (role) {
+        case 'admin':
+          router.push('/admin/activity')
+          break
+        case 'teacher':
+          router.push('/teacher/information')
+          break
+        case 'user':
+          router.push('/user')
+          break
+        default: // 處理身份不明的情況
+          router.push('/login')
+          break
       }
     } else {
       alert('帳號或密碼錯誤')
+      console.log(resData)
     }
   }
 
