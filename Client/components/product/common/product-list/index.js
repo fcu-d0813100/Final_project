@@ -1,4 +1,5 @@
 // components/ProductPage.js
+import toast, { Toaster } from 'react-hot-toast'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import styles from './index.module.scss'
@@ -21,6 +22,7 @@ const ProductPage = ({ products, onAll, onCategoryClick, onSubCategoryClick }) =
   const [isBrandDropdownOpen, setIsBrandDropdownOpen] = useState(false)
   const [selectedPrice, setSelectedPrice] = useState('價格')
   const [selectedBrand, setSelectedBrand] = useState('品牌')
+  const [selectedTime, setSelectedTime] = useState(null)
 
   const handleCardClick = (color_id) => {
     // 根據 color_id 跳轉到商品細節頁
@@ -71,7 +73,37 @@ const ProductPage = ({ products, onAll, onCategoryClick, onSubCategoryClick }) =
     setIsFiltered(false); // 標記為未篩選狀態
   };
 
-  const { onAddProduct } = useCartProduct()
+  // 加入購物車
+  const handleAddToCart = (product,navigateToCart = false) => {
+    const { onAddProduct } = useCartProduct()
+
+    // if (selectedTime) {
+      onAddProduct({
+        id: product.id,
+        product_name: product.product_name,
+        originalprice: product.originalprice,
+        price: product.price,
+        usages: product.usages,
+        brand: product.brand,
+        main_category: product.main_category,
+        sub_category: product.sub_category,
+        color_id: product.color_id,
+        color_name: product.color_name,
+        color: product.color,
+        mainimage: product.mainimage,
+        stock: product.stock,
+        qty: 1,
+        // date: selectedTime.date,
+      })
+
+      onAddProduct(cartProduct); // 添加商品到購物車
+      toast.success(`${product.product_name} 已加入購物車!`); // 顯示成功訊息
+      if (navigateToCart) {
+        router.push('/cart'); // 當 navigateToCart 為 true 時跳轉到購物車頁面
+      }
+    // }
+  }
+
 
   return (
     <div className={styles['container']}>
@@ -272,7 +304,7 @@ const ProductPage = ({ products, onAll, onCategoryClick, onSubCategoryClick }) =
                     <div className={styles['product-colorsquares-w']}>
                       <div className={styles['product-colorbox-w']} style={{ backgroundColor: product.color }}></div>
                     </div>
-                    <button className={`${styles['add-to-cart']} p btn-primary`} onClick={() => onAddProduct(product)}>加入購物車</button>
+                    <button className={`${styles['add-to-cart']} p btn-primary`} onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}>加入購物車</button>
                   </div>
                 </div>
               ))}
