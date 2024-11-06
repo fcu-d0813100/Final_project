@@ -9,17 +9,17 @@ import styles from '@/components/teacher/common/information.module.scss'
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
-  const { teacherAuth, setTeacherAuth, teacherLogin, teacherLogout } =
-    useTeacherAuth()
-  const { teacherData } = teacherAuth // 撈取 teacherData 資料
-  console.log(teacherAuth)
+  // const { teacherAuth, setTeacherAuth, teacherLogin, teacherLogout } =
+  //   useTeacherAuth()
+  // const { teacherData } = teacherAuth // 撈取 teacherData 資料
+  // console.log(teacherAuth)
   return (
     <>
       <div className={styles.main}>
         <DashboardTitle chTitle="個人資訊" enTitle="Information" />
 
         <TPersonalInfo
-          name={teacherData.account}
+          name="Gina Bettelli"
           account="Gina-Bettelli"
           email="ginabettelli@gmail.com"
           birthday="1987.03.30"
