@@ -24,11 +24,11 @@ router.post('/checkout', async function (req, res, next) {
 
     //確認分解資料正確
     // console.log(paymentMethod, deliveryMethod, orderNumber, totalDiscountPrice)
-    let shippingAddress;
+    let shippingAddress
     if (deliveryMethod == 1) {
-      shippingAddress = `${recipient_city} ${recipient_district} ${recipient_address}`;
+      shippingAddress = `${recipient_city} ${recipient_district} ${recipient_address}`
     } else {
-      shippingAddress = `${storename} ${storeaddress}`;
+      shippingAddress = `${storename} ${storeaddress}`
     }
     const shippingId = deliveryMethod
     const paymentId = paymentMethod
@@ -45,36 +45,29 @@ router.post('/checkout', async function (req, res, next) {
       orderNumber, // order_number
       totalDiscountPrice, // total_amount
       shippingAddress, // shipping_address
-      // 這裡沒有 coupon_id，所以不應該有 ?，只需去掉
+      // 這裡沒有 coupon_id，所以不應該有 ?
     ])
 
-    // const orderId = result[0].insertId // 獲取創建的訂單id
-    // console.log(`New order created with ID: ${orderId}`)
-    // console.log(`New order created with ID: ${orderId}`)
-    // console.log(`New order created with ID: ${orderId}`)
-    // console.log(`New order created with ID: ${orderId}`)
+    //result反回order_list的自增ID
+    const orderId = result // 獲取自增 ID
+    console.log('Query result:', result)
 
-    //利用訂單id創建訂單明細
-    // for (const product of productCart) {
-    //   const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity, comment, rating, review_date, review_likes) VALUES (${orderId}, ${product.product_id}, ${product.color_id}, NULL,${product.qty}, NULL, NULL, NULL, NULL)`
-    //   await db.query(sqlInsertDetail, [
-    //     orderId,
-    //     product.product_id,
-    //     product.color_id,
-    //     product.qty,
-    //   ])
-    // }
+    // 利用訂單id創建商品訂單明細
+    for (const product of productCart) {
+      const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity, comment, rating, review_date, review_likes) VALUES (${orderId}, ${product.product_id}, ${product.color_id}, NULL,${product.qty}, NULL, NULL, NULL, NULL)`
+      await db.query(sqlInsertDetail, [
+        orderId,
+        product.product_id,
+        product.color_id,
+        product.qty,
+      ])
+    }
 
-    //利用訂單id創建訂單明細
-    // for (const Workshop of Workshopcart) {
-    //   const sqlInsertDetail = `INSERT INTO order_detail (order_id, product_id, quantity, price) VALUES (?,?,?,?,?)`
-    //   await db.query(sqlInsertDetail, [
-    //     orderId, // order_id
-    //     Workshop.id, // product_id
-    //     Workshop.quantity, // quantity
-    //     Workshop.price, // price
-    //   ])
-    // }
+    //利用訂單id創建課程訂單明細
+    for (const Workshop of Workshopcart) {
+      const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity, comment, rating, review_date, review_likes) VALUES (${orderId}, NULL, NULL, ${Workshop.id},${Workshop.qty}, NULL, NULL, NULL, NULL)`
+      await db.query(sqlInsertDetail, [orderId, Workshop.id, Workshop.qty])
+    }
 
     // res.send('回傳的資料如下：' + JSON.stringify(req.body))
     // res.status(201).json({ message: 'Order created successfully', orderId })
@@ -85,16 +78,3 @@ router.post('/checkout', async function (req, res, next) {
 })
 
 export default router
-
-//測試訂單提交
-// import express from 'express'
-// const router = express.Router()
-// import db from '#configs/db.js'
-
-// router.post('/checkout', async function (req, res, next) {
-//   console.log(req.body) // 應該會顯示接收到的 JSON 資料
-//   console.log(JSON.stringify(req.body))
-//   res.send('回傳的資料如下：' + JSON.stringify(req.body))
-// })
-
-// export default router
