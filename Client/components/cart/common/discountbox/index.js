@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal'
 import styles from './discount-box.module.scss'
 import { X } from '@phosphor-icons/react'
 import Form from 'react-bootstrap/Form'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function DiscountBox() {
   const [show, setShow] = useState(false)
@@ -12,16 +13,13 @@ export default function DiscountBox() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  // 模擬從會員資料中抓取優惠券的資料
-  useEffect(() => {
-    // 假設這裡是從API獲取的優惠券數據
-    const fetchedCoupons = [
-      { id: '1', name: '10% off' },
-      { id: '2', name: '15% off' },
-      { id: '3', name: '100元折價' },
-    ]
-    setCoupons(fetchedCoupons)
-  }, [])
+  //獲取會員身上的優惠券
+  const { auth } = useAuth()
+  //確認會員id
+  // if (auth.isAuth) {
+  //   const userId = auth.userData.id
+  //   console.log(userId)
+  // }
 
   // 每次元件載入時從 localStorage 重新取得優惠券選擇
   useEffect(() => {

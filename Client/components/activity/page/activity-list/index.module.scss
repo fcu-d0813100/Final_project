@@ -130,7 +130,10 @@
   background-position: center;
   /* 背景圖片居中 */
   background-attachment: fixed;
-
+  .searchNotFound {
+    margin-top: 200px;
+    height: 600px;
+  }
   .month-title {
     width: 100%;
     height: 40px;
