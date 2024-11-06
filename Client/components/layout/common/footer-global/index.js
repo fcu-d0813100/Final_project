@@ -34,7 +34,7 @@ export default function index() {
             <ul className={styles['user-area']}>
               <li>會員專區</li>
               <li>
-                <Link href="/user/login">會員登入</Link>
+                <Link href="/user/login/user">會員登入</Link>
               </li>
               <li>
                 <Link href="/user">我的帳戶</Link>
@@ -73,10 +73,10 @@ export default function index() {
             <ul className={styles['other-area']}>
               <li>其他</li>
               <li>
-                <Link href="/admin/login">管理員登入</Link>
+                <Link href="/user/login/admin">管理員登入</Link>
               </li>
               <li>
-                <Link href="/teacher/login">彩妝師登入</Link>
+                <Link href="/user/login/teacher">彩妝師登入</Link>
               </li>
             </ul>
           </div>

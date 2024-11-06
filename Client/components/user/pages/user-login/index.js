@@ -9,11 +9,14 @@ import { useAuth } from '@/hooks/use-auth'
 export default function UserLogin() {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
-
+  const role = 'user'
   const { auth, login, logout } = useAuth()
   // checkbox 呈現密碼用
   const [showPassword, setShowPassword] = useState(false)
 
+  const handleLogin = () => {
+    login(account, password, role)
+  }
   return (
     <>
       <div className={styles['bg-img']}>
@@ -106,9 +109,7 @@ export default function UserLogin() {
                 </div>
                 <div className="d-grid col-12 pt-4">
                   <button
-                    onClick={() => {
-                      login(account, password)
-                    }}
+                    onClick={handleLogin}
                     className={`btn-primary h6 ${styles['btn-primary']}`}
                   >
                     登入
