@@ -52,10 +52,10 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // 會員註冊
   const register = async (user) => {
     try {
-      console.log('開始發送註冊請求:', user)
-
+      // console.log('開始發送註冊請求:', user)
       const res = await fetch('http://localhost:3005/api/user/register', {
         headers: {
           Accept: 'application/json',
@@ -66,28 +66,60 @@ export function AuthProvider({ children }) {
       })
 
       const resData = await res.json()
-
-      console.log('伺服器響應:', resData) // 調試輸出
+      // console.log('伺服器響應:', resData)
 
       if (resData.status === 'success') {
-        confirm(
-          'success',
-          '註冊成功',
-          '你已成功註冊，現在要跳轉到登入頁面嗎？',
-          '去登入',
-          () => {
-            router.push('/user/login')
-          }
-        )
+        toast.success('您已註冊成功', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        setTimeout(() => {
+          router.push('/user/login/user')
+        }, 2000)
+      } else if (resData.message === '電子郵件或帳號已被註冊') {
+        toast.error(resData.message, {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
       } else {
-        confirm('error', '失敗', resData.message, '重試', () => {
-          // 在這裡加入重新操作或其他處理邏輯
+        toast.error('註冊失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
         })
       }
     } catch (error) {
-      console.error('註冊過程中發生錯誤:', error) // 調試輸出
-      confirm('error', '失敗', '伺服器錯誤，請稍後重試', '重試', () => {
-        // 在這裡加入重新操作或其他處理邏輯
+      // console.error('註冊過程中發生錯誤:', error)
+      toast.error('註冊過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
       })
     }
   }
@@ -122,49 +154,131 @@ export function AuthProvider({ children }) {
         })
 
         // 顯示成功訊息
-        toast.success('您已登入成功')
+        toast.success('您已登入成功', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
 
         // 根據角色跳轉到相應頁面
-        switch (role) {
-          case 'admin':
-            router.push('/admin/activity')
-            break
-          case 'teacher':
-            router.push('/teacher/information')
-            break
-          case 'user':
-            router.push('/user')
-            break
-          default: // 處理身份不明的情況
-            router.push('/login')
-            break
-        }
+        setTimeout(() => {
+          switch (role) {
+            case 'admin':
+              router.push('/admin/activity')
+              break
+            case 'teacher':
+              router.push('/teacher/information')
+              break
+            case 'user':
+              router.push('/user')
+              break
+            default: // 處理身份不明的情況
+              router.push('/login')
+              break
+          }
+        }, 2000)
       } else {
         // 根據不同錯誤訊息顯示相應的吐司提示
         switch (resData.message) {
           case '身份不符合':
-            toast.error('您無登入權限')
+            toast.error('您無登入權限', {
+              style: {
+                border: '1.2px solid #90957a',
+                padding: '12px 40px',
+                color: '#963827',
+              },
+              iconTheme: {
+                primary: '#963827',
+                secondary: '#fff',
+              },
+            })
             break
           case '無教師權限':
-            toast.error('您尚未有老師登入權限')
+            toast.error('您並無老師登入權限', {
+              style: {
+                border: '1.2px solid #90957a',
+                padding: '12px 40px',
+                color: '#963827',
+              },
+              iconTheme: {
+                primary: '#963827',
+                secondary: '#fff',
+              },
+            })
             break
           case '無管理員權限':
-            toast.error('您尚未有管理員登入權限')
+            toast.error('您並無管理員登入權限', {
+              style: {
+                border: '1.2px solid #90957a',
+                padding: '12px 40px',
+                color: '#963827',
+              },
+              iconTheme: {
+                primary: '#963827',
+                secondary: '#fff',
+              },
+            })
             break
           case '密碼錯誤':
-            toast.error('帳號或密碼錯誤')
+            toast.error('帳號或密碼錯誤', {
+              style: {
+                border: '1.2px solid #90957a',
+                padding: '12px 40px',
+                color: '#963827',
+              },
+              iconTheme: {
+                primary: '#963827',
+                secondary: '#fff',
+              },
+            })
             break
           case '該會員不存在':
-            toast.error('您並未註冊')
+            toast.error('您並未註冊', {
+              style: {
+                border: '1.2px solid #90957a',
+                padding: '12px 40px',
+                color: '#963827',
+              },
+              iconTheme: {
+                primary: '#963827',
+                secondary: '#fff',
+              },
+            })
             break
           default:
-            toast.error('登入失敗，請稍後再試')
+            toast.error('登入失敗，請稍後再試', {
+              style: {
+                border: '1.2px solid #90957a',
+                padding: '12px 40px',
+                color: '#963827',
+              },
+              iconTheme: {
+                primary: '#963827',
+                secondary: '#fff',
+              },
+            })
             break
         }
       }
     } catch (error) {
-      console.error('登入過程中發生錯誤:', error)
-      toast.error('登入過程中發生錯誤，請稍後再試')
+      // console.error('登入過程中發生錯誤:', error)
+      toast.error('登入過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
@@ -216,7 +330,17 @@ export function AuthProvider({ children }) {
       const resData = await res.json()
 
       if (resData.status === 'success') {
-        toast.success('您已成功登出')
+        toast.success('您已登出', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
         router.push('/')
         setAuth({
           isAuth: false,
@@ -228,17 +352,37 @@ export function AuthProvider({ children }) {
           },
         })
       } else {
-        toast.error('登出失敗，請稍後再試')
+        toast.error('登出失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
       }
     } catch (error) {
       console.error('登出過程中發生錯誤:', error)
-      toast.error('登出過程中發生錯誤，請稍後再試')
+      toast.error('登出過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
   // 很簡單的保護，但還是會先瀏覽到那頁面，如果要檔的話，要加入載入動畫去檔
   // 登入路由 - 當要進入隱私路由但未登入時，會跳轉到登入路由
-  const loginRoute = '/user/login'
+  const loginRoute = '/user/login/user'
   // 隱私(保護)路由
   const protectedRoutes = ['/user']
   // 檢查會員狀態
@@ -268,10 +412,18 @@ export function AuthProvider({ children }) {
         // 作隱私路由跳轉
         if (protectedRoutes.includes(router.pathname)) {
           // 減緩跳轉時間
-          setTimeout(() => {
-            alert('無進入權限，請先登入!')
-            router.push(loginRoute)
-          }, 1500)
+          toast.error('請先登入以訪問該頁面', {
+            style: {
+              border: '1.2px solid #90957a',
+              padding: '12px 40px',
+              color: '#963827',
+            },
+            iconTheme: {
+              primary: '#963827',
+              secondary: '#fff',
+            },
+          })
+          router.push(loginRoute)
         }
       }
     } catch (e) {
