@@ -11,31 +11,31 @@ router.get('/product-list', async function (req, res, next) {
 
   // 基本 SQL 查詢語句
   let sqlSelect = `
-   SELECT DISTINCT
-    p.id AS product_id,
-    p.product_name,
-    p.originalprice,
-    p.price,
-    p.usages,
-    b.name AS brand,
-    mc.name AS main_category,
-    sc.name AS sub_category,
-    c.id AS color_id,
-    c.color_name,
-    c.color,
-    c.mainimage,
-    c.stock
-FROM 
-    product_list p
-JOIN 
-    brand b ON p.brand_id = b.id
-JOIN 
-    main_category mc ON p.main_category_id = mc.id
-JOIN 
-    sub_category sc ON p.sub_category_id = sc.id
-JOIN 
-    color c ON p.id = c.product_id;
-  `
+    SELECT 
+      p.id AS product_id,
+      p.product_name,
+      p.originalprice,
+      p.price,
+      p.usages,
+      b.name AS brand,
+      mc.name AS main_category,
+      sc.name AS sub_category,
+      c.id AS color_id,
+      c.color_name,
+      c.color,
+      c.mainimage,
+      c.stock
+    FROM 
+      product_list p
+    JOIN 
+      brand b ON p.brand_id = b.id
+    JOIN 
+      main_category mc ON p.main_category_id = mc.id
+    JOIN 
+      sub_category sc ON p.sub_category_id = sc.id
+    JOIN 
+      color c ON p.id = c.product_id
+  `;
 
   const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
   res.json(result)
@@ -168,34 +168,31 @@ router.get(
     // SQL 查詢語句，直接篩選指定的 main_category_id
     const sqlSelect = `
     SELECT 
-    p.id AS id,
-    p.product_name,
-    p.originalprice,
-    p.price,
-    b.name AS brand,
-    mc.name AS main_category,
-    sc.name AS sub_category,
-    c.id AS color_id,
-    c.color_name,
-    c.color,
-    c.mainimage,
-    c.stock
-FROM 
-    product_list p
-JOIN 
-    brand b ON p.brand_id = b.id
-JOIN 
-    main_category mc ON p.main_category_id = mc.id
-JOIN 
-    sub_category sc ON p.sub_category_id = sc.id
-JOIN 
-    color c ON p.id = c.product_id
-WHERE 
-    p.main_category_id = ${req.params.main_category_id}
-GROUP BY 
-    c.id;
-
-  `
+      p.id AS id,
+      p.product_name,
+      p.originalprice,
+      p.price,
+      b.name AS brand,
+      mc.name AS main_category,
+      sc.name AS sub_category,
+      c.id AS color_id,
+      c.color_name,
+      c.color,
+      c.mainimage,
+      c.stock
+    FROM 
+      product_list p
+    JOIN 
+      brand b ON p.brand_id = b.id
+    JOIN 
+      main_category mc ON p.main_category_id = mc.id
+    JOIN 
+      sub_category sc ON p.sub_category_id = sc.id
+    JOIN 
+      color c ON p.id = c.product_id
+    WHERE 
+      p.main_category_id = ${req.params.main_category_id}
+  `;
 
     try {
       // 執行查詢，使用 main_category_id 參數
@@ -226,35 +223,31 @@ router.get(
     // SQL 查詢語句，根據 main_category_id 和 sub_category_id 篩選商品
     const sqlSelect = `
     SELECT 
-    p.id AS id,
-    p.product_name,
-    p.originalprice,
-    p.price,
-    b.name AS brand,
-    mc.name AS main_category,
-    sc.name AS sub_category,
-    c.id AS color_id,
-    c.color_name,
-    c.color,
-    c.mainimage,
-    c.stock
-FROM 
-    product_list p
-JOIN 
-    brand b ON p.brand_id = b.id
-JOIN 
-    main_category mc ON p.main_category_id = mc.id
-JOIN 
-    sub_category sc ON p.sub_category_id = sc.id
-JOIN 
-    color c ON p.id = c.product_id
-WHERE 
-    p.main_category_id = ${req.params.main_category_id} 
-    AND p.sub_category_id = ${req.params.sub_category_id}
-GROUP BY 
-    c.id;
-
-  `
+      p.id AS id,
+      p.product_name,
+      p.originalprice,
+      p.price,
+      b.name AS brand,
+      mc.name AS main_category,
+      sc.name AS sub_category,
+      c.id AS color_id,
+      c.color_name,
+      c.color,
+      c.mainimage,
+      c.stock
+    FROM 
+      product_list p
+    JOIN 
+      brand b ON p.brand_id = b.id
+    JOIN 
+      main_category mc ON p.main_category_id = mc.id
+    JOIN 
+      sub_category sc ON p.sub_category_id = sc.id
+    JOIN 
+      color c ON p.id = c.product_id
+    WHERE 
+      p.main_category_id = ${req.params.main_category_id} AND p.sub_category_id = ${req.params.sub_category_id}
+  `;
 
     try {
       // 執行查詢，使用 main_category_id 和 sub_category_id 作為參數
