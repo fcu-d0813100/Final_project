@@ -159,7 +159,8 @@ $card-height: 350px;
 $border-radius: 8px;
 $box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 $badge-bg-color: #90957a;
-$status-color: #963827;
+$statusOff-color: #963827;
+$statusOn-color: #90957a;
 $font-color-light: #90957a;
 
 .cardLeft {
@@ -196,7 +197,7 @@ $font-color-light: #90957a;
     position: absolute;
     top: 240px;
     left: 0%;
-    padding-left: 340px;
+    height: 53px;
     width: 470px;
     font-weight: 900;
     font-size: 32px;
@@ -204,12 +205,14 @@ $font-color-light: #90957a;
     border-top: #90957a;
     border-left: #90957a;
     border-right: #90957a;
+    overflow: hidden;
   }
 
   .leftTextENG {
+    height: 53px;
     position: absolute;
     top: 300px;
-    left: 280px;
+    left: 1px;
   }
 }
 
@@ -376,9 +379,21 @@ $font-color-light: #90957a;
         font-size: 12px;
       }
 
-      .status {
-        color: $status-color;
+      .statusOn {
+        padding: 2px 14px;
+        color: white;
         font-weight: bold;
+        font-size: small;
+        background-color: $statusOn-color;
+        border-radius: 30px;
+      }
+      .statusOff {
+        padding: 2px 14px;
+        color: white;
+        font-weight: bold;
+        font-size: small;
+        background-color: $statusOff-color;
+        border-radius: 30px;
       }
 
       .heart-icon {
@@ -565,9 +580,21 @@ $font-color-light: #90957a;
         font-size: 12px;
       }
 
-      .status {
-        color: $status-color;
+      .statusOn {
+        padding: 2px 14px;
+        color: white;
         font-weight: bold;
+        font-size: small;
+        background-color: $statusOn-color;
+        border-radius: 30px;
+      }
+      .statusOff {
+        padding: 2px 14px;
+        color: white;
+        font-weight: bold;
+        font-size: small;
+        background-color: $statusOff-color;
+        border-radius: 30px;
       }
       .heart-icon {
         z-index: 30;

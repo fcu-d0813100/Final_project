@@ -31,6 +31,35 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
+router.get('/status', async (req, res) => {
+  const { status } = req.query // 獲取查詢參數 status
+
+  try {
+    const currentDate = new Date()
+
+    let query
+    if (status === '0') {
+      // 顯示開始時間小於當前時間的活動（報名中）
+      query = 'SELECT * FROM activity WHERE start_at < ?'
+    } else if (status === '1') {
+      // 顯示開始時間大於當前時間的活動（已截止）
+      query = 'SELECT * FROM activity WHERE start_at > ?'
+    } else {
+      return res.status(400).json({ error: '無效的狀態參數' })
+    }
+
+    const [rows] = await db.query(query, [currentDate])
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: '活動未找到' })
+    }
+
+    res.json(rows) // 返回所有符合條件的活動
+  } catch (error) {
+    console.error('Failed to fetch activity details:', error)
+    res.status(500).json({ error: '無法獲取活動詳細信息' })
+  }
+})
 
 // 獲取所有文章數據
 router.get('/', async (req, res) => {
