@@ -17,8 +17,8 @@ import db from '#configs/db.js'
 // })
 
 router.get('/', async function (req, res, next) {
-  const { search = '' } = req.query
-  const sqlSelect = `SELECT
+  const { search = '', order, min = '', max = '' } = req.query
+  let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
     workshop.price,
@@ -43,12 +43,32 @@ router.get('/', async function (req, res, next) {
      (workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%')
      AND workshop.valid = 1 
      AND workshop.isUpload = 1
- GROUP BY
-      workshop.id, teachers.id, workshop.isUpload, workshop.valid
 `
 
+  // 若 min 和 max 存在，則加入日期範圍篩選條件
+  if (min && max) {
+    sqlSelect += ` AND workshop.registration_start BETWEEN ? AND ?`
+  }
+
+  sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
+
+  // 根據 order 值決定排序條件
+  if (order === '1') {
+    sqlSelect += ` ORDER BY workshop.price ASC` // 價格升冪
+  } else if (order === '2') {
+    sqlSelect += ` ORDER BY workshop.price DESC` // 價格降冪
+  } else if (order === '3') {
+    sqlSelect += ` ORDER BY workshop_time.date ASC` // 日期升冪
+  }
+
+  // 設置查詢參數
+  const queryParams = [`%${search}%`, `%${search}%`, `%${search}%`]
+  if (min && max) {
+    queryParams.push(min, max) // 添加 min 和 max 到查詢參數
+  }
+
   const result = await db
-    .query(sqlSelect, [`%${search}%`, `%${search}%`, `%${search}%`])
+    .query(sqlSelect, queryParams)
     .catch((e) => console.log(e))
   res.json(result)
   //console.log(result)
