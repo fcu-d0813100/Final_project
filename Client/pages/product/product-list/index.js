@@ -1,62 +1,57 @@
 // pages/card-home/index.js
-// import React from 'react'
-import ProductPage from '@/components/product/common/product-list'
-import React, { useState, useEffect } from 'react'
-
-
-
-
-// const products = [
-//   {
-//     name: 'YSL <br> 時尚印記唇釉',
-//     originalPrice: 2080,
-//     salePrice: 1580,
-//     imageUrl: './imgs/NARS_ES01_M_ADULTS.webp',
-//     color: '#e3a790',
-//   },
-//   {
-//     name: 'NARS <br> 唇膏',
-//     originalPrice: 1900,
-//     salePrice: 1400,
-//     imageUrl: './imgs/NARS_LS01_M_133 (1).webp',
-//     color: '#732111',
-//   },
-//   {
-//     name: 'LANCOME <br> 絕對完美柔霧唇膏',
-//     originalPrice: 2500,
-//     salePrice: 2200,
-//     imageUrl: './imgs/LANCOME_LS01_M_196.webp',
-//     color: '#8f352d',
-//   },
-// ]
+import ProductPage from '@/components/product/common/product-list';
+import React, { useState, useEffect } from 'react';
 
 const ProductList = () => {
+  const [products, setProducts] = useState([]);
 
-  const [products, setProducts] = useState([])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:3005/api/product/product-list')
-        if (!response.ok) {
-          throw new Error('網路回應不成功：' + response.status)
-        }
-        const data = await response.json()
-        setProducts(data)
-        console.log(data)
-      } catch (err) {
-        console.log(err)
-      }
+  // 函數：獲取所有商品
+  const fetchAllProducts = async () => {
+    try {
+      const response = await fetch('http://localhost:3005/api/product/product-list');
+      if (!response.ok) throw new Error('網路回應不成功：' + response.status);
+      const data = await response.json();
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
     }
-    fetchData()
-  }, [])
+  };
 
+  // 函數：根據 main_category_id 獲取商品
+  const fetchProductsByCategory = async (mainCategoryId) => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/product-list/category/${mainCategoryId}`);
+      if (!response.ok) throw new Error('網路回應不成功：' + response.status);
+      const data = await response.json();
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 函數：根據 main_category_id 獲取商品
+  const fetchProductsBySubCategory = async (mainCategoryId, subCategoryId) => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/product-list/category/${mainCategoryId}/${subCategoryId}`);
+      if (!response.ok) throw new Error('網路回應不成功：' + response.status);
+      const data = await response.json();
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 加載所有商品
+  useEffect(() => {
+    fetchAllProducts();
+  }, []);
 
   return (
     <div>
-      <ProductPage products={products} />
+      {/* 將篩選函數作為 prop 傳遞給 ProductPage */}
+      <ProductPage products={products} onAll={fetchAllProducts} onCategoryClick={fetchProductsByCategory} onSubCategoryClick={fetchProductsBySubCategory}/>
     </div>
-  )
-}
+  );
+};
 
-export default ProductList
+export default ProductList;

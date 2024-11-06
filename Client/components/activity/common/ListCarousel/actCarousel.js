@@ -40,16 +40,14 @@ const ProductCarousel = () => {
         const targetIds = [3, 5, 6] // 替換成你想要的 ID
 
         // 根據指定的 ID 過濾數據
-        const filteredData = data.filter((item) =>
-          targetIds.includes(item.activity_id)
-        )
+        const filteredData = data.filter((item) => targetIds.includes(item.id))
 
         // 提取圖片並更新 images 狀態
         const newImages = filteredData.flatMap((item) => [
           {
             CHN_name: item.CHN_name,
             ENG_name: item.ENG_name,
-            src: '/activity/' + item.activity_img1,
+            src: '/activity/' + item.img1,
             alt: `${item.CHN_name} Image 1`,
           },
         ])

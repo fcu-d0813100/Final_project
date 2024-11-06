@@ -1,62 +1,67 @@
 import express from 'express'
+import db from '#configs/mysql.js'
 const router = express.Router()
-import db from '#configs/db.js'
 
-router.get('/', async function (req, res, next) {
-  const sqlSelect = `SELECT
-    activity.id AS activity_id,
-    activity.brand,
-    activity.ENG_name,
-    activity.CHN_name,
-    activity.address,
-    activity.start_at,
-    activity.end_at,
-    activity.description,
-    activity.currentREG,
-    activity.maxREG,
-    activity.brand_mail,
-    activity.ours_mail,
-    activity.img1 AS activity_img1,
-    activity.img2 AS activity_img2,
-    activity.img3 AS activity_img3
-  FROM
-    activity`
+// 搜索活動數據
+router.get('/search', async (req, res) => {
+  const { search } = req.query // 從查詢參數中獲取 search
 
   try {
-    const [result] = await db.query(sqlSelect)
-    res.json(result)
-  } catch (e) {
-    console.log(e)
-    res.status(500).json({ error: '資料庫查詢失敗' })
+    // 檢查是否提供了 search 參數
+    if (!search) {
+      return res.status(400).json({ error: '缺少搜尋參數' })
+    }
+
+    // 使用 LIKE 語法進行模糊搜索，忽略大小寫
+    const [rows] = await db.query(
+      `SELECT * FROM activity 
+       WHERE LOWER(brand) LIKE LOWER(?) 
+       OR LOWER(ENG_name) LIKE LOWER(?) 
+       OR LOWER(CHN_name) LIKE LOWER(?)`,
+      [`%${search}%`, `%${search}%`, `%${search}%`]
+    )
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: '活動未找到' })
+    }
+
+    res.json(rows) // 返回所有符合條件的活動
+  } catch (error) {
+    console.error('Failed to fetch activity details:', error)
+    res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
-// router.get('/', async function (req, res, next) {
-//     const sqlSelect = `SELECT
-//       activity.id AS activity_id,
-//       activity.brand,
-//       activity.ENG_name,
-//       activity.CHN_name,
-//       activity.address,
-//       activity.start_at,
-//       activity.end_at,
-//       activity.description,
-//       activity.currentREG,
-//       activity.maxREG,
-//       activity.brand_mail,
-//       activity.ours_mail,
-//       activity.img1 AS activity_img1,
-//       activity.img2 AS activity_img2,
-//       activity.img3 AS activity_img3
-//     FROM
-//       activity`
 
-//     try {
-//       const [result] = await db.query(sqlSelect)
-//       res.json(result)
-//     } catch (e) {
-//       console.log(e)
-//       res.status(500).json({ error: '資料庫查詢失敗' })
-//     }
-//   })
+// 獲取所有文章數據
+router.get('/', async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM activity')
+    res.json(rows)
+  } catch (error) {
+    console.error('Failed to fetch activity:', error)
+    res.status(500).json({ error: 'Failed to fetch activity' })
+  }
+})
+
+// 獲取特定月份的活動數據
+router.get('/:month', async (req, res) => {
+  const { month } = req.params // 獲取路徑參數中的 month
+  try {
+    // 使用 MONTH() 函數篩選出指定月份的活動
+    const [rows] = await db.query(
+      'SELECT * FROM activity WHERE MONTH(start_at) = ?',
+      [month]
+    )
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: '活動未找到' })
+    }
+
+    res.json(rows) // 返回所有符合條件的活動
+  } catch (error) {
+    console.error('Failed to fetch activity details:', error)
+    res.status(500).json({ error: '無法獲取活動詳細信息' })
+  }
+})
 
 export default router

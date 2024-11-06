@@ -43,8 +43,8 @@
   height: auto;
   overflow: hidden;
   display: flex;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
 
   .bestSeller-brand {
     position: absolute;
