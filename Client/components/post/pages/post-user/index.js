@@ -97,7 +97,7 @@ export default function Index(props) {
                   {/* http://localhost:3005/upload/${post.post_img} */}
                   {publishCard.map((post) => {
                     const imgSrc = post.post_img.startsWith('post')
-                      ? `/post/${post.post_img}` // 後端圖片路徑
+                      ? `http://localhost:3005/upload/${post.post_img}` // 後端圖片路徑
                       : `/post/${post.post_img}` // 前端靜態圖片路徑
 
                     return (

@@ -4,16 +4,15 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { RxCross2, RxPlus } from 'react-icons/rx'
 import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
+import { useAuth } from '@/hooks/use-auth'
+// import router from 'next/router'
 import axios from 'axios'
 import Link from 'next/link'
 import UserSection from '@/components/user/common/user-section'
 import styles from './index.module.scss'
-import { useAuth } from '@/hooks/use-auth'
 import ReactDOMServer from 'react-dom/server'
 export default function Index(props) {
   const { auth } = useAuth()
-  const userId = auth.userData.id
-
   const [imgs, setImgs] = useState([])
   //Focus
   const [TitleFocus, setTitleFocus] = useState(false)
@@ -30,8 +29,31 @@ export default function Index(props) {
   const [selectedTags, setSelectedTags] = useState([])
   const router = useRouter()
   const inputRef = useRef(null)
+  const { postId } = router.query
+  const userId = auth.userData.id
 
   let draggedItemIndex = null
+  //render
+  useEffect(() => {
+    if (postId && userId) {
+      fetchData()
+    }
+  }, [postId, userId, auth])
+  //get data
+  const fetchData = async () => {
+    const response = await fetch(
+      `http://localhost:3005/api/post/publish/${userId}/${postId}`,
+      {
+        credentials: 'include',
+      }
+    )
+    const [data] = await response.json()
+    setTitle(data.title)
+    // setTitleLength(data.title.length)
+    setContent(data.content)
+    setSelectedTags(data.tags ? data.tags.split(',') : [])
+    setImgs(data.post_imgs ? data.post_imgs.split(',') : [])
+  }
   //Sweet Alert setting
   const showAlert = (
     message,
@@ -73,22 +95,6 @@ export default function Index(props) {
   //delete img
   const deleteImg = (index) => {
     if (imgs.length === 1) {
-      // Swal.fire({
-      //   html: `
-      //         <div class="custom-alert-content">
-      //           <span class="custom-icon">❌</span>
-      //           <span>請至少上傳一張圖片</span>
-      //         </div>
-      //       `,
-      //   showConfirmButton: false,
-      //   timer: 1500,
-      //   position: 'center',
-      //   width: '300px',
-      //   padding: '1em',
-      //   customClass: {
-      //     popup: `${styles['custom-popup']}`,
-      //   },
-      // })
       showAlert('請至少上傳一張圖片')
       return
     }
@@ -124,6 +130,7 @@ export default function Index(props) {
     setContent(e.target.value)
     setContentLength(e.target.value.length)
   }
+  // add tag
   const addTagHandle = (e, tag) => {
     e.preventDefault()
     if (tagInput === '') return
@@ -150,7 +157,7 @@ export default function Index(props) {
       setSuggestedTags([])
     }
   }, [tagInput])
-
+  //表單送出
   const submitHandle = async (e) => {
     e.preventDefault()
     // Verify form
@@ -175,14 +182,11 @@ export default function Index(props) {
 
     // Submit form
     try {
-      const response = await fetch(
-        'http://localhost:3005/api/post/post_create',
-        {
-          method: 'POST',
-          body: formData,
-          credentials: 'include',
-        }
-      )
+      const response = await fetch('http://localhost:3005/api/post/update', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      })
       if (response.ok) {
         // 成功處理後的操作
         showAlert('發布貼文成功', <RiCheckboxCircleFill color="#90957A" />)
@@ -230,31 +234,32 @@ export default function Index(props) {
                 <div className={styles['img-preview-area']}>
                   <div className={styles['img-container']}>
                     {/* map上傳的圖片 */}
-                    {imgs.map((file, index) => (
-                      //eslint-disable-next-line
+                    {imgs.map((file, index) => {
+                      const src =
+                        file instanceof File
+                          ? URL.createObjectURL(file)
+                          : `/post/${file}`
+                      return (
+                        //eslint-disable-next-line
                         <div className={styles['image-wrapper']}
-                        key={index}
-                        draggable
-                        onDragStart={() => dragStartHandle(index)}
-                        onDragEnd={dragEndHandle}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => dropHandle(e, index)}
-                      >
-                        <Image
-                          src={URL.createObjectURL(file)}
-                          width={98}
-                          height={98}
-                          alt="image"
-                        />
-                        {/* //eslint-disable-next-line */}
-                        <div
-                          className={styles['delete-btn']}
-                          onClick={() => deleteImg(index)}
+                          key={index}
+                          draggable
+                          onDragStart={() => dragStartHandle(index)}
+                          onDragEnd={dragEndHandle}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={(e) => dropHandle(e, index)}
                         >
-                          <RxCross2 size={16} />
+                          <Image src={src} width={98} height={98} alt="image" />
+                          {/* //eslint-disable-next-line */}
+                          <div
+                            className={styles['delete-btn']}
+                            onClick={() => deleteImg(index)}
+                          >
+                            <RxCross2 size={16} />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               </div>
