@@ -8,14 +8,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAuth } from '@/hooks/use-auth'
-import axios from 'axios';
 
 export default function CartList() {
-  //-----會員登入確定，獲取優惠券
-  const { auth } = useAuth();
-
-
-
   //----------吐司訊息
   //新增商品
   const addPnotify = () =>
@@ -85,7 +79,6 @@ export default function CartList() {
 
   return (
     <>
- 
       <div className="container">
         <div className="row">
           {/* 步驟 */}
