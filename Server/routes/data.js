@@ -10,6 +10,7 @@ router.get('/aa', async function (req, res, next) {
   p.price,
   b.name AS brand_name,
   c.color,
+  c.id AS color_id,
   c.mainimage,
   c.stock
 FROM 

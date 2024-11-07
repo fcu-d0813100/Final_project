@@ -33,6 +33,8 @@ export default function Products(props) {
             <br />
             {product.product_name}
             <br />
+            {product.color_id}
+            <br />
             {'price: $' + product.price}
             <br />
             {product.color}

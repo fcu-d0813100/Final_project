@@ -5,10 +5,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
+import { useRouter } from 'next/router'
 
 export default function UpdateInfo() {
   // 從勾子的context得到註冊函式
   const { update, getUser } = useAuth()
+  const router = useRouter()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     name: '',
@@ -79,6 +81,7 @@ export default function UpdateInfo() {
       console.log('發送用戶資料:', user) // 確認發送的資料
       await update(user)
       console.log('更新成功')
+      router.push('/user') // 跳轉到 /user 頁面
     } catch (error) {
       console.error('更新失敗:', error)
     }

@@ -1,4 +1,5 @@
 'use client'
+import InputIME from '@/components/shared/input-ime.js'
 import styles from '@/components/workshop/common/workshops.module.scss'
 import { PiMagnifyingGlass, PiCaretDown, PiArrowRight } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
@@ -25,14 +26,23 @@ export default function WorkshopsBN(props) {
 
               <div className={styles.searchArea}>
                 <div className="d-flex align-items-center">
-                  <input
+                  <InputIME
                     type="text"
                     className={styles.searchInput}
                     placeholder="搜尋"
+                    value={props.search}
+                    onChange={(e) => props.setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        // 當用戶按下 Enter 鍵時觸發搜尋
+                        props.onSearch()
+                      }
+                    }}
                   />
                   <a
                     className="d-flex align-items-center text-decoration-none ms-3 text-white ph"
                     href="#"
+                    onClick={props.onSearch} // 點擊圖示時觸發搜尋
                   >
                     <PiMagnifyingGlass />
                   </a>

@@ -98,7 +98,7 @@ export default function Explore(props) {
                 imageSrc={`/post/${post.post_img}`}
                 title={post.title}
                 username={post.nickname}
-                avatarSrc={`/user/${post.user_img}`}
+                avatarSrc={`/user/img/${post.user_img}`}
                 likeCount={post.like_count}
               />
             ))}

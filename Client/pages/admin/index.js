@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import AdimSection from '@/components/admin/pages/admin-section'
-export default function Index(props) {
+import AdminSection from '@/components/admin/pages/admin-section'
+
+const AdminLoginPage = () => {
   return (
     <>
-     <AdimSection/>
+      <AdminSection />
     </>
   )
 }
+export default AdminLoginPage

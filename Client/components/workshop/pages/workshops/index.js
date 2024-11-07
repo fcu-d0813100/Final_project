@@ -8,38 +8,32 @@ import React, { useState, useEffect } from 'react'
 
 export default function WorkshopAll(props) {
   const [workshop, setWorkshop] = useState([])
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:3005/api/workshop')
-        if (!response.ok) {
-          throw new Error('網路回應不成功：' + response.status)
-        }
-        const data = await response.json()
-        setWorkshop(...data)
-        console.log(data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
     fetchData()
-  }, [])
+  }, [search]) // 當 search 更新時重新調用 fetchData
 
-  // useEffect(() => {
-  //   async function getWorkshop() {
-  //     try {
-  //       let response = await axios.get(`http://localhost:3005/api/workshop`, {
-  //         withCredentials: true,
-  //       })
-  //       const data = await response.json()
-  //       setWorkshop(data)
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error)
-  //     }
-  //   }
-  //   getWorkshop()
-  // }, [])
+  const fetchData = async () => {
+    try {
+      // 搜尋所有工作坊或依 `search` 查詢
+      const response = await fetch(
+        `http://localhost:3005/api/workshop/?search=${search}`
+      )
+      if (!response.ok) {
+        throw new Error('網路回應不成功：' + response.status)
+      }
+      const data = await response.json()
+      setWorkshop(...data) // 設置工作坊資料
+      console.log(...data);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const onSearch = () => {
+    fetchData() // 搜尋時觸發獲取新資料
+  }
 
   const getStatus = (registrationStart, registrationEnd) => {
     const currentDate = new Date()
@@ -57,8 +51,7 @@ export default function WorkshopAll(props) {
 
   return (
     <>
-  
-      <WorkshopsBN />
+      <WorkshopsBN search={search} setSearch={setSearch} onSearch={onSearch} />
 
       <WorkshopSelectbar />
 
@@ -113,7 +106,6 @@ export default function WorkshopAll(props) {
           })}
         </div>
       </div>
-
     </>
   )
 }

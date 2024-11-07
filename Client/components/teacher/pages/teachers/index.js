@@ -1,13 +1,48 @@
 'use client'
+import InputIME from '@/components/shared/input-ime.js'
 import Dropdown from '@/components/teacher/common/teacher-dropdown'
 import styles from '@/components/teacher/common/teachers.module.scss'
 import Image from 'next/image'
 import { PiMagnifyingGlass, PiCaretDown, PiArrowRight } from 'react-icons/pi'
-import Boxrow from '@/components/teacher/common/teacher-boxrow'
+import TeacherBox from '@/components/teacher/common/teacher-box'
 
 import React, { useState, useEffect, Fragment } from 'react'
 
 export default function Teachers(props) {
+  const [teacher, setTeacher] = useState([])
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    fetchData()
+  }, [search]) // 當 search 更新時重新調用 fetchData
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/teacher/?search=${search}`
+      )
+      if (!response.ok) {
+        throw new Error('網路回應不成功：' + response.status)
+      }
+      const data = await response.json()
+      setTeacher(data)
+      console.log(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+    const onSearch = () => {
+      fetchData() // 搜尋時觸發獲取新資料
+    }
+
+
+  // 每四個一組分成子陣列
+  const groupedTeachers = []
+  for (let i = 0; i < teacher.length; i += 4) {
+    groupedTeachers.push(teacher.slice(i, i + 4))
+  }
+
   return (
     <>
       <div className={styles.bodyImg}>
@@ -35,14 +70,23 @@ export default function Teachers(props) {
             className={`container d-flex justify-content-between align-items-center ${styles.selectBar}`}
           >
             <div className="d-flex align-items-center">
-              <input
+              <InputIME
                 type="text"
                 className={styles.searchInput}
                 placeholder="搜尋"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    // 當用戶按下 Enter 鍵時觸發搜尋
+                    onSearch()
+                  }
+                }}
               />
               <a
                 className="d-flex align-items-center text-decoration-none ph text-light ms-3"
                 href="#"
+                onClick={props.onSearch} // 點擊圖示時觸發搜尋
               >
                 <PiMagnifyingGlass />
               </a>
@@ -78,7 +122,22 @@ export default function Teachers(props) {
         </header>
 
         <div className={`${styles.section01} container `}>
-          <Boxrow />
+          {groupedTeachers.map((row, rowIndex) => (
+            <div className="d-flex justify-content-between" key={rowIndex}>
+              {row.map((teacher, index) => (
+                <TeacherBox
+                  tid={teacher.id}
+                  key={teacher.id}
+                  blackImg={`/teacher/teachers_img/T_${teacher.id}.jpg`}
+                  colorImg={`/teacher/teachers_img/T_${teacher.id}_color.jpg`}
+                  name={teacher.name}
+                  type={teacher.workshop_type_type}
+                  nation={teacher.nation}
+                  years={teacher.years}
+                />
+              ))}
+            </div>
+          ))}
         </div>
 
         <div className={`container ${styles.bottomText}`}>

@@ -1,19 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Swal from 'sweetalert2'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
+
 import { RxCross2, RxPlus } from 'react-icons/rx'
-import { PiPlusThin } from 'react-icons/pi'
-import { array } from 'prop-types'
-import { set, update } from 'lodash'
+import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
 import axios from 'axios'
 import Link from 'next/link'
+import SweetAlert from '@/components/post/common/sweet-alert'
 import UserSection from '@/components/user/common/user-section'
-import { sub } from 'date-fns'
 import styles from './index.module.scss'
-
+import { useAuth } from '@/hooks/use-auth'
+import ReactDOMServer from 'react-dom/server'
 export default function Index(props) {
-  const [imgs, setImgs] = useState([])
+  const { auth } = useAuth()
+  const userId = auth.userData.id
 
+  const [imgs, setImgs] = useState([])
+  //Focus
   const [TitleFocus, setTitleFocus] = useState(false)
   const [ContentFocus, setContentFocus] = useState(false)
   const [tagFocus, setTagFocus] = useState(false)
@@ -26,11 +30,34 @@ export default function Index(props) {
   const [tagInput, setTagInput] = useState('')
   const [suggestedTags, setSuggestedTags] = useState([])
   const [selectedTags, setSelectedTags] = useState([])
-
+  const router = useRouter()
   const inputRef = useRef(null)
 
   let draggedItemIndex = null
-
+  //Sweet Alert setting
+  const showAlert = (
+    message,
+    icon = <RiCloseCircleFill color="#963827" />,
+    timer = 1500
+  ) => {
+    const iconHtml = ReactDOMServer.renderToString(icon)
+    Swal.fire({
+      html: `
+      <div class="custom-alert-content">
+        <span class="custom-icon">${iconHtml}</span>
+        <span>${message}</span>
+      </div>
+    `,
+      showConfirmButton: false,
+      timer: timer,
+      position: 'center',
+      width: '300px',
+      padding: '1em',
+      customClass: {
+        popup: `${styles['custom-popup']}`,
+      },
+    })
+  }
   //img upload
   const inputHandle = () => {
     inputRef.current.click()
@@ -38,48 +65,33 @@ export default function Index(props) {
   //img upload show
   const showHandle = (e) => {
     const files = Array.from(e.target.files)
-    if (e.target.files.length + imgs.length > 5) {
-      Swal.fire({
-        html: `
-                  <div class="custom-alert-content">
-                    <span class="custom-icon">❌</span>
-                    <span>請勿上傳超過5張圖片</span>
-                  </div>
-                `,
-        showConfirmButton: false,
-        timer: 1500,
-        position: 'center',
-        width: '300px',
-        padding: '1em',
-        customClass: {
-          popup: `${styles['custom-popup']}`,
-        },
-      })
+    if (files.length + imgs.length > 5) {
+      showAlert('請勿上傳超過5張圖片')
       return
     }
-    const nextImgs = files.map((file) => URL.createObjectURL(file))
-    setImgs((prevImgs) => [...prevImgs, ...nextImgs])
+    // const nextImgs = files.map((file) => URL.createObjectURL(file))
+    setImgs((prevImgs) => [...prevImgs, ...files])
   }
   //delete img
   const deleteImg = (index) => {
     if (imgs.length === 1) {
-      Swal.fire({
-        html: `
-              <div class="custom-alert-content">
-                <span class="custom-icon">❌</span>
-                <span>請至少上傳一張圖片</span>
-              </div>
-            `,
-        showConfirmButton: false,
-        timer: 1500,
-        position: 'center',
-        width: '300px',
-        padding: '1em',
-        customClass: {
-          popup: `${styles['custom-popup']}`,
-        },
-      })
-
+      // Swal.fire({
+      //   html: `
+      //         <div class="custom-alert-content">
+      //           <span class="custom-icon">❌</span>
+      //           <span>請至少上傳一張圖片</span>
+      //         </div>
+      //       `,
+      //   showConfirmButton: false,
+      //   timer: 1500,
+      //   position: 'center',
+      //   width: '300px',
+      //   padding: '1em',
+      //   customClass: {
+      //     popup: `${styles['custom-popup']}`,
+      //   },
+      // })
+      showAlert('請至少上傳一張圖片')
       return
     }
     setImgs((prevImgs) => prevImgs.filter((_, i) => i !== index))
@@ -116,6 +128,7 @@ export default function Index(props) {
   }
   const addTagHandle = (e, tag) => {
     e.preventDefault()
+    if (tagInput === '') return
     if (!selectedTags.includes(tag)) {
       setSelectedTags([...selectedTags, tag])
     }
@@ -143,31 +156,36 @@ export default function Index(props) {
   const submitHandle = async (e) => {
     e.preventDefault()
     // Verify form
-
+    if (titleLength > 20) {
+      showAlert('標題超過20')
+      return
+    }
+    if (contentLength > 1000) {
+      showAlert('內文超過1000')
+      return
+    }
     // Collect form
     const formData = new FormData()
     formData.append('title', title)
     formData.append('content', content)
-    for (let i = 0; i < imgs.length; i++) {
-      formData.append('files', imgs[i])
-    }
+    formData.append('userId', userId)
+    imgs.forEach((file) => formData.append('files', file))
+
     for (let i = 0; i < selectedTags.length; i++) {
       formData.append('tags', selectedTags[i])
     }
 
     // Submit form
     try {
-      const response = await fetch(
-        'http://localhost:3005/api/post/post_create',
-        {
-          method: 'POST',
-          body: formData,
-          credentials: 'include',
-        }
-      )
+      const response = await fetch('http://localhost:3005/api/post/create', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      })
       if (response.ok) {
         // 成功處理後的操作
-        alert('表單提交成功！')
+        showAlert('發布貼文成功', <RiCheckboxCircleFill color="#90957A" />)
+        router.push('/user/post') // 跳轉到 /success 頁面
       } else {
         alert('提交失敗，請再試一次！')
       }
@@ -179,7 +197,11 @@ export default function Index(props) {
   return (
     <>
       <UserSection titleCN="我的貼文" titleENG="My Post">
-        <form className={styles['post-form']} onSubmit={submitHandle}>
+        <form
+          className={styles['post-form']}
+          onSubmit={submitHandle}
+          enctype="multipart/form-data"
+        >
           <div className={styles['post-content']}>
             {/* 圖片編輯 */}
             <div className={styles['post-img']}>
@@ -207,7 +229,7 @@ export default function Index(props) {
                 <div className={styles['img-preview-area']}>
                   <div className={styles['img-container']}>
                     {/* map上傳的圖片 */}
-                    {imgs.map((src, index) => (
+                    {imgs.map((file, index) => (
                       //eslint-disable-next-line
                         <div className={styles['image-wrapper']}
                         key={index}
@@ -217,7 +239,12 @@ export default function Index(props) {
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={(e) => dropHandle(e, index)}
                       >
-                        <Image src={src} width={98} height={98} alt="image" />
+                        <Image
+                          src={URL.createObjectURL(file)}
+                          width={98}
+                          height={98}
+                          alt="image"
+                        />
                         {/* //eslint-disable-next-line */}
                         <div
                           className={styles['delete-btn']}

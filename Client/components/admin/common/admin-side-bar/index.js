@@ -3,20 +3,10 @@ import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
 
-import {
-  PiUser,
-  PiLockOpen,
-  PiListMagnifyingGlass,
-  PiHeartStraight,
-  PiNotebook,
-  PiListPlus,
-  PiClockCountdown,
-  PiTicket,
-} from 'react-icons/pi'
+import { PiClockCountdown, PiTicket } from 'react-icons/pi'
 import styles from './index.module.scss'
 
 const navLinks = [
-  
   {
     href: '/admin/activity',
     icon: <PiClockCountdown size={65} />,

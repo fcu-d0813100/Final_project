@@ -11,6 +11,8 @@ export default function CheckoutBox() {
   const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
   // 計算打折後的總和
   const totalDiscountPrice = pTotalPrice * 0.8 + wTotalPrice * 0.8
+  //計算總和
+  const totalPrice = pTotalPrice * 0.8 + wTotalPrice * 0.8
 
   return (
     <>
@@ -48,7 +50,7 @@ export default function CheckoutBox() {
           </div>
         </div>
         <div className={style.total}>
-          總計：<span>NT$10,860</span>
+          總計：<span>NT${totalPrice.toLocaleString()}</span>
         </div>
       </div>
     </>

@@ -7,6 +7,7 @@ import { useCartWorkshop } from '@/hooks/use-cartW'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function CartList() {
   //----------吐司訊息
@@ -282,7 +283,7 @@ export default function CartList() {
                 >
                   <button
                     className="btn-primary"
-                    onClick={() => router.push('/')}
+                    onClick={() => router.push('/product/product-list')}
                   >
                     繼續購物
                   </button>
