@@ -42,7 +42,9 @@ export default function Index({
             <div className={`${styles['post-main-title']} h5`}>
               {title}
               <div className={styles['ps']}>
-                <button onClick={() => router.push('/user/post/edit')}>
+                <button
+                  onClick={() => router.push(`/user/post/edit/${postId}`)}
+                >
                   編輯
                 </button>
                 <button onClick={() => setShowModal(true)}>刪除</button>

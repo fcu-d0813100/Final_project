@@ -60,8 +60,30 @@ router.get('/status', async (req, res) => {
     res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
+router.get('/id', async (req, res) => {
+  const { id } = req.query // 獲取查詢參數 id
 
-// 獲取所有文章數據
+  try {
+    if (!id) {
+      return res.status(400).json({ error: '缺少活動 ID' }) // 檢查是否提供了 id
+    }
+
+    // 根據 id 查詢活動信息
+    const query = 'SELECT * FROM activity WHERE id = ?'
+    const [rows] = await db.query(query, [id])
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: '活動未找到' })
+    }
+
+    res.json(rows[0]) // 返回第一筆符合條件的活動
+  } catch (error) {
+    console.error('Failed to fetch activity details:', error)
+    res.status(500).json({ error: '無法獲取活動詳細信息' })
+  }
+})
+
+// 獲取所有活動數據
 router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM activity')

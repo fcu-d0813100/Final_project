@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import ActivityAdmin from '@/components/activity/page/activity-Admin'
-
+import PostEdit from '@/components/post/pages/post-edit'
 export default function Index(props) {
   return (
     <>
-      <ActivityAdmin />
+      <PostEdit />
     </>
   )
 }

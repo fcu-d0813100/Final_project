@@ -1,7 +1,8 @@
 import express from 'express'
 import db from '##/configs/mysql.js'
 import multer from 'multer'
-
+// 檢查空物件, 轉換req.params為數字
+import { getIdParam } from '#db-helpers/db-tool.js'
 import jsonwebtoken from 'jsonwebtoken'
 // 中介軟體，存取隱私會員資料用
 import authenticate from '#middlewares/authenticate.js'
@@ -9,8 +10,6 @@ import { generateHash, compareHash } from '##/db-helpers/password-hash.js'
 
 const upload = multer()
 const router = express.Router()
-// 檢查空物件, 轉換req.params為數字
-// import { getIdParam } from '#db-helpers/db-tool.js'
 
 // // multer的設定值 - START
 // const storage = multer.diskStorage({
@@ -78,9 +77,9 @@ router.post('/register', upload.none(), async (req, res) => {
 
     const sql = `
     INSERT INTO user (
-      name, account, password, email, gender, phone, address, img, level, created_at, updated_at
+      name, account, password, email, gender, phone, img, address, level,identity, created_at, updated_at
     ) VALUES (
-      ?, ?, ?, ?, ' ', ' ', 'avatar01.jpg', ' ', '1', NOW(), NULL
+      ?, ?, ?, ?, ' ', ' ', 'avatar01.jpg', ' ', '1','user', NOW(), NULL
     )
   `
 
@@ -108,22 +107,35 @@ router.post('/register', upload.none(), async (req, res) => {
 })
 
 // 登入
-router.post('/login', async (req, res) => {
+router.post(`/login/:role`, async (req, res) => {
   console.log(req.body)
   const loginUser = req.body
-  // 1.先用account查詢該會員
+  const role = req.params.role // 獲取路徑中的身份
 
-  const [rows] = await db.query('SELECT * FROM user WHERE account = ?', [
-    loginUser.account,
-  ])
+  // 1.先用account查詢該會員並判斷是否有軟刪除
+  const [rows] = await db.query(
+    'SELECT * FROM user WHERE account = ? AND valid = 1',
+    [loginUser.account]
+  )
 
   if (rows.length === 0) {
     return res.json({ status: 'error', message: '該會員不存在' })
   }
 
   const dbUser = rows[0]
+  // 2. 檢查該會員的身份是否符合登入要求
+  // console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
 
-  // 2. 比對密碼hash是否相同(返回true代表密碼正確)
+  if (dbUser.identity !== role) {
+    if (role === 'teacher') {
+      return res.json({ status: 'error', message: '無教師權限' })
+    } else if (role === 'admin') {
+      return res.json({ status: 'error', message: '無管理員權限' })
+    } else {
+      return res.json({ status: 'error', message: '身份不符合' })
+    }
+  }
+  // 3. 比對密碼hash是否相同(返回true代表密碼正確)
   const isValid = await compareHash(loginUser.password, dbUser.password)
 
   if (!isValid) {
@@ -135,6 +147,7 @@ router.post('/login', async (req, res) => {
   const returnUser = {
     id: dbUser.id,
     account: dbUser.account,
+    identity: dbUser.identity,
     // google_uid: user.google_uid,
     // line_uid: user.line_uid,
   }
@@ -149,12 +162,10 @@ router.post('/login', async (req, res) => {
   res.cookie('accessToken', accessToken, { httpOnly: true })
 
   // 傳送access token回應(例如react可以儲存在state中使用)
-  return res.json({
-    status: 'success',
-    data: { accessToken },
-  })
+  res.json({ status: 'success', accessToken, user: returnUser })
   // return res.json({ status: 'success', data: null })
 })
+
 // 登出
 router.post('/logout', authenticate, (req, res) => {
   // 清除cookie
@@ -171,25 +182,9 @@ router.put(
     // id可以用jwt的存取令牌(accessToken)從authenticate中得到(如果有登入的話)
     const id = req.user.id
 
-    // 這裡可以檢查
     const updateUser = req.body
 
     let result = null
-
-    // 這是一起更新密碼的寫法
-    // if (updateUser.password) {
-    //   result = await db.query(
-    //     'UPDATE `user` SET `name`=?,`password`=?,`email`=? WHERE `id`=?;',
-    //     [updateUser.name, updateUser.password, updateUser.email, id]
-    //   )
-    // } else {
-    //   result = await db.query(
-    //     'UPDATE `user` SET `name`=?,`email`=? WHERE `id`=?;',
-    //     [updateUser.name, updateUser.email, id]
-    //   )
-    // }
-
-    // const imgFileName = req.file ? req.file.filename : updateUser.img
 
     // 更新除了帳號密碼以外的資料的寫法
     result = await db.query(
@@ -222,24 +217,76 @@ router.put(
   }
 )
 
-// // DELETE - 刪除會員資料
-// router.delete('/:id', async function (req, res) {
-//   const affectedRows = await User.destroy({
-//     where: {
-//       id,
-//     },
-//   })
+// =================================================================
+// post - 會員密碼更新
+// PUT - 更新會員資料(密碼更新用)
+router.put('/:id/password', authenticate, async function (req, res) {
+  const id = getIdParam(req)
 
-//   // 沒有刪除到任何資料 -> 失敗或沒有資料被刪除
-//   if (!affectedRows) {
-//     return res.json({
-//       status: 'fail',
-//       message: 'Unable to detele.',
-//     })
-//   }
+  // 檢查是否為授權會員，只有授權會員可以存取自己的資料
+  if (req.user.id !== id) {
+    return res.json({ status: 'error', message: '存取會員資料失敗' })
+  }
 
-//   // 成功
-//   return res.json({ status: 'success', data: null })
-// })
+  // user為來自前端的會員資料(準備要修改的資料)
+  const userPassword = req.body
+  // 檢查從前端瀏覽器來的資料，哪些為必要(name, ...)，從前端接收的資料為
+  // {
+  //   originPassword: '', // 原本密碼，要比對成功才能修改
+  //   newPassword: '', // 新密碼
+  // }
+  if (!id || !userPassword.origin || !userPassword.new) {
+    return res.json({ status: 'error', message: '缺少必要資料' })
+  }
+
+  // const [rows] = await db.query('SELECT * FROM user WHERE account = ?', [
+  //   loginUser.account,
+  // ])
+  // 查詢資料庫目前的資料
+  const [rows] = await db.query('SELECT password FROM user WHERE id = ?', [id])
+  const dbUser = rows[0]
+  // const dbUser = await User.findByPk(id, {
+  //   raw: true, // 只需要資料表中資料
+  // })
+
+  // null代表不存在
+  if (!dbUser) {
+    return res.json({ status: 'error', message: '使用者不存在' })
+  }
+
+  // compareHash(登入時的密碼純字串, 資料庫中的密碼hash) 比較密碼正確性
+  // isValid=true 代表正確
+  const isValid = await compareHash(userPassword.origin, dbUser.password)
+
+  // isValid=false 代表密碼錯誤
+  if (!isValid) {
+    return res.json({ status: 'error', message: '密碼錯誤' })
+  }
+
+  const hashedPassword = await generateHash(userPassword.new)
+
+  // 對資料庫執行update
+  const [affectedRows] = await db.query(
+    'UPDATE user SET password = ? WHERE id = ?',
+    [hashedPassword, id]
+  )
+  // const [affectedRows] = await User.update(
+  //   { password: userPassword.new },
+  //   {
+  //     where: {
+  //       id,
+  //     },
+  //     individualHooks: true, // 更新時要加密密碼字串 trigger the beforeUpdate hook
+  //   }
+  // )
+
+  // 沒有更新到任何資料 -> 失敗
+  if (!affectedRows) {
+    return res.json({ status: 'error', message: '更新失敗' })
+  }
+
+  // 成功，不帶資料
+  return res.json({ status: 'success', data: null })
+})
 
 export default router

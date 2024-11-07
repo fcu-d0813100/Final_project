@@ -219,7 +219,7 @@ export default function Activity() {
                       index % 2 === 0 ? Styles['cardL'] : Styles['cardR']
                     }`}
                   >
-                    <Link href="/activity/activity-det">
+                    <Link href={`/activity/activity-det?id=${item.id}`}>
                       <div className={Styles['card-img']}>
                         <div className={`${Styles['card-text']} d-flex`}>
                           <div className="currentR">
