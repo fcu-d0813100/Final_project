@@ -1,0 +1,59 @@
+@import '@/styles/_variant.scss';
+
+.nav {
+    a {
+        color: $green-500;
+    }
+}
+
+.discount-group {
+    margin-top: 20px; // 上方間距 
+}
+
+.discount {
+    width: 100%; // 容器寬度
+    height: auto; // 高度自動
+    overflow: hidden; // 隱藏溢出部分
+
+    .img {
+        max-width: 100%; // 使圖片最大寬度為容器的寬度
+        height: auto; // 高度自動調整
+        margin-bottom: 5%; // 每個優惠的下方間距
+    }
+}
+
+.phoneSize {
+    display: none;
+}
+
+@media (max-width: 576px) {
+
+    .carousel-indicators {
+        margin-bottom: 0px;
+    }
+
+    .carousel-indicators [data-bs-target] {
+        border-radius: 50%;
+        width: 5px;
+        height: 5px;
+    }
+
+    .phoneSize {
+        display: block;
+    }
+
+    .btn {
+        height: 5px !important;
+        width: 5px !important;
+        margin-inline: 5px !important;
+        border-radius: 50%;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .discount-group {
+        display: none;
+    }
+}

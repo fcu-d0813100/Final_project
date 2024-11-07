@@ -1,0 +1,287 @@
+@import '@/styles/_variant.scss';
+
+.step {
+  margin-block: 100px;
+}
+
+//checkedbox樣式變更
+.form-check-input:checked {
+  background-color: black;
+  border-color: black;
+  box-shadow: none;
+}
+
+//input樣式變更
+.form-control {
+  border-color: $gray-200;
+  border-radius: 5px;
+  &::placeholder {
+    color: $gray-200;
+  }
+  &:focus {
+    border-color: $green-500;
+    box-shadow: 0 0 0 1px $green-500;
+  }
+}
+//select樣式變更
+.form-select {
+  border-color: $gray-200;
+  &:focus {
+    border-color: $green-500;
+    box-shadow: 0 0 0 1px $green-500;
+  }
+}
+
+.outer {
+  //   background-color: rgb(127, 125, 125);
+  display: flex;
+  justify-content: center;
+  .list {
+    width: 1000px;
+    .order {
+      .order-topic {
+        border-radius: 5px 5px 0 0;
+        padding: 15px 30px;
+        color: #fff;
+        background-color: $green-700;
+      }
+
+      //訂單簡易展示方框
+      .order-box {
+        padding: 20px 30px;
+        border: 1px solid $gray-200;
+        border-radius: 0 0 5px 5px;
+        .order-content {
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background-color: $gray-100;
+          padding: 15px 25px;
+          .pic {
+            width: 150px;
+            height: 150px;
+            img {
+              width: 100%;
+            }
+          }
+          button {
+            border: none;
+          }
+        }
+      }
+
+      //點擊後，訂單表細節內容
+      .order-list {
+        margin-top: 10px;
+        background-color: $gray-100;
+        width: 100%;
+        overflow-x: auto;
+        border-radius: 5px;
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        .old-price {
+          color: $gray-200;
+          font-size: 14px;
+          text-decoration: line-through;
+          margin-right: 5px;
+        }
+        .new-price {
+          color: $red-500;
+        }
+        th,
+        td {
+          padding: 15px 30px 10px 30px;
+          text-align: left;
+          color: $gray-300;
+        }
+        th {
+          color: #000;
+        }
+        th:nth-child(3),
+        td:nth-child(3) {
+          text-align: center;
+        }
+
+        th:nth-child(4),
+        td:nth-child(4) {
+          text-align: right;
+        }
+      }
+      .payment-topic,
+      .shipping-topic {
+        margin-top: 60px;
+        margin-bottom: 15px;
+        color: $green-500;
+      }
+
+      // 付款方式&物流
+      .payment,
+      .shipping {
+        .home_delivery {
+          padding: 8px;
+          position: relative;
+          &::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            width: 100%;
+            height: 1px;
+            background: #000;
+            transform: translateX(-50%) scaleX(0);
+            transition: transform 0.5s ease;
+          }
+          &.show-line::after {
+            // 當有 show-line 類時顯示線條
+            transform: translateX(-50%) scaleX(1);
+          }
+        }
+
+        input[type='radio'] {
+          display: none;
+          + label {
+            position: relative;
+            padding-left: 30px;
+            font-size: 16px;
+
+            &:before {
+              content: '';
+              position: absolute;
+              left: 0;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 18px;
+              height: 18px;
+              border: 1.2px solid $gray-200;
+              border-radius: 50%;
+              background-color: white;
+            }
+
+            // 當 radio 被選中時，內部的圓圈
+            &:after {
+              content: '';
+              position: absolute;
+              left: 4px;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              background-color: transparent;
+            }
+          }
+
+          &:checked + label {
+            &:after {
+              background-color: $green-500;
+            }
+          }
+        }
+      }
+    }
+
+    //購買須知
+    .buy-rule {
+      margin-block: 30px 150px;
+      padding: 30px;
+      border: 1px solid $gray-200;
+      border-radius: 5px;
+      color: $green-700;
+      p {
+        font-weight: 600;
+        padding: 5px;
+        line-height: 30px;
+      }
+    }
+    .btn-sm {
+      width: 30px;
+      height: 30px;
+      border-radius: 3px;
+      border: 1px solid black;
+      text-align: center;
+      padding: 0;
+      background: white;
+      transition: 0.3s;
+      .ph {
+        font-size: 20px;
+      }
+      &:hover {
+        background: rgb(0, 0, 0);
+        color: white;
+      }
+    }
+  }
+}
+
+//結帳小計方框
+.checkout {
+  .sticky {
+    position: sticky;
+    top: 0;
+  }
+  margin-left: 30px;
+  width: 380px;
+
+  //優惠券點選
+  .checkout_discount {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 30px;
+    border: 1px solid $gray-200;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    span:nth-child(2) {
+      color: $green-500;
+    }
+    &:hover {
+      background-color: $green-500;
+      span {
+        color: #fff;
+      }
+      span:nth-child(2) {
+        transform: translateX(10px);
+        transition: transform 0.6s ease;
+      }
+    }
+  }
+  //小計總額
+  .checkout_total {
+    .checkout_total_box {
+      padding: 20px 30px;
+      border: 1px solid $gray-200;
+      border-radius: 5px 5px 0 0;
+      .item {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+      }
+      .discount_item {
+        color: $red-500;
+      }
+      .total {
+        background-color: $gray-100;
+        border: 1px solid $gray-200;
+        border-radius: 0 0 5px 5px;
+        text-align: end;
+      }
+    }
+    .total {
+      background-color: $gray-100;
+      border-left: 1px solid $gray-200;
+      border-right: 1px solid $gray-200;
+      border-bottom: 1px solid $gray-200;
+      border-radius: 0 0 5px 5px;
+      padding: 20px 30px;
+      text-align: end;
+      margin-bottom: 20px;
+      span {
+        font-size: 20px;
+        color: $red-500;
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+@import '@/styles/_variant.scss';
+
+//自用按鈕
+.btn-women {
+  background-color: rgba(0, 0, 0, 0.14);
+  padding: 15px 20px;
+  border-radius: 3px;
+  color: #fff;
+  border: 2px solid #fff;
+  backdrop-filter: blur(4px);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+  &:hover {
+    transition: ease 0.3s;
+    background: rgba(255, 255, 255, 1);
+    color: #000;
+  }
+}
+
+//開始其他樣式
+
+.bgc-img {
+  height: 85vh;
+  width: 100%;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    overflow: hidden;
+  }
+  .msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    .msg-en {
+      font-weight: 600;
+      letter-spacing: 5px;
+      margin-bottom: 25px;
+    }
+    .msg-text {
+      div {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+    }
+    button {
+      margin-top: 20px;
+      padding-inline: 100px;
+    }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .bgc-img {
+    height: 90vh;
+    .msg {
+      .msg-en {
+        width: 400px;
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+      }
+      .msg-text {
+        div {
+          font-size: 16px;
+          margin-bottom: 15px;
+        }
+      }
+      button {
+        padding-inline: 60px;
+      }
+    }
+  }
+}

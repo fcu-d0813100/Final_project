@@ -1,0 +1,494 @@
+@import '@/styles/_variant.scss';
+
+// h6-del {
+//   font-size: 18px;
+//   font-family: Noto Sans;
+//   font-weight: 500;
+//   margin: 0;
+//   word-wrap: break-word;
+// }
+
+/* logo、nav */
+// header {
+//   background-color: white;
+//   text-align: center;
+//   box-shadow: 0px 4px 0px #f5f5f5;
+
+//   .logo {
+//     font-size: 35px;
+//     padding: 20px 0;
+//     color: #90957a;
+//     border-bottom: 1px solid #ccc;
+//   }
+
+//   nav {
+// ul {
+//   display: flex;
+//   justify-content: center;
+//   gap: 40px;
+//   padding: 20px 0;
+//   margin: 0;
+
+//   li {
+//     list-style: none;
+
+//     a {
+//       text-decoration: none;
+//       color: black;
+//       padding: 0 10px;
+//     }
+//   }
+// }
+//   }
+
+//
+// }
+
+.hamburger-menu {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.active {
+  border-bottom: 2px solid #90957a;
+  padding-bottom: 5px;
+  color: #90957a;
+}
+
+/* 輪播圖 */
+// html, body {
+//   position: relative;
+//   height: 100%;
+// }
+
+// .swiper-container {
+//   width: 100%;
+//   height: 100%;
+//   .swiper-wrapper {
+//     display: flex;
+//     width: 100%;
+//     height: auto;
+//   }
+// }
+// .test-pagination {
+//   background-color: yellow; /* 测试背景色 */
+//   color: rgb(180, 39, 39);
+//   z-index: 100;
+// }
+
+// .product-swiperslide-w {
+//   background-image: url('/product/S__18604034.jpg');
+//   background-size: cover;
+//   background-position: center;
+//   // width: 1920px;
+//   max-width: 100%;
+//   text-align: center;
+//   font-size: 18px;
+//   background: #fff;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// .swiper-slide {
+//   width: 100%; // 每個 slide 的寬度
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// .swiper-slide .imgs {
+//   // max-width: 100% !important;
+//   // height: 100%;
+//   object-fit: cover;
+// }
+
+// .product-swiperpagination-w {
+//   background-color: #8f1a1a;
+//   position: absolute;
+//   text-align: center;
+//   bottom: 0px;
+//   width: 100%;
+//   height: auto;
+//   z-index: 10;
+
+//   .swiper-pagination-bullet span {
+//     width: 8px;
+//     height: 8px;
+//     display: inline-block;
+//     border-radius: 50%;
+//     background: #d84646;
+//     opacity: 0.5;
+//     margin: 0 5px;
+//   }
+
+//   .swiper-pagination-bullet-active {
+//     opacity: 1;
+//     background: #ffffff;
+//   }
+// }
+
+// .swiper-pagination-bullet {
+//   width: 8px;
+//   height: 8px;
+//   display: inline-block;
+//   border-radius: 50%;
+//   background: #d84646;
+//   opacity: 0.5;
+//   margin: 0 5px;
+// }
+
+// .product-swiperbuttonnext-w,
+// .product-swiperbuttonprev-w {
+//   position: absolute;
+//   top: 50%;
+//   width: 27px;
+//   height: 44px;
+//   margin-top: -22px;
+//   z-index: 10;
+//   cursor: pointer;
+//   display: block;
+
+//   &.product-swiperbuttonnext-w {
+//     right: 10px;
+//     background-image: url('/product/chevron-right-solid.svg');
+//   }
+
+//   &.product-swiperbuttonprev-w {
+//     left: 10px;
+//     background-image: url('/product/chevron-left-solid.svg');
+//   }
+// }
+
+/* Container */
+.product-container-w {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  width: 1440px;
+  margin: 1440px;
+  margin: 0 auto;
+  // gap: 50%;
+  .product-row-w {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+}
+
+.product-sidebar-w {
+  width: 20%;
+  background-color: #fff;
+  // border-right: 1px solid #ddd;
+  padding: 0;
+
+  .product-sidebarcontent-w {
+    position: sticky;
+    top: 0;
+  }
+  ul {
+    li {
+      margin-bottom: 15px;
+      list-style: none;
+      a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        padding-left: 10px;
+      }
+    }
+  }
+
+  .product-filters-w {
+    margin-top: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+    }
+  }
+}
+
+/* Product Section */
+.product-list-w {
+  width: 80%;
+  padding: 20px 0;
+}
+
+.product-search-w {
+  position: relative;
+
+  input {
+    padding: 5px;
+    width: 300px;
+    border: 2px solid #90957a;
+    border-radius: 50px;
+    padding-right: 40px;
+  }
+
+  i {
+    position: absolute;
+    left: 80%;
+    margin: 0;
+  }
+}
+
+/* 商品排序 */
+.product-selectwrapper-w {
+  position: relative;
+  width: 200px;
+  max-width: 100%;
+
+  .custom-select {
+    position: relative;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .product-selecttrigger-w {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px 0 5px 15px;
+    border-bottom: 1px solid #ccc;
+    max-width: 90%;
+  }
+
+  .product-selectoptions-w {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 10px;
+    max-width: 90%;
+    overflow: visible;
+    display: none;
+    z-index: 99;
+
+    .product-selectoption-w {
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+}
+
+.product-select-w {
+  &.open {
+    .product-selectoptions-w {
+      display: block;
+    }
+
+    .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+/* Flexbox Layout for Products */
+.row {
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product-card-container {
+  display: flex;
+  gap: 5%;
+  width: 100%;
+  justify-content: center;
+}
+
+.product-colorsquares-w {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.product-colorbox-w {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+
+.column {
+  flex: 0 0 23%;
+}
+
+.product-card-w {
+  position: relative;
+  background-color: rgb(255, 255, 255);
+  padding: 20px 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  width: 240px;
+  height: 120%;
+  text-align: center;
+
+  .info {
+    position: absolute;
+
+    .product-new-w {
+      background-color: #963827;
+      color: #fff;
+      padding: 2px 5px;
+    }
+
+    .product-sale-w {
+      background-color: #000000;
+      color: #fff;
+      padding: 2px 5px;
+      transform: translate(-8.5%, 0);
+    }
+  }
+
+  i {
+    position: absolute;
+    font-size: 20px;
+    top: 5%;
+    right: 5%;
+  }
+
+  img {
+    width: 200px;
+    height: 200px;
+    // padding: 10px;
+  }
+
+  .product-cardtitle-w {
+    padding-top: 10px;
+  }
+  .product-price-w {
+    color: red;
+    font-weight: bold;
+    margin: 10px 0;
+
+    del {
+      color: #999;
+      font-weight: normal;
+    }
+  }
+
+  .add-to-cart {
+    width: 75%;
+    visibility: hidden;
+    margin: 0 auto;
+    padding: 10px 40px;
+  }
+
+  &:hover {
+    background-color: $gray-100;
+    box-sizing: border-box;
+    transform: translateY(-10px);
+    transition: transform 0.5s ease;
+    .add-to-cart {
+      visibility: visible;
+      background-color: #000000;
+      color: #fff;
+      border: 1px solid #000;
+      padding: 10px 40px;
+      cursor: pointer;
+    }
+  }
+}
+
+/* Responsive Flexbox Adjustments */
+@media screen and (max-width: 1200px) {
+  .column {
+    flex: 0 0 32%;
+  }
+
+  .product-search-w {
+    input {
+      width: 300px;
+      border: 2px solid #90957a;
+      border-radius: 50px;
+    }
+
+    i {
+      left: 85%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+
+  .column {
+    flex: 0 0 48%;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  /* 漢堡選單樣式 */
+  header {
+    .hamburger-menu {
+      display: block;
+      // position: fixed;
+      bottom: 0;
+      background-color: #d31b1b;
+      right: 0px;
+      z-index: 1001;
+    }
+  }
+
+  // 手機板輪播圖左右鍵
+  .product-swiperbuttonnext-w,
+  .product-swiperbuttonprev-w {
+    display: none;
+  }
+
+  // 手機板輪播圖以下
+
+  .product-row-w {
+    display: flex;
+    // 手機板sidebar
+    .product-sidebar-w {
+      display: none;
+    }
+    max-width: 100%;
+
+    .product-list-w {
+      padding: 0;
+      .product-search-w {
+        input {
+          width: 300px;
+          border: 2px solid #90957a;
+          border-radius: 50px;
+        }
+
+        i {
+          left: 315px;
+        }
+      }
+      .product-card-w {
+        span {
+          font-size: 16px;
+        }
+        .btn-primary {
+          font-size: 12px;
+          padding: 0;
+          width: 90%;
+        }
+      }
+    }
+  }
+}
