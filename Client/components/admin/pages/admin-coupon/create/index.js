@@ -23,7 +23,7 @@ export default function Index() {
                                 </div>
 
                             </div>
-                            <Link href="/admin/coupon/create/all"><div className={`${styles.btn} text-center`}>建立</div></Link>
+                            <Link href="/admin/coupon/create/content"><div className={`${styles.btn} text-center`}>建立</div></Link>
                         </div>
 
                         <div className={`${styles.cart} p-3 mb-3`}>
@@ -35,7 +35,7 @@ export default function Index() {
                                     </div>
                                 </div>
                             </div>
-                            <Link href="/admin/coupon/create/all">
+                            <Link href="/admin/coupon/create/content">
                                 <div className={`${styles.btn} text-center`}>建立</div>
                             </Link>
                         </div>

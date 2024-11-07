@@ -1,7 +1,20 @@
 @import '@/styles/_variant.scss';
 
+
 .order {
-    border-color: #bfbfbf;  
+    border-color: #bfbfbf;
+
+    .link {
+        color: rgb(31, 31, 31);
+    }
+
+    @media (max-width: 900px) {
+        margin-inline: 10px;
+    }
+
+    @media (max-width: 540px) {
+        margin-inline: 0px;
+    }
 }
 
 .footer {
@@ -13,8 +26,21 @@
 
     .btn {
         align-content: center;
+
+        @media (max-width: 900px) {
+            width: 92px;
+            height: 38px;
+        }
+
     }
 }
-.order-status{
+
+.order-status {
     color: $red-500;
+}
+
+.order-date {
+    @media (max-width: 900px) {
+        display: none;
+    }
 }

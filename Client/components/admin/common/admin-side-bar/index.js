@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
-import { useAdmin } from '@/hooks/use-admin'
+import { useAuth } from '@/hooks/use-auth'
 
 import { PiClockCountdown, PiTicket } from 'react-icons/pi'
 import styles from './index.module.scss'
@@ -23,7 +23,7 @@ const navLinks = [
 
 export default function Index() {
   const router = useRouter()
-  const { adminLogout } = useAdmin()
+  const { logout } = useAuth()
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
       acc[link.key] = { hover: false, active: router.pathname === link.href }
@@ -87,7 +87,7 @@ export default function Index() {
           <button
             className="btn-logout h6"
             onClick={() => {
-              adminLogout()
+              logout()
             }}
           >
             登出
