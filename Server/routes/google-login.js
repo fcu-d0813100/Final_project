@@ -58,6 +58,7 @@ router.post('/', async function (req, res) {
       google_uid: '',
       line_uid: '',
     }
+    console.log(returnUser)
 
     if (total) {
       // 2-1. 如果已存在 -> 從資料庫取得會員資料
@@ -111,5 +112,6 @@ router.post('/', async function (req, res) {
     })
   }
 })
+// routes/google-login.js
 
 export default router
