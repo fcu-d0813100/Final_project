@@ -4,19 +4,84 @@ import { GrGoogle } from 'react-icons/gr'
 import { FaLine } from 'react-icons/fa6'
 import { PiEyeClosed, PiEye } from 'react-icons/pi'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/use-auth'
+import { initUserData, useAuth } from '@/hooks/use-auth'
+import toast, { Toaster } from 'react-hot-toast'
+import { googleLogin, parseJwt } from '@/services/user'
+import useFirebase from '@/hooks/use-firebase'
 
 export default function UserLogin() {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const role = 'user'
-  const { auth, login, logout } = useAuth()
-  // checkbox 呈現密碼用
+  const { auth, login, setAuth } = useAuth()
+  const { loginGoogle, logoutFirebase } = useFirebase()
   const [showPassword, setShowPassword] = useState(false)
 
+  // 處理一般登入
   const handleLogin = () => {
     login(account, password, role)
   }
+
+  // 處理Google登入
+  const callbackGoogleLogin = async (providerData) => {
+    console.log('Google登入資料:', providerData)
+
+    if (auth.isAuth) return
+
+    try {
+      const res = await googleLogin(providerData)
+      console.log('Google登入回應:', res.data)
+
+      if (res.data.status === 'success') {
+        const jwtUser = parseJwt(res.data.data.accessToken)
+        console.log('JWT用戶資料:', jwtUser)
+
+        const userData = { ...initUserData, ...jwtUser }
+
+        setAuth({
+          isAuth: true,
+          userData,
+        })
+
+        toast.success('已成功登入', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+      } else {
+        toast.error('登入失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      toast.error('登入失敗，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
   return (
     <>
       <div className={styles['bg-img']}>
@@ -134,7 +199,10 @@ export default function UserLogin() {
                   </div>
                   <div className="col-5 d-flex justify-content-end align-items-center">
                     <FaLine className={styles['icon-line']} />
-                    <GrGoogle className={styles['icon-google']} />
+                    <GrGoogle
+                      className={styles['icon-google']}
+                      onClick={() => loginGoogle(callbackGoogleLogin)}
+                    />
                   </div>
                 </div>
               </div>
@@ -147,6 +215,7 @@ export default function UserLogin() {
           </div>
         </div>
       </div>
+      <Toaster />
     </>
   )
 }

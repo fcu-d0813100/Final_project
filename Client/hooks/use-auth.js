@@ -96,7 +96,7 @@ export function AuthProvider({ children }) {
         })
         setTimeout(() => {
           router.push('/user/login/user')
-        }, 2000)
+        }, 1500)
       } else if (resData.message === '電子郵件或帳號已被註冊') {
         toast.error(resData.message, {
           style: {

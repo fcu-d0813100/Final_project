@@ -77,7 +77,7 @@ router.post('/', async function (req, res) {
     } else {
       // 2-2. 不存在 -> 建立一個新會員資料(無帳號與密碼)，只有google來的資料 -> 執行登入工作
       const [result] = await db.execute(
-        'INSERT INTO user (name, email, google_uid, photo_url) VALUES (?, ?, ?, ?)',
+        `INSERT INTO user (name, email, google_uid, photo_url, level, identity, created_at) VALUES (?, ?, ?, ?, 1, 'user', NOW())`,
         [displayName, email, google_uid, photoURL]
       )
 
