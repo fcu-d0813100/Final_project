@@ -1,0 +1,37 @@
+{
+  "React Client Component": {
+    "scope": "typescript,javascript,jsx",
+    "prefix": "rfc",
+    "body": [
+      "'use client'",
+      "",
+      "import React, { useState, useEffect } from 'react'",
+      "",
+      "export default function ${TM_FILENAME/(.*)\\..+$/${1:/pascalcase}/}(props) {",
+      "  return (",
+      "    <>",
+      "      <div>${TM_FILENAME/(.*)\\..+$/${1}/}</div>",
+      "    </>",
+      "  )",
+      "}",
+      ""
+    ],
+    "description": "React Client Component (Functional)"
+  },
+  "React Server Component": {
+    "scope": "typescript,javascript,jsx",
+    "prefix": "rsc",
+    "body": [
+      "",
+      "export default async function ${TM_FILENAME/(.*)\\..+$/${1:/pascalcase}/}(props) {",
+      "  return (",
+      "    <>",
+      "      <div>${TM_FILENAME/(.*)\\..+$/${1}/}</div>",
+      "    </>",
+      "  )",
+      "}",
+      ""
+    ],
+    "description": "React Server Component"
+  }
+}

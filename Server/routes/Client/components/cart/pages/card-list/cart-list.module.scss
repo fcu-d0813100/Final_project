@@ -1,0 +1,192 @@
+@import '@/styles/_variant.scss';
+
+//數量按鈕
+.btn-sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: white;
+  transition: 0.3s;
+  .ph {
+    font-size: 20px;
+  }
+  &:hover {
+    background: rgb(0, 0, 0);
+    color: white;
+  }
+}
+
+// 步驟圖片
+.step {
+  margin-block: 100px;
+}
+
+// 彩妝品及課程盒子(電腦及手機板)
+.outer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
+  .list {
+    width: 1000px;
+    .cosmetic-topic,
+    .course-topic {
+      border-radius: 5px 5px 0 0;
+      padding: 15px 30px;
+      color: #fff;
+      background-color: $green-700;
+    }
+    .cosmetic-box,
+    .course-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      border-left: 1px solid $gray-200;
+      border-right: 1px solid $gray-200;
+      .cosmetic-detail,
+      .course-detail {
+        display: flex;
+        align-items: center;
+      }
+      .cosmetic-text,
+      .course-text {
+        margin-left: 15px;
+        .sub_text {
+          color: $green-500;
+        }
+      }
+      .cosmetic-img,
+      .course-img {
+        width: 140px;
+        height: 140px;
+        overflow: hidden;
+        img {
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+      .price {
+        text-align: right;
+        color: $red-500;
+        .origin_price {
+          color: $gray-200;
+          text-decoration: line-through;
+        }
+      }
+      .trash {
+        button {
+          border: 0;
+          background-color: transparent;
+          border-radius: 50%;
+          padding: 6px;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $green-500;
+          font-size: 24px;
+        }
+        &:hover {
+          button {
+            color: #fff;
+            background-color: $red-500;
+            transition: ease 0.5s;
+          }
+        }
+      }
+    }
+
+    .cosmetic_amount,
+    .course_amount {
+      background-color: $gray-100;
+      border: 1px solid $gray-200;
+      border-radius: 0 0 5px 5px;
+      padding: 20px 40px;
+      text-align: end;
+      margin-bottom: 30px;
+      span {
+        font-size: 24px;
+        color: $red-500;
+      }
+    }
+  }
+}
+// 商品及課程的box結束
+
+@media screen and (max-width: 1200px) {
+  .step {
+    margin-block: 50px;
+  }
+  .outer {
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    .list {
+      width: 100%;
+      padding: 0;
+    }
+    .checkout {
+      width: 100%;
+      margin: 0;
+      .checkout_discount {
+        margin-bottom: 50px;
+      }
+      .checkout_total_box {
+        display: none;
+      }
+    }
+    .phone-checkout {
+      background-color: $gray-200;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      background-color: rgb(223, 223, 223);
+      .phone-checkout-total {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .total span {
+        color: $red-500;
+      }
+    }
+  }
+}
+
+//小計box
+.checkout {
+  .sticky {
+    position: sticky;
+    top: 0;
+  }
+  margin-left: 30px;
+  width: 380px;
+  .checkout_discount {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 30px;
+    border: 1px solid $gray-200;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    span:nth-child(2) {
+      color: $green-500;
+    }
+    &:hover {
+      background-color: $green-500;
+      span {
+        color: #fff;
+      }
+      span:nth-child(2) {
+        transform: translateX(10px);
+        transition: transform 0.6s ease;
+      }
+    }
+  }
+}

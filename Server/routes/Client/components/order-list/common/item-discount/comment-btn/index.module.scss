@@ -1,0 +1,63 @@
+@import '@/styles/_variant.scss';
+
+.del {
+    color: $gray-200;
+}
+
+.item {
+    padding-inline: 20px;
+}
+
+.item-img {
+    width: 160px;
+    height: 160px;
+}
+
+.item-left {
+    width: 400px;
+}
+
+.text-group {
+    width: 200px;
+}
+
+.count {
+    width: 200px;
+}
+
+.sub-total {
+    width: 200px;
+}
+
+.color-right {
+    color: $green-500;
+}
+
+.color-left {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #998568;
+
+    .color {
+        width: 20px;
+        height: 20px;
+        background-color: #998568;
+    }
+}
+
+.btn {
+    width: 90px;
+    padding-block: 2px;
+    border-radius: 1px;
+    border: $red-500 solid 1px;
+    background-color:$red-500;
+    color: white;
+
+    &:hover {
+        border:$red-500 solid 1px;
+        background-color: white;
+        color:$red-500;
+        transition: ease 0.3s;
+    }
+
+}
