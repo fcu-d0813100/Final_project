@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
+import { googleLogin, parseJwt } from '@/services/user'
 
 // import { register } from 'module'
 
@@ -125,6 +126,66 @@ export function AuthProvider({ children }) {
     } catch (error) {
       // console.error('註冊過程中發生錯誤:', error)
       toast.error('註冊過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
+  // 處理Google登入
+  const callbackGoogleLogin = async (providerData) => {
+    console.log('Google登入資料:', providerData)
+
+    if (auth.isAuth) return
+
+    try {
+      const res = await googleLogin(providerData)
+      console.log('Google登入回應:', res.data)
+
+      if (res.data.status === 'success') {
+        const jwtUser = parseJwt(res.data.data.accessToken)
+        console.log('JWT用戶資料:', jwtUser)
+
+        const userData = { ...initUserData, ...jwtUser }
+
+        setAuth({
+          isAuth: true,
+          userData,
+        })
+
+        toast.success('已成功登入', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+      } else {
+        toast.error('登入失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      toast.error('登入失敗，請稍後再試', {
         style: {
           border: '1.2px solid #90957a',
           padding: '12px 40px',
@@ -459,7 +520,16 @@ export function AuthProvider({ children }) {
   //3. 最外(上)元件階層包裹提供者元件，可以提供它的值給所有後代⼦孫元件使⽤，包含所有頁面元件，與頁面中的元件
   return (
     <AuthContext.Provider
-      value={{ auth, getUser, login, logout, register, update, setAuth }}
+      value={{
+        auth,
+        getUser,
+        login,
+        logout,
+        register,
+        update,
+        setAuth,
+        callbackGoogleLogin,
+      }}
     >
       {children}
     </AuthContext.Provider>
