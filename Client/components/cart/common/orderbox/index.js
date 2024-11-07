@@ -47,7 +47,7 @@ export default function OrderBox() {
                   <span>無圖片</span>
                 )}
               </div>
-              <div>查看訂單</div>
+              <div className="h5 p-2">查看訂單</div>
             </div>
           </Accordion.Header>
           <Accordion.Body className={style['order-list']}>

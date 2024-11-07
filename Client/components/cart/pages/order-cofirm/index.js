@@ -1,122 +1,115 @@
 import React, { useState, useEffect } from 'react'
-import CheckoutBox from '@/components/cart/common/checkoutbox/index'
 import style from './order-comfirm.module.scss'
 import Image from 'next/image'
-import { Form, Row, Col } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import BuyRule from '../../common/buyrule'
 import OrderBox from '../../common/orderbox'
-import { useCartProduct } from '@/hooks/use-cartP'
-import { useCartWorkshop } from '@/hooks/use-cartW'
 import axios from 'axios'
 
 export default function OrderComfirm() {
   const router = useRouter()
 
-  // ---------- 物流 & 付款方式 -----------
-  const [deliveryMethod, setDeliveryMethod] = useState('home') // 預設選擇宅配
-  const [store711, setStore711] = useState(null) // 預設為 null，後面再更新
-  const [paymentMethod, setPaymentMethod] = useState('cod') // 預設付款方式為貨到付款
-
-  // 只在客戶端執行localStorage操作
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedDeliveryMethod = localStorage.getItem('deliveryMethod')
-      const savedPaymentMethod = localStorage.getItem('paymentMethod')
-      const savedStore711 = localStorage.getItem('store711')
-
-      if (savedDeliveryMethod) {
-        setDeliveryMethod(savedDeliveryMethod)
-      }
-      if (savedPaymentMethod) {
-        setPaymentMethod(savedPaymentMethod)
-      }
-      if (savedStore711) {
-        setStore711(JSON.parse(savedStore711))
-      }
-    }
-  }, [router.query])
-  //------------送出預設訂單
-
-  //   const handleCheckout = async () => {
-  //     // 獲取宅配或7-11的資料
-  //     let orderData = {}
-  //     const productCart = JSON.parse(localStorage.getItem('productCart'))
-  //     const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
-  //     const orderNumber = localStorage.getItem('orderNumber')
-
-  //     if (deliveryMethod === 'home') {
-  //       orderData = {
-  //         deliveryMethod: 1,
-  //         recipient_name: document.querySelector('input[name="recipient_name"]')
-  //           .value,
-  //         recipient_phone: document.querySelector('input[name="recipient_phone"]')
-  //           .value,
-  //         recipient_email: document.querySelector('input[name="recipient_email"]')
-  //           .value,
-  //         recipient_city: document.querySelector('select[name="recipient_city"]')
-  //           .value,
-  //         recipient_district: document.querySelector(
-  //           'select[name="recipient_district"]'
-  //         ).value,
-  //         recipient_address: document.querySelector(
-  //           'input[name="recipient_address"]'
-  //         ).value,
-  //         productCart,
-  //         Workshopcart,
-  //         orderNumber,
-  //         totalDiscountPrice,
-  //       }
-  //     } else if (deliveryMethod === '7-11') {
-  //       const store711 = JSON.parse(localStorage.getItem('store711'))
-  //       orderData = {
-  //         deliveryMethod: 2,
-  //         storename: store711.storename,
-  //         storeaddress: store711.storeaddress,
-  //         productCart,
-  //         Workshopcart,
-  //         orderNumber,
-  //         totalDiscountPrice,
-  //       }
-  //     }
-
-  // 根據付款方式進行處理
-  // if (paymentMethod === 'cod') {
-  //   orderData.paymentMethod = 1
-  //   // 直接插入訂單到資料庫
-  //   try {
-  //     const response = await axios.post(
-  //       'http://localhost:3005/api/cart/checkout',
-  //       orderData
-  //     )
-  //     console.log(orderData)
-  //     console.log('訂單已成功提交', response.data)
-  //     // 可以在此添加成功後的操作，比如重定向或顯示提示
-  //   } catch (error) {
-  //     console.error('提交訂單失敗', error)
-  //   }
-  // } else if (paymentMethod === 'ecPay') {
-  //   orderData.paymentMethod = 2
-  //   // 在此處理串接金流的邏輯
-  //   // 可能需要引導用戶到支付頁面
-  //   console.log('請求綠界支付...')
-  // }
-  //   }
-
-  //------------送出預設訂單
-
-  //生成時間戳記訂單編碼
+  //-----------------------生成時間戳記訂單編碼
   const [orderNumber, setOrderNumber] = useState('')
+  const [orderData, setOrderData] = useState(null)
+
   const generateOrderNumber = () => {
     const now = new Date()
     const timestamp = now.toISOString().replace(/\D/g, '').slice(0, 14)
     return `${timestamp}`
   }
+
   useEffect(() => {
     const newOrderNumber = generateOrderNumber()
     setOrderNumber(newOrderNumber)
-    localStorage.setItem('orderNumber', newOrderNumber)
+    // 從 localStorage 取得 orderData，並將 orderNumber 加入其中
+    let storedOrderData = JSON.parse(localStorage.getItem('orderData'))
+    // 加入 orderNumber 到 orderData 並更新 localStorage
+    storedOrderData.orderNumber = newOrderNumber
+    setOrderData(storedOrderData)
+    localStorage.setItem('orderData', JSON.stringify(storedOrderData))
   }, [])
+  // console.log(orderData)
+
+  //抓取付款方式的值
+  const paymentMethod = orderData?.paymentMethod
+  const deliveryMethod = orderData?.deliveryMethod
+
+  //處理綠界
+  // const goECPay = async (orderData) => {
+  //   try {
+  //     // 這裡可以替換為呼叫綠界 API 或者跳轉到支付頁面的邏輯
+  //     const response = await axios.post(
+  //       'http://localhost:3005/api/cart/ecpay',
+  //       orderData
+  //     )
+  //     console.log('綠界支付請求已成功', response.data)
+
+  //     // 如果需要跳轉到支付頁面
+  //     if (response.data.redirectUrl) {
+  //       window.location.href = `http://localhost:3005/api/ecpay-test-only?amount=1041`
+  //     }
+  //   } catch (error) {
+  //     console.error('綠界支付請求失敗:', error)
+  //   }
+  // }
+
+  //------------送訂單到後端
+  //判斷付款方式(1.貨到付款)
+  const handleCheckout = async () => {
+    //處理值的問題
+    orderData.paymentMethod = 1
+    if (deliveryMethod === 'home') {
+      orderData.deliveryMethod = 1
+    } else if (deliveryMethod === '7-11') {
+      orderData.deliveryMethod = 2
+    }
+    //推到後端api
+    try {
+      router.push('http://localhost:3000/cart/success')
+      const response = await axios.post(
+        'http://localhost:3005/api/cart/checkout',
+        orderData
+      )
+      console.log('訂單已成功提交', response.data)
+    } catch (error) {
+      console.error('提交訂單失敗', error)
+    }
+  }
+
+  //判斷付款方式(2.綠界)
+  const goECPay = async () => {
+    if (window.confirm('確認要導向至ECPay進行付款?')) {
+      //處理值的問題
+      orderData.paymentMethod = 2
+      if (deliveryMethod === 'home') {
+        orderData.deliveryMethod = 1
+      } else if (deliveryMethod === '7-11') {
+        orderData.deliveryMethod = 2
+      }
+      const totalPrice = orderData.totalPrice // 從 orderData 取得金額
+      const orderNumber = orderData.orderNumber // 從 orderData 取得訂單號
+      console.log(orderData)
+      console.log('請求綠界支付...')
+      try {
+        // 將資料傳送給後端
+        // const response = await axios.post(
+        //   'http://localhost:3005/api/ecpay-test-only',
+        //   {
+        //     totalPrice: totalPrice, // 傳送金額
+        //     orderNumber: orderNumber, // 傳送訂單號
+        //     // 其他需要的資料
+        //   }
+        // )
+        window.location.href = `http://localhost:3005/api/ecpay-test-only?`
+        // console.log('綠界支付請求已成功', response.data.redirectUrl)
+        // 如果需要跳轉到支付頁面
+      } catch (error) {
+        console.error('金流請求失敗', error)
+      }
+    }
+  }
 
   return (
     <>
@@ -146,17 +139,35 @@ export default function OrderComfirm() {
                           配送方式
                         </div>
                         <div>
-                          {deliveryMethod === 'home' ? (
-                            <div>
-                              {/* <div>{store711.storeaddress}</div>
-                              <div>{store711.storeaddress}</div>
-                              <div>{store711.storeaddress}</div>
-                              <div>{store711.storeaddress}</div> */}
+                          {orderData && orderData.deliveryMethod === 'home' ? (
+                            <div className={style.home}>
+                              <span className={style.text}>
+                                收件地址 : {orderData.homeAdress}
+                              </span>
+
+                              <span> 收件人 : {orderData.recipientName}</span>
+
+                              <span> 電話 : {orderData.recipientPhone}</span>
+
+                              <span> 信箱 : {orderData.recipientEmail}</span>
                             </div>
                           ) : (
-                            <div>
-                              {store711.storename}
-                              <div>{store711.storeaddress}</div>
+                            <div className={style.home}>
+                              <span className={style.text}>
+                                門市 : {orderData?.storename}
+                              </span>
+
+                              <span className={style.text}>
+                                地址 : {orderData?.storeaddress}
+                              </span>
+
+                              <span className={style.text}>
+                                收件人 : {orderData?.sevenRecipientName}
+                              </span>
+
+                              <span className={style.text}>
+                                電話 : {orderData?.sevenRecipientPhone}
+                              </span>
                             </div>
                           )}
                         </div>
@@ -170,9 +181,17 @@ export default function OrderComfirm() {
                     <div className={`h5 ${style['payment-topic']}`}>
                       付款方式
                     </div>
-                    <div>{paymentMethod === 'cod' ? '貨到付款' : '信用卡'}</div>
+                    <div className={style.home}>
+                      {orderData?.paymentMethod === 'cod'
+                        ? '貨到付款'
+                        : '綠界 ecPay'}
+                    </div>
                   </div>
                 </Form>
+              </div>
+              <div className={style['total_amount']}>
+                商品小計：
+                <span>NT${orderData?.totalPrice.toLocaleString()}</span>
               </div>
               {/* <BuyRule /> */}
               <div
@@ -184,17 +203,15 @@ export default function OrderComfirm() {
                 >
                   返回
                 </button>
-                <button className="ms-2 btn-secondary">結賬</button>
+                <button
+                  className="ms-2 btn-secondary"
+                  onClick={paymentMethod === 'cod' ? handleCheckout : goECPay}
+                >
+                  結賬
+                </button>
               </div>
             </div>
           </div>
-
-          {/* <div className={style.checkout}>
-            <div className={style.sticky}>
-              <CheckoutBox />
-              
-            </div>
-          </div> */}
         </div>
       </div>
     </>
