@@ -59,7 +59,12 @@ export const logout = async () => {
  * 載入會員id的資料用，需要登入後才能使用。此API路由會檢查JWT中的id是否符合本會員，不符合會失敗。
  */
 export const getUserById = async (id = 0) => {
-  return await axiosInstance.get(`/user/${id}`)
+  try {
+    return await axiosInstance.get(`/user/${id}`)
+  } catch (error) {
+    console.error('Error fetching user:', error)
+    throw error // 可以根據需要進一步處理錯誤
+  }
 }
 /**
  * 忘記密碼/OTP 要求一次性密碼
