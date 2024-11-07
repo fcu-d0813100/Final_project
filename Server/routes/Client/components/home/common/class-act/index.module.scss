@@ -1,0 +1,81 @@
+@import '@/styles/_variant.scss';
+
+
+.promobg {
+  background: url(/home/promo-banner.svg) center center no-repeat;
+  background-size: cover;
+  height: 650px;
+  position: relative;
+}
+
+.promo-title {
+  border-bottom: 1px solid white;
+  padding-bottom: 12px;
+  padding-left: 5px;
+}
+
+.line-style {
+  position: absolute;
+  top: 0;
+  left: 50%;
+}
+
+.info {
+  padding-block: 50px;
+}
+
+.act-section {
+  padding-inline: 50px;
+}
+
+@media (max-width: 768px) {
+  .act-section {
+    padding-inline: 0px;
+    margin-top: 30px;
+  }
+
+  .container-padding {
+    padding: 40px;
+  }
+
+  .line-style {
+    display: none;
+  }
+
+  .promo-title {
+    font-size: 32px;
+    margin: 10px 0;
+    border-bottom: 0;
+    padding-top: 5px;
+    padding-left: 0px;
+  }
+
+
+  .info {
+    margin: 15px 0;
+  }
+
+  .info-padding {
+    padding-block: 0px;
+  }
+
+
+  .class-area {
+    border-bottom: 1px solid white;
+    padding: 50px 0;
+  }
+
+
+  .promobg {
+    background: url(/home/promo-banner-rwd.svg) center center no-repeat;
+    background-size: cover;
+    padding-bottom: 30px;
+    height: 900px;
+  }
+
+  .date {
+    font-size: 20px;
+    display: flex;
+    padding-bottom: 10px;
+  }
+}

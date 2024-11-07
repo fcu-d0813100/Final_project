@@ -21,14 +21,14 @@ export default function Workshop({
                     />
                 </div>
                 <div className={`${styles["text-group"]} d-flex flex-column align-items-start`}>
-                    <div className={`${styles.h5} mb-2`}>{title}</div>
-                    <div className={`${styles["item-name"]} ${styles.ps} mb-1`}>{instructor}</div>
+                    <div className={`h5 mb-2 ${styles.class}`}>{title}</div>
+                    <div className={`${styles["item-name"]} ps mb-1`}>{instructor}</div>
                 </div>
             </div>
-            <div className={`${styles.count} ${styles.p}`}>
+            <div className={`${styles.count} p`}>
                 活動期間<br />{dateRange}
             </div>
-            <div className={`${styles["sub-total"]} text-end ${styles.h6}`}>NT$ {price}</div>
+            <div className={`${styles["sub-total"]} text-end h6`}>NT$ {price}</div>
         </div>
     );
 }

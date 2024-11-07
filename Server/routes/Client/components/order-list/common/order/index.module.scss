@@ -1,0 +1,20 @@
+@import '@/styles/_variant.scss';
+
+.order {
+    border-color: #bfbfbf;  
+}
+
+.footer {
+    background-color: #f5f5f5;
+
+    span {
+        color: $red-500;
+    }
+
+    .btn {
+        align-content: center;
+    }
+}
+.order-status{
+    color: $red-500;
+}
