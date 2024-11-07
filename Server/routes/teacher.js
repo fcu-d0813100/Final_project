@@ -82,40 +82,40 @@ router.get('/:tid', async function (req, res) {
   console.log(req.params.tid)
 })
 
-router.put('/information/Update', async function (req, res) {
-  const {
-    name,
-    email,
-    nation,
-    gender,
-    years,
-    birthday,
-    slogan,
-    about,
-    experience,
-    id,
-  } = req.body
-  //值沒帶進去
+// router.put('/information/Update', async function (req, res) {
+//   const {
+//     name,
+//     email,
+//     nation,
+//     gender,
+//     years,
+//     birthday,
+//     slogan,
+//     about,
+//     experience,
+//     id,
+//   } = req.body
+//   //值沒帶進去
 
-  const sqlUpdate =
-    'UPDATE `teachers` SET `name`=?, `email`=?, `nation`=?, `gender`=?, `years`=?, `slogan`=?, `about`=?, `experience`=?, `birthday`=? WHERE `id`=?;'
+//   const sqlUpdate =
+//     'UPDATE `teachers` SET `name`=?, `email`=?, `nation`=?, `gender`=?, `years`=?, `slogan`=?, `about`=?, `experience`=?, `birthday`=? WHERE `id`=?;'
 
-  const [result] = await db.query(sqlUpdate, [
-    name,
-    email,
-    nation,
-    gender,
-    years,
-    slogan,
-    about,
-    experience,
-    birthday,
-    id,
-  ])
+//   const [result] = await db.query(sqlUpdate, [
+//     name,
+//     email,
+//     nation,
+//     gender,
+//     years,
+//     slogan,
+//     about,
+//     experience,
+//     birthday,
+//     id,
+//   ])
 
-  // 傳回結果
-  res.json(result)
-  //console.log(req.params)
-})
+//   // 傳回結果
+//   res.json(result)
+//   //console.log(req.params)
+// })
 
 export default router
