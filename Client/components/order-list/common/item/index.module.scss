@@ -6,23 +6,78 @@
 
 .item-img {
     width: 160px;
-    height: 160px;
+    height: 160px; 
+
+    @media (max-width: 1300px) {
+        max-width: 120px;
+        max-height: 120px;
+    }
+
 }
 
 .item-left {
     width: 400px;
+
+    @media (max-width: 1300px) {
+        width: 350px;
+    }
+
+    @media (max-width: 720px) {
+        width: 240px;
+    }
 }
 
 .text-group {
     width: 200px;
+
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        width: 100px;
+
+        .brand {
+            font-size: 11px;
+            line-height: 100%;
+        }
+
+        .item-name {
+            font-size: 16px;
+        }
+
+        .color-right {
+            font-size: 12px;
+        }
+    }
+
+
 }
 
 .count {
     width: 200px;
+
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        font-size: 16px;
+        width: 80px;
+    }
 }
 
 .sub-total {
     width: 200px;
+
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        width: 80px;
+        font-size: 12px;
+    }
 }
 
 .color-right {
