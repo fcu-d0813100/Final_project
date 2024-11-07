@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { PiUser, PiHandbagSimple, PiMagnifyingGlass } from 'react-icons/pi';
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { PiUser, PiHandbagSimple, PiMagnifyingGlass } from 'react-icons/pi'
 import {
   Container,
   Row,
@@ -10,9 +10,9 @@ import {
   Nav,
   NavDropdown,
   Dropdown,
-} from 'react-bootstrap';
+} from 'react-bootstrap'
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import styles from './index.module.scss';
+import styles from './index.module.scss'
 
 function TopBar() {
   return (
@@ -136,9 +136,8 @@ function TopBar() {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      
     </>
-  );
+  )
 }
 
-export default TopBar;
+export default TopBar

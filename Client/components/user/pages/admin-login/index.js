@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
-import { useAdmin } from '@/hooks/use-admin'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function AdminLogin(props) {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
-
-  const { adminLogin } = useAdmin()
+  const role = 'admin'
+  const { auth, login, logout } = useAuth()
+  const handleLogin = () => {
+    login(account, password, role)
+  }
   return (
     <>
       <div className={styles['bg-img']}>
@@ -69,9 +72,7 @@ export default function AdminLogin(props) {
 
                   <div className="d-grid col-12 pt-4">
                     <button
-                      onClick={() => {
-                        adminLogin(account, password)
-                      }}
+                      onClick={handleLogin}
                       className={`btn-primary h6 ${styles['btn-primary']}`}
                     >
                       登入

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Swal from 'sweetalert2'
-import Image from 'next/image'
+
 import { useRouter } from 'next/router'
 import { RxCross2, RxPlus } from 'react-icons/rx'
 import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
+import Swal from 'sweetalert2'
+import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
-// import router from 'next/router'
 import axios from 'axios'
 import Link from 'next/link'
 import UserSection from '@/components/user/common/user-section'
@@ -121,11 +121,12 @@ export default function Index(props) {
     setImgs(newImgs)
     draggedItemIndex = null
   }
-  // title & content
+  // title
   const titleHandle = (e) => {
     setTitle(e.target.value)
     setTitleLength(e.target.value.length)
   }
+  // content
   const contentHandle = (e) => {
     setContent(e.target.value)
     setContentLength(e.target.value.length)
@@ -139,24 +140,47 @@ export default function Index(props) {
     }
     setTagInput('')
   }
-  //動態搜尋
+  // 動態搜尋
   useEffect(() => {
     if (tagInput) {
-      const fetchTags = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:3005/api/post/tags?tagInput=${tagInput}`
-          )
-          setSuggestedTags(response.data)
-        } catch (error) {
-          console.error('Failed to fetch tags:', error)
-        }
-      }
       fetchTags()
     } else {
       setSuggestedTags([])
     }
   }, [tagInput])
+  const fetchTags = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/post/tags?tagInput=${tagInput}`,
+        {
+          credentials: 'include',
+        }
+      )
+      const data = await response.json()
+      setSuggestedTags(data)
+    } catch (error) {
+      console.error('Failed to fetch tags:', error)
+    }
+  }
+
+  // useEffect(() => {
+  //   if (tagInput) {
+  //     const fetchTags = async () => {
+  //       try {
+  //         const response = await axios.get(
+  //           `http://localhost:3005/api/post/tags?tagInput=${tagInput}`
+  //         )
+  //         setSuggestedTags(response.data)
+  //       } catch (error) {
+  //         console.error('Failed to fetch tags:', error)
+  //       }
+  //     }
+  //     fetchTags()
+  //   } else {
+  //     setSuggestedTags([])
+  //   }
+  // }, [tagInput])
+
   //表單送出
   const submitHandle = async (e) => {
     e.preventDefault()
@@ -171,26 +195,29 @@ export default function Index(props) {
     }
     // Collect form
     const formData = new FormData()
+    formData.append('postId', postId)
     formData.append('title', title)
     formData.append('content', content)
     formData.append('userId', userId)
-    imgs.forEach((file) => formData.append('files', file))
-
-    for (let i = 0; i < selectedTags.length; i++) {
-      formData.append('tags', selectedTags[i])
-    }
+    // 保留的舊圖片&上傳的新圖片
+    const oldImgs = imgs.filter((img) => typeof img === 'string')
+    const newFiles = imgs.filter((img) => img instanceof File)
+    oldImgs.forEach((img) => formData.append('imgs', img))
+    newFiles.forEach((file) => formData.append('files', file))
+    // 標籤
+    selectedTags.forEach((tag) => formData.append('tags', tag))
 
     // Submit form
     try {
       const response = await fetch('http://localhost:3005/api/post/update', {
-        method: 'POST',
+        method: 'PUT',
         body: formData,
         credentials: 'include',
       })
       if (response.ok) {
         // 成功處理後的操作
-        showAlert('發布貼文成功', <RiCheckboxCircleFill color="#90957A" />)
-        router.push('/user/post') // 跳轉到 /success 頁面
+        showAlert('更新貼文成功', <RiCheckboxCircleFill color="#90957A" />)
+        router.push('/user/post')
       } else {
         alert('提交失敗，請再試一次！')
       }
@@ -238,6 +265,8 @@ export default function Index(props) {
                       const src =
                         file instanceof File
                           ? URL.createObjectURL(file)
+                          : file.startsWith('post')
+                          ? `http://localhost:3005/upload/${file}`
                           : `/post/${file}`
                       return (
                         //eslint-disable-next-line
@@ -358,7 +387,7 @@ export default function Index(props) {
           {/* 按鈕 */}
           <div className={styles['post-btn']}>
             <button className="btn-primary h6" type="submit">
-              發布
+              更新
             </button>
             <Link href="/user/post" className={`btn-secondary ${styles['']}`}>
               取消

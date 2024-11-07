@@ -36,7 +36,7 @@ export default function ReplyInfo({
     let user = userRef.current.textContent
     user = '回覆 ' + user
     const text = replyRef.current.textContent
-    onReplyClick(text, user) // 傳遞回父組件
+    onReplyClick(text, user, comments.comment_id) // 傳遞回父組件
   }
   const showMoreHandle = () => {
     setShow(!show)
