@@ -1,7 +1,30 @@
 import express from 'express'
 import db from '#configs/db.js'
+import authenticate from '#middlewares/authenticate.js'
 
 const router = express.Router()
+
+router.get('/information', authenticate, async function (req, res) {
+  const id = req.user.id
+
+  const sqlSelect = `SELECT
+   teachers.*,
+      user.account AS user_account
+
+   FROM
+   teachers
+   JOIN
+    workshop_type ON workshop_type.id = teachers.type_id 
+ LEFT JOIN
+    user ON user.id = teachers.id
+   WHERE
+   teachers.id = ${id}
+`
+
+  const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
+  res.json(result[0])
+  console.log(req.params)
+})
 
 router.get('/', async function (req, res) {
   const { search = '' } = req.query
@@ -59,17 +82,40 @@ router.get('/:tid', async function (req, res) {
   console.log(req.params.tid)
 })
 
-router.get('/information/:tid', async function (req, res) {
-  const sqlSelect = `SELECT
-  teachers.*
- FROM
-    teachers
- WHERE
-    teachers.id=${req.params.tid}`
+router.put('/information/Update', async function (req, res) {
+  const {
+    name,
+    email,
+    nation,
+    gender,
+    years,
+    birthday,
+    slogan,
+    about,
+    experience,
+    id,
+  } = req.body
+  //值沒帶進去
 
-  const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
+  const sqlUpdate =
+    'UPDATE `teachers` SET `name`=?, `email`=?, `nation`=?, `gender`=?, `years`=?, `slogan`=?, `about`=?, `experience`=?, `birthday`=? WHERE `id`=?;'
+
+  const [result] = await db.query(sqlUpdate, [
+    name,
+    email,
+    nation,
+    gender,
+    years,
+    slogan,
+    about,
+    experience,
+    birthday,
+    id,
+  ])
+
+  // 傳回結果
   res.json(result)
-  console.log(req.params.tid)
+  //console.log(req.params)
 })
 
 export default router

@@ -22,14 +22,23 @@ export default function Page1({ onNextPage }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://localhost:3005/api/teacher`)
+      const response = await fetch(
+        'http://localhost:3005/api/teacher/information',
+        {
+          credentials: 'include', //一定要加，才會帶cookie
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       if (!response.ok) {
         throw new Error('網路回應不成功：' + response.status)
       }
       const data = await response.json()
-      const filteredData = data.find((teacher) => teacher.id === userData.id) // 篩選符合 userData.id 的資料
-      setTeacher(filteredData) // 只設定符合 id 的資料
-      console.log(filteredData)
+      //const filteredData = data.find((teacher) => teacher.id === userData.id) // 篩選符合 userData.id 的資料
+      setTeacher(data) // 只設定符合 id 的資料
+      console.log(data)
     } catch (err) {
       console.log(err)
     }

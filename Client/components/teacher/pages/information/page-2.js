@@ -22,14 +22,23 @@ export default function Page2({ onPreviousPage }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://localhost:3005/api/teacher`)
+      const response = await fetch(
+        'http://localhost:3005/api/teacher/information',
+        {
+          credentials: 'include', //一定要加，才會帶cookie
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       if (!response.ok) {
         throw new Error('網路回應不成功：' + response.status)
       }
       const data = await response.json()
-      const filteredData = data.find((teacher) => teacher.id === userData.id) // 篩選符合 userData.id 的資料
-      setTeacher(filteredData) // 只設定符合 id 的資料
-      console.log(filteredData)
+      // const filteredData = data.find((teacher) => teacher.id === userData.id) // 篩選符合 userData.id 的資料
+      setTeacher(data) // 只設定符合 id 的資料
+      console.log(data)
     } catch (err) {
       console.log(err)
     }
@@ -40,11 +49,38 @@ export default function Page2({ onPreviousPage }) {
     setTeacher((prevTeacher) => ({ ...prevTeacher, gender: e.target.value })) // 更新 teacher.gender
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/teacher/information/Update',
+        {
+          credentials: 'include',
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(teacher),
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('更新資料失敗')
+      }
+
+      const result = await response.json()
+      console.log('更新成功', result)
+    } catch (error) {
+      console.error('更新失敗', error)
+    }
+    onPreviousPage()
+  }
+
   return (
     <>
       <div className={styles.main}>
         <DashboardTitle chTitle="個人資訊" enTitle="Information" />
-        <form action="">
+        <form onSubmit={handleSubmit}>
           {teacher ? (
             <div>
               <div
@@ -59,14 +95,30 @@ export default function Page2({ onPreviousPage }) {
                   <div className={`${styles.inputArea} mt-5`}>
                     <div className="d-flex mb-3">
                       <InputStyle
+                        addclass="d-none"
+                        forText="id"
+                        titleCh="ID"
+                        titleEn=""
+                        typeText=""
+                        placeholder=""
+                        name="id"
+                        value={teacher.id}
+                        onChange={(e) =>
+                          setTeacher({ ...teacher, id: e.target.value })
+                        }
+                      />
+                      <InputStyle
                         addclass="w-50"
                         forText="name"
                         titleCh="姓名"
                         titleEn=" | name"
                         typeText="text"
                         placeholder="請輸入姓名"
-                        name=""
+                        name="name"
                         value={teacher.name}
+                        onChange={(e) =>
+                          setTeacher({ ...teacher, name: e.target.value })
+                        }
                       />
                       <div className="mx-3"></div>
                       <InputStyle
@@ -76,8 +128,11 @@ export default function Page2({ onPreviousPage }) {
                         titleEn=" | email"
                         typeText="email"
                         placeholder="請輸入信箱"
-                        name=""
+                        name="email"
                         value={teacher.email}
+                        onChange={(e) =>
+                          setTeacher({ ...teacher, email: e.target.value })
+                        }
                       />
                     </div>
                     <div className="d-flex justify-content-between align-items-start mb-3">
@@ -88,8 +143,11 @@ export default function Page2({ onPreviousPage }) {
                         titleEn=" | nation"
                         typeText="text"
                         placeholder="請輸入課程名稱"
-                        name=""
+                        name="nation"
                         value={teacher.nation}
+                        onChange={(e) =>
+                          setTeacher({ ...teacher, nation: e.target.value })
+                        }
                       />
                       <div className="mx-3 pb-3 ">
                         <label
@@ -101,7 +159,7 @@ export default function Page2({ onPreviousPage }) {
                         </label>
                         <div className="d-inline me-3">
                           <input
-                            class="form-check-input p me-2 align-middle"
+                            className="form-check-input p me-2 align-middle"
                             type="radio"
                             name="gender"
                             id="inlineRadio1"
@@ -113,7 +171,7 @@ export default function Page2({ onPreviousPage }) {
                         </div>
                         <div className="d-inline">
                           <input
-                            class="form-check-input p me-2 align-middle"
+                            className="form-check-input p me-2 align-middle"
                             type="radio"
                             name="gender"
                             id="inlineRadio2"
@@ -131,7 +189,7 @@ export default function Page2({ onPreviousPage }) {
                         titleEn=" | years of experience"
                         typeText="text"
                         placeholder="請填入資歷/年"
-                        name=""
+                        name="years"
                         value={teacher.years}
                       />
                     </div>
@@ -142,8 +200,11 @@ export default function Page2({ onPreviousPage }) {
                       titleEn=" | birthday"
                       typeText="date"
                       placeholder="請選擇日期"
-                      name=""
+                      name="birthday"
                       value={teacher.birthday}
+                      onChange={(e) =>
+                        setTeacher({ ...teacher, birthday: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -170,6 +231,9 @@ export default function Page2({ onPreviousPage }) {
                     placeholder="最多輸入250字"
                     addclass="w-100"
                     value={teacher.about}
+                    onChange={(e) =>
+                      setTeacher({ ...teacher, about: e.target.value })
+                    }
                   />
                   <Textarea
                     title="我的 Slogan"
@@ -179,6 +243,9 @@ export default function Page2({ onPreviousPage }) {
                     placeholder="最多輸入250字"
                     addclass="w-100"
                     value={teacher.slogan}
+                    onChange={(e) =>
+                      setTeacher({ ...teacher, notes: e.target.value })
+                    }
                   />
                   <Textarea
                     title="經歷 Experience"
@@ -188,6 +255,9 @@ export default function Page2({ onPreviousPage }) {
                     placeholder="最多輸入250字"
                     addclass="w-100"
                     value={teacher.experience}
+                    onChange={(e) =>
+                      setTeacher({ ...teacher, notes: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -195,21 +265,29 @@ export default function Page2({ onPreviousPage }) {
           ) : (
             <p>載入中或找不到資料</p>
           )}
+
+          <div className={`${styles.button} d-flex`}>
+            <button
+              className="btn-primary h6"
+              onClick={(e) => {
+                e.preventDefault()
+                onPreviousPage()
+              }}
+            >
+              回前頁
+            </button>
+            <button
+              type="submit"
+              className="btn-danger h6 ms-auto"
+              // onClick={(e) => {
+              //   e.preventDefault()
+              //   onPreviousPage()
+              // }}
+            >
+              儲存
+            </button>
+          </div>
         </form>
-        <div className={`${styles.button} d-flex`}>
-          <button
-            className="btn-primary h6"
-            onClick={(e) => {
-              e.preventDefault()
-              onPreviousPage()
-            }}
-          >
-            回前頁
-          </button>
-          <button type="submit" className="btn-danger h6 ms-auto">
-            儲存
-          </button>
-        </div>
       </div>
     </>
   )
