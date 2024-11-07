@@ -5,7 +5,13 @@ import db from '#configs/db.js';
 // 获取特定用户的优惠券
 router.get('/:userId', async (req, res) => {
     const userId = req.params.userId; // 获取 URL 参数中的 userId
+    const { page = 1, limit = 10 } = req.query; // 获取分页参数，默认值是 page 1 和 limit 10
+
     console.log('User ID:', userId); // 日志检查 userId
+    console.log('Page:', page, 'Limit:', limit); // 日志检查分页参数
+
+    // 计算偏移量（OFFSET）
+    const offset = (page - 1) * limit;
 
     try {
         const sqlSelect = `
@@ -19,11 +25,15 @@ router.get('/:userId', async (req, res) => {
             JOIN coupon_list ON coupon_relation.coupon_id = coupon_list.id
             JOIN user ON coupon_relation.user_id = user.id 
             WHERE coupon_relation.user_id = ${userId}
-            ORDER BY coupon_relation.id DESC`;
+            ORDER BY coupon_relation.id DESC
+            LIMIT ${limit} OFFSET ${offset}`;  // 加入分页的 LIMIT 和 OFFSET`;
 
+    
         console.log('Executing query:', sqlSelect);
-        console.log('With userId:', userId);
-        const [result] = await db.query(sqlSelect, [userId]);
+        console.log('With userId:', userId, 'Page:', page, 'Limit:', limit);
+
+        // 传递分页参数给数据库查询
+        const [result] = await db.query(sqlSelect, [limit, offset]);
 
         if (result.length === 0) {
             return res.status(404).json({ success: false, message: 'No coupons found for this user.' });
@@ -36,6 +46,23 @@ router.get('/:userId', async (req, res) => {
         res.status(500).json({ message: 'Error fetching coupons. Please try again later.' });
     }
 });
+
+
+//         console.log('Executing query:', sqlSelect);
+//         console.log('With userId:', userId);
+//         const [result] = await db.query(sqlSelect, [userId]);
+
+//         if (result.length === 0) {
+//             return res.status(404).json({ success: false, message: 'No coupons found for this user.' });
+//         }
+
+//         res.status(200).json({ success: true, data: result });
+//         console.log('Query result:', result);
+//     } catch (error) {
+//         console.error('Database query error:', error);
+//         res.status(500).json({ message: 'Error fetching coupons. Please try again later.' });
+//     }
+// });
 
 router.get('/history/:userId', async (req, res) => {
     const userId = req.params.userId;
@@ -54,7 +81,7 @@ router.get('/history/:userId', async (req, res) => {
             JOIN user ON coupon_relation.user_id = user.id  
             WHERE coupon_relation.user_id = ${userId}
             ORDER BY coupon_relation.id DESC`;
-// JOIN order_list ON order_list.coupon_id = coupon_list.id
+        // JOIN order_list ON order_list.coupon_id = coupon_list.id
         const [result] = await db.query(sqlSelect, [userId]);
         console.log(result);
 

@@ -23,19 +23,19 @@ export default function ItemDiscount({
                     />
                 </div>
                 <div className={`${styles['text-group']} d-flex flex-column align-items-start`}>
-                    <div className={`${styles.p} mb-2`}>{brand}</div>
-                    <div className={`${styles['item-name']} ${styles.h6} mb-1`}>{name}</div>
+                    <div className={`${styles.brand} mb-2 p`}>{brand}</div>
+                    <div className={`${styles['item-name']} h6 mb-1`}>{name}</div>
                     <div className={`${styles['color-group']} d-flex align-items-center`}>
-                        <div className={`${styles['color-left']} d-flex justify-content-center align-items-center me-2`}>
+                        {/* <div className={`${styles['color-left']} d-flex justify-content-center align-items-center me-2`}>
                             <div className={styles.color}></div>
-                        </div>
-                        <div className={`${styles['color-right']} ${styles.ps}`}>顏色：{color}</div>
+                        </div> */}
+                        <div className={`${styles['color-right']} ps`}>顏色：{color}</div>
                     </div>
                 </div>
             </div>
             <div className={`${styles.count} text-center`}>x{quantity}</div>
-            <div className={`${styles['sub-total']} text-end ${styles.h6}`}>
-                <del className={`${styles.p} ${styles.del}`}>NT$ {originalPrice}</del> NT$ {discountedPrice}
+            <div className={`${styles['sub-total']} text-end h6`}>
+                <del className={`p ${styles.del}`}>NT$ {originalPrice}</del> NT$ {discountedPrice}
             </div>
         </div>
     );
