@@ -318,7 +318,7 @@ export default function RegisterForm() {
                   <div className="row d-flex justify-content-end align-items-start">
                     <div className={`col-7 ${styles['signup-rwd']}`}>
                       已經有帳號了?{' '}
-                      <Link href="/user/login" className="text-black">
+                      <Link href="/user/login/user" className="text-black">
                         立即登入
                       </Link>
                     </div>
@@ -336,7 +336,7 @@ export default function RegisterForm() {
                     已經是Beautique會員?立即登入享受會員專屬體驗！{' '}
                   </h6>
                   <div className="col-12 d-flex justify-content-center align-items-center">
-                    <Link href="/user/login">
+                    <Link href="/user/login/user">
                       <button
                         type="button"
                         className={`btn-outline h6 ${styles['btn-outline']}`}
