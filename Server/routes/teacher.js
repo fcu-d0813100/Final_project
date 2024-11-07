@@ -6,18 +6,16 @@ const router = express.Router()
 router.get('/', async function (req, res) {
   const { search = '' } = req.query
   const sqlSelect = `SELECT
-  teachers.id,
-  teachers.name,
-  teachers.gender,
-  teachers.years,
-  teachers.nation,
-  teachers.valid,
+  teachers.*,
+  user.account AS user_account,
   workshop_type.type AS workshop_type_type
 
  FROM
     teachers
  JOIN
     workshop_type ON workshop_type.id = teachers.type_id 
+ LEFT JOIN
+    user ON user.id = teachers.id
  WHERE
     (teachers.name LIKE '%${search}%' OR teachers.nation LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%')
     AND teachers.valid = 1  
@@ -30,44 +28,6 @@ router.get('/', async function (req, res) {
   res.json(result)
   console.log(req.params)
 })
-
-// router.get('/', async function (req, res, next) {
-//   const { search = '' } = req.query
-//   const sqlSelect = `SELECT
-//     workshop.id,
-//     workshop.name,
-//     workshop.price,
-//     workshop.type_id,
-//     teachers.id AS teacher_id,
-//     teachers.name AS teacher_name,
-//     GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
-//     workshop.registration_start,
-//     workshop.registration_end,
-//     workshop.isUpload,
-//     workshop.valid,
-//     workshop_type.type AS workshop_type_type
-//  FROM
-//     workshop
-//  JOIN
-//     teachers ON  workshop.teachers_id = teachers.id
-//  LEFT JOIN
-//       workshop_time ON workshop_time.workshop_id = workshop.id
-//  LEFT JOIN
-//     workshop_type ON workshop.type_id = workshop_type.id
-//  WHERE
-//      (workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%')
-//      AND workshop.valid = 1
-//      AND workshop.isUpload = 1
-//  GROUP BY
-//       workshop.id, teachers.id, workshop.isUpload, workshop.valid
-// `
-
-//   const result = await db
-//     .query(sqlSelect, [`%${search}%`, `%${search}%`, `%${search}%`])
-//     .catch((e) => console.log(e))
-//   res.json(result)
-//   //console.log(result)
-// })
 
 router.get('/:tid', async function (req, res) {
   const sqlSelect = `SELECT
