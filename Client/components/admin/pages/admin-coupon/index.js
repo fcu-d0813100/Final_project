@@ -12,6 +12,10 @@ export default function Index(props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [currentPageOngoing, setCurrentPageOngoing] = useState(1); // 当前进行中优惠券页码
+  const [currentPageEnded, setCurrentPageEnded] = useState(1); // 当前已结束优惠券页码
+  const couponsPerPage = 6; // 每页显示的优惠券数量
+
   const brandImageMap = {
     1: '/discount/coupon/brands/bobbi.svg',
     2: '/discount/coupon/brands/estee.svg',
@@ -57,11 +61,29 @@ export default function Index(props) {
     fetchCoupons(); // 在组件加载时调用
   }, []);
 
+  // 计算当前进行中优惠券的分页
+  const indexOfLastOngoingCoupon = currentPageOngoing * couponsPerPage;
+  const indexOfFirstOngoingCoupon = indexOfLastOngoingCoupon - couponsPerPage;
+  const currentOngoingCoupons = ongoingCoupons.slice(indexOfFirstOngoingCoupon, indexOfLastOngoingCoupon);
+ 
+  // 计算当前已结束优惠券的分页
+  const indexOfLastEndedCoupon = currentPageEnded * couponsPerPage;
+  const indexOfFirstEndedCoupon = indexOfLastEndedCoupon - couponsPerPage;
+  const currentEndedCoupons = endedCoupons.slice(indexOfFirstEndedCoupon, indexOfLastEndedCoupon);
+
+  const handleTabSelect = (key) => {
+    if (key === '/ing') {
+      setCurrentPageOngoing(1); // 切换到进行中时重置页码
+    } else {
+      setCurrentPageEnded(1); // 切换到已结束时重置页码
+    }
+  };
+
   return (
     <>
       <AdminSection titleCN="優惠券管理">
-        <Tab.Container defaultActiveKey="/ing">
-          <div className={styles['post-navbar']}>
+        <Tab.Container defaultActiveKey="/ing" onSelect={handleTabSelect}>
+          <div className={styles['coupon-navbar']}>
             <Nav variant="underline" className={`${styles['nav-item']} h6`}>
               <Nav.Item className={`${styles['nav-link']} text-center`}>
                 <Nav.Link className={`${styles['link-style']}`} eventKey="/ing">進行中與即將開始</Nav.Link>
@@ -74,29 +96,53 @@ export default function Index(props) {
           <Tab.Content>
             <Tab.Pane eventKey="/ing">
               <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                {ongoingCoupons.map((coupon, index) => (
+                {currentOngoingCoupons.map((coupon) => (
                   <CouponEdit
                     key={coupon.id}
+                    id={coupon.id}
                     img={brandImageMap[coupon.brand_id]}
                     name={coupon.name}
-                    discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`} // 动态格式
-                    condition={'NT$' + coupon.minimum_amount}
+                    discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`}
+                    condition={coupon.minimum_amount}
                     expiration={coupon.end_date}
                   />
+                ))}
+              </div>
+              <div className={styles.pagination}>
+                {Math.ceil(ongoingCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(ongoingCoupons.length / couponsPerPage) }, (_, index) => (
+                  <button
+                    key={index + 1}
+                    className={`${styles.pageBtn} ${currentPageOngoing === index + 1 ? styles.active : ''}`}
+                    onClick={() => setCurrentPageOngoing(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
                 ))}
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="/end">
               <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                {endedCoupons.map((coupon, index) => (
+                {currentEndedCoupons.map((coupon) => (
                   <CouponEnd
                     key={coupon.id}
+                    id={coupon.id}
                     img={brandImageMap[coupon.brand_id]}
                     name={coupon.name}
-                    discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`} // 动态格式
-                    condition={'NT$' + coupon.minimum_amount}
+                    discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`}
+                    condition={coupon.minimum_amount}
                     expiration={coupon.end_date}
                   />
+                ))}
+              </div>
+              <div className={styles.pagination}>
+                {Math.ceil(endedCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(endedCoupons.length / couponsPerPage) }, (_, index) => (
+                  <button
+                    key={index + 1}
+                    className={`${styles.pageBtn} ${currentPageEnded === index + 1 ? styles.active : ''}`}
+                    onClick={() => setCurrentPageEnded(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
                 ))}
               </div>
             </Tab.Pane>
@@ -106,4 +152,3 @@ export default function Index(props) {
     </>
   );
 }
-
