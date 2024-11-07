@@ -4,6 +4,18 @@ import toast, { Toaster } from 'react-hot-toast'
 
 // import { register } from 'module'
 
+// 初始化會員狀態(登出時也要用)
+// 只需要必要的資料即可，沒有要多個頁面或元件用的資料不需要加在這裡
+// !!注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
+export const initUserData = {
+  id: 0,
+  username: '',
+  google_uid: '',
+  line_uid: '',
+  name: '',
+  email: '',
+}
+
 // 1. 建立與導出它
 // 傳入參數為defaultValue，是在套用context時錯誤或失敗才會得到的值。
 // 可以使用有意義的預設值，或使用null(通常目的是為了除錯)
@@ -21,6 +33,8 @@ export function AuthProvider({ children }) {
       name: '',
       email: '',
       account: '',
+      google_uid: '',
+      line_uid: '',
     },
   })
 
@@ -349,6 +363,8 @@ export function AuthProvider({ children }) {
             name: '',
             email: '',
             account: '',
+            google_uid: '',
+            line_uid: '',
           },
         })
       } else {
