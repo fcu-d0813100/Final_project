@@ -7,9 +7,21 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function UserInfo() {
-  const { auth } = useAuth()
-  // 從勾子的 context 獲取更新和獲取用戶資訊的函式
-  // 未登入時，不會出現頁面內容
+  const { auth, getUser } = useAuth()
+  const [userData, setUserData] = useState(auth.userData)
+  // 獲取用戶信息
+  const fetchUserData = async () => {
+    try {
+      const user = await getUser()
+      setUserData(user)
+    } catch (error) {
+      console.error('獲取用戶信息失敗:', error)
+    }
+  }
+  useEffect(() => {
+    fetchUserData()
+  }, [])
+
   if (!auth.isAuth) return <></>
 
   return (
@@ -29,19 +41,19 @@ export default function UserInfo() {
                         <th>
                           姓名<span> | name</span>
                         </th>
-                        <td>{auth.userData.name}</td>
+                        <td>{userData.name}</td>
                       </tr>
                       <tr>
                         <th>
                           信箱<span> | email</span>
                         </th>
-                        <td>{auth.userData.email}</td>
+                        <td>{userData.email}</td>
                       </tr>
                       <tr>
                         <th>
                           生日<span> | birthday</span>
                         </th>
-                        <td>{auth.userData.birthday}</td>
+                        <td>{userData.birthday}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -56,9 +68,9 @@ export default function UserInfo() {
                         </th>
                         <td>
                           {' '}
-                          {auth.userData.gender === 1
+                          {userData.gender === 1
                             ? '男士'
-                            : auth.userData.gender === 2
+                            : userData.gender === 2
                             ? '女士'
                             : ''}
                         </td>
@@ -67,13 +79,13 @@ export default function UserInfo() {
                         <th>
                           手機<span> | phone</span>
                         </th>
-                        <td>{auth.userData.phone}</td>
+                        <td>{userData.phone}</td>
                       </tr>
                       <tr>
                         <th>
                           地址<span> | address</span>
                         </th>
-                        <td>{auth.userData.address}</td>
+                        <td>{userData.address}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -87,7 +99,7 @@ export default function UserInfo() {
               width={255}
               height={255}
               className={styles.img}
-              src={`/user/img/${auth.userData.img}`}
+              src={`/user/img/${userData.img}`}
               alt=""
             />
           </div>
@@ -102,7 +114,7 @@ export default function UserInfo() {
                     <th>
                       創建時間<span> | created time</span>
                     </th>
-                    <td>{auth.userData.created_at}</td>
+                    <td>{userData.created_at}</td>
                   </tr>
                 </tbody>
               </table>
@@ -114,7 +126,7 @@ export default function UserInfo() {
                     <th>
                       更新時間<span> | updated time</span>
                     </th>
-                    <td>{auth.userData.updated_at}</td>
+                    <td>{userData.updated_at}</td>
                   </tr>
                 </tbody>
               </table>
@@ -150,11 +162,11 @@ export default function UserInfo() {
                 >
                   <div className="col-4 d-flex justify-content-center align-items-center">
                     {' '}
-                    {auth.userData.level === 1
+                    {userData.level === 1
                       ? '一般會員'
-                      : auth.userData.level === 2
+                      : userData.level === 2
                       ? '白金會員'
-                      : auth.userData.level === 3
+                      : userData.level === 3
                       ? '鑽石會員'
                       : ''}
                   </div>
