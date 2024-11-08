@@ -124,7 +124,7 @@ export default function Index(props) {
           <div className={styles['coupon-navbar']}>
             <Nav variant="underline" className={`${styles['nav-item']} h6`}>
               <Nav.Item className={`${styles['nav-link']} text-center`}>
-                <Nav.Link className={`${styles['link-style']}`} eventKey="/ing">進行中與即將開始</Nav.Link>
+                <Nav.Link className={`${styles['link-style']}`} eventKey="/ing">進行中</Nav.Link>
               </Nav.Item>
               <Nav.Item className={`${styles['nav-link']} text-center`}>
                 <Nav.Link className={`${styles['link-style']}`} eventKey="/fet">即將開始</Nav.Link>
