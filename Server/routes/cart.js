@@ -2,6 +2,28 @@ import express from 'express'
 const router = express.Router()
 import db from '#configs/db.js'
 
+// //獲取會員id抓取優惠券返回前端
+// router.get('/getCoupon', async function (req, res) {
+//   const userId = req.query.userId // 從查詢參數獲取 userId
+
+//   if (!userId) {
+//     return res.status(400).json({ error: 'User ID is required' })
+//   }
+
+//   try {
+//     const sqlSelect = `SELECT *
+//     FROM
+//     coupon_relatoin`
+//     const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
+//     res.json(result)
+//   } catch (error) {
+//     console.error('Database query error:', error)
+//     res
+//       .status(500)
+//       .json({ message: 'Error fetching coupons. Please try again later.' })
+//   }
+// })
+
 //訂單提交路由
 router.post('/checkout', async function (req, res, next) {
   try {
