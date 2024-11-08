@@ -58,7 +58,7 @@ const Coupon = ({
         if (!userId) {
             // 用户未登录，跳转到登录页面
             alert("請先登入會員");
-            router.push(`/user/login`);
+            router.push(`/user/login/user`);
             return;
         }
 
