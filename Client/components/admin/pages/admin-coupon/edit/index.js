@@ -186,11 +186,15 @@ import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import AdminSection from '@/components/admin/common/admin-section';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function Index() {
-    const [coupon, setCoupon] = useState(null);
+    const [coupon, setCoupon] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [couponCode, setCouponCode] = useState(""); // 用空字符串初始化
+    const router = useRouter();
+
 
     // 當組件加載後，從 localStorage 獲取 couponId 並根據它獲取優惠券數據
     useEffect(() => {
@@ -226,6 +230,9 @@ export default function Index() {
     // 處理表單提交
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        console.log("提交的優惠券資料：", coupon);  // 打印 coupon 内容，确认数据是否正确
+
         // 提交表單數據到後端
         fetch(`http://localhost:3005/api/coupons/${coupon.id}`, {
             method: 'PUT',
@@ -238,7 +245,6 @@ export default function Index() {
             .then(updatedCoupon => {
                 setCoupon(updatedCoupon); // 更新为后端返回的数据
                 alert('優惠券更新成功！');
-
                 router.push('/admin/coupon');  // 提交後跳轉到優惠券列表頁
             })
             .catch(err => {
@@ -246,7 +252,6 @@ export default function Index() {
                 alert('更新優惠券時發生錯誤');
             });
     };
-
 
 
     // 如果還在加載或者有錯誤，顯示提示
@@ -290,7 +295,7 @@ export default function Index() {
                                 type="text"
                                 name="name"
                                 value={coupon.name}
-                                onChange={handleInputChange}
+                                onChange={(e) => setCouponCode(e.target.value)} 
                             />
                         </div>
 
