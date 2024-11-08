@@ -1,22 +1,13 @@
-import express from 'express'
-const router = express.Router()
-import { createOtp, updatePassword } from '#db-helpers/otp.js'
-import transporter from '#configs/mail.js'
-import 'dotenv/config.js'
-
-// 電子郵件文字訊息樣版
 const mailHtml = (otpToken) => `
 <html>
   <head>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&display=swap');
+      
       body {
-      font-family: "Libre Bodoni", serif;
-      font-optical-sizing: auto;
-      font-weight: 400;
-      font-style: normal;
+        font-family: 'Libre Bodoni', serif;
+        font-weight: 400;
+        font-style: normal;
         font-size: 16px;
         line-height: 1.5;
       }
@@ -26,7 +17,6 @@ const mailHtml = (otpToken) => `
       .title {
         font-weight: 700;
         font-size: 30px;
-        
       }
       .content {
         padding: 5px;
@@ -58,11 +48,11 @@ const mailHtml = (otpToken) => `
         display: flex;
         justify-content: center;
       }
-      .logo{
-      font-style: italic;
-      color:#90957A;
-      font-weight: 500;
-      font-size: 50px;
+      .logo {
+        font-style: italic;
+        color: #90957A;
+        font-weight: 500;
+        font-size: 50px;
       }
     </style>
   </head>
@@ -76,8 +66,7 @@ const mailHtml = (otpToken) => `
         重設密碼頁面的《電子郵件驗證碼》欄位中。<br />
         <br />
         請注意驗證碼將於寄送後 30 分鐘後過期，<br />
-        如有任何問題請洽 Beautique 客服人員
-        <br />S
+        如有任何問題請洽 Beautique 客服人員，謝謝。
       </div>
 
       <div class="token-content">
@@ -86,49 +75,9 @@ const mailHtml = (otpToken) => `
           <div class="token">${otpToken}</div>
         </div>
       </div>
-      <p>敬上</p>
-      <p class ="logo">Beautique</p>
+      <p>Beautique 敬上</p>
+      <p class="logo">Beautique</p>
     </div>
   </body>
 </html>
-
 `
-
-// 使用時，將此HTML傳遞給您的電子郵件發送功能
-
-router.post('/otp', async (req, res, next) => {
-  const { email } = req.body
-  if (!email) return res.json({ message: 'fail', code: '400' })
-
-  const otp = await createOtp(email)
-  if (!otp.token) return res.json({ message: 'fail', code: '400' })
-
-  // 寄送email
-  const mailOptions = {
-    from: `"support"<${process.env.SMTP_TO_EMAIL}>`,
-    to: email,
-    subject: '重設密碼要求的電子郵件驗證碼',
-    html: mailHtml(otp.token),
-  }
-
-  transporter.sendMail(mailOptions, (err, response) => {
-    if (err) {
-      return res.status(400).json({ message: 'fail', detail: err })
-    } else {
-      return res.json({ message: 'email sent', code: '200' })
-    }
-  })
-})
-
-// 重設密碼用
-router.post('/reset', async (req, res, next) => {
-  const { email, token, password } = req.body
-
-  if (!token) return res.json({ message: 'fail', code: '400' })
-  const result = await updatePassword(email, token, password)
-
-  if (!result) return res.json({ message: 'fail', code: '400' })
-  return res.json({ message: 'success', code: '200' })
-})
-
-export default router
