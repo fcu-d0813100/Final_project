@@ -10,9 +10,9 @@ export default function CheckoutBox() {
   //從use-cartＷ鉤子取得課程內容
   const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
   // 計算打折後的總和
-  const totalDiscountPrice = pTotalPrice * 0.8 + wTotalPrice * 0.8
+  const totalDiscountPrice = pTotalPrice + wTotalPrice * 0.8
   //計算總和
-  const totalPrice = pTotalPrice * 0.8 + wTotalPrice * 0.8
+  const totalPrice = pTotalPrice + wTotalPrice * 0.8
 
   return (
     <>
@@ -27,7 +27,7 @@ export default function CheckoutBox() {
           </div>
           <div className={style.item}>
             <span>彩妝商品</span>
-            <span>NT${(pTotalPrice * 0.8).toLocaleString()}</span>
+            <span>NT${pTotalPrice.toLocaleString()}</span>
           </div>
           <div className={style.item}>
             <span>課程商品</span>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import CheckoutBox from '@/components/cart/common/checkoutbox/index'
 import style from './checkout.module.scss'
 import Image from 'next/image'
@@ -13,22 +13,29 @@ import axios from 'axios'
 
 export default function Checkout() {
   const router = useRouter()
+  const [deliveryMethod, setDeliveryMethod] = useState('home') //預設物流
+  const [paymentMethod, setPaymentMethod] = useState('cod') //預設付款
+  const [orderData, setOrderData] = useState({}) // 保存訂單資料
 
   //鉤子帶入金額跟數量
   const { pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
   const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
   //打折的價格
-  const discountedPTotalPrice = pTotalPrice * 0.8
+  const discountedPTotalPrice = pTotalPrice
   const discountedWTotalPrice = wTotalPrice * 0.8
-  const totalDiscountPrice = discountedPTotalPrice + discountedWTotalPrice
+  const totalPrice = discountedPTotalPrice + discountedWTotalPrice
 
-  //----------物流
-  const [deliveryMethod, setDeliveryMethod] = useState('home') // 預設選擇宅配
+  // 使用 useRef 來存儲 input 值
+  const recipientNameRef = useRef(null)
+  const recipientPhoneRef = useRef(null)
+  const recipientEmailRef = useRef(null)
+  const recipientCityRef = useRef(null)
+  const recipientDistrictRef = useRef(null)
+  const recipientAddressRef = useRef(null)
+  const sevenRecipientNameRef = useRef(null)
+  const sevenRecipientPhoneRef = useRef(null)
 
-  //----------付款方式
-  const [paymentMethod, setPaymentMethod] = useState('cod') // 預設付款方式為貨到付款
-
-  // 在組件加載時從 localStorage 獲取值
+  //首次渲染-------------------------抓取已設定在localStorage的物流跟付款方法
   useEffect(() => {
     const savedDeliveryMethod = localStorage.getItem('deliveryMethod')
     const savedPaymentMethod = localStorage.getItem('paymentMethod')
@@ -39,94 +46,77 @@ export default function Checkout() {
     if (savedPaymentMethod) {
       setPaymentMethod(savedPaymentMethod)
     }
-
-    // 檢查 URL 中是否有 deliveryMethod 查詢參數(711的)
+    //擋711路由顯示的問題
     if (router.query.deliveryMethod) {
       router.replace(router.pathname, undefined, { shallow: true })
     }
   }, [router.query])
 
-  // 儲存到 localStorage
+  //------------選擇方式
   const handleDeliveryChange = (method) => {
     setDeliveryMethod(method)
     localStorage.setItem('deliveryMethod', method)
   }
-  // 儲存到 localStorage
+  //------------選擇付款方式
   const handlePaymentChange = (event) => {
     const method = event.target.value
     setPaymentMethod(method)
     localStorage.setItem('paymentMethod', method)
   }
 
-  //------------送出預設訂單
-
-  const handleCheckout = async () => {
-    // 獲取宅配或7-11的資料
-    let orderData = {}
+  //------------產生訂單資訊儲存到localstorage(整合使用者選擇的內容)
+  const handleCheckout = () => {
+    //宅配
+    const recipientName = recipientNameRef.current?.value
+    const recipientPhone = recipientPhoneRef.current?.value
+    const recipientEmail = recipientEmailRef.current?.value
+    const recipientCity = recipientCityRef.current?.value
+    const recipientDistrict = recipientDistrictRef.current?.value
+    const recipientAddress = recipientAddressRef.current?.value
+    const homeAdress = `${recipientCity}${recipientDistrict}${recipientAddress}`
+    //711
+    const sevenRecipientName = sevenRecipientNameRef.current?.value
+    const sevenRecipientPhone = sevenRecipientPhoneRef.current?.value
+    const store711Data = JSON.parse(localStorage.getItem('store711'))
+    const storename = store711Data?.storename
+    const storeaddress = store711Data?.storeaddress
+    //商品&課程資訊&金額
     const productCart = JSON.parse(localStorage.getItem('productCart'))
     const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
-    const orderNumber = localStorage.getItem('orderNumber')
 
-    if (deliveryMethod === 'home') {
+    let orderData = {}
+    if (deliveryMethod === '7-11') {
       orderData = {
-        deliveryMethod: 1,
-        recipient_name: document.querySelector('input[name="recipient_name"]')
-          .value,
-        recipient_phone: document.querySelector('input[name="recipient_phone"]')
-          .value,
-        recipient_email: document.querySelector('input[name="recipient_email"]')
-          .value,
-        recipient_city: document.querySelector('select[name="recipient_city"]')
-          .value,
-        recipient_district: document.querySelector(
-          'select[name="recipient_district"]'
-        ).value,
-        recipient_address: document.querySelector(
-          'input[name="recipient_address"]'
-        ).value,
+        deliveryMethod,
+        paymentMethod,
+        sevenRecipientName,
+        sevenRecipientPhone,
+        storename,
+        storeaddress,
         productCart,
         Workshopcart,
-        orderNumber,
-        totalDiscountPrice,
+        totalPrice,
       }
-    } else if (deliveryMethod === '7-11') {
-      const store711 = JSON.parse(localStorage.getItem('store711'))
+    } else {
       orderData = {
-        deliveryMethod: 2,
-        storename: store711.storename,
-        storeaddress: store711.storeaddress,
+        deliveryMethod,
+        paymentMethod,
+        recipientName,
+        recipientPhone,
+        recipientEmail,
+        homeAdress,
         productCart,
         Workshopcart,
-        orderNumber,
-        totalDiscountPrice,
+        totalPrice,
       }
     }
 
-    // 根據付款方式進行處理
-    if (paymentMethod === 'cod') {
-      orderData.paymentMethod = 1
-      // 直接插入訂單到資料庫
-      try {
-        const response = await axios.post(
-          'http://localhost:3005/api/cart/checkout',
-          orderData
-        )
-        console.log(orderData)
-        console.log('訂單已成功提交', response.data)
-        // 可以在此添加成功後的操作，比如重定向或顯示提示
-      } catch (error) {
-        console.error('提交訂單失敗', error)
-      }
-    } else if (paymentMethod === 'ecPay') {
-      orderData.paymentMethod = 2
-      // 在此處理串接金流的邏輯
-      // 可能需要引導用戶到支付頁面
-      console.log('請求綠界支付...')
-    }
+    localStorage.setItem('orderData', JSON.stringify(orderData))
+    alert('訂單成立')
+    router.push('/cart/order-check')
   }
 
-  //------------送出預設訂單
-
+  //------------渲染頁面
   return (
     <>
       <div className="container">
@@ -183,6 +173,7 @@ export default function Checkout() {
                             type="text"
                             placeholder="填寫姓名"
                             name="recipient_name"
+                            ref={recipientNameRef}
                           />
                         </Form.Group>
 
@@ -195,6 +186,7 @@ export default function Checkout() {
                             type="text"
                             placeholder="例 : 0912345678"
                             name="recipient_phone"
+                            ref={recipientPhoneRef}
                           />
                         </Form.Group>
 
@@ -207,6 +199,7 @@ export default function Checkout() {
                             type="email"
                             placeholder="填寫信箱"
                             name="recipient_email"
+                            ref={recipientEmailRef}
                           />
                         </Form.Group>
 
@@ -214,7 +207,10 @@ export default function Checkout() {
                           <Col md={6}>
                             <Form.Group controlId="recipient-city">
                               <Form.Label>縣市</Form.Label>
-                              <Form.Select name="recipient_city">
+                              <Form.Select
+                                name="recipient_city"
+                                ref={recipientCityRef}
+                              >
                                 <option value="" disabled selected>
                                   選擇縣市
                                 </option>
@@ -228,7 +224,10 @@ export default function Checkout() {
                           <Col md={6}>
                             <Form.Group controlId="recipient-district">
                               <Form.Label>區</Form.Label>
-                              <Form.Select name="recipient_district">
+                              <Form.Select
+                                name="recipient_district"
+                                ref={recipientDistrictRef}
+                              >
                                 <option value="" disabled selected>
                                   選擇區
                                 </option>
@@ -250,12 +249,37 @@ export default function Checkout() {
                             type="text"
                             placeholder="填寫地址"
                             name="recipient_address"
+                            ref={recipientAddressRef}
                           />
                         </Form.Group>
                       </div>
                     ) : (
                       <div className={style['shipping-form']}>
                         <Seven />
+                        <Form.Group
+                          className="mb-3"
+                          controlId="seven-recipient-name"
+                        >
+                          <Form.Label className="mt-3">收件人</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="填寫姓名"
+                            name="seven_recipient_name"
+                            ref={sevenRecipientNameRef}
+                          />
+                        </Form.Group>
+                        <Form.Group
+                          className="mb-3"
+                          controlId="seven-recipient-phone"
+                        >
+                          <Form.Label>電話</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="例 : 0912345678"
+                            name="seven_recipient_phone"
+                            ref={sevenRecipientPhoneRef}
+                          />
+                        </Form.Group>
                       </div>
                     )}
                   </Form>
@@ -296,22 +320,16 @@ export default function Checkout() {
           </div>
 
           <div className={style.checkout}>
-            <div className={style.sticky}>
+            <div className="mb-5">
               <CheckoutBox />
-              <div
-                className={`justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
-              >
-                <button
-                  className="btn-primary"
-                  onClick={() => router.push('/cart/')}
-                >
-                  返回
-                </button>
-                <button className="ms-2 btn-secondary" onClick={handleCheckout}>
-                  結賬
-                </button>
-              </div>
             </div>
+            <button
+              type="button"
+              className={`w-100 btn btn-primary ${style['checkout-btn']}`}
+              onClick={handleCheckout}
+            >
+              確認結帳
+            </button>
           </div>
         </div>
       </div>
