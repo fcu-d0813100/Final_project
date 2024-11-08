@@ -41,7 +41,7 @@ app.set('view engine', 'pug')
 app.use(logger('dev'))
 // 剖析 POST 與 PUT 要求的JSON格式資料
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 // 剖折 Cookie 標頭與增加至 req.cookies
 app.use(cookieParser())
 // 在 public 的目錄，提供影像、CSS 等靜態檔案

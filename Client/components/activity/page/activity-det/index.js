@@ -4,32 +4,61 @@ import Image from 'next/image'
 import Styles from '@/components/activity/page/activity-det/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import FormToggle from '../../common/FormToggle'
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import axios from 'axios'
+
+const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
 
 export default function ActivityDet() {
   const [activityData, setActivityData] = useState(null)
+  const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 })
   const router = useRouter()
-  const { id } = router.query // 從路由中取得 id 參數
+  const { id } = router.query
+
+  // 加載 Google Maps API
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+  })
 
   // 從 API 獲取活動詳細信息
   useEffect(() => {
-    if (!id) return // 確保 id 存在後再執行
+    if (!id) return
 
     const fetchActivityData = async () => {
       try {
         const response = await axios.get(
           `http://localhost:3005/api/activity/id?id=${id}`
         )
-        setActivityData(response.data) // 設置活動詳細數據
+        setActivityData(response.data)
       } catch (error) {
         console.error('無法獲取活動數據:', error)
       }
     }
 
     fetchActivityData()
-  }, [id]) // id 變更時重新取得資料
+  }, [id])
+
+  // 通過地址獲取地理坐標
+  useEffect(() => {
+    if (activityData && activityData.address) {
+      const geocodeAddress = async () => {
+        const address = encodeURIComponent(activityData.address)
+        const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${GOOGLE_MAPS_API_KEY}`
+        try {
+          const response = await axios.get(geocodeUrl)
+          const { lat, lng } = response.data.results[0].geometry.location
+          setCoordinates({ lat, lng })
+        } catch (error) {
+          console.error('無法獲取座標:', error)
+        }
+      }
+
+      geocodeAddress()
+    }
+  }, [activityData])
 
   if (!activityData) return <p>加載中...</p>
+  if (!isLoaded) return <p>地圖加載中...</p>
 
   return (
     <>
@@ -65,12 +94,13 @@ export default function ActivityDet() {
         </div>
         <div className={`${Styles['sec3']} container d-flex flex-wrap`}>
           <div className={`${Styles['googleMap']} col-md-6`}>
-            <Image
-              src={'/activity/googleMap.png'}
-              width={800}
-              height={500}
-              alt="google"
-            />
+            <GoogleMap
+              mapContainerStyle={{ width: '100%', height: '500px' }}
+              center={coordinates}
+              zoom={15}
+            >
+              <Marker position={coordinates} />
+            </GoogleMap>
           </div>
           <div className={`${Styles['info']} col-md-6`}>
             <div className={`${Styles['info-title']} d-flex`}>
@@ -90,7 +120,11 @@ export default function ActivityDet() {
               </p>
               <p>
                 官網：
-                <a href={activityData.brand_mail} target="_blank">
+                <a
+                  href={activityData.brand_mail}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {activityData.brand_mail || '暫無資訊'}
                 </a>
               </p>

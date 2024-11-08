@@ -10,15 +10,13 @@ export default function InputStyle({
   typeText = '',
   placeholder = '',
   name = '',
-  value='',
-
+  value = '',
 }) {
+  const [inputValue, setInputValue] = useState(value) // 使用 useState 管理輸入值
 
-    const [inputValue, setInputValue] = useState(value) // 使用 useState 管理輸入值
-
-    const handleInputChange = (e) => {
-      setInputValue(e.target.value) // 更新輸入值
-    }
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value) // 更新輸入值
+  }
 
   return (
     <>

@@ -39,7 +39,7 @@ export default function Activity() {
   const fetchActivitiesByMonth = async (month) => {
     try {
       const url = month
-        ? `http://localhost:3005/api/activity/${month}`
+        ? `http://localhost:3005/api/activity/month/${month}`
         : `http://localhost:3005/api/activity`
 
       const response = await fetch(url)
