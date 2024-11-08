@@ -171,6 +171,9 @@ export function AuthProvider({ children }) {
             secondary: '#fff',
           },
         })
+        setTimeout(() => {
+          router.push('/user')
+        }, 1500)
       } else {
         toast.error('登入失敗，請稍後再試', {
           style: {
