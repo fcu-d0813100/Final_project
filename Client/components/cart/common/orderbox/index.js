@@ -22,22 +22,6 @@ export default function OrderBox() {
       ? `/workshop/workshop_img/${workshopItems[0].typeId}-${workshopItems[0].id}-c.jpg`
       : null
 
-  //生成時間戳記訂單編碼
-  const [orderNumber, setOrderNumber] = useState('')
-
-  const generateOrderNumber = () => {
-    const now = new Date()
-    const timestamp = now.toISOString().replace(/\D/g, '').slice(0, 14)
-    const randomCode = Math.floor(10 + Math.random() * 90)
-    return `${timestamp}-${randomCode}`
-  }
-  useEffect(() => {
-    const newOrderNumber = generateOrderNumber()
-    setOrderNumber(newOrderNumber)
-    // 將訂單編號存儲到localStorage
-    localStorage.setItem('orderNumber', newOrderNumber)
-  }, [])
-
   return (
     <div className={style['order-box']}>
       <Accordion>
@@ -63,8 +47,7 @@ export default function OrderBox() {
                   <span>無圖片</span>
                 )}
               </div>
-              <div>訂單編號：{orderNumber}</div>
-              <div>查看訂單</div>
+              <div className="h5 p-2">查看訂單</div>
             </div>
           </Accordion.Header>
           <Accordion.Body className={style['order-list']}>
@@ -83,14 +66,14 @@ export default function OrderBox() {
                   {productItems.map((v, i) => (
                     <tr key={i}>
                       <td>{v.product_name}</td>
-                      <td>{v.color}</td>
+                      <td>{v.color_name}</td>
                       <td>{v.qty}</td>
                       <td>
                         <span className={style['old-price']}>
-                          NT${(v.price * v.qty).toLocaleString()}
+                          NT${(v.originalprice * v.qty).toLocaleString()}
                         </span>
                         <span className={style['new-price']}>
-                          NT${(v.price * v.qty * 0.8).toLocaleString()}
+                          NT${(v.price * v.qty).toLocaleString()}
                         </span>
                       </td>
                     </tr>

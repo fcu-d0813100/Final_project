@@ -1,0 +1,70 @@
+@import '@/styles/_variant.scss';
+
+.step {
+  margin-block: 100px;
+}
+
+//checkedbox樣式變更
+.form-check-input:checked {
+  background-color: black;
+  border-color: black;
+  box-shadow: none;
+}
+
+.outer {
+  //   background-color: rgb(127, 125, 125);
+  display: flex;
+  justify-content: center;
+  .list {
+    width: 1000px;
+    .order {
+      .order-topic {
+        border-radius: 5px 5px 0 0;
+        padding: 15px 30px;
+        color: #fff;
+        background-color: $green-700;
+      }
+
+      //訂單簡易展示方框
+      .order-box {
+        padding: 20px 30px;
+        border: 1px solid $gray-200;
+      }
+
+      .payment-topic,
+      .shipping-topic {
+        margin-top: 30px;
+        margin-bottom: 15px;
+        color: $green-500;
+        font-weight: 600;
+        span {
+          color: $red-500;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+.total_amount {
+  background-color: $gray-100;
+  border-right: 1px solid $gray-200;
+  border-left: 1px solid $gray-200;
+  border-bottom: 1px solid $gray-200;
+  border-radius: 0 0 5px 5px;
+  padding: 20px 40px;
+  text-align: end;
+  margin-bottom: 30px;
+  span {
+    font-size: 24px;
+    color: $red-500;
+  }
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  span {
+    margin-top: 10px;
+  }
+}

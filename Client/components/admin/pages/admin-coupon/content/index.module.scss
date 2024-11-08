@@ -1,6 +1,6 @@
 @import '@/styles/_variant.scss';
 
-.msg-title{
+.msg-title {
     color: $green-500;
 }
 
@@ -13,7 +13,7 @@
         text-align: end;
     }
 
-    input[type=text] {
+    input[type=text]{
         padding: 10px;
         height: 42px;
         width: 600px;
@@ -25,6 +25,48 @@
             outline-width: 2px;
         }
     }
+
+    .select {
+        width: 600px;
+        border-radius: 5px;
+        box-shadow: 5px #e9ecef;
+        border: 1px solid $gray-200;
+
+        &:focus {
+            box-shadow: 0 0 0 0.1rem $green-500;
+        }
+    }
+
+    .number {
+        &:focus {
+            box-shadow: 0 0 0 0.1rem $green-500;
+        }
+    }
+
+    .discount {
+        width: 600px;
+        .btn-dp {
+            height: 42px;
+            padding-inline: 10px;
+            background-color: transparent;
+            border: solid $gray-200 1px;
+            border-radius: 3px 0 0 3px;
+
+            &:hover {
+                background-color: $gray-300;
+                color: #fff;
+            }
+            &:focus {
+                box-shadow: 0 0 2px 0.1rem $green-500;
+            }
+        }
+
+        input[type=number] {
+            width: 400px;
+        }
+
+    }
+
 }
 
 
@@ -45,17 +87,12 @@
     }
 }
 
-.discount {
-    width: 600px;
-    input[type=text] {
-        width: 100px;
-    }
 
-}
 
 .dscode {
     input {
         width: 500px !important;
+
     }
 }
 
@@ -64,18 +101,7 @@
 }
 
 
-.btn-dp {
-    height: 42px;
-    padding-inline: 10px;
-    background-color: transparent;
-    border: solid $gray-200 1px;
-    border-radius: 3px 0 0 3px;
 
-    &:hover {
-        background-color: $gray-300;
-        color: #fff;
-    }
-}
 
 .success {
     text-align: center;

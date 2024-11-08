@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import AdminCouponCreateAll from '@/components/admin/pages/admin-coupon/admin-coupon-create-all'
+import AdminCouponCreateAll from '@/components/admin/pages/admin-coupon/content'
 
 export default function Index(props) {
   return (
