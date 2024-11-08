@@ -13,6 +13,29 @@ import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     const response = await fetch('http://localhost:3005/api/workshop/', {
+  //       credentials: 'include',
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         // Authorization: `Bearer ${auth.token}`,
+  //       },
+  //     })
+
+  //     if (!response.ok) {
+  //       throw new Error('更新資料失敗')
+  //     }
+
+  //     const result = await response.json()
+  //     console.log('更新成功', result)
+  //   } catch (error) {
+  //     console.error('更新失敗', error)
+  //   }
+  // }
+
   return (
     <>
       <form action="">
