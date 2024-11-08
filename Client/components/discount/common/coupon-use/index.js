@@ -21,7 +21,7 @@ const Coupon = ({
     };
 
     return (
-        <div className={`${styles['coupon-lg']} d-flex align-items-center justify-content-around px-2`}>
+        <div className={`${styles['coupon-lg']} d-flex align-items-center px-2`}>
             <div className={styles.img}>
                 <img className={styles['coupon-image']} src={img} alt="Coupon Image" />
             </div>
