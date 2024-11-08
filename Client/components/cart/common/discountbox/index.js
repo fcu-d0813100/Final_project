@@ -7,19 +7,44 @@ import Form from 'react-bootstrap/Form'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function DiscountBox() {
+  //-----------獲取會員id
+  const { auth } = useAuth()
+  const userId = auth.userData.id
+  console.log('userId:', userId)
+
+  const [discount, setDiscount] = useState(0)
+  const [coupons, setCoupons] = useState([]) // 儲存會員的優惠券清單
   const [show, setShow] = useState(false)
   const [selectedCoupon, setSelectedCoupon] = useState('') // 用來存儲選擇的優惠券
-  const [coupons, setCoupons] = useState([]) // 儲存會員的優惠券清單
+
+  // 取得優惠券
+  const getCoupon = async () => {
+    if (!userId) return // 如果 userId 不存在，就返回
+    try {
+      const url = `http://localhost:3005/api/getCoupon?userId=${userId}`
+      const res = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+      const resData = await res.json()
+      console.log(resData.data)
+      if (resData?.data) {
+        setDiscount(resData.data)
+        setCoupons(resData.data) // 將優惠券數據存入 coupons 狀態
+      } else {
+        console.warn('No discount data found')
+      }
+    } catch (error) {
+      console.error('Failed to fetch coupon data:', error)
+    }
+  }
+
+  useEffect(() => {
+    getCoupon()
+  }, [userId])
+
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-
-  //獲取會員身上的優惠券
-  const { auth } = useAuth()
-  //確認會員id
-  // if (auth.isAuth) {
-  //   const userId = auth.userData.id
-  //   console.log(userId)
-  // }
 
   // 每次元件載入時從 localStorage 重新取得優惠券選擇
   useEffect(() => {
@@ -37,6 +62,8 @@ export default function DiscountBox() {
     setSelectedCoupon(couponName)
     localStorage.setItem('selectedCoupon', couponName) // 更新 localStorage
   }
+  // const storedCartItems = JSON.parse(localStorage.getItem('productCart')) || []
+  // console.log(storedCartItems) // [{ productId: 1, brand_id: 1, name: '商品1' }, ...]
 
   return (
     <>
@@ -77,11 +104,12 @@ export default function DiscountBox() {
             {/* 動態生成優惠券選項 */}
             {coupons.map((coupon) => (
               <option key={coupon.id} value={coupon.id}>
-                {coupon.name}
+                {`${coupon.name} 折扣價: ${coupon.discount_value}`}
               </option>
             ))}
           </Form.Select>
         </Modal.Body>
+
         <div className={styles['btn-comfirm']}>
           <button onClick={handleClose}>確認</button>
         </div>

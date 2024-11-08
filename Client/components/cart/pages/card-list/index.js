@@ -41,37 +41,6 @@ export default function CartList() {
   //-----------按鈕路由
   const router = useRouter()
 
-  //-----------獲取會員id
-  const { auth } = useAuth()
-  const userId = auth?.userData?.id
-  console.log('userId:', userId)
-  //把會員id傳給後端
-  const [discount, setDiscount] = useState(0)
-  // 取得優惠券
-  const getCoupon = async () => {
-    if (!userId) return // 如果 userId 不存在，就返回
-    try {
-      const url = `http://localhost:3005/api/getCoupon?userId=${userId}`
-      const res = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      })
-      const resData = await res.json()
-      console.log(resData?.data)
-      if (resData?.data) {
-        setDiscount(resData.data)
-      } else {
-        console.warn('No discount data found')
-      }
-    } catch (error) {
-      console.error('Failed to fetch coupon data:', error)
-    }
-  }
-
-  useEffect(() => {
-    getCoupon()
-  }, [userId])
-
   // 從use-cartP鉤子取得商品內容
   const {
     productItems = [],

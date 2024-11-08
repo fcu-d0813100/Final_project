@@ -31,29 +31,33 @@ router.get('/', async function (req, res) {
   try {
     // 定義查詢語句的不同部分，直接插入 userId 變數
     const selectFields = `
-   cl.id,
-   cl.type_id,
-   cl.brand_id,
-   cl.code,
-   cl.name,
-   cl.discount_value,
-   cl.minimum_amount,
-   cl.start_date,
-   cl.end_date,
-   cl.used,
-   cl.maximum,
-   cl.valid
- `
+    cl.id,
+    cl.type_id,
+    cl.brand_id,
+    cl.code,
+    cl.name,
+    cl.discount_value,
+    cl.minimum_amount,
+    cl.start_date,
+    cl.end_date,
+    cl.used,
+    cl.maximum,
+    cl.valid
+  `
 
     const fromClause = `
-   FROM 
-     coupon_list AS cl
-   JOIN 
-     coupon_relation AS cr ON cl.id = cr.coupon_id
- `
+    FROM 
+      coupon_list AS cl
+    JOIN 
+      coupon_relation AS cr ON cl.id = cr.coupon_id
+  `
 
-    // 直接插入 userId
-    const whereClause = `WHERE cr.user_id = ${userId}`
+    // 直接插入 userId，並加入篩選條件
+    const whereClause = `
+    WHERE cr.user_id = ${userId} 
+    AND cl.end_date >= CURDATE() 
+    AND cl.used < cl.maximum
+  `
 
     // 組合成完整的 SQL 查詢
     const sqlSelect = `SELECT ${selectFields} ${fromClause} ${whereClause}`
