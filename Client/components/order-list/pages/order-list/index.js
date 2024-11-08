@@ -1,17 +1,20 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Order from '@/components/order-list/common/order';
 import styles from './index.module.scss'; // 确保引入正确的样式
 import OrderSection from '@/components/order-list/common/order-section';
 import Nav from 'react-bootstrap/Nav';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function OrderList() {
+    const { auth } = useAuth();
     const [activeKey, setActiveKey] = useState("全部"); // 设置默认选中的项目
     const [orders, setOrders] = useState([]); // 保存订单列表
     const [filteredOrders, setFilteredOrders] = useState([]); // 保存过滤后的订单
     const [loading, setLoading] = useState(false); // 加载状态
-    const router = useRouter();
-    const { userId } = router.query; // 从路由中获取 userId
+
+    // 從 AuthContext 獲取 userId
+    const userId = auth.isAuth ? auth.userData.id : null;
+    console.log("User ID from auth:", userId); // 确认userId值
 
     const handleSelect = (key) => {
         setActiveKey(key); // 点击时更新 activeKey
