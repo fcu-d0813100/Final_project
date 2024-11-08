@@ -372,21 +372,30 @@ export function AuthProvider({ children }) {
 
     const resData = await res.json()
     if (resData.status === 'success') {
-      confirm('success', '更新完成', '已更新完成', '確認', () => {
-        // 在這裡可以添加更新完成後的操作
+      toast.success('您已更新個人資料', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#626553',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
       })
+      router.push('/user')
     } else {
-      confirm(
-        'error',
-        '失敗',
-        `${resData.message}\n請檢查以下錯誤詳細信息：${JSON.stringify(
-          resData.errors || {}
-        )}`,
-        '重試',
-        () => {
-          // 在這裡可以添加失敗後的操作
-        }
-      )
+      toast.error('更新失敗，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
