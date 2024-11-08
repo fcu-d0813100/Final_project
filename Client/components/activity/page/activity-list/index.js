@@ -18,6 +18,7 @@ import ListCarousel from '@/components/activity/common/ListCarousel/actCarousel'
 export default function Activity() {
   const [filledHearts, setFilledHearts] = useState({})
   const [active, setActive] = useState([])
+  const [originalActivities, setOriginalActivities] = useState([]) // 存儲原始活動數據
   const [selectedMonth, setSelectedMonth] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
@@ -38,7 +39,7 @@ export default function Activity() {
   const fetchActivitiesByMonth = async (month) => {
     try {
       const url = month
-        ? `http://localhost:3005/api/activity/${month}`
+        ? `http://localhost:3005/api/activity/month/${month}`
         : `http://localhost:3005/api/activity`
 
       const response = await fetch(url)
@@ -47,6 +48,7 @@ export default function Activity() {
       }
       const data = await response.json()
       setActive(data)
+      setOriginalActivities(data) // 存儲原始數據
       setSelectedMonth(month)
     } catch (err) {
       console.error('資料庫查詢失敗:', err)
@@ -66,12 +68,38 @@ export default function Activity() {
       }
       const data = await response.json()
       setActive([...data])
-      setSearchQuery('') // 清空搜尋框
+      setOriginalActivities(data) // 更新原始數據
+      setSearchQuery('')
     } catch (err) {
       console.error('資料庫查詢失敗:', err)
-      setActive([]) // 查詢失敗時將 active 設為空陣列
+      setActive([])
     }
   }
+  const fetchActivitiesByStatus = async (status) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/activity/status?status=${status}`
+      )
+      if (!response.ok) {
+        throw new Error('網路回應不成功：' + response.status)
+      }
+      const data = await response.json()
+      setActive(data)
+    } catch (err) {
+      console.error('資料庫查詢失敗:', err)
+      setActive([])
+    }
+  }
+  useEffect(() => {
+    const status = router.query.status
+    if (status === '1' || status === '0') {
+      fetchActivitiesByStatus(status)
+    } else {
+      const month = router.query.month ? parseInt(router.query.month) : null
+      fetchActivitiesByMonth(month)
+    }
+  }, [router.query.status, router.query.month])
+  // 狀態篩選處理函數
 
   useEffect(() => {
     const month = router.query.month ? parseInt(router.query.month) : null
@@ -88,13 +116,25 @@ export default function Activity() {
         <div className={`${Styles['act-month-button']} d-none d-lg-block`}>
           <ul className="d-flex justify-content-around">
             <li>
-              <a href="#" onClick={() => fetchActivitiesByMonth(null)}>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  fetchActivitiesByMonth(null)
+                }}
+              >
                 ALL
               </a>
             </li>
             {[...Array(12)].map((_, i) => (
               <li key={i}>
-                <a href="#" onClick={() => fetchActivitiesByMonth(i + 1)}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    fetchActivitiesByMonth(i + 1)
+                  }}
+                >
                   {i + 1} 月
                 </a>
               </li>
@@ -142,8 +182,6 @@ export default function Activity() {
           {selectedMonth ? `${selectedMonth} 月的活動` : '所有活動'}
         </div>
 
-        {/* 檢查活動數據是否為空，顯示提示信息 */}
-
         {active.length === 0 ? (
           <div className={`${Styles['searchNotFound']} text-center`}>
             <h5>未找到任何活動</h5>
@@ -151,103 +189,114 @@ export default function Activity() {
           </div>
         ) : (
           <div className={`${Styles['act-card-sec']} container`}>
-            {active.map((item, index) => (
-              <div
-                key={item.id}
-                className={`${
-                  index % 2 === 0 ? Styles['cardLeft'] : Styles['cardRight']
-                } d-flex`}
-              >
-                {index % 2 !== 0 && (
-                  <>
-                    <div className={Styles['leftTextCHN']}>{item.CHN_name}</div>
-                    <div className={Styles['leftTextENG']}>{item.ENG_name}</div>
-                  </>
-                )}
+            {active.map((item, index) => {
+              const now = new Date()
+              const startAt = new Date(item.start_at)
+              const status = startAt > now ? '報名中' : '已截止'
+              const statusClass =
+                status === '報名中' ? Styles['statusOn'] : Styles['statusOff']
 
+              return (
                 <div
+                  key={item.id}
                   className={`${
-                    index % 2 === 0 ? Styles['cardL'] : Styles['cardR']
-                  }`}
+                    index % 2 === 0 ? Styles['cardLeft'] : Styles['cardRight']
+                  } d-flex`}
                 >
-                  <Link href="/activity/activity-det">
-                    <div className={Styles['card-img']}>
-                      <div className={`${Styles['card-text']} d-flex`}>
-                        <div className="currentR">
-                          <p className={Styles['num']}>{item.currentREG}</p>
-                          <p>目前人數</p>
-                        </div>
-                        <div className="maxR">
-                          <p className={Styles['num']}>{item.maxREG}</p>
-                          <p>報名人數</p>
-                        </div>
-                        <div className="view">
-                          <p className={Styles['num']}>{item.views}</p>
-                          <p>瀏覽次數</p>
-                        </div>
+                  {index % 2 !== 0 && (
+                    <>
+                      <div className={Styles['leftTextCHN']}>
+                        {item.CHN_name}
                       </div>
-                      <p className={Styles['card-det']}>詳細資訊</p>
-                      <Image
-                        src={`/activity/${item.img1}`}
-                        width={1200}
-                        height={800}
-                        alt={item.CHN_name}
-                      />
-                    </div>
-                  </Link>
+                      <div className={Styles['leftTextENG']}>
+                        {item.ENG_name}
+                      </div>
+                    </>
+                  )}
 
-                  <div className={Styles['card-content']}>
-                    <div className={Styles['card-date']}>
-                      {item.start_at}~{item.end_at}
-                    </div>
-                    <div className={Styles['card-info']}>
-                      <p className={Styles['title']}>主辦單位 | host</p>
-                      <p>{item.brand}</p>
-                      <p className={Styles['title']}>活動地點 | location</p>
-                      <p>{item.address}</p>
-                    </div>
-                    <div className={Styles['card-footer']}>
-                      <div className={Styles['status']}>報名中</div>
+                  <div
+                    className={`${
+                      index % 2 === 0 ? Styles['cardL'] : Styles['cardR']
+                    }`}
+                  >
+                    <Link href={`/activity/activity-det?id=${item.id}`}>
+                      <div className={Styles['card-img']}>
+                        <div className={`${Styles['card-text']} d-flex`}>
+                          <div className="currentR">
+                            <p className={Styles['num']}>{item.currentREG}</p>
+                            <p>目前人數</p>
+                          </div>
+                          <div className="maxR">
+                            <p className={Styles['num']}>{item.maxREG}</p>
+                            <p>報名人數</p>
+                          </div>
+                          <div className="view">
+                            <p className={Styles['num']}>{item.views}</p>
+                            <p>瀏覽次數</p>
+                          </div>
+                        </div>
+                        <p className={Styles['card-det']}>詳細資訊</p>
+                        <Image
+                          src={`/activity/${item.img1}`}
+                          width={1200}
+                          height={800}
+                          alt={item.CHN_name}
+                        />
+                      </div>
+                    </Link>
 
-                      <div
-                        className={Styles['heart-icon']}
-                        onClick={() => toggleHeart(item.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            toggleHeart(item.id)
-                          }
-                        }}
-                        role="button"
-                        tabIndex="0"
-                      >
-                        {filledHearts[item.id] ? (
-                          <PiHeartStraightFill
-                            size={22}
-                            className={Styles['ph-heart']}
-                          />
-                        ) : (
-                          <PiHeartStraight
-                            size={22}
-                            className={Styles['ph-heart']}
-                          />
-                        )}
+                    <div className={Styles['card-content']}>
+                      <div className={Styles['card-date']}>
+                        {item.start_at}~{item.end_at}
+                      </div>
+                      <div className={Styles['card-info']}>
+                        <p className={Styles['title']}>主辦單位 | host</p>
+                        <p>{item.brand}</p>
+                        <p className={Styles['title']}>活動地點 | location</p>
+                        <p>{item.address}</p>
+                      </div>
+                      <div className={Styles['card-footer']}>
+                        <div className={statusClass}>{status}</div>
+                        <div
+                          className={Styles['heart-icon']}
+                          onClick={() => toggleHeart(item.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              toggleHeart(item.id)
+                            }
+                          }}
+                          role="button"
+                          tabIndex="0"
+                        >
+                          {filledHearts[item.id] ? (
+                            <PiHeartStraightFill
+                              size={22}
+                              className={Styles['ph-heart']}
+                            />
+                          ) : (
+                            <PiHeartStraight
+                              size={22}
+                              className={Styles['ph-heart']}
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {index % 2 === 0 && (
-                  <>
-                    <div className={Styles['rightTextCHN']}>
-                      {item.CHN_name}
-                    </div>
-                    <div className={Styles['rightTextENG']}>
-                      {item.ENG_name}
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+                  {index % 2 === 0 && (
+                    <>
+                      <div className={Styles['rightTextCHN']}>
+                        {item.CHN_name}
+                      </div>
+                      <div className={Styles['rightTextENG']}>
+                        {item.ENG_name}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )
+            })}
           </div>
         )}
       </div>

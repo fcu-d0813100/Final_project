@@ -1,9 +1,16 @@
 'use client'
 import { PiCaretDown } from 'react-icons/pi'
 import styles from '@/components/teacher/common/t-dashboard-select-input/index.module.scss'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
-export default function SelectInput({ forText, titleCh, titleEn, addClass }) {
+export default function SelectInput({
+  forText,
+  titleCh,
+  titleEn,
+  addClass,
+  onChange, // 父組件傳入的 onChange 回調
+  name, // 用於標識此選項的 name 屬性
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('類別') // 初始顯示文字
 
@@ -14,6 +21,11 @@ export default function SelectInput({ forText, titleCh, titleEn, addClass }) {
   const handleOptionClick = (option) => {
     setSelectedOption(option)
     setIsOpen(false) // 選取後關閉下拉選單
+
+    if (onChange) {
+      // 傳遞選擇的值給父組件
+      onChange({ target: { name, value: option } })
+    }
   }
 
   return (
