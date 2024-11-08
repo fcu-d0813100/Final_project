@@ -27,18 +27,26 @@ router.post('/checkout', async function (req, res, next) {
     //確認分解資料正確
     // console.log(paymentMethod, deliveryMethod, orderNumber, totalDiscountPrice)
     let shippingAddress
-    if (deliveryMethod == 'home') {
+    if (deliveryMethod == '1') {
       shippingAddress = homeAdress
     } else {
       shippingAddress = `${storename} ${storeaddress}`
     }
+    //處理已付款跟未付款的狀態資訊
+    let status
+    if (paymentMethod == 1) {
+      status = '未付款'
+    } else if (paymentMethod == 2) {
+      status = '已付款'
+    }
+
     const shippingId = deliveryMethod
     const paymentId = paymentMethod
 
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
     (user_id, payment_id, shipping_id, order_number, total_amount, shipping_address, coupon_id, status)
-    VALUES (1, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', NULL, '未付款')`
+    VALUES (1, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', NULL, '${status}')`
 
     const [result] = await db.query(sqlInsert, [
       1, // user_id
@@ -47,6 +55,7 @@ router.post('/checkout', async function (req, res, next) {
       orderNumber, // order_number
       totalPrice, // total_amount
       shippingAddress, // shipping_address
+      status,
       // 這裡沒有 coupon_id，所以不應該有 ?
     ])
 

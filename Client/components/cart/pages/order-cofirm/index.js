@@ -36,25 +36,6 @@ export default function OrderComfirm() {
   const paymentMethod = orderData?.paymentMethod
   const deliveryMethod = orderData?.deliveryMethod
 
-  //處理綠界
-  // const goECPay = async (orderData) => {
-  //   try {
-  //     // 這裡可以替換為呼叫綠界 API 或者跳轉到支付頁面的邏輯
-  //     const response = await axios.post(
-  //       'http://localhost:3005/api/cart/ecpay',
-  //       orderData
-  //     )
-  //     console.log('綠界支付請求已成功', response.data)
-
-  //     // 如果需要跳轉到支付頁面
-  //     if (response.data.redirectUrl) {
-  //       window.location.href = `http://localhost:3005/api/ecpay-test-only?amount=1041`
-  //     }
-  //   } catch (error) {
-  //     console.error('綠界支付請求失敗:', error)
-  //   }
-  // }
-
   //------------送訂單到後端
   //判斷付款方式(1.貨到付款)
   const handleCheckout = async () => {
@@ -65,6 +46,9 @@ export default function OrderComfirm() {
     } else if (deliveryMethod === '7-11') {
       orderData.deliveryMethod = 2
     }
+    // -----------另外抓取orderNumber存到localStorage
+    localStorage.setItem('orderNumber', orderData.orderNumber)
+
     //推到後端api
     try {
       router.push('http://localhost:3000/cart/success')
@@ -81,6 +65,8 @@ export default function OrderComfirm() {
   //判斷付款方式(2.綠界)
   const goECPay = async () => {
     if (window.confirm('確認要導向至ECPay進行付款?')) {
+      // -----------另外抓取orderNumber存到localStorage
+      localStorage.setItem('orderNumber', orderData.orderNumber)
       //處理值的問題
       orderData.paymentMethod = 2
       if (deliveryMethod === 'home') {
@@ -88,23 +74,18 @@ export default function OrderComfirm() {
       } else if (deliveryMethod === '7-11') {
         orderData.deliveryMethod = 2
       }
-      const totalPrice = orderData.totalPrice // 從 orderData 取得金額
-      const orderNumber = orderData.orderNumber // 從 orderData 取得訂單號
+      const totalPrice = orderData.totalPrice
+      const orderNumber = `Beautique訂單編號 : ${orderData.orderNumber}`
       console.log(orderData)
       console.log('請求綠界支付...')
+      //導向綠界支付
       try {
-        // 將資料傳送給後端
-        // const response = await axios.post(
-        //   'http://localhost:3005/api/ecpay-test-only',
-        //   {
-        //     totalPrice: totalPrice, // 傳送金額
-        //     orderNumber: orderNumber, // 傳送訂單號
-        //     // 其他需要的資料
-        //   }
-        // )
-        window.location.href = `http://localhost:3005/api/ecpay-test-only?`
-        // console.log('綠界支付請求已成功', response.data.redirectUrl)
-        // 如果需要跳轉到支付頁面
+        window.location.href = `http://localhost:3005/api/ecpay-test-only?amount=${totalPrice}&orderId=${orderNumber}`
+        //訂單資料推到後端街口處理
+        const response = await axios.post(
+          'http://localhost:3005/api/cart/checkout',
+          orderData
+        )
       } catch (error) {
         console.error('金流請求失敗', error)
       }
