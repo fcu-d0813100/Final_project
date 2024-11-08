@@ -25,12 +25,13 @@
     }
 }
 
-.phoneSize {
+.carouselContainer {
     display: none;
 }
 
 @media (max-width: 576px) {
     .carouselContainer {
+        display: block;
         ul {
             bottom: 10px;
             li {

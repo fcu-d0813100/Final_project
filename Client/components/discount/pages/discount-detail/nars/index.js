@@ -11,16 +11,18 @@ const SomePage = () => {
         {
             img: '/discount/coupon/brands/nars.svg',
             name: 'GIFT COUPON',
-            discount: '20% OFF',
-            condition: 2000,
-            expiration: '2024/10/5',
+            discount_value: 120,
+            minimum_amount: 2000,
+            end_date: '2024/12/31',
+            coupon_id:49
         },
         {
             img: '/discount/coupon/brands/nars.svg',
             name: 'SPECIAL DISCOUNT',
-            discount: '15% OFF',
-            condition: 1500,
-            expiration: '2024/11/10',
+            discount_value: 100,
+            minimum_amount: 1500,
+            end_date: '2024/12/25',
+            coupon_id:48
         },
         // 可以添加更多優惠券
     ];

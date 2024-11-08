@@ -3,8 +3,10 @@
 
 .nav {
     width: 300px;
+    height: 95vh;
     background-color: $green-800;
     flex-direction: column;
+    
     // position: relative;
 
 
@@ -40,10 +42,12 @@
 
     .collapse {
         // width: 100%;
-        // display: flex;
+        display: flex;
+        align-items: flex-start;
         // flex-direction: column;
         flex: 1 1 0;
-        background-color: $green-800;
+        background-color:$green-800;
+
 
         @media(max-width: 991px) {
             // width:fit-content;
@@ -140,6 +144,8 @@
     button {
         margin-block: 70px;
         margin-inline: 48px;
+        position: absolute;
+        bottom: 50px;
 
         // @media(max-width: 390px) {
         //     margin-inline: 20px;

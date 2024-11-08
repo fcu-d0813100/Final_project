@@ -13,6 +13,7 @@ import { usePost } from '@/hooks/post/use-post'
 import { useAuth } from '@/hooks/use-auth'
 import styles from './index.module.scss'
 import ReplyInfo from '../reply-info'
+import { send } from 'process'
 export default function PostCard1({
   postAuthor,
   authorAvatar,
@@ -24,33 +25,19 @@ export default function PostCard1({
   saveCount,
   commentCount,
   postCreateTime,
+  comments,
+  sendHandle,
+  setCancelHandle = {},
 }) {
   const { postId } = usePost()
   const { auth } = useAuth()
+  const userId = auth.userData.id
   const [active, setActive] = useState({ 1: null, 2: null, 3: false })
   const [inputValue, setInputValue] = useState('')
   const [focus, setFocus] = useState(false)
   const [user, setUser] = useState('')
   const [reply, setReply] = useState('')
-  const userId = auth.userData.id
-
-  // const [index, setIndex] = useState(0)
-  // const [isSaved, setIsSaved] = useState(false)
-  // Like Init (only if user is logged in)
-  useEffect(() => {
-    if (auth.isAuth) {
-      fetch(`/api/post/${postId}/${userId}/isLiked`)
-        .then((res) => res.json())
-        .then((data) => {
-          setActive((prevState) => ({
-            ...prevState,
-            1: data.isLiked, // icon id 1 是按赞
-          }))
-          console.log(data.isLiked)
-        })
-        .catch((err) => console.error(err))
-    }
-  }, [postId, userId, auth.isAuth])
+  const [replyId, setReplyId] = useState('')
 
   const icons = [
     {
@@ -69,6 +56,9 @@ export default function PostCard1({
       active: <PiChatCircle size={26} fill="#8A8A8A" />,
     },
   ]
+  useEffect(() => {
+    setCancelHandle(() => cancelHandle)
+  }, [setCancelHandle])
 
   const formattedTime = postCreateTime
     ? format(new Date(postCreateTime), 'yyyy-MM-dd HH:mm')
@@ -78,27 +68,29 @@ export default function PostCard1({
   if (!post) {
     return <p></p>
   }
-  const { comments } = post
+  // const { comments } = post
 
   const cancelHandle = (e) => {
-    e.preventDefault()
+    e && e.preventDefault()
     setInputValue('')
     setFocus(false)
     setUser('')
     setReply('')
+    setReplyId('')
   }
-  const replyHandle = (text, user) => {
+  const replyHandle = (text, user, replyId) => {
+    setReplyId(replyId)
     setUser(user)
     setReply(text)
     setFocus(true)
   }
-  // const iconHandle = (iconId) => {
-  //   //先複製原本的狀態 然後動態搜尋 改相反
-  //   setActive((prevState) => ({
-  //     ...prevState,
-  //     [iconId]: !prevState[iconId],
-  //   }))
-  // }
+  const iconHandle = (iconId) => {
+    //先複製原本的狀態 然後動態搜尋 改相反
+    setActive((prevState) => ({
+      ...prevState,
+      [iconId]: !prevState[iconId],
+    }))
+  }
 
   // const SelectHandle = (index, e) => {
   //   const imagesCount = postImages.split(',').length
@@ -166,9 +158,12 @@ export default function PostCard1({
               </div>
               <div className={styles['reply-container']}>
                 {comments.map((comment) => (
+                  // setReplyId(comment.comment_id)
                   <ReplyInfo
                     key={comment.comment_id}
-                    onReplyClick={replyHandle}
+                    onReplyClick={(text, user, commentId) =>
+                      replyHandle(text, user, commentId)
+                    }
                     comments={comment}
                     commentAuthor={comment.comment_author_nickname}
                     commentAuthorAvatar={comment.comment_author_img}
@@ -182,7 +177,14 @@ export default function PostCard1({
             </div>
           </div>
           {/* bott */}
-          <form className={styles['post-comment']}>
+          <form
+            className={styles['post-comment']}
+            onSubmit={(e) => {
+              e.preventDefault()
+              console.log('replyId:', replyId, 'inputValue:', inputValue)
+              sendHandle(replyId, inputValue)
+            }}
+          >
             <div className={styles['reply-user']}>
               <span> {user}</span>
               <span>{reply}</span>

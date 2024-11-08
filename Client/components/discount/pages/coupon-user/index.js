@@ -12,17 +12,16 @@ const UserCoupon = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [couponsPerPage] = useState(6);
 
-  // 從 AuthContext 獲取 userId
-  const userId = auth.isAuth ? auth.userData.id : null;
-
-  // 品牌圖片映射
   const brandImageMap = {
     1: '/discount/coupon/brands/bobbi.svg',
     2: '/discount/coupon/brands/estee.svg',
     3: '/discount/coupon/brands/lancome.svg',
     4: '/discount/coupon/brands/nars.svg',
     5: '/discount/coupon/brands/ysl.svg',
-  };
+};
+
+  // 從 AuthContext 獲取 userId
+  const userId = auth.isAuth ? auth.userData.id : null;
 
   // 獲取優惠券
   const fetchCoupons = async () => {
@@ -32,8 +31,14 @@ const UserCoupon = () => {
       return;
     }
     setLoading(true);
+
     try {
-      const response = await fetch(`http://localhost:3005/api/user-coupons/${userId}?page=${currentPage}&limit=${couponsPerPage}`);
+      const response = await fetch(`http://localhost:3005/api/user-coupons/${userId}?page=${currentPage}&limit=${couponsPerPage}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       if (!response.ok) {
         throw new Error(`錯誤: ${response.statusText}`);
       }
@@ -41,7 +46,8 @@ const UserCoupon = () => {
       setCoupons(data.data);
     } catch (error) {
       console.error('獲取優惠券時發生錯誤:', error);
-      setError(`獲取優惠券失敗：${error.message}`);
+      setError(`尚未擁有優惠券：${error.message}`);
+      
     } finally {
       setLoading(false);
     }
@@ -76,9 +82,9 @@ const UserCoupon = () => {
               key={index}
               img={brandImageMap[coupon.brand_id]}
               name={coupon.name}
-              discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
-              condition={coupon.minimum_amount}
-              expiration={coupon.end_date}
+              discount_value={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
+              minimum_amount={coupon.minimum_amount}
+              end_date={coupon.end_date}
             />
           ))}
         </div>
