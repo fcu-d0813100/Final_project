@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Coupon from '@/components/discount/common/coupon-use';
-import styles from './index.module.scss'; // 確保引入正確的樣式
+import Coupon from '@/components/discount/common/coupon-add';
+import styles from './index.module.scss';
 import Link from 'next/link';
-
 
 export default function DiscountDetail({
     title = "",
@@ -11,9 +10,11 @@ export default function DiscountDetail({
     details = "",
     largeImageSrc = '/discount/nars-1920.svg', // 大圖片默認值
     smallImageSrc = '/discount/phone-size/nars1.svg', // 小圖片默認值
-    coupons,
+    coupons = [],
     onImageChange
+
 }) {
+
     const [currentImageSrc, setCurrentImageSrc] = useState(largeImageSrc);
 
     useEffect(() => {
@@ -39,11 +40,9 @@ export default function DiscountDetail({
 
             <main className="container">
                 <nav className={styles.nav}>
-                    <Link href="/" className="text-decoration-none">
-                        首頁 / 
-                    </Link>
+                    <Link href="/" className="text-decoration-none">首頁 /</Link>
                     <Link href="/discount" className="text-decoration-none">
-                        <span> </span>優惠活動 
+                        <span> </span>優惠活動
                     </Link>
                     {' / 活動詳情'}
                 </nav>
@@ -66,16 +65,25 @@ export default function DiscountDetail({
                         </div>
                         <hr className="align-self-stretch" />
                         <div className="coupon-group d-flex flex-wrap justify-content-around">
-                            {coupons.map((coupon, index) => (
-                                <Coupon
-                                    key={index}
-                                    img={coupon.img}
-                                    name={coupon.name}
-                                    discount_value={coupon.discount_value}
-                                    minimum_amount={coupon.minimum_amount}
-                                    end_date={coupon.end_date}
-                                />
-                            ))}
+                            {coupons && coupons.length > 0 ? (
+                                coupons.map((coupon) => (
+                                    <Coupon
+                                        key={coupon.coupon_id}  // coupon_id 必须对应实际字段
+                                        img={coupon.img}  // 确保 img 字段存在
+                                        name={coupon.name}
+                                        discount_value={
+                                            coupon.discount_value > 1
+                                                ? `折 ${coupon.discount_value}元`  // 如果折扣值大于1，则为固定金额折扣
+                                                : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`  // 如果折扣值小于等于1，则为百分比折扣
+                                        }
+                                        minimum_amount={coupon.minimum_amount}
+                                        end_date={coupon.end_date}
+                                        coupon_id={coupon.coupon_id}
+                                    />
+                                ))
+                            ) : (
+                                <p>没有可用的优惠券</p>
+                            )}
                         </div>
                     </article>
                 </section>

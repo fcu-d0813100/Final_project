@@ -8,7 +8,6 @@ export default function index({ children, titleCN, titleENG }) {
   return (
     <>
       <UserHeader />
-      
       <div className={styles['user-section']}>
         <SideBar />
         <div className={styles['any-section']}>
@@ -16,8 +15,6 @@ export default function index({ children, titleCN, titleENG }) {
           {children}
         </div>
       </div>
-
-
     </>
   )
 }

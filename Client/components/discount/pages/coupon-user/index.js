@@ -12,17 +12,16 @@ const UserCoupon = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [couponsPerPage] = useState(6);
 
-  // 從 AuthContext 獲取 userId
-  const userId = auth.isAuth ? auth.userData.id : null;
-
-  // 品牌圖片映射
   const brandImageMap = {
     1: '/discount/coupon/brands/bobbi.svg',
     2: '/discount/coupon/brands/estee.svg',
     3: '/discount/coupon/brands/lancome.svg',
     4: '/discount/coupon/brands/nars.svg',
     5: '/discount/coupon/brands/ysl.svg',
-  };
+};
+
+  // 從 AuthContext 獲取 userId
+  const userId = auth.isAuth ? auth.userData.id : null;
 
   // 獲取優惠券
   const fetchCoupons = async () => {
