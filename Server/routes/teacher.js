@@ -106,23 +106,40 @@ router.put('/information/update', authenticate, async function (req, res) {
 
     //  console.log(sql)
     //const [result] = await db.query(sql)
-    const [result] = await db.query(
-      SQL.format(
-        'UPDATE `teachers` SET `name` = ?, `email` = ?, `gender` = ?, `years` = ?, `birthday` = ?, `nation` = ?, `slogan` = ?, `about` = ?, `experience` = ? WHERE `teachers`.`id` = ?;',
-        [
-          updateTeacher.name,
-          updateTeacher.email,
-          updateTeacher.gender,
-          updateTeacher.years,
-          updateTeacher.birthday,
-          updateTeacher.nation,
-          updateTeacher.slogan,
-          updateTeacher.about,
-          updateTeacher.experience,
-          id,
-        ]
-      )
-    )
+    // -----------------
+    //  const [result] = await db.query(
+    //    SQL.format(
+    //      'UPDATE `teachers` SET `name` = ?, `email` = ?, `gender` = ?, `years` = ?, `birthday` = ?, `nation` = ?, `slogan` = ?, `about` = ?, `experience` = ? WHERE `teachers`.`id` = ?;',
+    //      [
+    //        updateTeacher.name,
+    //        updateTeacher.email,
+    //        updateTeacher.gender,
+    //        updateTeacher.years,
+    //        updateTeacher.birthday,
+    //        updateTeacher.nation,
+    //        updateTeacher.slogan,
+    //        updateTeacher.about,
+    //        updateTeacher.experience,
+    //        id,
+    //      ]
+    //    )
+    //  )
+    // -----------------
+    const sql = `
+      UPDATE teachers 
+      SET name = '${updateTeacher.name}', 
+          email = '${updateTeacher.email}', 
+          gender = '${updateTeacher.gender}', 
+          years = '${updateTeacher.years}', 
+          birthday = '${updateTeacher.birthday}', 
+          nation = '${updateTeacher.nation}', 
+          slogan = '${updateTeacher.slogan}', 
+          about = '${updateTeacher.about}', 
+          experience = '${updateTeacher.experience}' 
+      WHERE id = '${id}'
+    `
+
+    const [result] = await db.query(sql)
 
     //console.log(result)
 

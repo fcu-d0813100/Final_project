@@ -3,7 +3,7 @@ import styles from '@/components/teacher/common/t-dashboard-uploadImg/uploadImg.
 import { PiPlus } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
-export default function UploadImg({ width, height, bigText, smText }) {
+export default function UploadImg({ width, height, bigText, smText, name }) {
   const [preview, setPreview] = useState(null)
 
   // 動態生成 ID 碼
@@ -37,6 +37,7 @@ export default function UploadImg({ width, height, bigText, smText }) {
           onChange={handleFileChange}
           style={{ display: 'none' }}
           id={uniqueId} // 使用動態 ID
+          name={name}
         />
         <label
           htmlFor={uniqueId} // 確保 label 對應動態 ID

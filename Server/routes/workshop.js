@@ -1,6 +1,13 @@
 import express from 'express'
-const router = express.Router()
 import db from '#configs/db.js'
+import multer from 'multer'
+import authenticate from '#middlewares/authenticate.js'
+import fs from 'fs/promises'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
+const upload = multer()
+const router = express.Router()
+import SQL from 'sqlstring'
 
 // router.get('/', async function (req, res, next) {
 //   let workshop = await db //await下一行馬上使用
@@ -75,31 +82,6 @@ router.get('/', async function (req, res, next) {
   //console.log(result)
 })
 
-// router.get('/search', async function (req, res, next) {
-//   const { search = '' } = req.query
-//   const sqlSelect = `
-//     SELECT
-//     workshop.name,
-//     teachers.name AS teachers_name,
-//     workshop_type.type AS workshop_type_type
-
-//     FROM
-//       workshop
-//     JOIN
-//       teachers ON  workshop.teachers_id = teachers.id
-//     LEFT JOIN
-//       workshop_type ON workshop.type_id = workshop_type.id
-
-//     WHERE
-//       workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%' AND workshop.valid = 1
-//   `
-//   const result = await db
-//     .query(sqlSelect, [`%${search}%`, `%${search}%`, `%${search}%`])
-//     .catch((e) => console.log(e))
-//   res.json(result)
-//   console.log(result)
-// })
-
 router.get('/:wid', async function (req, res, next) {
   //   const { wid } = req.params
   const sqlSelect = `SELECT
@@ -134,8 +116,200 @@ WHERE
   console.log(req.params.wid)
 })
 
-// router.post('/upload', async function (req, res, next) {
+router.post('/upload/page01', authenticate, async function (req, res, next) {
+  const id = req.user.id
+  const createWorkshop = req.body
+  console.log(createWorkshop) // 打印出來檢查
 
-// })
+  try {
+    const sql = SQL.format(
+      `
+  INSERT INTO workshop (
+    type_id, name, description, outline, notes, price, teachers_id,
+    address, registration_start, registration_end, isUpload, valid
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`,
+      [
+        createWorkshop.type_id,
+        createWorkshop.name,
+        createWorkshop.description,
+        createWorkshop.outline,
+        createWorkshop.notes,
+        createWorkshop.price,
+        id,
+        createWorkshop.address,
+        createWorkshop.registration_start,
+        createWorkshop.registration_end,
+        0, // isUpload
+        1, // valid
+      ]
+    )
+
+    const [result] = await db.query(sql)
+    res.json(result)
+  } catch (e) {
+    console.error(e)
+    return res.status(500).json({ message: 'Server error', error: e.message })
+  }
+})
+
+//儲存未發布
+// router.post(
+//   '/upload/page01',
+//   authenticate,
+//   upload.single('img_cover'),
+//   async function (req, res, next) {
+//     const id = req.user.id
+//     const createWorkshop = req.body
+//     const uploadedFile = req.file
+
+//     console.log(req.file, req.body)
+
+//     const sqlInsertWorkshop = `
+//     INSERT INTO workshop (
+//         type_id, name, description, outline, notes, price, teachers_id,
+//         address, registration_start, registration_end, isUpload, valid
+//     ) VALUES (
+//         '${createWorkshop.type_id}', '${createWorkshop.name}', '${createWorkshop.description}',
+//         '${createWorkshop.outline}', '${createWorkshop.notes}', '${createWorkshop.price}',
+//         '${id}', '${createWorkshop.address}', '${createWorkshop.registration_start}',
+//         '${createWorkshop.registration_end}', 0, 1
+//     )`
+
+//     const sqlInsertWorkshopTime = `
+//     INSERT INTO workshop_time(
+//       workshop_id, date, start_time, end_time, min_students, max_students
+//     ) VALUES(
+//       '${createWorkshop.workshop_id}', '${createWorkshop.date}', '${createWorkshop.start_time}',
+//       '${createWorkshop.end_time}', '${createWorkshop.min_students}', '${createWorkshop.max_students}'
+//     )
+// `
+
+//     try {
+//       // 插入 workshop 資料
+//       const [result] = await db.query(sqlInsertWorkshop)
+
+//       // 取得新插入的 workshop_id
+//       const newWorkshopId = result.insertId
+
+//       // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+//       await db.query(sqlInsertWorkshopTime)
+
+//       if (uploadedFile) {
+//         // 使用 import.meta.url 獲取當前模組的目錄
+//         const __dirname = dirname(fileURLToPath(import.meta.url))
+//         // 設定圖片儲存路徑為 /public/workshop
+//         const destinationDir = join(__dirname, '..', 'public', 'workshop')
+//         const newFileName = `${createWorkshop.typeId}-${newWorkshopId}-c.jpg`
+//         const newFilePath = join(destinationDir, newFileName)
+
+//         // 確保目錄存在，否則創建目錄
+//         await fs.promises.mkdir(destinationDir, { recursive: true })
+
+//         // 使用 async/await 的方式重命名圖片
+//         try {
+//           await fs.promises.rename(uploadedFile.path, newFilePath)
+//           console.log('圖片已成功重命名:', newFileName)
+
+//           // 回傳成功訊息
+//           return res.json({
+//             body: req.body,
+//             file: newFileName,
+//             message: 'success',
+//             code: '200',
+//           })
+//         } catch (renameErr) {
+//           console.error('圖片重命名失敗:', renameErr)
+//           res.status(500).json({ message: '圖片重命名失敗', code: '500' })
+//         }
+//       } else {
+//         console.log('沒有上傳檔案')
+//         return res.json({ message: 'fail', code: '409' })
+//       }
+//     } catch (e) {
+//       console.error(e)
+//       return res.status(500).json({ message: 'Server error', error: e.message })
+//     }
+//   }
+// )
+
+// router.post(
+//   '/upload/page01',
+//   authenticate,
+
+//   async function (req, res, next) {
+//     const id = req.user.id
+//     const createWorkshop = req.body
+
+//     // // 確保資料的有效性，檢查必要欄位是否存在
+//     // if (
+//     //   !createWorkshop.type_id ||
+//     //   !createWorkshop.name ||
+//     //   !createWorkshop.description
+//     // ) {
+//     //   return res.status(400).json({ message: 'Missing required fields' })
+//     // }
+
+//     const sql = SQL.format(`
+//       INSERT INTO workshop (
+//         type_id, name, description, outline, notes, price, teachers_id,
+//         address, registration_start, registration_end, isUpload, valid, img_cover, img_lg, img_sm01, img_sm02
+//       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+//     `)
+//     const sqlInsertWorkshop = sql
+
+//     try {
+//       // 使用參數化查詢來執行 SQL 插入
+//       const [result] = await db.query(sqlInsertWorkshop, [
+//         createWorkshop.type_id,
+//         createWorkshop.name,
+//         createWorkshop.description,
+//         createWorkshop.outline,
+//         createWorkshop.notes,
+//         createWorkshop.price,
+//         id, // teachers_id
+//         createWorkshop.address,
+//         createWorkshop.registration_start,
+//         createWorkshop.registration_end,
+//         0, // isUpload
+//         1, // valid
+//         '', // img_cover
+//         '', // img_lg
+//         '', // img_sm01
+//         '', // img_sm02
+//       ])
+
+//       // 取得新插入的 workshop_id
+//       const newWorkshopId = result.insertId
+
+//       // 插入 workshop_time 資料
+//       const sqlInsertWorkshopTime = SQL.format(`
+//         INSERT INTO workshop_time (
+//           workshop_id, date, start_time, end_time, min_students, max_students
+//         ) VALUES (?, ?, ?, ?, ?, ?)
+//       `)
+
+//       await db.query(sqlInsertWorkshopTime, [
+//         newWorkshopId,
+//         createWorkshop.date,
+//         createWorkshop.start_time,
+//         createWorkshop.end_time,
+//         createWorkshop.min_students,
+//         createWorkshop.max_students,
+//       ])
+
+//       // 回應成功
+//       return res.json({
+//         message: 'created successfully',
+//         workshop_id: newWorkshopId,
+//       })
+//     } catch (e) {
+//       console.error(e)
+//       return res.status(500).json({ message: 'Server error', error: e.message })
+//     }
+//   }
+// )
+
+router.post('/upload/page01/time', async function (req, res, next) {})
 
 export default router

@@ -13,30 +13,28 @@ import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const response = await fetch(
-        'http://localhost:3005/api/workshop/upload/page01',
-        {
-          credentials: 'include',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     const response = await fetch('http://localhost:3005/api/workshop/', {
+  //       credentials: 'include',
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         // Authorization: `Bearer ${auth.token}`,
+  //       },
+  //     })
 
-      if (!response.ok) {
-        throw new Error('更新資料失敗')
-      }
+  //     if (!response.ok) {
+  //       throw new Error('更新資料失敗')
+  //     }
 
-      const result = await response.json()
-      console.log('更新成功', result)
-    } catch (error) {
-      console.error('更新失敗', error)
-    }
-  }
+  //     const result = await response.json()
+  //     console.log('更新成功', result)
+  //   } catch (error) {
+  //     console.error('更新失敗', error)
+  //   }
+  // }
 
   return (
     <>
@@ -49,7 +47,6 @@ export default function Page1({ onNextPage }) {
               height="320px"
               bigText="新增封面圖"
               smText="必填"
-              name="img_cover"
             />
 
             <div className={`${styles.uploadMainInfo} flex-grow-1`}>
@@ -189,16 +186,13 @@ export default function Page1({ onNextPage }) {
             </div>
           </div>
           <div className="ms-auto d-flex justify-content-end mt-2">
-            <button className="btn-secondary h6 me-4" type="submit">
-              儲存
-            </button>
+            <button className="btn-secondary h6 me-4">儲存</button>
             <button
               className="btn-primary h6"
               onClick={(e) => {
                 e.preventDefault()
                 onNextPage()
               }}
-              type="submit"
             >
               下一步
             </button>

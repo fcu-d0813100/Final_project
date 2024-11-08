@@ -19,7 +19,6 @@ export default function Page2({ onPreviousPage }) {
               height="330px"
               bigText="新增細節圖"
               smText="1920 X 550 px"
-              name="img_cover"
             />
             <div className=" d-flex mt-5">
               <UploadImg
