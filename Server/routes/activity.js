@@ -101,15 +101,29 @@ router.post('/activity-Upload', upload.array('files'), async (req, res) => {
       CHN_name,
       ENG_name,
       maxREG,
-      brand,
+      brand, // 接收 brand，而不是直接傳 brand_mail
       address,
       start_at,
       end_at,
       description,
     } = req.body
     console.log('接收到的資料:', req.body) // 確認 req.body 是否有資料
-    if (!CHN_name || !ENG_name) {
+    if (!CHN_name || !ENG_name || !brand) {
       return res.status(400).json({ error: '缺少必要的欄位資料' })
+    }
+
+    // 根據 brand 值設定 brand_mail
+    let brand_mail
+    if (brand === 'YSL') {
+      brand_mail = 'https://www.yslbeauty.com.tw'
+    } else if (brand === 'NARS') {
+      brand_mail = 'https://www.narscosmetics.com'
+    } else if (brand === 'Bobbi Brown') {
+      brand_mail = 'https://www.bobbibrown.com.tw'
+    } else if (brand === 'Estee Lauder') {
+      brand_mail = 'https://www.esteelauder.com.tw'
+    } else {
+      brand_mail = 'https://www.lancome.com.tw/' // 如果沒有匹配，設置一個默認值
     }
 
     // 檢查 `req.files` 是否存在，如果沒有則設置為空陣列
@@ -122,6 +136,7 @@ router.post('/activity-Upload', upload.array('files'), async (req, res) => {
       ENG_name,
       maxREG,
       brand,
+      brand_mail, // 顯示動態設置的 brand_mail
       address,
       start_at,
       end_at,
@@ -135,14 +150,15 @@ router.post('/activity-Upload', upload.array('files'), async (req, res) => {
 
     const sqlInsertAct = `
       INSERT INTO activity 
-      (CHN_name, ENG_name, maxREG, brand, address, start_at, end_at, description, img1, img2, img3)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (CHN_name, ENG_name, maxREG, brand_mail, brand, address, start_at, end_at, description, img1, img2, img3)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `
 
     const [actResult] = await db.query(sqlInsertAct, [
       CHN_name,
       ENG_name,
       maxREG,
+      brand_mail, // 插入設置好的 brand_mail
       brand,
       address,
       start_at,
@@ -243,7 +259,37 @@ router.get('/id', async (req, res) => {
       return res.status(404).json({ error: '活動未找到' })
     }
 
-    res.json(rows[0]) // 返回第一筆符合條件的活動
+    // 增加 views 欄位的值
+    const updateViewsQuery =
+      'UPDATE activity SET views = views + 1 WHERE id = ?'
+    await db.query(updateViewsQuery, [id])
+
+    res.json(rows[0]) // 返回查詢到的活動數據
+  } catch (error) {
+    console.error('Failed to fetch activity details:', error)
+    res.status(500).json({ error: '無法獲取活動詳細信息' })
+  }
+})
+router.get('/top3', async (req, res) => {
+  try {
+    const currentDate = new Date() // 獲取當前日期
+
+    // 查詢 views 排名前三高且開始時間比現在時間還要晚的活動
+    const query = `
+      SELECT * 
+      FROM activity 
+      WHERE start_at > ? 
+      ORDER BY views DESC 
+      LIMIT 3
+    `
+
+    const [rows] = await db.query(query, [currentDate])
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: '活動未找到' })
+    }
+
+    res.json(rows) // 返回符合條件的前三高活動
   } catch (error) {
     console.error('Failed to fetch activity details:', error)
     res.status(500).json({ error: '無法獲取活動詳細信息' })

@@ -5,6 +5,7 @@ import Styles from '@/components/activity/page/activity-det/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import FormToggle from '../../common/FormToggle'
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
+import DetCarousel from '@/components/activity/common/DetCarousel'
 import axios from 'axios'
 
 const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
@@ -12,6 +13,7 @@ const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
 export default function ActivityDet() {
   const [activityData, setActivityData] = useState(null)
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 })
+  const [cardsData, setCardsData] = useState([])
   const router = useRouter()
   const { id } = router.query
 
@@ -37,6 +39,33 @@ export default function ActivityDet() {
 
     fetchActivityData()
   }, [id])
+
+  // 從 API 獲取前三高瀏覽量的活動
+  useEffect(() => {
+    const fetchTop3Activities = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:3005/api/activity/top3'
+        )
+        const top3Activities = response.data.map((activity) => ({
+          id: activity.id,
+          title: activity.CHN_name,
+          subtitle: activity.ENG_name,
+          imgSrc: '/activity/' + activity.img1,
+          date: `${activity.start_at} ~ ${activity.end_at}`,
+          host: activity.brand,
+          location: activity.address,
+          attendees: `${activity.currentREG} 人`,
+          status: activity.status === '0' ? '報名中' : '已截止',
+        }))
+        setCardsData(top3Activities)
+      } catch (error) {
+        console.error('無法獲取前三高活動數據:', error)
+      }
+    }
+
+    fetchTop3Activities()
+  }, [])
 
   // 通過地址獲取地理坐標
   useEffect(() => {
@@ -148,6 +177,7 @@ export default function ActivityDet() {
         </div>
         <div className={Styles['sec5']}>
           <FormToggle />
+          <DetCarousel cardsData={cardsData} />
         </div>
       </div>
     </>
