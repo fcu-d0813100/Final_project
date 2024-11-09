@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename)
 // 設置 multer 儲存選項
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/upload')
+    cb(null, 'public/upload/activity')
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
@@ -183,7 +183,107 @@ router.post('/activity-Upload', upload.array('files'), async (req, res) => {
     })
   }
 })
+router.put('/activity-edit/:id', upload.array('files'), async (req, res) => {
+  try {
+    const { id } = req.params // 獲取活動 ID
+    const {
+      CHN_name,
+      ENG_name,
+      maxREG,
+      brand,
+      address,
+      start_at,
+      end_at,
+      description,
+    } = req.body
 
+    // 確認接收到的數據是否包含必要的欄位
+    if (!CHN_name || !ENG_name || !brand) {
+      return res.status(400).json({ error: '缺少必要的欄位資料' })
+    }
+
+    // 根據 brand 值動態設定 brand_mail
+    let brand_mail
+    switch (brand) {
+      case 'YSL':
+        brand_mail = 'https://www.yslbeauty.com.tw'
+        break
+      case 'NARS':
+        brand_mail = 'https://www.narscosmetics.com'
+        break
+      case 'Bobbi Brown':
+        brand_mail = 'https://www.bobbibrown.com.tw'
+        break
+      case 'Estee Lauder':
+        brand_mail = 'https://www.esteelauder.com.tw'
+        break
+      default:
+        brand_mail = 'https://www.lancome.com.tw/'
+        break
+    }
+
+    // 檢查 `req.files` 是否存在
+    const uploadedFiles = req.files
+      ? req.files.map((file) => file.filename)
+      : []
+    const img1 = uploadedFiles[0] || null
+    const img2 = uploadedFiles[1] || null
+    const img3 = uploadedFiles[2] || null
+
+    // 構建 SQL 查詢以更新活動資料
+    const sqlUpdateAct = `
+      UPDATE activity SET
+      CHN_name = ?, ENG_name = ?, maxREG = ?, brand_mail = ?, brand = ?,
+      address = ?, start_at = ?, end_at = ?, description = ?,
+      img1 = COALESCE(?, img1), img2 = COALESCE(?, img2), img3 = COALESCE(?, img3)
+      WHERE id = ?
+    `
+
+    // 執行更新操作
+    const [updateResult] = await db.query(sqlUpdateAct, [
+      CHN_name,
+      ENG_name,
+      maxREG,
+      brand_mail,
+      brand,
+      address,
+      start_at,
+      end_at,
+      description,
+      img1,
+      img2,
+      img3,
+      id,
+    ])
+
+    if (updateResult.affectedRows === 0) {
+      return res.status(404).json({ error: '找不到對應的活動資料' })
+    }
+
+    res.json({
+      status: 'success',
+      message: `ID:${id} 活動資料更新成功`,
+    })
+  } catch (error) {
+    console.error('Error updating event:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '活動更新失敗',
+    })
+  }
+})
+router.put('/delete/:id', async function (req, res, next) {
+  const sqlUpdate = `UPDATE activity SET valid = 0 WHERE id = ?`
+  const { id } = req.params // 從請求路徑參數中提取 id
+
+  try {
+    await db.query(sqlUpdate, [id]) // 將 id 傳遞給 SQL 查詢
+    res.json({ status: 'success', message: '刪除活動成功' })
+  } catch (error) {
+    console.error('Error deleting activity:', error)
+    res.status(500).json({ status: 'error', message: '刪除活動失敗' })
+  }
+})
 // 搜索活動數據
 router.get('/search', async (req, res) => {
   const { search } = req.query // 從查詢參數中獲取 search
@@ -199,7 +299,7 @@ router.get('/search', async (req, res) => {
       `SELECT * FROM activity 
        WHERE LOWER(brand) LIKE LOWER(?) 
        OR LOWER(ENG_name) LIKE LOWER(?) 
-       OR LOWER(CHN_name) LIKE LOWER(?)`,
+       OR LOWER(CHN_name) LIKE LOWER(?) AND valid = 1`,
       [`%${search}%`, `%${search}%`, `%${search}%`]
     )
 
@@ -223,10 +323,10 @@ router.get('/status', async (req, res) => {
     let query
     if (status === '0') {
       // 顯示開始時間小於當前時間的活動（報名中）
-      query = 'SELECT * FROM activity WHERE start_at < ?'
+      query = 'SELECT * FROM activity WHERE start_at < ? AND valid = 1'
     } else if (status === '1') {
       // 顯示開始時間大於當前時間的活動（已截止）
-      query = 'SELECT * FROM activity WHERE start_at > ?'
+      query = 'SELECT * FROM activity WHERE start_at > ? AND valid = 1'
     } else {
       return res.status(400).json({ error: '無效的狀態參數' })
     }
@@ -261,7 +361,7 @@ router.get('/id', async (req, res) => {
 
     // 增加 views 欄位的值
     const updateViewsQuery =
-      'UPDATE activity SET views = views + 1 WHERE id = ?'
+      'UPDATE activity SET views = views + 1 WHERE id = ? AND valid = 1'
     await db.query(updateViewsQuery, [id])
 
     res.json(rows[0]) // 返回查詢到的活動數據
@@ -278,7 +378,7 @@ router.get('/top3', async (req, res) => {
     const query = `
       SELECT * 
       FROM activity 
-      WHERE start_at > ? 
+      WHERE start_at > ?  AND valid = 1
       ORDER BY views DESC 
       LIMIT 3
     `
@@ -299,7 +399,7 @@ router.get('/top3', async (req, res) => {
 // 獲取所有活動數據
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM activity')
+    const [rows] = await db.query('SELECT * FROM activity WHERE valid = 1')
     res.json(rows)
   } catch (error) {
     console.error('Failed to fetch activity:', error)
@@ -312,7 +412,7 @@ router.get('/month/:month', async (req, res) => {
   const { month } = req.params // 獲取路徑參數中的 month
   try {
     const [rows] = await db.query(
-      'SELECT * FROM activity WHERE MONTH(start_at) = ?',
+      'SELECT * FROM activity WHERE MONTH(start_at) = ? AND valid = 1',
       [month]
     )
 

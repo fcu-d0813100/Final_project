@@ -1,4 +1,3 @@
-'use client'
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -10,11 +9,13 @@ import { PiArrowRight } from 'react-icons/pi'
 import styles from '@/components/teacher/common/upload.module.scss'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
 import Sidebar from '@/components/activity/common/Sidebar'
+import Swal from 'sweetalert2'
+import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
+import ReactDOMServer from 'react-dom/server'
 
 export default function Upload(props) {
   const router = useRouter()
 
-  // 定義表單狀態
   const [formData, setFormData] = useState({
     CHN_name: '',
     ENG_name: '',
@@ -25,71 +26,149 @@ export default function Upload(props) {
     end_at: '',
     description: '',
   })
-
-  // 定義文件狀態，用於存儲選取的圖片文件
   const [selectedFiles, setSelectedFiles] = useState([])
+  const [errors, setErrors] = useState({})
 
-  // 處理表單輸入變更
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevData) => {
-      const newData = {
-        ...prevData,
-        [name]: value,
+    setFormData((prevData) => ({ ...prevData, [name]: value }))
+    setErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors }
+      if (name === 'maxREG') {
+        if (/^\d+$/.test(value) || value === '不限') {
+          delete updatedErrors[name] // 刪除該錯誤
+        }
+      } else if (value.trim()) {
+        delete updatedErrors[name]
       }
-      // console.log('更新的表單數據:', newData) // 檢查新狀態
-      return newData
+      return updatedErrors
     })
   }
 
-  // 處理文件選擇，從 UploadImg 組件接收文件
   const handleFileChange = (files) => {
-    setSelectedFiles(files) // 更新文件狀態
+    setSelectedFiles(files)
   }
 
-  // 提交表單數據到後端
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const data = new FormData()
+  const showErrorAlert = (message) => {
+    Swal.fire({
+      iconHtml: ReactDOMServer.renderToString(
+        <RiCloseCircleFill color="#963827" size={50} />
+      ),
+      title: '錯誤',
+      text: message,
+      customClass: {
+        icon: styles.customIcon,
+        popup: styles.customPopup,
+      },
+      showConfirmButton: false,
+      timer: 2000,
+    })
+  }
 
-      // 檢查 formData 的內容是否正確
-      console.log('表單數據:', formData)
+  const validateForm = () => {
+    const newErrors = {}
 
-      // 添加文字欄位到 FormData
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) {
-          data.append(key, value)
+    Object.entries(formData).forEach(([key, value]) => {
+      if (!value.trim()) {
+        newErrors[key] = '此欄位為必填'
+      }
+    })
+
+    if (formData.maxREG) {
+      if (!/^\d+$/.test(formData.maxREG) && formData.maxREG !== '不限') {
+        newErrors.maxREG = '活動名額只能為數字或「不限」'
+      } else if (
+        formData.maxREG !== '不限' &&
+        parseInt(formData.maxREG, 10) === 0
+      ) {
+        newErrors.maxREG = '活動名額不能為0'
+      }
+    }
+
+    if (
+      formData.start_at &&
+      formData.end_at &&
+      formData.start_at > formData.end_at
+    ) {
+      newErrors.end_at = '活動開始日期不能比結束日期晚！'
+    }
+
+    setErrors(newErrors)
+
+    if (Object.keys(newErrors).length > 0) {
+      const errorMessages = Object.entries(newErrors).map(([key, msg]) => {
+        switch (key) {
+          case 'CHN_name':
+            return '請填寫活動中文名稱'
+          case 'ENG_name':
+            return '請填寫活動英文名稱'
+          case 'maxREG':
+            return msg
+          case 'brand':
+            return '請選擇活動品牌'
+          case 'address':
+            return '請填寫活動地點'
+          case 'start_at':
+            return msg
+          case 'end_at':
+            return '請填寫報名結束時間'
+          case 'description':
+            return '請填寫課程簡介'
+          default:
+            return msg
         }
       })
 
-      // 添加文件到 FormData
-      selectedFiles.forEach((file) => data.append('files', file))
+      showErrorAlert(errorMessages[0])
+      return false
+    }
 
-      // 測試 FormData 的內容
-      for (let [key, value] of data.entries()) {
-        console.log(`${key}:`, value)
-      }
+    return true
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!validateForm()) return
+
+    if (selectedFiles.length !== 3) {
+      showErrorAlert('請選擇三張圖片')
+      return
+    }
+
+    try {
+      const data = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value) data.append(key, value)
+      })
+      selectedFiles.forEach((file) => data.append('files', file))
 
       const response = await fetch(
         'http://localhost:3005/api/activity/activity-Upload',
         {
           method: 'POST',
           body: data,
-          credentials: 'include'
+          credentials: 'include',
         }
       )
 
       if (response.ok) {
-        alert('活動上架成功！')
-        router.push('/admin/activity') // 成功後跳轉
+        Swal.fire({
+          iconHtml: ReactDOMServer.renderToString(
+            <RiCheckboxCircleFill color="#4CAF50" size={50} />
+          ),
+          title: '成功',
+          text: '活動上架成功！',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+        router.push('/admin/activity')
       } else {
-        console.error('提交失敗:', await response.text())
-        alert('活動上架失敗，請重試1')
+        showErrorAlert('活動上架失敗，請重試')
       }
     } catch (error) {
       console.error('Error submitting form:', error)
-      alert('活動上架失敗，請重試2')
+      showErrorAlert('活動上架失敗，請重試')
     }
   }
 
@@ -113,6 +192,7 @@ export default function Upload(props) {
                 width="445px"
                 height="320px"
                 onFileChange={handleFileChange}
+                hasError={!!errors.maxREG}
               />
 
               <div className={`${styles.uploadMainInfo} flex-grow-1`}>
@@ -130,6 +210,7 @@ export default function Upload(props) {
                       placeholder="請輸入活動名稱"
                       name="CHN_name"
                       onChange={handleInputChange}
+                      hasError={!!errors.CHN_name}
                     />
                     <InputStyle
                       addclass="col-4"
@@ -140,6 +221,7 @@ export default function Upload(props) {
                       placeholder="請輸入活動名稱"
                       name="ENG_name"
                       onChange={handleInputChange}
+                      hasError={!!errors.ENG_name}
                     />
                     <InputStyle
                       addclass="col-4"
@@ -150,6 +232,7 @@ export default function Upload(props) {
                       placeholder="請填入活動名額"
                       name="maxREG"
                       onChange={handleInputChange}
+                      hasError={!!errors.maxREG}
                     />
                   </div>
 
@@ -159,10 +242,10 @@ export default function Upload(props) {
                       forText="type"
                       titleCh="活動品牌"
                       titleEn="brand"
-                      name="brand" // 指定 name 屬性，和 formData 中的鍵對應
-                      onChange={handleInputChange} // 確保 onChange 正確綁定
+                      name="brand"
+                      onChange={handleInputChange}
+                      hasError={!!errors.brand}
                     />
-
                     <InputStyle
                       addclass="col-7"
                       forText="address"
@@ -172,6 +255,7 @@ export default function Upload(props) {
                       placeholder="請填入地址"
                       name="address"
                       onChange={handleInputChange}
+                      hasError={!!errors.address}
                     />
                   </div>
                   <div className="container d-flex align-items-end justify-content-between gap-2">
@@ -184,11 +268,11 @@ export default function Upload(props) {
                       placeholder="開始日期"
                       name="start_at"
                       onChange={handleInputChange}
+                      hasError={!!errors.start_at}
                     />
                     <p className="col-1 d-flex justify-content-center align-items-center">
                       <PiArrowRight className="ph" />
                     </p>
-
                     <InputStyle
                       addclass="col-5 ms-1"
                       forText="end_at"
@@ -198,6 +282,7 @@ export default function Upload(props) {
                       placeholder="結束日期"
                       name="end_at"
                       onChange={handleInputChange}
+                      hasError={!!errors.end_at}
                     />
                   </div>
                 </div>
@@ -209,12 +294,13 @@ export default function Upload(props) {
                 <Textarea
                   addclass="mb-4"
                   title="課程簡介"
-                  name="description" // 確保 name 與 formData 中的鍵對應
+                  name="description"
                   rows="5"
                   width="100%"
                   placeholder="最多輸入200字"
-                  value={formData.description} // 使用 formData 中的值
-                  onChange={handleInputChange} // 傳入父組件的 handleInputChange 回調
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  hasError={!!errors.description}
                 />
               </div>
             </div>

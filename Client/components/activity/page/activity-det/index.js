@@ -51,7 +51,7 @@ export default function ActivityDet() {
           id: activity.id,
           title: activity.CHN_name,
           subtitle: activity.ENG_name,
-          imgSrc: '/activity/' + activity.img1,
+          imgSrc: 'http://localhost:3005/upload/activity/' + activity.img1,
           date: `${activity.start_at} ~ ${activity.end_at}`,
           host: activity.brand,
           location: activity.address,
@@ -94,7 +94,7 @@ export default function ActivityDet() {
       <div>
         <div className={Styles['act-img-container']}>
           <Image
-            src={'/activity/' + activityData.img1}
+            src={'http://localhost:3005/upload/activity/' + activityData.img1}
             width={1920}
             height={700}
             alt={activityData.CHN_name || '活動圖片'}
@@ -109,13 +109,13 @@ export default function ActivityDet() {
         </div>
         <div className={Styles['sec2']}>
           <Image
-            src={'/activity/' + activityData.img2}
+            src={'http://localhost:3005/upload/activity/' + activityData.img2}
             width={860}
             height={500}
             alt="活動圖片"
           />
           <Image
-            src={'/activity/' + activityData.img3}
+            src={'http://localhost:3005/upload/activity/' + activityData.img3}
             width={800}
             height={500}
             alt="活動圖片"
