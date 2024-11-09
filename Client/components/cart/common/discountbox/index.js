@@ -17,9 +17,13 @@ export default function DiscountBox() {
   const [show, setShow] = useState(false)
   const [selectedCoupon, setSelectedCoupon] = useState('') // 用來存儲選擇的優惠券
 
-  // 取得優惠券
+  //-------------控制談窗
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
+  // -----------取得優惠券
   const getCoupon = async () => {
-    if (!userId) return // 如果 userId 不存在，就返回
+    if (!userId) return
     try {
       const url = `http://localhost:3005/api/getCoupon?userId=${userId}`
       const res = await fetch(url, {
@@ -28,9 +32,15 @@ export default function DiscountBox() {
       })
       const resData = await res.json()
       console.log(resData.data)
-      if (resData?.data) {
-        setDiscount(resData.data)
-        setCoupons(resData.data) // 將優惠券數據存入 coupons 狀態
+      if (resData.data) {
+        const brandsInCart = productCart.map((item) => item.brand)
+
+        // 篩選符合購物車品牌的優惠券
+        const filteredCoupons = resData.data.filter((coupon) =>
+          brandsInCart.includes(coupon.brand_name)
+        )
+        // 設置篩選後的優惠券列表
+        setCoupons(filteredCoupons)
       } else {
         console.warn('No discount data found')
       }
@@ -43,10 +53,7 @@ export default function DiscountBox() {
     getCoupon()
   }, [userId])
 
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
-  // 每次元件載入時從 localStorage 重新取得優惠券選擇
+  //-------------每次元件載入時從 localStorage 重新取得優惠券選擇
   useEffect(() => {
     const storedCoupon = localStorage.getItem('selectedCoupon')
     if (storedCoupon) {
@@ -54,16 +61,12 @@ export default function DiscountBox() {
     }
   }, [])
 
-  // 更新選擇的優惠券名稱
+  // 更新選擇的優惠券 id
   const handleCouponChange = (event) => {
     const couponId = event.target.value
-    const selected = coupons.find((coupon) => coupon.id === couponId)
-    const couponName = selected ? selected.name : ''
-    setSelectedCoupon(couponName)
-    localStorage.setItem('selectedCoupon', couponName) // 更新 localStorage
+    setSelectedCoupon(couponId)
+    localStorage.setItem('selectedCoupon', couponId) // 更新 localStorage
   }
-  // const storedCartItems = JSON.parse(localStorage.getItem('productCart')) || []
-  // console.log(storedCartItems) // [{ productId: 1, brand_id: 1, name: '商品1' }, ...]
 
   return (
     <>
@@ -103,8 +106,8 @@ export default function DiscountBox() {
             <option value="">選擇優惠券</option>
             {/* 動態生成優惠券選項 */}
             {coupons.map((coupon) => (
-              <option key={coupon.id} value={coupon.id}>
-                {`${coupon.name} 折扣價: ${coupon.discount_value}`}
+              <option key={coupon.coupon_relation_id} value={coupon.id}>
+                {`${coupon.brand_name}${coupon.name} `}
               </option>
             ))}
           </Form.Select>

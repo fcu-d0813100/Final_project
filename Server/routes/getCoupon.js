@@ -31,7 +31,8 @@ router.get('/', async function (req, res) {
   try {
     // 定義查詢語句的不同部分，直接插入 userId 變數
     const selectFields = `
-    cl.id,
+    cl.id AS coupon_list_id,
+    cr.id AS coupon_relation_id,
     cl.type_id,
     cl.brand_id,
     cl.code,
@@ -42,7 +43,8 @@ router.get('/', async function (req, res) {
     cl.end_date,
     cl.used,
     cl.maximum,
-    cl.valid
+    cl.valid,
+    b.name AS brand_name
   `
 
     const fromClause = `
@@ -50,17 +52,24 @@ router.get('/', async function (req, res) {
       coupon_list AS cl
     JOIN 
       coupon_relation AS cr ON cl.id = cr.coupon_id
+    JOIN 
+      brand AS b ON cl.brand_id = b.id
   `
 
-    // 直接插入 userId，並加入篩選條件
     const whereClause = `
     WHERE cr.user_id = ${userId} 
+    AND cr.order_id IS NULL
     AND cl.end_date >= CURDATE() 
     AND cl.used < cl.maximum
+    AND cl.valid = 1
+  `
+
+    const groupByClause = `
+    GROUP BY cl.id
   `
 
     // 組合成完整的 SQL 查詢
-    const sqlSelect = `SELECT ${selectFields} ${fromClause} ${whereClause}`
+    const sqlSelect = `SELECT ${selectFields} ${fromClause} ${whereClause} ${groupByClause}`
 
     const [result] = await db.query(sqlSelect) // 不需要額外傳入參數
     res.json({ data: result })
