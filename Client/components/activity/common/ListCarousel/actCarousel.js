@@ -41,7 +41,7 @@ const ProductCarousel = () => {
           id: item.id,
           CHN_name: item.CHN_name,
           ENG_name: item.ENG_name,
-          src: '/activity/' + item.img1,
+          src: 'http://localhost:3005/upload/activity/' + item.img1,
           alt: `${item.CHN_name} Image 1`,
         }))
 

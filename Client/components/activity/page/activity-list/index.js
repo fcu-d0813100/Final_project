@@ -237,7 +237,7 @@ export default function Activity() {
                         </div>
                         <p className={Styles['card-det']}>詳細資訊</p>
                         <Image
-                          src={`/activity/${item.img1}`}
+                          src={`http://localhost:3005/upload/activity/${item.img1}`}
                           width={1200}
                           height={800}
                           alt={item.CHN_name}
