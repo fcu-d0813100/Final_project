@@ -5,6 +5,7 @@ import { requestOtpToken, resetPassword } from '@/services/user'
 import toast, { Toaster } from 'react-hot-toast'
 import styles from './index.module.scss'
 import { PiEyeClosed, PiEye, PiLockLight } from 'react-icons/pi'
+import { CiMail } from 'react-icons/ci'
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState('')
@@ -73,27 +74,28 @@ export default function ForgetPassword() {
         className={`${styles['password-area']} row d-flex justify-content-center align-items-center`}
       >
         <div className="col-11 col-xl-8 mb-3">
-          <label htmlFor="old-password" className="form-label h6">
-            原密碼
+          <h2 className="pb-5">忘記密碼</h2>
+
+          <label
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            htmlFor="email"
+            className="form-label h6"
+          >
+            電子郵件信箱
           </label>
         </div>
         <div className={`${styles['input-password']} col-11 col-xl-8 mb-3`}>
-          <PiLockLight className={`${styles['icon-lock']}`} />
+          <CiMail className={`${styles['icon-lock']}`} />
           <input
-            name="origin"
-            type={showPassword ? 'text' : 'password'}
+            name="email"
+            type="text"
             className={`form-control ${styles['form-focus']}`}
-            value={userPassword.origin}
-            onChange={handleFieldChange}
-            placeholder="請輸入原密碼"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="請輸入電子郵件信箱"
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className={styles.eyeiclosed}
-          >
-            {showPassword ? <PiEye /> : <PiEyeClosed />}
-          </button>
         </div>
       </div>
       <div className="row mt-4 d-flex justify-content-center align-items-center">
@@ -105,20 +107,19 @@ export default function ForgetPassword() {
         <div className={`${styles['input-password']} col-11 col-xl-8 mb-3`}>
           <PiLockLight className={`${styles['icon-lock']}`} />
           <input
-            // type={showNewPassword ? 'text' : 'password'}
+            type={showPassword ? 'text' : 'password'}
             className={`form-control ${styles['form-focus']}`}
             name="new"
             placeholder="請輸入新密碼"
-            type="text"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button
             type="button"
-            onClick={() => setShowNewPassword(!showNewPassword)}
+            onClick={() => setShowPassword(!showPassword)}
             className={styles.eyeiclosed}
           >
-            {showNewPassword ? <PiEye /> : <PiEyeClosed />}
+            {showPassword ? <PiEye /> : <PiEyeClosed />}
           </button>
         </div>
       </div>
@@ -136,8 +137,8 @@ export default function ForgetPassword() {
             className={`form-control ${styles['form-focus']}`}
             placeholder="請再次輸入新密碼"
             name="confirm"
-            value={userPassword.confirm}
-            onChange={handleFieldChange}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <button
             type="button"
@@ -152,30 +153,12 @@ export default function ForgetPassword() {
       <div
         className={`${styles['email-area']} row d-flex justify-content-center align-items-center mt-5`}
       >
-        <div
-          className={`${styles['email-rwd']} col-11 col-xl-4 justify-content-center align-items-center`}
-        >
-          <div className="form-check col-6 col-xl-12">
-            <input
-              className={`form-check-input ${styles['form-check-input2']}`}
-              type="checkbox"
-              value=""
-              id="default-check1"
-            />
-            <label className="form-check-label p" htmlFor="default-check1">
-              email 密碼驗證
-            </label>
-          </div>
-          <div className="col-6 col-xl-12">
-            <p className={`${styles['email-text']} ps`}>
-              *以個人資訊 email驗證
-            </p>
-          </div>
-        </div>
-
         <div className="col-11 col-xl-4">
           <div className="input-group mb-3">
-            <span className="input-group-text" id="inputGroup-sizing-default">
+            <span
+              className={`input-group-text ${styles['span-color']}`}
+              id="inputGroup-sizing-default"
+            >
               驗證碼
             </span>
             <input
@@ -196,8 +179,11 @@ export default function ForgetPassword() {
       >
         <div className="col-12 h6 d-flex justify-content-end pt-5">
           <button className="btn btn-secondary h6 me-3">取消</button>
-          <button className="btn btn-primary h6" type="submit">
-            確認
+          <button
+            className="btn btn-primary h6 me-3"
+            onClick={handleResetPassword}
+          >
+            重設密碼
           </button>
         </div>
       </div>
