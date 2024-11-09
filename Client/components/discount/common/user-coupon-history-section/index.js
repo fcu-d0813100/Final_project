@@ -1,7 +1,7 @@
 import React, { Children } from 'react'
 import SideBar from '@/components/user/common/side-bar'
 import UserHeader from '@/components/user/common/user-header'
-import OrderTitle from '@/components/order-list/common/order-title'
+import UserCouponTitle from '@/components/discount/common/user-coupon-history-title'
 import styles from './index.module.scss'
 
 export default function index({ children, titleCN, titleENG }) {
@@ -11,7 +11,7 @@ export default function index({ children, titleCN, titleENG }) {
       <div className={styles['user-section']}>
         <SideBar />
         <div className={styles['any-section']}>
-          <OrderTitle CN={titleCN} ENG={titleENG} />
+          <UserCouponTitle CN={titleCN}  />
           {children}
         </div>
       </div>

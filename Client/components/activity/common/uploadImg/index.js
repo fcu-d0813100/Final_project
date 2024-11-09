@@ -3,11 +3,16 @@ import styles from '@/components/activity/common/uploadImg/index.module.scss'
 import { PiPlus } from 'react-icons/pi'
 import React, { useState } from 'react'
 
-export default function UploadImg({ width, height }) {
+export default function UploadImg({ width, height, onFileChange }) {
   const [previews, setPreviews] = useState([]) // 儲存所有圖片預覽
+  const [selectedFiles, setSelectedFiles] = useState([]) // 儲存選取的文件
 
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files) // 轉換 FileList 為陣列
+    const files = Array.from(event.target.files) // 將 FileList 轉為陣列
+    setSelectedFiles(files) // 將選取的文件儲存在狀態中
+    onFileChange(files) // 將文件傳回父組件
+
+    // 生成圖片預覽
     const newPreviews = files.map((file) => {
       const reader = new FileReader()
       reader.readAsDataURL(file) // 將每個檔案轉換為 Data URL
@@ -27,6 +32,9 @@ export default function UploadImg({ width, height }) {
 
   const handleRemoveImage = (index) => {
     setPreviews((prev) => prev.filter((_, i) => i !== index)) // 刪除指定的圖片
+    const newFiles = selectedFiles.filter((_, i) => i !== index)
+    setSelectedFiles(newFiles)
+    onFileChange(newFiles) // 更新父組件的檔案
   }
 
   return (

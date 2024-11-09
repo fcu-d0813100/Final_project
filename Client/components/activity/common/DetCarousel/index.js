@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import Styles from '@/components/activity/page/activity-det/index.module.scss'
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import {
+  PiMagnifyingGlass,
+  PiHeartStraight,
+  PiHeartStraightFill,
+} from 'react-icons/pi'
+
+import Link from 'next/link'
 
 export default function Carousel({ cardsData = [] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [filledHearts, setFilledHearts] = useState({})
 
   const updateCarousel = (index) => {
     setCurrentIndex(index)
@@ -17,13 +25,20 @@ export default function Carousel({ cardsData = [] }) {
     setCurrentIndex((currentIndex - 1 + cardsData.length) % cardsData.length)
   }
 
+  const toggleHeart = (id) => {
+    setFilledHearts((prevHearts) => ({
+      ...prevHearts,
+      [id]: !prevHearts[id],
+    }))
+  }
+
   useEffect(() => {
     updateCarousel(currentIndex)
   }, [currentIndex])
 
   return (
     <div className={`${Styles['activity-carousel-text']} container`}>
-      <h2 className={Styles['section-title']}>相關活動</h2>
+      <h2 className={Styles['section-title']}>熱門活動</h2>
       <div className={Styles['activity-name']}>
         <h3 id="activityTitle">{cardsData[currentIndex].title}</h3>
         <p id="activitySubtitle">{cardsData[currentIndex].subtitle}</p>
@@ -41,7 +56,7 @@ export default function Carousel({ cardsData = [] }) {
       <div className={Styles['activity-carousel']}>
         {cardsData.map((card, index) => (
           <div
-            key={index}
+            key={card.id} // 使用唯一的活動 ID 作為 key
             className={`${Styles['cardLeft']} ${
               index === currentIndex
                 ? Styles['active']
@@ -66,11 +81,11 @@ export default function Carousel({ cardsData = [] }) {
             }}
           >
             <div className={Styles['cardL']}>
-              <a href="#">
+              <Link href={`/activity/activity-det?id=${card.id}`}>
                 <div className={Styles['card-img']}>
                   <img src={card.imgSrc} alt="Image" />
                 </div>
-              </a>
+              </Link>
               <div className={Styles['card-content']}>
                 <div className={Styles['card-date']}>{card.date}</div>
                 <div className={Styles['card-info']}>
@@ -80,8 +95,25 @@ export default function Carousel({ cardsData = [] }) {
                   <p>{card.location}</p>
                 </div>
                 <div className={Styles['card-footer']}>
-                  <div className={Styles['badge']}>{card.attendees}</div>
-                  <div className={Styles['status']}>{card.status}</div>
+                  <div className={Styles['status']}>報名中</div>
+                  <div
+                    className={Styles['heart-icon']}
+                    onClick={() => toggleHeart(card.id)}
+                    role="button"
+                    tabIndex="0"
+                  >
+                    {filledHearts[card.id] ? (
+                      <PiHeartStraightFill
+                        size={22}
+                        className={Styles['ph-heart']}
+                      />
+                    ) : (
+                      <PiHeartStraight
+                        size={22}
+                        className={Styles['ph-heart']}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

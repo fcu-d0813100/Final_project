@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import UserSection from '@/components/user/common/user-section';
+import UserCouponSection from '@/components/discount/common/user-coupon-history-section';
 import { Tab, Nav } from 'react-bootstrap';
 import styles from './index.module.scss';
 import CouponEnd from '@/components/discount/common/coupon-end';
@@ -33,8 +33,12 @@ export default function Index() {
         }
         setLoading(true);
         try {
-            setLoading(true); // 開始加載
-            const response = await fetch(`http://localhost:3005/api/user-coupons/history/${userId}`); // 假設 userId = 1
+            const response = await fetch(`http://localhost:3005/api/user-coupons/history/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
             if (!response.ok) {
                 throw new Error(`錯誤: ${response.statusText}`);
             }
@@ -69,7 +73,7 @@ export default function Index() {
 
     return (
         <>
-            <UserSection titleCN="歷史紀錄">
+            <UserCouponSection titleCN="歷史紀錄">
                 {loading ? (
                     <p>正在加載...</p>
                 ) : error ? (
@@ -133,7 +137,7 @@ export default function Index() {
                         </Tab.Content>
                     </Tab.Container>
                 )}
-            </UserSection>
+            </UserCouponSection>
         </>
     );
 }
