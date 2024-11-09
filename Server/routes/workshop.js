@@ -122,13 +122,13 @@ router.post('/upload/page01', authenticate, async function (req, res, next) {
   console.log(createWorkshop) // 打印出來檢查
 
   try {
-    const sql = SQL.format(
+    const sqlInsertWorkshop = SQL.format(
       `
-  INSERT INTO workshop (
-    type_id, name, description, outline, notes, price, teachers_id,
-    address, registration_start, registration_end, isUpload, valid
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`,
+      INSERT INTO workshop (
+        type_id, name, description, outline, notes, price, teachers_id,
+        address, registration_start, registration_end, isUpload, valid
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     `,
       [
         createWorkshop.type_id,
         createWorkshop.name,
@@ -144,8 +144,32 @@ router.post('/upload/page01', authenticate, async function (req, res, next) {
         1, // valid
       ]
     )
+    const [result] = await db.query(sqlInsertWorkshop)
+    console.log('Insert Result:', result)
 
-    const [result] = await db.query(sql)
+    // 取得新插入的 workshop_id
+    const newWorkshopId = result
+    console.log('New Workshop ID:', newWorkshopId)
+
+    const sqlInsertWorkshopTime = SQL.format(
+      `
+      INSERT INTO workshop_time(
+      workshop_id, date, start_time, end_time, min_students, max_students, registered
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+     `,
+      [
+        newWorkshopId,
+        createWorkshop.date,
+        createWorkshop.start_time,
+        createWorkshop.end_time,
+        createWorkshop.min_students,
+        createWorkshop.max_students,
+        0,
+      ]
+    )
+    // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+    await db.query(sqlInsertWorkshopTime)
+
     res.json(result)
   } catch (e) {
     console.error(e)
