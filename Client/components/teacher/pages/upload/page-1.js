@@ -5,11 +5,10 @@ import Textarea from '@/components/teacher/common/t-dashboard-textarea-style'
 import UploadImg from '@/components/teacher/common/t-dashboard-uploadImg'
 import SelectInput from '@/components/teacher/common/t-dashboard-select-input'
 import InputStyle from '@/components/teacher/common/t-dashboard-input-style'
-import { PiPlus, PiArrowRight } from 'react-icons/pi'
-import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
+import { PiPlus, PiArrowRight, PiX } from 'react-icons/pi'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
 import styles from '@/components/teacher/common/upload.module.scss'
-import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
+import timeSelectstyles from '@/components/teacher/common/t-dashboard-add-worshopTime/add-workshopTime.module.scss'
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
@@ -37,7 +36,85 @@ export default function Page1({ onNextPage }) {
       console.error('更新失敗', error)
     }
   }
+  const timeOptions = [
+    '09:00',
+    '09:30',
+    '10:00',
+    '10:30',
+    '11:00',
+    '11:30',
+    '12:00',
+    '12:30',
+    '13:00',
+    '13:30',
+    '14:00',
+    '14:30',
+    '15:00',
+    '15:30',
+    '16:00',
+    '16:30',
+    '17:00',
+    '17:30',
+    '18:00',
+    '18:30',
+  ]
 
+  const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
+  const [timeSchedule, setTimeSchedule] = useState([])
+
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    address: '',
+    registration_start: '',
+    registration_end: '',
+    description: '',
+    outline: '',
+    notes: '',
+    date: '',
+    start_time: '',
+    end_time: '',
+    min_students: '',
+    max_students: '',
+  })
+
+  // 處理表單數據變更
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
+  const handleAddTime = (newTime) => {
+    setTimeSchedule((prevSchedule) => [
+      ...prevSchedule,
+      { ...newTime, id: Date.now() },
+    ])
+  }
+  const toggleModal = (id, time = {}) => {
+    if (modalOpenId === id) {
+      setModalOpenId(null)
+    } else {
+      setModalOpenId(id)
+      setFormData({
+        date: time.date || '',
+        start_time: time.start_time || '',
+        end_time: time.end_time || '',
+        min_students: time.min_students || '',
+        max_students: time.max_students || '',
+      })
+    }
+  }
+  const handleSaveChanges = (id) => {
+    setTimeSchedule((prevSchedule) =>
+      prevSchedule.map((time) =>
+        time.id === id ? { ...time, ...formData } : time
+      )
+    )
+    toggleModal(id)
+  }
   return (
     <>
       <form action="">
@@ -65,7 +142,9 @@ export default function Page1({ onNextPage }) {
                     titleEn=" | name"
                     typeText="text"
                     placeholder="請輸入課程名稱"
-                    name=""
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                   />
                   <InputStyle
                     addclass="col-3"
@@ -74,7 +153,9 @@ export default function Page1({ onNextPage }) {
                     titleEn=" | price"
                     typeText="text"
                     placeholder="請填入金額"
-                    name=""
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="container d-flex gap-4 mb-3">
@@ -101,18 +182,22 @@ export default function Page1({ onNextPage }) {
                     titleEn=" | address"
                     typeText="text"
                     placeholder="請填入地址"
-                    name=""
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="container d-flex align-items-end justify-content-between gap-2">
                   <InputStyle
                     addclass="col-6 me-1"
-                    forText="name"
+                    forText="registration_start"
                     titleCh="報名時間"
                     titleEn=" | registration period"
                     typeText="date"
                     placeholder="Beginning Date"
-                    name=""
+                    name="registration_start"
+                    value={formData.registration_start}
+                    onChange={handleChange}
                   />
                   <p className="col-1 d-flex justify-content-center align-items-center">
                     <PiArrowRight className="ph" />
@@ -125,7 +210,9 @@ export default function Page1({ onNextPage }) {
                     titleEn=""
                     typeText="date"
                     placeholder="End Date"
-                    name=""
+                    name="registration_end"
+                    value={formData.registration_end}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -141,7 +228,8 @@ export default function Page1({ onNextPage }) {
                 width="100%"
                 placeholder="最多輸入200字"
                 addclass="mb-4"
-                value=""
+                value={formData.description}
+                onChange={handleChange}
               />
               <div className="d-flex justify-content-between p-0">
                 <Textarea
@@ -151,7 +239,8 @@ export default function Page1({ onNextPage }) {
                   width="93%"
                   placeholder="最多輸入120字"
                   addclass="w-100"
-                  value=""
+                  value={formData.outline}
+                  onChange={handleChange}
                 />
                 <Textarea
                   title="注意事項"
@@ -160,7 +249,8 @@ export default function Page1({ onNextPage }) {
                   width="100%"
                   placeholder="最多輸入120字"
                   addclass="w-100"
-                  value=""
+                  value={formData.notes}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -169,23 +259,152 @@ export default function Page1({ onNextPage }) {
           <div className={`${styles.section03} `}>
             <h4 className="h4 mb-4">開課時程</h4>
             <div className="row row-cols-3">
-              <TimeSelect
-                date="20202020"
-                beginTime="12"
-                endTime="12"
-                hours="3"
-                min="2"
-                max="1"
-              />
-              <TimeSelect
-                date="20202020"
-                beginTime="12"
-                endTime="12"
-                hours="3"
-                min="2"
-                max="1"
-              />
-              <AddWorkshopTime />
+              {timeSchedule.map((time, index) => (
+                <div key={index}>
+                  <TimeSelect
+                    key={time.id}
+                    date={time.date.replace(/-/g, '/')}
+                    beginTime={time.start_time}
+                    endTime={time.end_time}
+                    min={time.min_students}
+                    max={time.max_students}
+                    onClick={() => toggleModal(time.id, time)} // 點擊以打開特定 Modal
+                  />
+
+                  {/* Modal 視窗 */}
+                  {modalOpenId === time.id && (
+                    <button
+                      type="button"
+                      className={timeSelectstyles.modalOverlay}
+                      onClick={() => toggleModal(time.id)}
+                    >
+                      <button
+                        type="button"
+                        className={timeSelectstyles.modalContent}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          onClick={() => toggleModal(time.id)}
+                          className={`${timeSelectstyles.close} ph`}
+                        >
+                          <PiX />
+                        </button>
+                        <h5 className="h5 mb-4">修改課程時間</h5>
+
+                        {/* 表單元素 */}
+                        <InputStyle
+                          addclass="mb-3"
+                          forText="date"
+                          titleCh="上課時間"
+                          typeText="date"
+                          placeholder="請選擇日期"
+                          name="date"
+                          value={formData.date}
+                          onChange={(e) =>
+                            setFormData({ ...formData, date: e.target.value })
+                          }
+                        />
+
+                        {/* 開始與結束時間選擇 */}
+                        <div className="d-flex align-items-end justify-content-between p-0 mb-3">
+                          <SelectInput
+                            initName="開始時間"
+                            addClass="w-100"
+                            forText="start_time"
+                            titleCh="時間"
+                            items={timeOptions.map((t) => ({
+                              name: 'start_time',
+                              option: t,
+                            }))}
+                            name="start_time"
+                            value={formData.start_time}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                start_time: e.target.value,
+                              })
+                            }
+                          />
+                          <p className="col-1 d-flex justify-content-center align-items-center">
+                            <PiArrowRight className="ph" />
+                          </p>
+                          <SelectInput
+                            initName="結束時間"
+                            addClass="w-100"
+                            forText="end_time"
+                            items={timeOptions.map((t) => ({
+                              name: 'end_time',
+                              option: t,
+                            }))}
+                            name="end_time"
+                            value={formData.end_time}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                end_time: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        {/* 最少與最多學生人數 */}
+                        <div className="container d-flex align-items-end justify-content-between p-0">
+                          <InputStyle
+                            addclass="w-100"
+                            forText="min_students"
+                            titleCh="人數區間"
+                            typeText="text"
+                            placeholder="最少人數"
+                            name="min_students"
+                            value={formData.min_students}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                min_students: e.target.value,
+                              })
+                            }
+                          />
+                          <p className="col-1 d-flex justify-content-center align-items-center">
+                            <PiArrowRight className="ph" />
+                          </p>
+                          <InputStyle
+                            addclass="w-100"
+                            typeText="text"
+                            placeholder="最多人數"
+                            name="max_students"
+                            value={formData.max_students}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                max_students: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        <p
+                          className={`${timeSelectstyles.note} ps my-3 mb-5 pb-5`}
+                        >
+                          *少於區間人數將自動通知不開班授課
+                        </p>
+
+                        <div className="d-flex justify-content-end pt-4 h6">
+                          <button className="btn-danger me-3 w-100">
+                            移除
+                          </button>
+                          <button
+                            className="btn-success w-100"
+                            onClick={() => handleSaveChanges(time.id)}
+                          >
+                            確認修改
+                          </button>
+                        </div>
+                      </button>
+                    </button>
+                  )}
+                </div>
+              ))}
+              <AddWorkshopTime onAddTime={handleAddTime} />
             </div>
           </div>
           <div className="ms-auto d-flex justify-content-end mt-2">
