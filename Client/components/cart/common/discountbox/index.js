@@ -12,12 +12,12 @@ export default function DiscountBox() {
   const userId = auth.userData.id
   console.log('userId:', userId)
 
-  const [discount, setDiscount] = useState(0)
-  const [coupons, setCoupons] = useState([]) // 儲存會員的優惠券清單
-  const [show, setShow] = useState(false)
-  const [selectedCoupon, setSelectedCoupon] = useState('') // 用來存儲選擇的優惠券
+  const [discount, setDiscount] = useState(0) //折扣內容
+  const [coupons, setCoupons] = useState([]) // 會員的優惠券清單
+  const [selectedCoupon, setSelectedCoupon] = useState('') // 選中的優惠券
 
   //-------------控制談窗
+  const [show, setShow] = useState(false) //彈窗
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
@@ -33,13 +33,11 @@ export default function DiscountBox() {
       const resData = await res.json()
       console.log(resData.data)
       if (resData.data) {
+        // 篩選已加入購物車的商品的品牌優惠券
         const brandsInCart = productCart.map((item) => item.brand)
-
-        // 篩選符合購物車品牌的優惠券
         const filteredCoupons = resData.data.filter((coupon) =>
           brandsInCart.includes(coupon.brand_name)
         )
-        // 設置篩選後的優惠券列表
         setCoupons(filteredCoupons)
       } else {
         console.warn('No discount data found')
