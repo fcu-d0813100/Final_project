@@ -82,7 +82,6 @@ router.post('/register', upload.none(), async (req, res) => {
       ?, ?, ?, ?, ' ', ' ', 'avatar01.jpg', ' ', '1','user', NOW(), NULL
     )
   `
-
     const params = [name, account, hashedPassword, email]
 
     const [result] = await db.query(sql, params)
