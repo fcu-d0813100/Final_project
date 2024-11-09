@@ -20,11 +20,11 @@ export default function SelectInput({
   const toggleDropdown = () => setIsOpen(!isOpen)
 
   // 處理選取選項的函數
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option, value) => {
     setSelectedOption(option)
     setIsOpen(false) // 選取後關閉下拉選單
     if (onChange) {
-      onChange({ target: { name: forText, value: option } }) // 呼叫 onChange，傳遞選項
+      onChange({ target: { name: forText, value: value } }) // 呼叫 onChange，傳遞選項
     }
   }
 
@@ -47,7 +47,7 @@ export default function SelectInput({
           {items.map((item, index) => (
             <li
               key={index}
-              onClick={() => handleOptionClick(`${item.option}`)}
+              onClick={() => handleOptionClick(item.option, item.value)}
               name={item.name}
             >
               {item.option}

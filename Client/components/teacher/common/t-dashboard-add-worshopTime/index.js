@@ -118,6 +118,7 @@ console.log(formData)
                 items={timeOptions.map((t) => ({
                   name: 'start_time',
                   option: t,
+                  value: 't',
                 }))}
                 name="start_time"
                 value={formData.start_time}
@@ -135,6 +136,7 @@ console.log(formData)
                 items={timeOptions.map((t) => ({
                   name: 'end_time',
                   option: t,
+                  value: 't',
                 }))}
                 name="end_time"
                 value={formData.end_time}

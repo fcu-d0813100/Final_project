@@ -12,6 +12,24 @@ import timeSelectstyles from '@/components/teacher/common/t-dashboard-add-worsho
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
+  const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
+  const [timeSchedule, setTimeSchedule] = useState([])
+
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    address: '',
+    registration_start: '',
+    registration_end: '',
+    description: '',
+    outline: '',
+    notes: '',
+    date: '',
+    start_time: '',
+    end_time: '',
+    min_students: '',
+    max_students: '',
+  })
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -23,18 +41,20 @@ export default function Page1({ onNextPage }) {
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify(formData),
         }
       )
 
       if (!response.ok) {
-        throw new Error('更新資料失敗')
+        throw new Error('上傳資料失敗')
       }
 
       const result = await response.json()
-      console.log('更新成功', result)
+      console.log('上傳成功', result)
     } catch (error) {
-      console.error('更新失敗', error)
+      console.error('上傳失敗', error)
     }
+    onNextPage()
   }
   const timeOptions = [
     '09:00',
@@ -58,25 +78,6 @@ export default function Page1({ onNextPage }) {
     '18:00',
     '18:30',
   ]
-
-  const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
-  const [timeSchedule, setTimeSchedule] = useState([])
-
-  const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    address: '',
-    registration_start: '',
-    registration_end: '',
-    description: '',
-    outline: '',
-    notes: '',
-    date: '',
-    start_time: '',
-    end_time: '',
-    min_students: '',
-    max_students: '',
-  })
 
   // 處理表單數據變更
   const handleChange = (e) => {
@@ -115,9 +116,10 @@ export default function Page1({ onNextPage }) {
     )
     toggleModal(id)
   }
+  console.log(formData)
   return (
     <>
-      <form action="">
+      <form onSubmit={handleSubmit} method="post">
         <div className={styles.main}>
           <DashboardTitle chTitle="課程上架" enTitle="New workshop" />
           <div className={`${styles.section1} d-flex align-items-end`}>
@@ -162,17 +164,20 @@ export default function Page1({ onNextPage }) {
                   <SelectInput
                     initName="類別"
                     addClass="col-5"
-                    forText="type"
+                    forText="type_id"
                     titleCh="課程類別"
                     titleEn=" | type"
                     items={[
-                      { name: 'type_id', option: '基礎化妝' },
-                      { name: 'type_id', option: '新娘化妝' },
-                      { name: 'type_id', option: '時尚與攝影化妝' },
-                      { name: 'type_id', option: '韓系美妝' },
-                      { name: 'type_id', option: '特效化妝' },
-                      { name: 'type_id', option: '美妝產品知識' },
+                      { name: 'type_id', option: '基礎化妝', value: 1 },
+                      { name: 'type_id', option: '新娘化妝', value: 2 },
+                      { name: 'type_id', option: '時尚與攝影化妝', value: 3 },
+                      { name: 'type_id', option: '韓系美妝', value: 4 },
+                      { name: 'type_id', option: '特效化妝', value: 5 },
+                      { name: 'type_id', option: '美妝產品知識', value: 6 },
                     ]}
+                    name="type_id"
+                    value={formData.value}
+                    onChange={handleChange}
                   />
 
                   <InputStyle
@@ -315,6 +320,7 @@ export default function Page1({ onNextPage }) {
                             items={timeOptions.map((t) => ({
                               name: 'start_time',
                               option: t,
+                              value: 't',
                             }))}
                             name="start_time"
                             value={formData.start_time}
@@ -335,6 +341,7 @@ export default function Page1({ onNextPage }) {
                             items={timeOptions.map((t) => ({
                               name: 'end_time',
                               option: t,
+                              value: 't',
                             }))}
                             name="end_time"
                             value={formData.end_time}
@@ -411,14 +418,7 @@ export default function Page1({ onNextPage }) {
             <button className="btn-secondary h6 me-4" type="submit">
               儲存
             </button>
-            <button
-              className="btn-primary h6"
-              onClick={(e) => {
-                e.preventDefault()
-                onNextPage()
-              }}
-              type="submit"
-            >
+            <button className="btn-primary h6" type="submit">
               下一步
             </button>
           </div>
