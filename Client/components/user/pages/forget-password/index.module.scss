@@ -97,3 +97,18 @@
   background-color: $green-600;
   color:white;
 }
+
+.btn-style{
+  // height: 50px;
+  width: 200px;
+  background-color: $green-700;
+  color: #fff;
+  border-radius: 3px;
+  border: $green-700 solid 1px;
+  margin: 0;
+  &:hover {
+    background: $green-500;
+    border: $green-500 solid 1px;
+    transition: ease 0.3s;
+  }
+}

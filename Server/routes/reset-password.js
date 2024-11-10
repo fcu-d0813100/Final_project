@@ -1,9 +1,8 @@
 import express from 'express'
 const router = express.Router()
-import { createOtp, updatePassword } from '#db-helpers/otp.js'
+import { createOtp, updatePassword, generateHash } from '#db-helpers/otp.js'
 import transporter from '#configs/mail.js'
 import 'dotenv/config.js'
-
 const mailHtml = (otpToken) => `
 <html>
   <head>
@@ -34,7 +33,7 @@ const mailHtml = (otpToken) => `
         justify-content: center;
         background-color: #1c262c;
         color: white;
-        padding-block: 10px;
+        padding-block: 20px;
       }
       .tip {
         text-align: center;
@@ -118,11 +117,21 @@ router.post('/otp', async (req, res, next) => {
 router.post('/reset', async (req, res, next) => {
   const { email, token, password } = req.body
 
-  if (!token) return res.json({ message: 'fail', code: '400' })
-  const result = await updatePassword(email, token, password)
+  if (!token) return res.status(400).json({ message: 'fail', code: '400' })
 
-  if (!result) return res.json({ message: 'fail', code: '400' })
-  return res.json({ message: 'success', code: '200' })
+  try {
+    // 使用 generateHash 加密新密碼
+    const hashedPassword = await generateHash(password)
+
+    // 更新密碼的數據庫函數
+    const result = await updatePassword(email, token, hashedPassword)
+
+    if (!result) return res.status(400).json({ message: 'fail', code: '400' })
+    return res.status(200).json({ message: 'success', code: '200' })
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: 'fail', code: '500', detail: error.message })
+  }
 })
-
 export default router
