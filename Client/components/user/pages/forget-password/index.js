@@ -6,7 +6,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import styles from './index.module.scss'
 import { PiEyeClosed, PiEye, PiLockLight } from 'react-icons/pi'
 import { CiMail } from 'react-icons/ci'
-
+import Router from 'next/router'
 export default function ForgetPassword() {
   const [email, setEmail] = useState('')
   const [token, setToken] = useState('')
@@ -37,7 +37,17 @@ export default function ForgetPassword() {
   // 處理要求一次性驗證碼用
   const handleRequestOtpToken = async () => {
     if (delay !== null) {
-      toast.error('錯誤 - 60s內無法重新獲得驗證碼')
+      toast.error(' 60s內無法重新獲得驗證碼', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
       return
     }
 
@@ -47,39 +57,149 @@ export default function ForgetPassword() {
     console.log(res.data)
 
     if (res.data.status === 'success') {
-      toast.success('驗證碼已寄送到電子郵件中')
+      toast.success('驗證碼已寄送到電子郵件中', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#626553',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
+      })
       setCount(60) // 倒數 60秒
       setDelay(1000) // 每 1000ms = 1s 減1
       setDisableBtn(true)
     } else {
-      toast.error(`錯誤 - ${res.data.message}`)
+      toast.error(`${res.data.message}`, {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
   // 處理重設密碼用
   const handleResetPassword = async () => {
+    // 表單驗証 - START
+    if (!email) {
+      toast.error('請填寫電子郵件', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+      return // 跳出函式
+    }
+
+    // 表單驗証 - START
+    if (!token) {
+      toast.error('請填寫驗證碼', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+      return // 跳出函式
+    }
+    if (!password || !confirmPassword) {
+      toast.error('密碼欄位為必填', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+      return // 跳出函式
+    }
+
+    if (password !== confirmPassword) {
+      toast.error('新密碼與確認密碼不同', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+      return // 跳出函式
+    }
+
     const res = await resetPassword(email, password, token)
     // 除錯用
-    console.log(res.data)
+    // console.log(res.data)
 
     if (res.data.status === 'success') {
-      toast.success('資訊 - 密碼已成功修改')
+      toast.success('密碼已成功修改，請重新登入', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#626553',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
+      })
+      setTimeout(() => {
+        Router.push('/user/login/user')
+      }, 2000)
     } else {
-      toast.error(`錯誤 - ${res.data.message}`)
+      toast.error(` ${res.data.message}`, {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
-
+  // 處理取消按鈕
+  const handleCancel = () => {
+    setEmail('')
+    setToken('')
+    setPassword('')
+    setConfirmPassword('')
+  }
   return (
     <>
-      <div className="container">
+      <div className="container my-5">
         <div className="row mt-4 d-flex justify-content-center align-items-center">
           <div className="col-11 col-xl-8 mb-3">
-            <h3 className="pb-5">忘記密碼</h3>
+            <h3 className={`pb-5 ${styles.title}`}>忘記密碼</h3>
             <label htmlFor="email" className="form-label h6">
               電子郵件信箱
             </label>
           </div>
-          <div className="col-11 col-xl-8 mb-3">
+          <div className="col-11 col-xl-8 mb-2">
             <div className={`${styles['input-password']} col-12`}>
               <CiMail className={`${styles['icon-lock']}`} />
               <input
@@ -92,7 +212,7 @@ export default function ForgetPassword() {
               />
             </div>
             <div className="row mt-3">
-              <div className="col-12  col-md-8 col-lg-6">
+              <div className="col-12 col-xl-8">
                 <div className="input-group">
                   {/* 一次性驗證碼 */}
                   <button
@@ -117,7 +237,7 @@ export default function ForgetPassword() {
         </div>
 
         <div className="row mt-4 d-flex justify-content-center align-items-center">
-          <div className="col-11 col-xl-8 mb-3">
+          <div className="col-11 col-xl-8 mb-2">
             <label htmlFor="new-password" className="form-label h6">
               新密碼
             </label>
@@ -145,7 +265,7 @@ export default function ForgetPassword() {
         </div>
 
         <div className="row mt-4 d-flex justify-content-center align-items-center">
-          <div className="col-11 col-xl-8 mb-3">
+          <div className="col-11 col-xl-8 mb-2">
             <label htmlFor="confirm-password" className="form-label h6">
               確認密碼
             </label>
@@ -170,19 +290,26 @@ export default function ForgetPassword() {
               </button>
             </div>
             <div>
-              <p>※所有會員修改，將同時變更於Beautique會員資料。</p>
+              <p className="ps pt-5">
+                ※所有會員修改，將同時變更於Beautique會員資料。
+              </p>
             </div>
           </div>
         </div>
 
         <div className="row d-flex justify-content-end align-items-center">
-          <div className="col-12 h6 d-flex justify-content-end pt-5">
-            <button className="btn btn-secondary h6 me-3">取消</button>
+          <div className="col-6 h6 d-flex ">
+            <button
+              className="btn btn-secondary h6 me-3"
+              onClick={handleCancel}
+            >
+              取消
+            </button>
             <button
               className="btn btn-primary h6 me-3"
               onClick={handleResetPassword}
             >
-              重設密碼
+              確認
             </button>
           </div>
         </div>

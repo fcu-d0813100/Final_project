@@ -133,15 +133,17 @@ router.post('/reset', async (req, res) => {
     return res.json({ status: 'error', message: '缺少必要資料' })
   }
 
-  // updatePassword中驗証otp的存在與合法性(是否有到期)
-  const result = await updatePassword(email, token, password)
+  // 加密密碼
+  const hashedPassword = await generateHash(password)
+
+  // updatePassword 中驗證 otp 的存在與合法性(是否有到期)
+  const result = await updatePassword(email, token, hashedPassword)
 
   if (!result) {
     return res.json({ status: 'error', message: '修改密碼失敗' })
   }
 
-  // 成功
-  return res.json({ status: 'success', data: null })
+  res.json({ status: 'success', message: '密碼修改成功' })
 })
 
 export default router
