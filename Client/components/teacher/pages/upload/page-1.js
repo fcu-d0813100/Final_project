@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/router'
 import AddWorkshopTime from '@/components/teacher/common/t-dashboard-add-worshopTime'
 import TimeSelect from '@/components/teacher/common/t-dashboard-time-select'
 import Textarea from '@/components/teacher/common/t-dashboard-textarea-style'
@@ -12,6 +13,7 @@ import timeSelectstyles from '@/components/teacher/common/t-dashboard-add-worsho
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
+  const router = useRouter() // 使用 Next.js 的 useRouter hook 來進行頁面跳轉
   const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
   const [timeSchedule, setTimeSchedule] = useState([])
 
@@ -57,7 +59,6 @@ export default function Page1({ onNextPage }) {
     } catch (error) {
       console.error('上傳失敗', error)
     }
-    onNextPage()
   }
   const timeOptions = [
     '09:00',
@@ -97,6 +98,13 @@ export default function Page1({ onNextPage }) {
       { ...newTime, id: Date.now() },
     ])
   }
+  // 新增移除時間的函數
+  const handleRemoveTime = (id) => {
+    setTimeSchedule((prevSchedule) =>
+      prevSchedule.filter((time) => time.id !== id)
+    )
+  }
+
   const toggleModal = (id, time = {}) => {
     if (modalOpenId === id) {
       setModalOpenId(null)
@@ -117,7 +125,19 @@ export default function Page1({ onNextPage }) {
     )
     toggleModal(id)
   }
-  console.log(formData)
+  //console.log(formData)
+
+  // 儲存按鈕的處理函數，送出資料並重定向到 /teacher/myworkshop
+  const handleSave = async (e) => {
+    await handleSubmit(e) // 先送出資料
+    router.push('/teacher/myworkshop') // 然後跳轉到 /teacher/myworkshop
+  }
+
+  // 下一步按鈕的處理函數，送出資料並執行 onNextPage()
+  const handleNext = async (e) => {
+    await handleSubmit(e) // 先送出資料
+    onNextPage() // 執行 onNextPage() 進行下一步
+  }
   return (
     <>
       <form onSubmit={handleSubmit} method="post">
@@ -401,7 +421,10 @@ export default function Page1({ onNextPage }) {
                         </p>
 
                         <div className="d-flex justify-content-end pt-4 h6">
-                          <button className="btn-danger me-3 w-100">
+                          <button
+                            className="btn-danger me-3 w-100"
+                            onClick={() => handleRemoveTime(time.id)}
+                          >
                             移除
                           </button>
                           <button
@@ -420,10 +443,18 @@ export default function Page1({ onNextPage }) {
             </div>
           </div>
           <div className="ms-auto d-flex justify-content-end mt-2">
-            <button className="btn-secondary h6 me-4" type="submit">
+            <button
+              className="btn-secondary h6 me-4"
+              type="submit"
+              onClick={handleSave}
+            >
               儲存
             </button>
-            <button className="btn-primary h6" type="submit">
+            <button
+              className="btn-primary h6"
+              type="submit"
+              onClick={handleNext}
+            >
               下一步
             </button>
           </div>
