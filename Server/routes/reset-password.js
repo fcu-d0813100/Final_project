@@ -23,7 +23,7 @@ const mailHtml = (otpToken) => `
       }
       .title {
         font-weight: 700;
-        font-size: 30px;
+        font-size: 20px;
       }
       .content {
         padding: 5px;
@@ -33,23 +33,28 @@ const mailHtml = (otpToken) => `
       .token-content {
         display: flex;
         justify-content: center;
-        background-color: #1c262c;
+        background-color: #4b4d3f;
         color: white;
         padding-block: 20px;
+        width: 400px;
+        height: 100px;
+
       }
       .tip {
         text-align: center;
         font-size: 20px;
-        font-weight: 900;
+        font-weight: 800;
       }
       .token {
         text-align: center;
-        font-size: 30px;
-        font-weight: 900;
+        font-size: 40px;
+        font-weight: 800;
       }
       .column {
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        margin-inline: 10px;
       }
       .center {
         display: flex;
@@ -123,10 +128,10 @@ router.post('/reset', async (req, res, next) => {
 
   try {
     // 使用 generateHash 加密新密碼
-    const hashedPassword = await generateHash(password)
+    // const hashedPassword = await generateHash(password)
 
     // 更新密碼的數據庫函數
-    const result = await updatePassword(email, token, hashedPassword)
+    const result = await updatePassword(email, token, password)
 
     if (!result) return res.status(400).json({ message: 'fail', code: '400' })
     return res.status(200).json({ message: 'success', code: '200' })

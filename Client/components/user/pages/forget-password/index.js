@@ -34,10 +34,10 @@ export default function ForgetPassword() {
     }
   }, [count])
 
-  // 處理要求一次性驗證碼用
+  // 處理要求一次性驗証碼用
   const handleRequestOtpToken = async () => {
     if (delay !== null) {
-      toast.error('錯誤 - 60s內無法重新獲得驗證碼')
+      toast.error('錯誤 - 60s內無法重新獲得驗証碼')
       return
     }
 
@@ -47,7 +47,7 @@ export default function ForgetPassword() {
     console.log(res.data)
 
     if (res.data.status === 'success') {
-      toast.success('資訊 - 驗證碼已寄送到電子郵件中')
+      toast.success('資訊 - 驗証碼已寄送到電子郵件中')
       setCount(60) // 倒數 60秒
       setDelay(1000) // 每 1000ms = 1s 減1
       setDisableBtn(true)
@@ -68,80 +68,79 @@ export default function ForgetPassword() {
       toast.error(`錯誤 - ${res.data.message}`)
     }
   }
+
   return (
     <>
-      <div
-        className={`${styles['password-area']} row d-flex justify-content-center align-items-center`}
-      >
-        <div className="col-11 col-xl-8 mb-3">
-          <h2 className="pb-5">忘記密碼</h2>
-
-          <label
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            htmlFor="email"
-            className="form-label h6"
-          >
-            電子郵件信箱
-          </label>
-          {/* <div className={`${styles['input-password']} col-11 col-xl-8 mb-3`}>
-          <CiMail className={`${styles['icon-lock']}`} />
-          <input
-            name="email"
-            type="text"
-            className={`form-control ${styles['form-focus']}`}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="請輸入電子郵件信箱"
-          />
-        </div>
-        <button onClick={handleRequestOtpToken} disabled={disableBtn}>
-          {delay ? count + '秒後可以再次取得驗證碼' : '取得驗證碼'}
-        </button> */}
-          <div class="input-group mb-3">
-            <input
-              type="text"
-              class={`form-control ${styles['form-focus']}`}
-              placeholder="請輸入會員信箱(電子郵件)"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-label="Recipient's username"
-              aria-describedby="button-addon2"
-            />
-            <button
-              onClick={handleRequestOtpToken}
-              disabled={disableBtn}
-              className={`btn btn-outline-secondary ${styles['btn-style']}`}
-              id="button-addon2"
-            >
-              {delay ? count + '秒後可以再次取得驗證碼' : '取得驗證碼'}{' '}
-            </button>
+      <div className="container">
+        <div className="row mt-4 d-flex justify-content-center align-items-center">
+          <div className="col-11 col-xl-8 mb-3">
+            <h3 className="pb-5">忘記密碼</h3>
+            <label htmlFor="email" className="form-label h6">
+              電子郵件信箱
+            </label>
+          </div>
+          <div className="col-11 col-xl-8 mb-3">
+            <div className={`${styles['input-password']} col-12`}>
+              <CiMail className={`${styles['icon-lock']}`} />
+              <input
+                type="text"
+                name="email"
+                className={`form-control ${styles['form-focus']}`}
+                placeholder="請輸入會員信箱"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="row mt-3">
+              <div className="col-12  col-md-8 col-lg-6">
+                <div className="input-group">
+                  {/* 一次性驗證碼 */}
+                  <button
+                    onClick={handleRequestOtpToken}
+                    disabled={disableBtn}
+                    className={`btn btn-outline-secondary ${styles['btn-style']}`}
+                    id="button-addon2"
+                  >
+                    {delay ? count + '秒後可以再次取得驗證碼' : '取得驗證碼'}
+                  </button>
+                  <input
+                    className={`form-control ps-3 ${styles['form-focus']} ${styles['input-token']}`}
+                    placeholder="請輸入6碼信箱驗證碼"
+                    type="text"
+                    value={token}
+                    onChange={(e) => setToken(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
         <div className="row mt-4 d-flex justify-content-center align-items-center">
           <div className="col-11 col-xl-8 mb-3">
             <label htmlFor="new-password" className="form-label h6">
               新密碼
             </label>
           </div>
-          <div className={`${styles['input-password']} col-11 col-xl-8 mb-3`}>
-            <PiLockLight className={`${styles['icon-lock']}`} />
-            <input
-              type={showPassword ? 'text' : 'password'}
-              className={`form-control ${styles['form-focus']}`}
-              name="new"
-              placeholder="請輸入新密碼"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className={styles.eyeiclosed}
-            >
-              {showPassword ? <PiEye /> : <PiEyeClosed />}
-            </button>
+          <div className="col-11 col-xl-8 mb-3">
+            <div className={`${styles['input-password']} col-12`}>
+              <PiLockLight className={`${styles['icon-lock']}`} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className={`form-control ${styles['form-focus']}`}
+                name="new"
+                placeholder="請輸入新密碼"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={styles.eyeiclosed}
+              >
+                {showPassword ? <PiEye /> : <PiEyeClosed />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -151,53 +150,32 @@ export default function ForgetPassword() {
               確認密碼
             </label>
           </div>
-          <div className={`${styles['input-password']} col-11 col-xl-8 mb-3`}>
-            <PiLockLight className={`${styles['icon-lock']}`} />
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              className={`form-control ${styles['form-focus']}`}
-              placeholder="請再次輸入新密碼"
-              name="confirm"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className={styles.eyeiclosed}
-            >
-              {showConfirmPassword ? <PiEye /> : <PiEyeClosed />}
-            </button>
-          </div>
-        </div>
-
-        <div
-          className={`${styles['email-area']} row d-flex justify-content-center align-items-center mt-5`}
-        >
-          <div className="col-11 col-xl-4">
-            <div className="input-group mb-3">
-              <span
-                className={`input-group-text ${styles['span-color']}`}
-                id="inputGroup-sizing-default"
-              >
-                驗證碼
-              </span>
+          <div className="col-11 col-xl-8 mb-3">
+            <div className={`${styles['input-password']} col-12`}>
+              <PiLockLight className={`${styles['icon-lock']}`} />
               <input
-                className={`form-control ps-3 ${styles['form-focus']}`}
-                aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default"
-                placeholder="請輸入信箱驗證碼"
-                type="text"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
+                type={showConfirmPassword ? 'text' : 'password'}
+                className={`form-control ${styles['form-focus']}`}
+                placeholder="請再次輸入新密碼"
+                name="confirm"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className={styles.eyeiclosed}
+              >
+                {showConfirmPassword ? <PiEye /> : <PiEyeClosed />}
+              </button>
+            </div>
+            <div>
+              <p>※所有會員修改，將同時變更於Beautique會員資料。</p>
             </div>
           </div>
         </div>
 
-        <div
-          className={`${styles['line-title-down']} row d-flex justify-content-end align-items-center`}
-        >
+        <div className="row d-flex justify-content-end align-items-center">
           <div className="col-12 h6 d-flex justify-content-end pt-5">
             <button className="btn btn-secondary h6 me-3">取消</button>
             <button
@@ -210,38 +188,6 @@ export default function ForgetPassword() {
         </div>
       </div>
 
-      {/* <label>
-        電子郵件信箱:
-        <input
-          type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
-      <br />
-      <button onClick={handleRequestOtpToken} disabled={disableBtn}>
-        {delay ? count + '秒後可以再次取得驗證碼' : '取得驗證碼'}
-      </button>
-      <br />
-      <label>
-        一次性驗證碼:
-        <input
-          type="text"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        新密碼:
-        <input
-          type="text"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
-      <br />
-      <button onClick={handleResetPassword}>重設密碼</button> */}
       {/* 土司訊息視窗用 */}
       <Toaster />
     </>
