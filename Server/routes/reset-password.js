@@ -1,6 +1,8 @@
 import express from 'express'
 const router = express.Router()
-import { createOtp, updatePassword, generateHash } from '#db-helpers/otp.js'
+import { createOtp, updatePassword } from '#db-helpers/otp.js'
+import { generateHash } from '##/db-helpers/password-hash.js'
+
 import transporter from '#configs/mail.js'
 import 'dotenv/config.js'
 const mailHtml = (otpToken) => `
@@ -8,7 +10,7 @@ const mailHtml = (otpToken) => `
   <head>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&display=swap');
-      
+
       body {
         font-family: 'Libre Bodoni', serif;
         font-weight: 400;
