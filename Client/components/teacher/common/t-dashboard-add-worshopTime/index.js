@@ -5,35 +5,65 @@ import { PiPlus, PiX, PiArrowRight } from 'react-icons/pi'
 import styles from '@/components/teacher/common/t-dashboard-add-worshopTime/add-workshopTime.module.scss'
 import React, { useState, useEffect } from 'react'
 
+export default function AddWorkshopTime({ onAddTime }) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-export default function AddWorkshopTime(props) {
-      const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedTime, setSelectedTime] = useState({
+    id: null,
+    date: '',
+    start_time: '',
+    end_time: '',
+    min_students: '',
+    max_students: '',
+  })
 
-      // 控制 Modal 的顯示
-      const toggleModal = () => setIsModalOpen(!isModalOpen)
+  // 控制 Modal 的顯示
+  const toggleModal = () => setIsModalOpen(!isModalOpen)
 
-      const time = [
-        '09:00:00',
-        '09:30:00',
-        '10:00:00',
-        '10:30:00',
-        '11:00:00',
-        '11:30:00',
-        '12:00:00',
-        '12:30:00',
-        '13:00:00',
-        '13:30:00',
-        '14:00:00',
-        '14:30:00',
-        '15:00:00',
-        '15:30:00',
-        '16:00:00',
-        '16:30:00',
-        '17:00:00',
-        '17:30:00',
-        '18:00:00',
-        '18:30:00',
-      ]
+  // 處理表單數據變更
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setSelectedTime((prevTime) => ({
+      ...prevTime,
+      [name]: value,
+    }))
+  }
+
+  const timeOptions = [
+    '09:00',
+    '09:30',
+    '10:00',
+    '10:30',
+    '11:00',
+    '11:30',
+    '12:00',
+    '12:30',
+    '13:00',
+    '13:30',
+    '14:00',
+    '14:30',
+    '15:00',
+    '15:30',
+    '16:00',
+    '16:30',
+    '17:00',
+    '17:30',
+    '18:00',
+    '18:30',
+  ]
+  console.log(selectedTime)
+  // 處理新增時間
+  const handleAddTime = () => {
+    onAddTime(selectedTime) // 將資料傳遞給父層
+    setSelectedTime({
+      date: '',
+      start_time: '',
+      end_time: '',
+      min_students: '',
+      max_students: '',
+    })
+    toggleModal()
+  }
 
   return (
     <>
@@ -52,8 +82,13 @@ export default function AddWorkshopTime(props) {
 
       {/* Modal 視窗 */}
       {isModalOpen && (
-        <div className={styles.modalOverlay} onClick={toggleModal}>
-          <div
+        <button
+          className={styles.modalOverlay}
+          type="button"
+          onClick={toggleModal}
+        >
+          <button
+            type="button"
             className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}
           >
@@ -68,17 +103,26 @@ export default function AddWorkshopTime(props) {
               titleEn=""
               typeText="date"
               placeholder="請選擇日期"
-              name=""
+              name="date"
+              value={selectedTime.date}
+              onChange={handleChange}
             />
 
             <div className="d-flex align-items-end justify-content-between p-0 mb-3">
               <SelectInput
                 initName="開始時間"
                 addClass="w-100"
-                forText="time"
+                forText="start_time"
                 titleCh="時間"
                 titleEn=""
-                items={time.map((t) => ({ name: 'start_time', option: t }))}
+                items={timeOptions.map((t) => ({
+                  name: 'start_time',
+                  option: t,
+                  value: `${t}`,
+                }))}
+                name="start_time"
+                value={selectedTime.start_time}
+                onChange={handleChange}
               />
               <p className="col-1 d-flex justify-content-center align-items-center">
                 <PiArrowRight className="ph" />
@@ -86,10 +130,17 @@ export default function AddWorkshopTime(props) {
               <SelectInput
                 initName="結束時間"
                 addClass="w-100"
-                forText="time"
+                forText="end_time"
                 titleCh=""
                 titleEn=""
-                items={time.map((t) => ({ name: 'end_time', option: t }))}
+                items={timeOptions.map((t) => ({
+                  name: 'end_time',
+                  option: t,
+                  value: `${t}`,
+                }))}
+                name="end_time"
+                value={selectedTime.end_time}
+                onChange={handleChange}
               />
             </div>
             <div className="container d-flex align-items-end justify-content-between p-0">
@@ -101,6 +152,8 @@ export default function AddWorkshopTime(props) {
                 typeText="text"
                 placeholder="最少人數"
                 name="min_students"
+                value={selectedTime.min_students}
+                onChange={handleChange}
               />
               <p className="col-1 d-flex justify-content-center align-items-center">
                 <PiArrowRight className="ph" />
@@ -114,6 +167,8 @@ export default function AddWorkshopTime(props) {
                 typeText="text"
                 placeholder="最多人數"
                 name="max_students"
+                value={selectedTime.max_students}
+                onChange={handleChange}
               />
             </div>
             <p className={`${styles.note} ps my-3 mb-5 pb-5`}>
@@ -121,10 +176,16 @@ export default function AddWorkshopTime(props) {
             </p>
 
             <div className="d-flex justify-content-end pt-4">
-              <button className="btn-success">確定</button>
+              <button
+                type="button"
+                className="btn-success h6"
+                onClick={handleAddTime}
+              >
+                新增
+              </button>
             </div>
-          </div>
-        </div>
+          </button>
+        </button>
       )}
     </>
   )

@@ -8,13 +8,13 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 export default function Page2({ onPreviousPage }) {
-  const role = 'admin'
+  //const role = 'admin'
   const { auth, login, logout } = useAuth()
-  const { userData } = auth // 撈取 teacherData 資料
+  //const { userData } = auth // 撈取 teacherData 資料
   console.log(auth)
 
   const [teacher, setTeacher] = useState(null)
-  const [gender, setGender] = useState('') // 新增 gender 狀態
+ 
 
   useEffect(() => {
     fetchData()
@@ -44,21 +44,26 @@ export default function Page2({ onPreviousPage }) {
     }
   }
 
-  const handleGenderChange = (e) => {
-    setGender(e.target.value)
-    setTeacher((prevTeacher) => ({ ...prevTeacher, gender: e.target.value })) // 更新 teacher.gender
+
+  const handleFieldChange = (e) => {
+    const { name, value } = e.target
+    setTeacher((prevTeacher) => ({
+      ...prevTeacher,
+      [name]: value, // 使用動態屬性來更新 teacher 對應欄位的值
+    }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       const response = await fetch(
-        'http://localhost:3005/api/teacher/information/Update',
+        'http://localhost:3005/api/teacher/information/update',
         {
           credentials: 'include',
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${auth.token}`,
           },
           body: JSON.stringify(teacher),
         }
@@ -80,7 +85,7 @@ export default function Page2({ onPreviousPage }) {
     <>
       <div className={styles.main}>
         <DashboardTitle chTitle="個人資訊" enTitle="Information" />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} method="post">
           {teacher ? (
             <div>
               <div
@@ -103,9 +108,7 @@ export default function Page2({ onPreviousPage }) {
                         placeholder=""
                         name="id"
                         value={teacher.id}
-                        onChange={(e) =>
-                          setTeacher({ ...teacher, id: e.target.value })
-                        }
+                        onChange={handleFieldChange}
                       />
                       <InputStyle
                         addclass="w-50"
@@ -116,9 +119,7 @@ export default function Page2({ onPreviousPage }) {
                         placeholder="請輸入姓名"
                         name="name"
                         value={teacher.name}
-                        onChange={(e) =>
-                          setTeacher({ ...teacher, name: e.target.value })
-                        }
+                        onChange={handleFieldChange}
                       />
                       <div className="mx-3"></div>
                       <InputStyle
@@ -130,9 +131,7 @@ export default function Page2({ onPreviousPage }) {
                         placeholder="請輸入信箱"
                         name="email"
                         value={teacher.email}
-                        onChange={(e) =>
-                          setTeacher({ ...teacher, email: e.target.value })
-                        }
+                        onChange={handleFieldChange}
                       />
                     </div>
                     <div className="d-flex justify-content-between align-items-start mb-3">
@@ -145,9 +144,7 @@ export default function Page2({ onPreviousPage }) {
                         placeholder="請輸入課程名稱"
                         name="nation"
                         value={teacher.nation}
-                        onChange={(e) =>
-                          setTeacher({ ...teacher, nation: e.target.value })
-                        }
+                        onChange={handleFieldChange}
                       />
                       <div className="mx-3 pb-3 ">
                         <label
@@ -165,7 +162,7 @@ export default function Page2({ onPreviousPage }) {
                             id="inlineRadio1"
                             value="male"
                             checked={teacher.gender === 'male'} // 當 teacher.gender 為 male 時選中
-                            onChange={handleGenderChange} // 加入 onChange 事件
+                            onChange={handleFieldChange} // 加入 onChange 事件
                           />
                           男
                         </div>
@@ -177,7 +174,7 @@ export default function Page2({ onPreviousPage }) {
                             id="inlineRadio2"
                             value="female"
                             checked={teacher.gender === 'female'} // 當 teacher.gender 為 female 時選中
-                            onChange={handleGenderChange} // 加入 onChange 事件
+                            onChange={handleFieldChange} // 加入 onChange 事件
                           />
                           女
                         </div>
@@ -191,6 +188,7 @@ export default function Page2({ onPreviousPage }) {
                         placeholder="請填入資歷/年"
                         name="years"
                         value={teacher.years}
+                        onChange={handleFieldChange}
                       />
                     </div>
                     <InputStyle
@@ -202,9 +200,7 @@ export default function Page2({ onPreviousPage }) {
                       placeholder="請選擇日期"
                       name="birthday"
                       value={teacher.birthday}
-                      onChange={(e) =>
-                        setTeacher({ ...teacher, birthday: e.target.value })
-                      }
+                      onChange={handleFieldChange}
                     />
                   </div>
                 </div>
@@ -231,21 +227,17 @@ export default function Page2({ onPreviousPage }) {
                     placeholder="最多輸入250字"
                     addclass="w-100"
                     value={teacher.about}
-                    onChange={(e) =>
-                      setTeacher({ ...teacher, about: e.target.value })
-                    }
+                    onChange={handleFieldChange}
                   />
                   <Textarea
                     title="我的 Slogan"
-                    name="notes"
+                    name="slogan"
                     rows="10"
                     width="100%"
                     placeholder="最多輸入250字"
                     addclass="w-100"
                     value={teacher.slogan}
-                    onChange={(e) =>
-                      setTeacher({ ...teacher, notes: e.target.value })
-                    }
+                    onChange={handleFieldChange}
                   />
                   <Textarea
                     title="經歷 Experience"
@@ -255,9 +247,7 @@ export default function Page2({ onPreviousPage }) {
                     placeholder="最多輸入250字"
                     addclass="w-100"
                     value={teacher.experience}
-                    onChange={(e) =>
-                      setTeacher({ ...teacher, notes: e.target.value })
-                    }
+                    onChange={handleFieldChange}
                   />
                 </div>
               </div>

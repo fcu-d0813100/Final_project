@@ -1,4 +1,5 @@
 @import '@/styles/_variant.scss';
+$statusOn-color: #90957a;
 .p {
   font-size: 16px;
   font-family: $primary-font;
@@ -609,8 +610,12 @@
             }
 
             .status {
-              color: $status-color;
+              padding: 2px 14px;
+              color: white;
               font-weight: bold;
+              font-size: small;
+              background-color: $statusOn-color;
+              border-radius: 30px;
             }
 
             .ph-heart {
