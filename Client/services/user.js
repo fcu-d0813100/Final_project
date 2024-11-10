@@ -11,6 +11,7 @@ export const checkAuth = async () => {
  * Google Login(Firebase)登入用，providerData為登入後得到的資料
  */
 export const googleLogin = async (providerData = {}) => {
+  console.log('Google登入資料:', providerData)
   return await axiosInstance.post('/google-login', providerData)
 }
 
@@ -59,6 +60,9 @@ export const logout = async () => {
  * 載入會員id的資料用，需要登入後才能使用。此API路由會檢查JWT中的id是否符合本會員，不符合會失敗。
  */
 export const getUserById = async (id = 0) => {
+  {
+    console.log(`請求獲取用戶ID: ${id}`)
+  }
   return await axiosInstance.get(`/user/${id}`)
 }
 /**

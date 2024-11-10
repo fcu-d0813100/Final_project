@@ -1,8 +1,21 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
+import { googleLogin, parseJwt } from '@/services/user'
 
 // import { register } from 'module'
+
+// 初始化會員狀態(登出時也要用)
+// 只需要必要的資料即可，沒有要多個頁面或元件用的資料不需要加在這裡
+// !!注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
+export const initUserData = {
+  id: 0,
+  username: '',
+  google_uid: '',
+  line_uid: '',
+  name: '',
+  email: '',
+}
 
 // 1. 建立與導出它
 // 傳入參數為defaultValue，是在套用context時錯誤或失敗才會得到的值。
@@ -21,6 +34,8 @@ export function AuthProvider({ children }) {
       name: '',
       email: '',
       account: '',
+      google_uid: '',
+      line_uid: '',
     },
   })
 
@@ -82,7 +97,7 @@ export function AuthProvider({ children }) {
         })
         setTimeout(() => {
           router.push('/user/login/user')
-        }, 2000)
+        }, 1500)
       } else if (resData.message === '電子郵件或帳號已被註冊') {
         toast.error(resData.message, {
           style: {
@@ -111,6 +126,69 @@ export function AuthProvider({ children }) {
     } catch (error) {
       // console.error('註冊過程中發生錯誤:', error)
       toast.error('註冊過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
+  // 處理Google登入
+  const callbackGoogleLogin = async (providerData) => {
+    console.log('Google登入資料:', providerData)
+
+    if (auth.isAuth) return
+
+    try {
+      const res = await googleLogin(providerData)
+      console.log('Google登入回應:', res.data)
+
+      if (res.data.status === 'success') {
+        const jwtUser = parseJwt(res.data.data.accessToken)
+        console.log('JWT用戶資料:', jwtUser)
+
+        const userData = { ...initUserData, ...jwtUser }
+
+        setAuth({
+          isAuth: true,
+          userData,
+        })
+
+        toast.success('已成功登入', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        setTimeout(() => {
+          router.push('/user')
+        }, 1500)
+      } else {
+        toast.error('登入失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      toast.error('登入失敗，請稍後再試', {
         style: {
           border: '1.2px solid #90957a',
           padding: '12px 40px',
@@ -297,21 +375,30 @@ export function AuthProvider({ children }) {
 
     const resData = await res.json()
     if (resData.status === 'success') {
-      confirm('success', '更新完成', '已更新完成', '確認', () => {
-        // 在這裡可以添加更新完成後的操作
+      toast.success('您已更新個人資料', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#626553',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
       })
+      router.push('/user')
     } else {
-      confirm(
-        'error',
-        '失敗',
-        `${resData.message}\n請檢查以下錯誤詳細信息：${JSON.stringify(
-          resData.errors || {}
-        )}`,
-        '重試',
-        () => {
-          // 在這裡可以添加失敗後的操作
-        }
-      )
+      toast.error('更新失敗，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
@@ -349,6 +436,8 @@ export function AuthProvider({ children }) {
             name: '',
             email: '',
             account: '',
+            google_uid: '',
+            line_uid: '',
           },
         })
       } else {
@@ -443,7 +532,16 @@ export function AuthProvider({ children }) {
   //3. 最外(上)元件階層包裹提供者元件，可以提供它的值給所有後代⼦孫元件使⽤，包含所有頁面元件，與頁面中的元件
   return (
     <AuthContext.Provider
-      value={{ auth, getUser, login, logout, register, update }}
+      value={{
+        auth,
+        getUser,
+        login,
+        logout,
+        register,
+        update,
+        setAuth,
+        callbackGoogleLogin,
+      }}
     >
       {children}
     </AuthContext.Provider>
