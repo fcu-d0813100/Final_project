@@ -57,3 +57,38 @@
 .coupon-group {
     margin: auto;
 }
+
+.btnReceive{
+    width: 55px;
+    height: 36px;
+    &:hover{
+        background-color: transparent;
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-block: 45px;
+  }
+  
+  .pageBtn {
+    width: 30px;
+    height: 30px;
+    color: $green-500;
+    background-color: transparent;
+    border: 2px solid transparent;
+  
+    &:hover {
+      border-bottom: 2px solid $green-500;
+      cursor: pointer; // Ensure pointer on hover
+    }
+    &.active {
+      color: $green-500; // Active page number color
+      border-bottom: 2px solid $green-500;
+    }
+  }
+
+  .funnel{
+    border: transparent;
+  }
