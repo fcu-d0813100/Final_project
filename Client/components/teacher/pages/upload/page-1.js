@@ -83,6 +83,13 @@ export default function Page1({ onNextPage }) {
     '18:30',
   ]
 
+  const handleAddTime = (newTime) => {
+    setTimeSchedule((prevSchedule) => [
+      ...prevSchedule,
+      { ...newTime, id: Date.now() },
+    ])
+  }
+
   // 處理表單數據變更
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -92,12 +99,6 @@ export default function Page1({ onNextPage }) {
     }))
   }
 
-  const handleAddTime = (newTime) => {
-    setTimeSchedule((prevSchedule) => [
-      ...prevSchedule,
-      { ...newTime, id: Date.now() },
-    ])
-  }
   // 新增移除時間的函數
   const handleRemoveTime = (id) => {
     setTimeSchedule((prevSchedule) =>
