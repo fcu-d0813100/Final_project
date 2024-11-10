@@ -6,10 +6,10 @@ import styles from '@/components/teacher/common/t-dashboard-add-worshopTime/add-
 import React, { useState, useEffect } from 'react'
 
 export default function AddWorkshopTime({ onAddTime }) {
-  
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const [formData, setFormData] = useState({
+  const [selectedTime, setSelectedTime] = useState({
+    id: null,
     date: '',
     start_time: '',
     end_time: '',
@@ -23,8 +23,8 @@ export default function AddWorkshopTime({ onAddTime }) {
   // 處理表單數據變更
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
+    setSelectedTime((prevTime) => ({
+      ...prevTime,
       [name]: value,
     }))
   }
@@ -51,11 +51,11 @@ export default function AddWorkshopTime({ onAddTime }) {
     '18:00',
     '18:30',
   ]
-console.log(formData)
+  console.log(selectedTime)
   // 處理新增時間
   const handleAddTime = () => {
-    onAddTime(formData) // 將資料傳遞給父層
-    setFormData({
+    onAddTime(selectedTime) // 將資料傳遞給父層
+    setSelectedTime({
       date: '',
       start_time: '',
       end_time: '',
@@ -104,7 +104,7 @@ console.log(formData)
               typeText="date"
               placeholder="請選擇日期"
               name="date"
-              value={formData.date}
+              value={selectedTime.date}
               onChange={handleChange}
             />
 
@@ -118,10 +118,10 @@ console.log(formData)
                 items={timeOptions.map((t) => ({
                   name: 'start_time',
                   option: t,
-                  value: 't',
+                  value: `${t}`,
                 }))}
                 name="start_time"
-                value={formData.start_time}
+                value={selectedTime.start_time}
                 onChange={handleChange}
               />
               <p className="col-1 d-flex justify-content-center align-items-center">
@@ -136,10 +136,10 @@ console.log(formData)
                 items={timeOptions.map((t) => ({
                   name: 'end_time',
                   option: t,
-                  value: 't',
+                  value: `${t}`,
                 }))}
                 name="end_time"
-                value={formData.end_time}
+                value={selectedTime.end_time}
                 onChange={handleChange}
               />
             </div>
@@ -152,7 +152,7 @@ console.log(formData)
                 typeText="text"
                 placeholder="最少人數"
                 name="min_students"
-                value={formData.min_students}
+                value={selectedTime.min_students}
                 onChange={handleChange}
               />
               <p className="col-1 d-flex justify-content-center align-items-center">
@@ -167,7 +167,7 @@ console.log(formData)
                 typeText="text"
                 placeholder="最多人數"
                 name="max_students"
-                value={formData.max_students}
+                value={selectedTime.max_students}
                 onChange={handleChange}
               />
             </div>

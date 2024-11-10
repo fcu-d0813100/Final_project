@@ -15,6 +15,14 @@ export default function Page1({ onNextPage }) {
   const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
   const [timeSchedule, setTimeSchedule] = useState([])
 
+  const [selectedTime, setSelectedTime] = useState({
+    id: null,
+    date: '',
+    start_time: '',
+    end_time: '',
+    min_students: '',
+    max_students: '',
+  })
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -24,11 +32,6 @@ export default function Page1({ onNextPage }) {
     description: '',
     outline: '',
     notes: '',
-    date: '',
-    start_time: '',
-    end_time: '',
-    min_students: '',
-    max_students: '',
   })
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -41,7 +44,7 @@ export default function Page1({ onNextPage }) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({ ...formData, timeSchedule }),
         }
       )
 
@@ -99,7 +102,7 @@ export default function Page1({ onNextPage }) {
       setModalOpenId(null)
     } else {
       setModalOpenId(id)
-      setFormData({
+      setSelectedTime({
         date: time.date || '',
         start_time: time.start_time || '',
         end_time: time.end_time || '',
@@ -110,9 +113,7 @@ export default function Page1({ onNextPage }) {
   }
   const handleSaveChanges = (id) => {
     setTimeSchedule((prevSchedule) =>
-      prevSchedule.map((time) =>
-        time.id === id ? { ...time, ...formData } : time
-      )
+      prevSchedule.map((time) => (time.id === id ? { ...selectedTime } : time))
     )
     toggleModal(id)
   }
@@ -133,12 +134,12 @@ export default function Page1({ onNextPage }) {
 
             <div className={`${styles.uploadMainInfo} flex-grow-1`}>
               <div className={styles.subtitle}>
-                <h4 className="h4 pb-2">主要資訊</h4>
+                <h4 className="h4 pb-2 ms-2">主要資訊</h4>
               </div>
               <div className={styles.inputArea}>
                 <div className="container d-flex gap-4 mb-3">
                   <InputStyle
-                    addclass="col-9"
+                    addclass="col-8"
                     forText="name"
                     titleCh="課程名稱"
                     titleEn=" | name"
@@ -149,7 +150,7 @@ export default function Page1({ onNextPage }) {
                     onChange={handleChange}
                   />
                   <InputStyle
-                    addclass="col-3"
+                    addclass="col-4 pe-4"
                     forText="price"
                     titleCh="價錢"
                     titleEn=" | price"
@@ -181,7 +182,7 @@ export default function Page1({ onNextPage }) {
                   />
 
                   <InputStyle
-                    addclass="col-7"
+                    addclass="col-7 pe-4"
                     forText="address"
                     titleCh="上課地點"
                     titleEn=" | address"
@@ -194,7 +195,7 @@ export default function Page1({ onNextPage }) {
                 </div>
                 <div className="container d-flex align-items-end justify-content-between gap-2">
                   <InputStyle
-                    addclass="col-6 me-1"
+                    addclass="w-100"
                     forText="registration_start"
                     titleCh="報名時間"
                     titleEn=" | registration period"
@@ -204,12 +205,12 @@ export default function Page1({ onNextPage }) {
                     value={formData.registration_start}
                     onChange={handleChange}
                   />
-                  <p className="col-1 d-flex justify-content-center align-items-center">
+                  <p className="col-1 mx-1 d-flex justify-content-center align-items-center">
                     <PiArrowRight className="ph" />
                   </p>
 
                   <InputStyle
-                    addclass="col-5 ms-1"
+                    addclass="w-100"
                     forText="price"
                     titleCh=""
                     titleEn=""
@@ -304,9 +305,12 @@ export default function Page1({ onNextPage }) {
                           typeText="date"
                           placeholder="請選擇日期"
                           name="date"
-                          value={formData.date}
+                          value={selectedTime.date}
                           onChange={(e) =>
-                            setFormData({ ...formData, date: e.target.value })
+                            setSelectedTime({
+                              ...selectedTime,
+                              date: e.target.value,
+                            })
                           }
                         />
 
@@ -320,13 +324,13 @@ export default function Page1({ onNextPage }) {
                             items={timeOptions.map((t) => ({
                               name: 'start_time',
                               option: t,
-                              value: 't',
+                              value: `${t}`,
                             }))}
                             name="start_time"
-                            value={formData.start_time}
+                            value={selectedTime.start_time}
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
+                              setSelectedTime({
+                                ...selectedTime,
                                 start_time: e.target.value,
                               })
                             }
@@ -341,13 +345,13 @@ export default function Page1({ onNextPage }) {
                             items={timeOptions.map((t) => ({
                               name: 'end_time',
                               option: t,
-                              value: 't',
+                              value: `${t}`,
                             }))}
                             name="end_time"
-                            value={formData.end_time}
+                            value={selectedTime.end_time}
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
+                              setSelectedTime({
+                                ...selectedTime,
                                 end_time: e.target.value,
                               })
                             }
@@ -363,10 +367,10 @@ export default function Page1({ onNextPage }) {
                             typeText="text"
                             placeholder="最少人數"
                             name="min_students"
-                            value={formData.min_students}
+                            value={selectedTime.min_students}
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
+                              setSelectedTime({
+                                ...selectedTime,
                                 min_students: e.target.value,
                               })
                             }
@@ -376,13 +380,14 @@ export default function Page1({ onNextPage }) {
                           </p>
                           <InputStyle
                             addclass="w-100"
+                            forText="max_students"
                             typeText="text"
                             placeholder="最多人數"
                             name="max_students"
-                            value={formData.max_students}
+                            value={selectedTime.max_students}
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
+                              setSelectedTime({
+                                ...selectedTime,
                                 max_students: e.target.value,
                               })
                             }

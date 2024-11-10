@@ -152,25 +152,27 @@ router.post('/upload/page01', authenticate, async function (req, res, next) {
     const newWorkshopId = result
     console.log('New Workshop ID:', newWorkshopId)
 
-    const sqlInsertWorkshopTime = SQL.format(
-      `
+    // 插入每筆 timeSchedule 資料
+    for (const time of createWorkshop.timeSchedule) {
+      const sqlInsertWorkshopTime = SQL.format(
+        `
       INSERT INTO workshop_time(
       workshop_id, date, start_time, end_time, min_students, max_students, registered
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
      `,
-      [
-        newWorkshopId,
-        createWorkshop.date,
-        createWorkshop.start_time,
-        createWorkshop.end_time,
-        createWorkshop.min_students,
-        createWorkshop.max_students,
-        0,
-      ]
-    )
-    // 插入 workshop_time 資料，假設 req.body 中包含時間資料
-    await db.query(sqlInsertWorkshopTime)
-
+        [
+          newWorkshopId,
+          time.date,
+          time.start_time,
+          time.end_time,
+          time.min_students,
+          time.max_students,
+          0,
+        ]
+      )
+      // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+      await db.query(sqlInsertWorkshopTime)
+    }
     res.json(result)
   } catch (e) {
     console.error(e)
