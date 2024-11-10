@@ -34,10 +34,10 @@ export default function ForgetPassword() {
     }
   }, [count])
 
-  // 處理要求一次性驗証碼用
+  // 處理要求一次性驗證碼用
   const handleRequestOtpToken = async () => {
     if (delay !== null) {
-      toast.error('錯誤 - 60s內無法重新獲得驗証碼')
+      toast.error('錯誤 - 60s內無法重新獲得驗證碼')
       return
     }
 
@@ -47,7 +47,7 @@ export default function ForgetPassword() {
     console.log(res.data)
 
     if (res.data.status === 'success') {
-      toast.success('資訊 - 驗証碼已寄送到電子郵件中')
+      toast.success('驗證碼已寄送到電子郵件中')
       setCount(60) // 倒數 60秒
       setDelay(1000) // 每 1000ms = 1s 減1
       setDisableBtn(true)
