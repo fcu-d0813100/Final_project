@@ -1,6 +1,7 @@
-import express from 'express'
+import express, { query } from 'express'
 import db from '#configs/db.js'
 import authenticate from '#middlewares/authenticate.js'
+import SQL from 'sqlstring'
 
 const router = express.Router()
 
@@ -82,40 +83,76 @@ router.get('/:tid', async function (req, res) {
   console.log(req.params.tid)
 })
 
-// router.put('/information/Update', async function (req, res) {
-//   const {
-//     name,
-//     email,
-//     nation,
-//     gender,
-//     years,
-//     birthday,
-//     slogan,
-//     about,
-//     experience,
-//     id,
-//   } = req.body
-//   //值沒帶進去
+router.put('/information/update', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateTeacher = req.body
 
-//   const sqlUpdate =
-//     'UPDATE `teachers` SET `name`=?, `email`=?, `nation`=?, `gender`=?, `years`=?, `slogan`=?, `about`=?, `experience`=?, `birthday`=? WHERE `id`=?;'
+  try {
+    //  const sql = SQL.format(
+    //    'UPDATE `teachers` SET `name` = ?, `email` = ?, `gender` = ?, `years` = ?, `birthday` = ?, `nation` = ?, `slogan` = ?, `about` = ?, `experience` = ? WHERE `teachers`.`id` = ?;',
+    //    [
+    //      updateTeacher.name,
+    //      updateTeacher.email,
+    //      updateTeacher.gender,
+    //      updateTeacher.years,
+    //      updateTeacher.birthday,
+    //      updateTeacher.nation,
+    //      updateTeacher.slogan,
+    //      updateTeacher.about,
+    //      updateTeacher.experience,
+    //      id,
+    //    ]
+    //  )
 
-//   const [result] = await db.query(sqlUpdate, [
-//     name,
-//     email,
-//     nation,
-//     gender,
-//     years,
-//     slogan,
-//     about,
-//     experience,
-//     birthday,
-//     id,
-//   ])
+    //  console.log(sql)
+    //const [result] = await db.query(sql)
+    // -----------------
+    //  const [result] = await db.query(
+    //    SQL.format(
+    //      'UPDATE `teachers` SET `name` = ?, `email` = ?, `gender` = ?, `years` = ?, `birthday` = ?, `nation` = ?, `slogan` = ?, `about` = ?, `experience` = ? WHERE `teachers`.`id` = ?;',
+    //      [
+    //        updateTeacher.name,
+    //        updateTeacher.email,
+    //        updateTeacher.gender,
+    //        updateTeacher.years,
+    //        updateTeacher.birthday,
+    //        updateTeacher.nation,
+    //        updateTeacher.slogan,
+    //        updateTeacher.about,
+    //        updateTeacher.experience,
+    //        id,
+    //      ]
+    //    )
+    //  )
+    // -----------------
+    const sql = `
+      UPDATE teachers 
+      SET name = '${updateTeacher.name}', 
+          email = '${updateTeacher.email}', 
+          gender = '${updateTeacher.gender}', 
+          years = '${updateTeacher.years}', 
+          birthday = '${updateTeacher.birthday}', 
+          nation = '${updateTeacher.nation}', 
+          slogan = '${updateTeacher.slogan}', 
+          about = '${updateTeacher.about}', 
+          experience = '${updateTeacher.experience}' 
+      WHERE id = '${id}'
+    `
 
-//   // 傳回結果
-//   res.json(result)
-//   //console.log(req.params)
-// })
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
 
 export default router

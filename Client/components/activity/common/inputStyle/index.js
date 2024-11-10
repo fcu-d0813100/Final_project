@@ -1,5 +1,5 @@
 'use client'
-import styles from '@/components/teacher/common/t-dashboard-input-style/input.module.scss'
+import styles from '@/components/activity/common/inputStyle/index.module.scss'
 import React, { useState, useEffect } from 'react'
 
 export default function InputStyle({
@@ -12,6 +12,7 @@ export default function InputStyle({
   name = '',
   value = '',
   onChange, // 父組件傳入的 onChange 回調
+  hasError = false,
 }) {
   const [inputValue, setInputValue] = useState(value) // 使用 useState 管理輸入值
 
@@ -36,6 +37,7 @@ export default function InputStyle({
         name={name}
         value={inputValue} // 設定 value 為狀態變數
         onChange={handleInputChange} // 添加 onChange 事件
+        className={`${hasError ? styles.errorInput : ''}`}
       />
     </div>
   )

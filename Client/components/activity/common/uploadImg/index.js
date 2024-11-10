@@ -1,47 +1,89 @@
-'use client'
 import styles from '@/components/activity/common/uploadImg/index.module.scss'
 import { PiPlus } from 'react-icons/pi'
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
+import { RiCloseCircleFill } from 'react-icons/ri'
+import ReactDOMServer from 'react-dom/server'
 
-export default function UploadImg({ width, height, onFileChange }) {
-  const [previews, setPreviews] = useState([]) // 儲存所有圖片預覽
-  const [selectedFiles, setSelectedFiles] = useState([]) // 儲存選取的文件
+export default function UploadImg({ width, height, onFileChange, hasError }) {
+  const [previews, setPreviews] = useState([])
+  const [selectedFiles, setSelectedFiles] = useState([])
+
+  const showAlert = (
+    message,
+    icon = <RiCloseCircleFill color="#963827" />,
+    timer = 1500
+  ) => {
+    const iconHtml = ReactDOMServer.renderToString(icon)
+    Swal.fire({
+      html: `
+        <div class="${styles['custom-alert-content']}">
+          <span class="${styles['custom-icon']}">${iconHtml}</span>
+          <span>${message}</span>
+        </div>
+      `,
+      showConfirmButton: false,
+      timer: timer,
+      position: 'center',
+      width: '300px',
+      padding: '1em',
+      customClass: {
+        popup: `${styles['custom-popup']}`,
+      },
+    })
+  }
 
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files) // 將 FileList 轉為陣列
-    setSelectedFiles(files) // 將選取的文件儲存在狀態中
-    onFileChange(files) // 將文件傳回父組件
+    const files = Array.from(event.target.files)
+    if (selectedFiles.length + files.length > 3) {
+      showAlert('最多只能選擇三張圖片')
+      return
+    }
+    const updatedFiles = [...selectedFiles, ...files]
+    setSelectedFiles(updatedFiles)
+    onFileChange(updatedFiles)
 
-    // 生成圖片預覽
     const newPreviews = files.map((file) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file) // 將每個檔案轉換為 Data URL
       return new Promise((resolve) => {
+        const reader = new FileReader()
         reader.onload = () => resolve(reader.result)
+        reader.readAsDataURL(file)
       })
     })
 
     Promise.all(newPreviews).then((results) => {
-      setPreviews((prev) => [...prev, ...results]) // 將新圖片添加到現有的預覽陣列
+      setPreviews((prev) => [...prev, ...results])
     })
   }
 
   const handleReSelect = () => {
+    setSelectedFiles([])
+    setPreviews([])
+    onFileChange([])
     document.getElementById('fileInput').click()
   }
 
   const handleRemoveImage = (index) => {
-    setPreviews((prev) => prev.filter((_, i) => i !== index)) // 刪除指定的圖片
     const newFiles = selectedFiles.filter((_, i) => i !== index)
     setSelectedFiles(newFiles)
-    onFileChange(newFiles) // 更新父組件的檔案
+    onFileChange(newFiles)
+    setPreviews((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const handleKeyDown = (e, action) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      action()
+    }
   }
 
   return (
     <>
       <div
-        className={styles.uploadCover}
-        style={{ width: `${width}`, height: `${height}` }}
+        className={`${styles.uploadCover} ${
+          hasError ? styles.errorBorder : ''
+        }`}
+        style={{ width, height }}
       >
         <input
           type="file"
@@ -49,22 +91,26 @@ export default function UploadImg({ width, height, onFileChange }) {
           onChange={handleFileChange}
           style={{ display: 'none' }}
           id="fileInput"
-          multiple // 支持多個檔案
+          multiple
         />
-        <label
-          htmlFor="fileInput"
+        <div
           className="text-center"
-          style={{ width: `${width}`, height: `${height}` }}
+          style={{ width, height }}
+          role="button"
+          tabIndex="0"
+          onClick={() => document.getElementById('fileInput').click()}
+          onKeyDown={(e) =>
+            handleKeyDown(e, () => document.getElementById('fileInput').click())
+          }
         >
           {previews.length === 0 ? (
-            <div className={styles.picUploadText}>
-              <div>
-                <PiPlus className={styles.plus} />
-                <p className={`h4 mt-3`}>
-                  新增圖片
-                  <br /> <span className="p">(必填)</span>
-                </p>
-              </div>
+            <div className={`${styles.picUploadText} d-flex flex-column`}>
+              <PiPlus className={styles.plus} />
+
+              <p className="h4 mt-3">
+                新增圖片
+                <br /> <span className="p">(必填)</span>
+              </p>
             </div>
           ) : (
             <div className={styles.imageGrid}>
@@ -76,22 +122,34 @@ export default function UploadImg({ width, height, onFileChange }) {
                     className={styles.previewImage}
                   />
                   <button
-                    type="button" // 添加 type="button" 防止表單提交
+                    type="button"
                     className={styles.removeImageButton}
-                    onClick={() => handleRemoveImage(index)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleRemoveImage(index)
+                    }}
+                    onKeyDown={(e) =>
+                      handleKeyDown(e, () => handleRemoveImage(index))
+                    }
                   >
-                    &times; {/* 使用叉叉符號作為刪除按鈕 */}
+                    &times;
                   </button>
                 </div>
               ))}
             </div>
           )}
-        </label>
+        </div>
 
         {previews.length > 0 && (
           <a
             className={`${styles.reSelectImg} btn-outline h6`}
-            onClick={handleReSelect}
+            role="button"
+            tabIndex="0"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleReSelect()
+            }}
+            onKeyDown={(e) => handleKeyDown(e, handleReSelect)}
           >
             重新選取
           </a>
