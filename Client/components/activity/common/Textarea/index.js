@@ -1,30 +1,31 @@
-'use client'
-import styles from '@/components/teacher/common/t-dashboard-textarea-style/textarea.module.scss'
 import React from 'react'
+import styles from './index.module.scss'
 
 export default function Textarea({
-  addclass = '',
-  title = '',
-  name = '',
-  rows = '',
-  width = '',
-  placeholder = '',
-  value = '',
-  onChange, // 父組件傳入的 onChange 回調
+  title,
+  name,
+  rows,
+  width,
+  placeholder,
+  value,
+  onChange,
+  hasError = false, // 用於接收錯誤狀態的屬性
 }) {
   return (
-    <div className={`${addclass}`}>
+    <div className="mb-4">
       <label htmlFor={name} className={`${styles.label} h4 mb-3 d-block`}>
         {title}
       </label>
       <textarea
         name={name}
         rows={rows}
-        className={`${styles.detailTextarea} p-3`}
-        style={{ width: width }}
+        className={`${styles.detailTextarea} ${
+          hasError ? styles.errorInput : ''
+        }`}
+        style={{ width }}
         placeholder={placeholder}
-        value={value} // 使用父組件傳入的 value
-        onChange={onChange} // 傳入父組件的 onChange 回調
+        value={value}
+        onChange={onChange}
       ></textarea>
     </div>
   )

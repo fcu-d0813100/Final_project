@@ -36,6 +36,13 @@ export default function Carousel({ cardsData = [] }) {
     updateCarousel(currentIndex)
   }, [currentIndex])
 
+  if (!cardsData || cardsData.length === 0) {
+    return (
+      <div className={`${Styles['activity-carousel-text']} container`}>
+        暫無活動
+      </div>
+    )
+  }
   return (
     <div className={`${Styles['activity-carousel-text']} container`}>
       <h2 className={Styles['section-title']}>熱門活動</h2>

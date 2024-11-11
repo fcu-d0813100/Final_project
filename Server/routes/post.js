@@ -1,10 +1,10 @@
 import express from 'express'
-const router = express.Router()
 import db from '#configs/db.js'
 import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+const router = express.Router()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -214,16 +214,14 @@ router.put('/delete', async function (req, res, next) {
 })
 
 // check if post is liked - render
-router.get('/:postId/:userId/isLiked', async (req, res) => {
+router.get('/isLiked/:postId/:userId', async (req, res) => {
   const { postId, userId } = req.params
-
   try {
     // 檢查是否已按讚
     const [existingLike] = await db.query(
       `SELECT * FROM post_like WHERE user_id = ${userId} AND post_id = ${postId}`,
       [userId, postId]
     )
-
     if (existingLike.length > 0) {
       return res.status(200).json({ isLiked: true, message: '已按讚此貼文' })
     } else {
@@ -236,7 +234,7 @@ router.get('/:postId/:userId/isLiked', async (req, res) => {
 })
 
 // like post - like 未按讚 → 加入按讚
-router.post('/:postId/:userId/like', async (req, res) => {
+router.post('/like/:postId/:userId', async (req, res) => {
   const { postId, userId } = req.params
   try {
     const sqlInsert = `INSERT INTO post_like (post_id, user_id) VALUES (${postId}, ${userId})`
@@ -247,8 +245,8 @@ router.post('/:postId/:userId/like', async (req, res) => {
     res.status(500).json({ error: '伺服器錯誤，無法更新按讚狀態' })
   }
 })
-// like post - unlike 已按讚 → 取消按讚
-router.delete('/:postId/:userId/dislike', async (req, res) => {
+// like post - dislike 已按讚 → 取消按讚
+router.delete('/dislike/:postId/:userId', async (req, res) => {
   const { postId, userId } = req.params
   try {
     const sqlDelete = `DELETE FROM post_like WHERE post_id = ${postId} AND user_id = ${userId}`
@@ -260,58 +258,95 @@ router.delete('/:postId/:userId/dislike', async (req, res) => {
   }
 })
 
-// check if post is saved post - render
-router.get('/:postId/:userId/isSaved', async (req, res) => {
+// check if post is saved - render
+router.get('/isSaved/:postId/:userId', async (req, res) => {
   const { postId, userId } = req.params
   try {
-    const existingSave = await db.query(
+    // 檢查是否已收藏
+    const [existingSave] = await db.query(
       `SELECT * FROM post_save WHERE user_id = ${userId} AND post_id = ${postId}`,
       [userId, postId]
     )
-
     if (existingSave.length > 0) {
-      return res.status(400).json({ message: '已收藏此貼文' })
+      return res.status(200).json({ isSaved: true, message: '已收藏此貼文' })
+    } else {
+      return res.status(200).json({ isSaved: false, message: '尚未收藏此貼文' })
     }
-
-    // 插入收藏
-    await db.query(
-      `INSERT INTO post_save (user_id, post_id, created_at) VALUES (${userId}, ${postId} NOW())`,
-      [userId, postId]
-    )
   } catch (err) {
     console.error(err)
-    res.json(500).json({ error: '伺服器錯誤，無法檢查收藏狀態' })
+    res.status(500).json({ error: '伺服器錯誤，無法檢查收藏狀態' })
   }
 })
-// save post - toggle
-router.get('/:postId/:userId/save', async (req, res) => {
+
+// save post - save 未收藏 → 加入收藏
+router.post('/save/:postId/:userId', async (req, res) => {
   const { postId, userId } = req.params
-
   try {
-    // 檢查是否已收藏
-    const sqlCheck = `SELECT * FROM post_save WHERE post_id = ? AND user_id = ?`
-    const [rows] = await db.query(sqlCheck, [postId, userId])
-
-    if (rows.length > 0) {
-      // 已收藏 → 取消收藏
-      const sqlDelete = `DELETE FROM post_save WHERE post_id = ? AND user_id = ?`
-      await db.query(sqlDelete, [postId, userId])
-      res.json({ status: 'success', message: '取消收藏成功' })
-    } else {
-      // 未收藏 → 加入收藏
-      const sqlInsert = `INSERT INTO post_save (post_id, user_id) VALUES (?, ?)`
-      await db.query(sqlInsert, [postId, userId])
-      res.json({ status: 'success', message: '收藏成功' })
-    }
+    const sqlInsert = `INSERT INTO post_save (post_id, user_id) VALUES (${postId}, ${userId})`
+    await db.query(sqlInsert, [postId, userId])
+    res.json({ status: 'success', message: '收藏成功' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法更新收藏狀態' })
+  }
+})
+// save post - unsave 已收藏 → 取消收藏
+router.delete('/unsave/:postId/:userId', async (req, res) => {
+  const { postId, userId } = req.params
+  try {
+    const sqlDelete = `DELETE FROM post_save WHERE post_id = ${postId} AND user_id = ${userId}`
+    await db.query(sqlDelete, [postId, userId])
+    res.json({ status: 'success', message: '取消收藏成功' })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: '伺服器錯誤，無法更新收藏狀態' })
   }
 })
 
-// like comment - render
+// check if comment is liked - render
+router.get('/comment/isLiked/:commentId/:userId', async (req, res) => {
+  const { commentId, userId } = req.params
+  try {
+    // 檢查是否已按讚
+    const [existingLike] = await db.query(
+      `SELECT * FROM post_comment_like WHERE user_id = ${userId} AND comment_id = ${commentId}`,
+      [userId, commentId]
+    )
+    if (existingLike.length > 0) {
+      return res.status(200).json({ isLiked: true, message: '已按讚此留言' })
+    } else {
+      return res.status(200).json({ isLiked: false, message: '尚未按讚此留言' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法檢查留言按讚狀態' })
+  }
+})
 
-router.post('/', async function (req, res, next) {})
+// like comment - like 未按讚 → 加入按讚
+router.post('/comment/like/:commentId/:userId', async (req, res) => {
+  const { commentId, userId } = req.params
+  try {
+    const sqlInsert = `INSERT INTO post_comment_like (comment_id, user_id) VALUES (${commentId}, ${userId})`
+    await db.query(sqlInsert, [commentId, userId])
+    res.json({ status: 'success', message: '按讚成功' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法更新留言按讚狀態' })
+  }
+})
+// like comment - dislike 已按讚 → 取消按讚
+router.delete('/comment/dislike/:commentId/:userId', async (req, res) => {
+  const { commentId, userId } = req.params
+  try {
+    const sqlDelete = `DELETE FROM post_comment_like WHERE comment_id = ${commentId} AND user_id = ${userId}`
+    await db.query(sqlDelete, [commentId, userId])
+    res.json({ status: 'success', message: '取消留言按讚成功' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: '伺服器錯誤，無法更新留言按讚狀態' })
+  }
+})
 
 // render post-wall page sort/order/search/tags
 router.get('/', async function (req, res, next) {
@@ -372,6 +407,8 @@ router.get('/', async function (req, res, next) {
     conditions.push(`(${tagsConditions})`)
     tagsArray.forEach((tag) => params.push(`%${tag}%`))
   }
+  //status
+  conditions.push('status = 1')
   //條件
   if (conditions.length > 0) {
     sqlSelect += ` WHERE ${conditions.join(' AND ')} `
@@ -605,7 +642,7 @@ router.get('/post_save/:userId', async function (req, res, next) {
   res.json(result)
 })
 
-// render user-post-publish-edit 獲取指定user_id的指定post.id
+// render user-post-publish-edit 指定user_id的指定post.id
 router.get('/publish/:userId/:postId', async function (req, res, next) {
   const { userId, postId } = req.params
   const sqlSelect = `SELECT 
@@ -659,9 +696,6 @@ router.post(
 
 // tags search
 router.get('/tags', async function (req, res, next) {
-  // const sqlSelect = `SELECT name FROM post_tag`
-  // const [result] = await db.query(sqlSelect)
-  // res.json(result)
   const { tagInput } = req.query
   console.log('tagInput received:', tagInput)
   const sqlSelect = `

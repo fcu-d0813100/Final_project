@@ -3,7 +3,6 @@ import { PiCaretDown } from 'react-icons/pi'
 import styles from '@/components/teacher/common/t-dashboard-select-input/index.module.scss'
 import React, { useState, useEffect } from 'react'
 
-
 export default function SelectInput({
   initName,
   forText,
@@ -11,17 +10,22 @@ export default function SelectInput({
   titleEn,
   addClass,
   items = [],
+  value,
+  onChange,
 }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(`${initName}`) // 初始顯示文字
+  const [selectedOption, setSelectedOption] = useState(value || initName) // 支援預設值或初始顯示文字
 
   // 切換下拉選單的顯示狀態
   const toggleDropdown = () => setIsOpen(!isOpen)
 
   // 處理選取選項的函數
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option, value) => {
     setSelectedOption(option)
     setIsOpen(false) // 選取後關閉下拉選單
+    if (onChange) {
+      onChange({ target: { name: forText, value: value } }) // 呼叫 onChange，傳遞選項
+    }
   }
 
   return (
@@ -43,7 +47,7 @@ export default function SelectInput({
           {items.map((item, index) => (
             <li
               key={index}
-              onClick={() => handleOptionClick(`${item.option}`)}
+              onClick={() => handleOptionClick(item.option, item.value)}
               name={item.name}
             >
               {item.option}

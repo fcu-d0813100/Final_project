@@ -4,11 +4,13 @@ import 'swiper/css'
 import styles from './actCarousel.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
+import Link from 'next/link'
 
 const ProductCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const swiperRef = useRef(null)
   const [images, setImages] = useState([])
+
 
   const goToSlide = (index) => {
     if (swiperRef.current) swiperRef.current.slideTo(index)
@@ -27,9 +29,12 @@ const ProductCarousel = () => {
   }, [])
 
   // Fetch top 3 activities data
+
+  // Fetch top 3 activities data
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const response = await fetch('http://localhost:3005/api/activity/top3')
         const response = await fetch('http://localhost:3005/api/activity/top3')
         if (!response.ok) {
           throw new Error('網路回應不成功：' + response.status)
@@ -64,6 +69,24 @@ const ProductCarousel = () => {
       >
         {images.map((image, index) => (
           <SwiperSlide key={index} className={styles['swiper-slide']}>
+            <Link href={`/activity/activity-det?id=${image.id}`}>
+              <div className={styles['car-img']}>
+                <Image
+                  width={1920}
+                  height={700}
+                  src={image.src}
+                  alt={image.alt}
+                  className={styles['carousel-image']}
+                  priority={index === 0}
+                />
+                {/* 遮罩層 */}
+                <div className={styles['overlay']}>
+                  <h2 className={styles['overlay-text']}>{image.CHN_name}</h2>
+                  <div className={styles['separator']}></div>
+                  <h2 className={styles['overlay-text']}>{image.ENG_name}</h2>
+                </div>
+              </div>
+            </Link>
             <Link href={`/activity/activity-det?id=${image.id}`}>
               <div className={styles['car-img']}>
                 <Image
