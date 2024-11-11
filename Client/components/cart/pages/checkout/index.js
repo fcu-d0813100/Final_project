@@ -9,6 +9,7 @@ import OrderBox from '../../common/orderbox'
 import Seven from '../../../../pages/cart/ship'
 import { useCartProduct } from '@/hooks/use-cartP'
 import { useCartWorkshop } from '@/hooks/use-cartW'
+import { useAuth } from '@/hooks/use-auth'
 import axios from 'axios'
 
 export default function Checkout() {
@@ -17,13 +18,33 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('cod') //預設付款
   const [orderData, setOrderData] = useState({}) // 保存訂單資料
 
+  //會員id
+  const { auth } = useAuth()
+  const userId = auth.userData.id
+
   //鉤子帶入金額跟數量
-  const { pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
+  const {
+    pTotalPrice = 0,
+    pTotalQty = 0,
+    pOriginalTotalPrice,
+  } = useCartProduct()
   const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
   //打折的價格
   const discountedPTotalPrice = pTotalPrice
-  const discountedWTotalPrice = wTotalPrice * 0.8
-  const totalPrice = discountedPTotalPrice + discountedWTotalPrice
+  const discountedWTotalPrice = Math.floor(wTotalPrice * 0.95)
+  //加入優惠券的部分
+  const [couponDiscount, setCouponDiscount] = useState(0)
+  const [coupon, setCoupon] = useState(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const coupon = JSON.parse(localStorage.getItem('selectedCouponObj'))
+      setCoupon(coupon)
+      setCouponDiscount(coupon?.discount_value || 0)
+    }
+  }, [])
+  //計算總金額
+  const totalPrice =
+    discountedPTotalPrice + discountedWTotalPrice - couponDiscount
 
   // 使用 useRef 來存儲 input 值
   const recipientNameRef = useRef(null)
@@ -96,6 +117,8 @@ export default function Checkout() {
         productCart,
         Workshopcart,
         totalPrice,
+        coupon,
+        userId,
       }
     } else {
       orderData = {
@@ -108,6 +131,8 @@ export default function Checkout() {
         productCart,
         Workshopcart,
         totalPrice,
+        coupon,
+        userId,
       }
     }
 

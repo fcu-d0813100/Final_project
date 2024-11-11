@@ -58,9 +58,12 @@ export default function Index(props) {
       setOngoingCoupons(ongoing);
       setEndedCoupons(ended);
       setUpcomingCoupons(upcoming); // 新增设置即将开始的优惠券
+<<<<<<< HEAD
+=======
 
       // 成功提示
       toast.success("優惠券已成功加載！");
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
     } catch (error) {
       console.error('Error fetching coupons:', error);
@@ -71,6 +74,7 @@ export default function Index(props) {
     }
   };
 
+
   useEffect(() => {
     fetchCoupons(); // 在组件加载时调用
   }, []);
@@ -80,11 +84,19 @@ export default function Index(props) {
   const indexOfFirstUpcomingCoupon = indexOfLastUpcomingCoupon - couponsPerPage;
   const currentUpcomingCoupons = upcomingCoupons.slice(indexOfFirstUpcomingCoupon, indexOfLastUpcomingCoupon);
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
   // 计算当前进行中优惠券的分页
   const indexOfLastOngoingCoupon = currentPageOngoing * couponsPerPage;
   const indexOfFirstOngoingCoupon = indexOfLastOngoingCoupon - couponsPerPage;
   const currentOngoingCoupons = ongoingCoupons.slice(indexOfFirstOngoingCoupon, indexOfLastOngoingCoupon);
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
   // 计算当前已结束优惠券的分页
   const indexOfLastEndedCoupon = currentPageEnded * couponsPerPage;
   const indexOfFirstEndedCoupon = indexOfLastEndedCoupon - couponsPerPage;
@@ -100,6 +112,10 @@ export default function Index(props) {
     }
   };
   
+<<<<<<< HEAD
+
+=======
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
   // 处理分页左右按钮
   const handlePrevPage = (isOngoing) => {
     if (isOngoing) {
@@ -187,6 +203,32 @@ export default function Index(props) {
                     expiration={coupon.end_date}
                   />
                 ))}
+<<<<<<< HEAD
+              </div>
+              <div className={styles.pagination}>
+                <button
+                  className={`${styles.pageBtn} ${currentPageOngoing === 1 ? styles.disabled : ''}`}
+                  onClick={() => handlePrevPage(true)}
+                >
+                  &lt;
+                </button>
+                {Math.ceil(ongoingCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(ongoingCoupons.length / couponsPerPage) }, (_, index) => (
+                  <button
+                    key={index + 1}
+                    className={`${styles.pageBtn} ${currentPageOngoing === index + 1 ? styles.active : ''}`}
+                    onClick={() => setCurrentPageOngoing(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  className={`${styles.pageBtn} ${currentPageOngoing === Math.ceil(ongoingCoupons.length / couponsPerPage) ? styles.disabled : ''}`}
+                  onClick={() => handleNextPage(true)}
+                >
+                  &gt;
+                </button>
+=======
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="/end">
@@ -203,6 +245,32 @@ export default function Index(props) {
                   />
                 ))}
               </div>
+<<<<<<< HEAD
+              <div className={styles.pagination}>
+                <button
+                  className={`${styles.pageBtn} ${currentPageEnded === 1 ? styles.disabled : ''}`}
+                  onClick={() => handlePrevPage(false)}
+                >
+                  &lt;
+                </button>
+                {Math.ceil(endedCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(endedCoupons.length / couponsPerPage) }, (_, index) => (
+                  <button
+                    key={index + 1}
+                    className={`${styles.pageBtn} ${currentPageEnded === index + 1 ? styles.active : ''}`}
+                    onClick={() => setCurrentPageEnded(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  className={`${styles.pageBtn} ${currentPageEnded === Math.ceil(endedCoupons.length / couponsPerPage) ? styles.disabled : ''}`}
+                  onClick={() => handleNextPage(false)}
+                >
+                  &gt;
+                </button>
+              </div>
+=======
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>

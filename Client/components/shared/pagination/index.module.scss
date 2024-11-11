@@ -1,0 +1,31 @@
+// components/shared/pagination/index.module.scss
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  button {
+    background: none;
+    border: none;
+    color: #90957a;
+    cursor: pointer;
+    padding: 0.3rem 0.6rem;
+    font-size: 1rem;
+  }
+
+  button:disabled {
+    color: #c0c0c0;
+    cursor: not-allowed;
+  }
+
+  .active {
+    font-weight: bold;
+    color: #626553;
+    border-bottom: 2px solid #626553;
+  }
+
+  span {
+    color: #90957a;
+  }
+}

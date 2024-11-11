@@ -7,7 +7,7 @@ import { PiChatCircle } from 'react-icons/pi'
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
 import DeleteModal from '@/components/shared/modal-delete'
 import styles from './index.module.scss'
-export default function Index({
+export default function PublishCard({
   postId,
   userId,
   imageSrc,
@@ -25,35 +25,6 @@ export default function Index({
   const router = useRouter()
   return (
     <>
-      {/* {showModal && (
-        <DeleteModal
-          title="刪除貼文"
-          content={`刪除後將無法恢復，\n確定要刪除這篇貼文嗎 ?`}
-          btnConfirm="確定刪除"
-          btnCancel="取消"
-          ConfirmFn={async () => {
-            try {
-              await fetch(`http://localhost:3005/api/post/delete`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                  postId,
-                  userId,
-                }),
-              })
-              setShowModal(false)
-              // router.push('/user/post')
-            } catch (err) {
-              alert('刪除失敗，請稍後再試！')
-            }
-          }}
-          show={showModal}
-          handleClose={() => setShowModal(false)}
-        />
-      )} */}
       <div className={styles['post-card3']}>
         <Image src={imageSrc} alt="public image" width={200} height={200} />
 
