@@ -87,7 +87,7 @@ export default function Upload(props) {
         <form
           onSubmit={handleSubmit}
           method="post"
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
         >
           {!isPage2 ? (
             <Page1

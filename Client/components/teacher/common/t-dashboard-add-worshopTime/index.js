@@ -51,7 +51,7 @@ export default function AddWorkshopTime({ onAddTime }) {
     '18:00',
     '18:30',
   ]
-  console.log(selectedTime)
+  //console.log(selectedTime)
   // 處理新增時間
   const handleAddTime = () => {
     onAddTime(selectedTime) // 將資料傳遞給父層

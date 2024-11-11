@@ -242,8 +242,21 @@ router.post(
       const newWorkshopId = result
       console.log('New Workshop ID:', newWorkshopId)
 
+      ///////
+      // 解析 timeSchedule 資料
+      const parsedTimeSchedule = createWorkshop.timeSchedule.map((item) => {
+        // 確保每個項目都是一個有效的物件
+        try {
+          return JSON.parse(item)
+        } catch (e) {
+          console.error('Error parsing timeSchedule item:', item)
+          return null
+        }
+      })
+      ///////
+
       // 插入每筆 timeSchedule 資料
-      for (const time of createWorkshop.timeSchedule) {
+      for (const time of parsedTimeSchedule) {
         const sqlInsertWorkshopTime = SQL.format(
           `
       INSERT INTO workshop_time(
@@ -263,8 +276,8 @@ router.post(
         // 插入 workshop_time 資料，假設 req.body 中包含時間資料
         await db.query(sqlInsertWorkshopTime)
       }
-      console.log('req.files' + req.files)
-      console.log('req.body' + req.body)
+      // console.log('req.files' + req.files)
+      // console.log('req.body' + req.body)
 
       res.json(result)
     } catch (e) {

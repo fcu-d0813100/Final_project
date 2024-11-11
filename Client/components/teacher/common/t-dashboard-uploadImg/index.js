@@ -5,9 +5,13 @@ import React, { useState, useEffect } from 'react'
 
 export default function UploadImg({ width, height, bigText, smText, name, onFileChange }) {
   const [preview, setPreview] = useState(null)
+  const [uniqueId, setUniqueId] = useState('')
 
   // 動態生成 ID 碼
-  const uniqueId = `fileInput-${Math.random().toString(36)}`
+  // 確保在客戶端渲染時才生成唯一的 ID，避免 SSR 錯誤
+  useEffect(() => {
+    setUniqueId(`fileInput-${Math.random().toString(36)}`)
+  }, [])
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]
