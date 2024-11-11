@@ -1,4 +1,5 @@
 'use client'
+
 import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import Page1 from '@/components/teacher/pages/information/page-1'
@@ -7,6 +8,7 @@ import React, { useState, useEffect } from 'react'
 
 export default function TeacherInformation(props) {
   const [isPage2, setIsPage2] = useState(false) // 控制是否顯示第二頁
+  
 
   // 切換到下一頁並滾動到頂部
   const handleNextPage = () => {
@@ -22,7 +24,7 @@ export default function TeacherInformation(props) {
 
   return (
     <>
-      <TDashboardBN teacher="Gina Bettelli" />
+      <TDashboardBN />
       <div>
         <Sidebar />
         {!isPage2 ? (
