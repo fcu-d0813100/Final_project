@@ -36,7 +36,7 @@ const Coupon = ({
 
                 {/* 这里直接绑定 onClick 处理 edit 操作 */}
                 <Link
-                    href="/product/home"
+                    href="/product/product-list"
                     className={`${styles.btn} ${styles['btn-outline-light']} d-flex justify-content-center align-items-center btn-primary p text-decoration-none`}
                     onClick={handleCouponUse} 
                 >
