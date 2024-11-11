@@ -64,6 +64,25 @@
       color: #000;
       // padding-bottom: 20px;
     }
+    .post-add {
+      position: sticky;
+      top: 600px;
+      margin-left: 240px;
+      width: 65px;
+      height: 65px;
+      z-index: 500;
+      display: flex;
+      margin-block: 0;
+      justify-content: center;
+      align-items: center;
+      background-color: $green-400;
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 50px;
+      @media (min-width: 1000px) {
+        display: none;
+      }
+    }
   }
 }
 .post-navbar {
@@ -97,18 +116,20 @@
       cursor: pointer;
       @media (max-width: 1000px) {
         // display: none;
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        bottom: 20px;
-        right: 20px;
-        width: 65px;
-        height: 65px;
-        svg {
-          width: 35px;
-          height: 35px;
-        }
+        // position: sticky;
+        // top: 100px;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+        // // bottom: 20px;
+        // // right: 20px;
+        // width: 65px;
+        // height: 65px;
+        // svg {
+        //   width: 35px;
+        //   height: 35px;
+        // }
+        display: none;
         span {
           display: none;
         }

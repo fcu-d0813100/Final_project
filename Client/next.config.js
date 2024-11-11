@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
+    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -19,24 +20,24 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'localhost',
         port: '3005',
-        pathname: '/upload/activity/**',
+        pathname: '/**',
       },
     ],
     unoptimized: true,
   },
-  sassOptions: {
-    // prependData: `@import "@/styles/global.scss";`,
-  },
   // output: 'export', // don't use with `next start` or api route
   // distDir: 'dist',
   // avoid cors with proxy
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:3005/:path*', // Proxy to Backend
-      },
-    ]
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/:path*',
+  //       destination: 'http://localhost:3005/:path*', // Proxy to Backend
+  //     },
+  //   ]
+  // },
+  sassOptions: {
+    // prependData: `@import "@/styles/global.scss";`,
   },
 }
 

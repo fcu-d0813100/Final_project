@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { PiNotePencilBold } from 'react-icons/pi'
 import { PiMagnifyingGlass } from 'react-icons/pi'
+import { useAuth } from '@/hooks/use-auth'
+import ModalConfirm from '@/components/shared/modal-confirm'
+import InputIME from '@/components/shared/input-amend'
+
 import Masonry from 'react-masonry-css'
 import WallCard from '@/components/post/common/wall-card'
-// import axios from 'axios'
 import styles from './index.module.scss'
 export default function PostWall(props) {
   const [wallCard, setWallCard] = useState([])
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('total_count')
+  const [showModal, setShowModal] = useState(false)
+  const router = useRouter()
+  const { auth } = useAuth()
+  const userId = auth.userData.id
+  // const postId = wallCard?.id
 
-  //render
+  // render
   useEffect(() => {
     fetchPosts()
   }, [sort, search])
 
-  //get data
+  // GET DATA : wall card
   const fetchPosts = async () => {
     const response = await fetch(
       `http://localhost:3005/api/post/?sort=${sort}&order=DESC&search=${search}`,
@@ -26,16 +35,16 @@ export default function PostWall(props) {
     )
     const data = await response.json()
     setWallCard(data)
+    // console.log(data)
   }
-
-  // const searchHandle = async () => {
-  //   let response = await fetch()
-  // }
-  // const keyDownHandle = (e) => {
-  //   if (e.key === 'Enter') {
-  //     searchHandle()
-  //   }
-  // }
+  const createHandle = () => {
+    if (userId == 0) {
+      setShowModal(true)
+    } else {
+      router.push('/user/post/create')
+    }
+  }
+  //masonry
   const breakpoint = {
     default: 5,
     1600: 4,
@@ -53,10 +62,14 @@ export default function PostWall(props) {
       <section className={styles['post-section']}>
         <div className={styles['post-navbar']}>
           <div className={styles['post-nav']}>
-            <Link className={styles['post-add']} href={'/user/post/create'}>
+            <button
+              className={styles['post-add']}
+              onClick={createHandle}
+              // href={'/user/post/create'}
+            >
               <PiNotePencilBold size={22} />
               <span>建立</span>
-            </Link>
+            </button>
             <div className={styles['post-search']}>
               <input
                 type="text"
@@ -85,26 +98,46 @@ export default function PostWall(props) {
           </div>
         </div>
         <div className={styles['post-wall']}>
+          <Link className={styles['post-add']} href={'/user/post/create'}>
+            <PiNotePencilBold size={35} />
+          </Link>
           <Masonry
             breakpointCols={breakpoint}
             className={styles['my-masonry-grid']}
             columnClassName={styles['my-masonry-grid_column']}
           >
-            {wallCard.map((post) => (
-              <WallCard
-                postId={post.id}
-                key={post.id}
-                href={`/post/${post.id}`}
-                imageSrc={`/post/${post.post_img}`}
-                title={post.title}
-                username={post.nickname}
-                avatarSrc={`/user/img/${post.user_img}`}
-                likeCount={post.like_count}
-              />
-            ))}
+            {wallCard.map((post) => {
+              const imgSrc = post.post_img.startsWith('post')
+                ? `http://localhost:3005/upload/${post.post_img}`
+                : `/post/${post.post_img}`
+              return (
+                <WallCard
+                  postId={post.id}
+                  key={post.id}
+                  href={`/post/${post.id}`}
+                  imageSrc={imgSrc}
+                  title={post.title}
+                  username={post.nickname}
+                  avatarSrc={`/user/img/${post.user_img}`}
+                  likeCount={post.like_count}
+                />
+              )
+            })}
           </Masonry>
         </div>
       </section>
+      {showModal && (
+        <ModalConfirm
+          title="尚未登入會員"
+          content={`是否前往登入?`}
+          btnConfirm="前往登入"
+          ConfirmFn={() => {
+            router.push('/user/login')
+          }}
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )}
     </>
   )
 }

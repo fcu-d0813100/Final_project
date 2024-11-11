@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
+import UserCouponSection from '@/components/discount/common/user-coupon-history-section';
+=======
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 import { Tab, Nav } from 'react-bootstrap';
 import UserCouponSection from '@/components/discount/common/user-coupon-history-section';
 import CouponEnd from '@/components/discount/common/coupon-end';
@@ -45,7 +49,10 @@ export default function Index() {
                     'Content-Type': 'application/json',
                 },
             });
+<<<<<<< HEAD
+=======
 
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
             if (!response.ok) {
                 throw new Error(`錯誤: ${response.statusText}`);
             }

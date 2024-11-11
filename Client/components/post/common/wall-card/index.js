@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+// import { useAction } from '@/hooks/post/use-action'
+// import { useCard } from '@/hooks/post/use-card'
 import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
+import PostIcon from '../post-icon'
 
 import styles from './index.module.scss'
-export default function Index({
+export default function WallCard({
   postId,
   href,
   imageSrc,
@@ -13,20 +16,12 @@ export default function Index({
   username,
   likeCount,
 }) {
-  const [isSaved, setIsSaved] = useState(null)
-  useEffect(() => {
-    // 發送 API 請求取得收藏狀態
-    fetch(`/api/posts/${postId}/isSaved`)
-      .then((res) => res.json())
-      .then((data) => {
-        // 根據 API 返回的狀態更新 isSaved，假設返回的狀態為布林值
-        setIsSaved(data.isSaved)
-      })
-      .catch((err) => {
-        console.error(err)
-        setIsSaved(false) // 若發生錯誤，設定為未收藏
-      })
-  }, [postId])
+  // const { liked, likeToggle } = useAction(postId, {
+  //   fetchLike: true,
+  //   fetchSave: true,
+  // })
+  // const { wallCard, fetchWallPosts, updateLikeCount } = useCard()
+  // const [likeCount, setLikeCount] = useState(initialLikeCount)
   return (
     <>
       <div className={styles['post-card1']}>
@@ -48,16 +43,21 @@ export default function Index({
           </Link>
         </div>
         <div className={styles['post-title']}>{title}</div>
-        <div className={styles['post-info']}>
+        {/* <div className={styles['post-info']}>
           <div className={styles['post-info-user']}>
             <Image src={avatarSrc} width={24} height={24} alt="User avatar" />
             <p className="p">{username}</p>
           </div>
           <div className={styles['post-info-like']}>
-            <FgThumbsUp />
-            <p className="p">{likeCount}</p>
+            <PostIcon
+              postId={postId}
+              icon="like"
+              count={likeCount}
+              initialToggled={liked}
+              onToggle={likeToggle}
+            />
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   )
