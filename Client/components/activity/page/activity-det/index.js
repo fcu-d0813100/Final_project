@@ -8,7 +8,7 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import DetCarousel from '@/components/activity/common/DetCarousel'
 import axios from 'axios'
 
-const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 export default function ActivityDet() {
   const [activityData, setActivityData] = useState(null)
