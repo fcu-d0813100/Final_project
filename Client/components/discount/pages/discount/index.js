@@ -25,7 +25,7 @@ export default function Discount() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true, // 啟用自動播放
-    autoplaySpeed: 3000,
+    autoplaySpeed: 2000,
     arrows: false, // 隱藏箭頭
   };
 
