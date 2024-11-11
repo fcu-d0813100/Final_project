@@ -7,6 +7,12 @@ ProductCartContext.displayName = 'ProductCartContext'
 export function ProductCartProvider({ children }) {
   const [productItems, setProductItems] = useState([])
   const [firstRender, setFirstRender] = useState(false)
+  const [selectedCoupon, setSelectedCoupon] = useState(null) // 優惠券狀態
+
+  // 優惠券選擇的更新函數
+  const onSelectCoupon = (coupon) => {
+    setSelectedCoupon(coupon)
+  }
 
   //商品新增到購物車
   const onAddProduct = (product) => {
@@ -92,10 +98,12 @@ export function ProductCartProvider({ children }) {
         pTotalQty,
         pTotalPrice,
         pOriginalTotalPrice,
+        selectedCoupon, // 提供優惠券
         onAddProduct,
         onIncreaseProduct,
         onDecreaseProduct,
         onRemoveProduct,
+        onSelectCoupon, // 更新優惠券
       }}
     >
       {children}

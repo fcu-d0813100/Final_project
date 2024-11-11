@@ -4,18 +4,18 @@ import styles from './discount-box.module.scss'
 import { X } from '@phosphor-icons/react'
 import Form from 'react-bootstrap/Form'
 import { useAuth } from '@/hooks/use-auth'
+import { useCartProduct } from '@/hooks/use-cartP'
 
-export default function DiscountBox() {
+export default function DiscountBox({ onCouponSelect }) {
   // 獲取會員ID
   const { auth } = useAuth()
   const userId = auth.userData.id
   console.log('userId:', userId)
 
-  const [discount, setDiscount] = useState(0) // 折扣內容
+  const { productItems } = useCartProduct() // 使用上下文中的購物車資料
   const [coupons, setCoupons] = useState([]) // 優惠券清單
   const [selectedCoupon, setSelectedCoupon] = useState('') // 已選的優惠券
   const [tempCoupon, setTempCoupon] = useState('') // 暫存的優惠券
-  const [couponData, setCouponData] = useState(null) //儲存被選中的優惠券物件（到時候要抓裡面的值）
 
   // 控制彈窗
   const [show, setShow] = useState(false)
@@ -32,12 +32,9 @@ export default function DiscountBox() {
         credentials: 'include',
       })
       const resData = await res.json()
-      console.log(resData.data)
 
       // 從購物車取得商品品牌
-      let productBrand = JSON.parse(localStorage.getItem('productCart'))
-      productBrand = productBrand.map((product) => product.brand)
-      console.log(productBrand)
+      const productBrands = productItems.map((product) => product.brand)
 
       if (resData.data) {
         // 篩選出有效優惠券
@@ -48,10 +45,9 @@ export default function DiscountBox() {
           return (
             startDate <= now &&
             endDate >= now &&
-            productBrand.includes(coupon.brand_name)
+            productBrands.includes(coupon.brand_name)
           )
         })
-        console.log(filteredData) // 篩選後的結果
         setCoupons(filteredData)
       } else {
         console.warn('No discount data found')
@@ -63,7 +59,7 @@ export default function DiscountBox() {
 
   useEffect(() => {
     getCoupon()
-  }, [userId])
+  }, [userId, productItems]) // 當 userId 或 productItems 改變時重新獲取優惠券
 
   // 從 localStorage 重新取得上次選擇的優惠券
   useEffect(() => {
@@ -76,7 +72,6 @@ export default function DiscountBox() {
   // 更新暫存的優惠券
   const handleCouponChange = (event) => {
     const couponId = event.target.value
-    console.log(couponId)
     setTempCoupon(couponId) // 儲存在 tempCoupon 中，按確認後才更新
   }
 
@@ -86,16 +81,22 @@ export default function DiscountBox() {
     const selectedCouponObj = coupons.find(
       (item) => item.coupon_list_id == tempCoupon
     )
-    console.log(selectedCouponObj)
     localStorage.setItem('selectedCoupon', tempCoupon)
-    if (tempCoupon) {
+
+    if (tempCoupon && selectedCouponObj) {
       localStorage.setItem(
         'selectedCouponObj',
         JSON.stringify(selectedCouponObj)
       )
-    } else if (!tempCoupon) {
+    } else {
       localStorage.removeItem('selectedCouponObj')
     }
+
+    // 調用父組件的 onCouponSelect 回調
+    if (onCouponSelect) {
+      onCouponSelect(selectedCouponObj || null)
+    }
+
     handleClose()
   }
 
@@ -104,7 +105,6 @@ export default function DiscountBox() {
       <div onClick={handleShow} className={styles['checkout_discount']}>
         <span>優惠券</span>
         <span className="ps">
-          {' '}
           {selectedCoupon
             ? coupons.find((coupon) => coupon.coupon_list_id == selectedCoupon)
                 ?.brand_name +
@@ -135,12 +135,11 @@ export default function DiscountBox() {
           <Form.Label className="h6 mt-3 mb-3">優惠券折扣 :</Form.Label>
           <Form.Select
             value={tempCoupon}
-            onChange={handleCouponChange} // 綁定到 tempCoupon
+            onChange={handleCouponChange}
             aria-label="Default select example"
             className={styles['form-select']}
           >
             <option value="">選擇優惠券</option>
-            {/* 動態生成優惠券選項 */}
             {coupons.map((coupon) => (
               <option
                 key={coupon.coupon_relation_id}

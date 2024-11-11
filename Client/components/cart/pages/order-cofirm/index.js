@@ -6,9 +6,18 @@ import { useRouter } from 'next/router'
 import BuyRule from '../../common/buyrule'
 import OrderBox from '../../common/orderbox'
 import axios from 'axios'
+import { useCartProduct } from '@/hooks/use-cartP'
+import { useCartWorkshop } from '@/hooks/use-cartW'
 
 export default function OrderComfirm() {
   const router = useRouter()
+
+  const { pTotalPrice = 0, pOriginalTotalPrice = 0 } = useCartProduct()
+  const { wTotalPrice = 0 } = useCartWorkshop()
+  //打折的價格
+  const discountedWTotalPrice = Math.floor(wTotalPrice * 0.95)
+  const discountDifference =
+    pOriginalTotalPrice - pTotalPrice + (wTotalPrice - discountedWTotalPrice)
 
   //-----------------------生成時間戳記訂單編碼
   const [orderNumber, setOrderNumber] = useState('')
@@ -171,8 +180,19 @@ export default function OrderComfirm() {
                 </Form>
               </div>
               <div className={style['total_amount']}>
-                商品小計：
-                <span>NT${orderData?.totalPrice.toLocaleString()}</span>
+                <div className={style.discount}>
+                  全站95折優惠：NT${discountDifference.toLocaleString()}
+                </div>
+                {orderData && orderData.coupon && (
+                  <div className={style.discount}>
+                    {`${orderData.coupon.brand_name} ${orderData.coupon.name}：NT$${orderData.coupon.discount_value}`}
+                  </div>
+                )}
+                <hr></hr>
+                總金額：
+                <span className={style['total_price']}>
+                  NT${orderData?.totalPrice.toLocaleString()}
+                </span>
               </div>
               {/* <BuyRule /> */}
               <div

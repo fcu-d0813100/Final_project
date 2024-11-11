@@ -44,6 +44,8 @@ router.post('/checkout', async function (req, res, next) {
       storeaddress,
       productCart,
       Workshopcart,
+      coupon,
+      userId,
     } = req.body
 
     //確認分解資料正確
@@ -68,7 +70,7 @@ router.post('/checkout', async function (req, res, next) {
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
     (user_id, payment_id, shipping_id, order_number, total_amount, shipping_address, coupon_id, status)
-    VALUES (1, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', NULL, '${status}')`
+    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', NULL, '${status}')`
 
     const [result] = await db.query(sqlInsert, [
       1, // user_id
@@ -104,6 +106,32 @@ router.post('/checkout', async function (req, res, next) {
     WHERE product_id = ${product.product_id} AND id = ${product.color_id}
   `
       await db.query(sqlUpdateStock)
+    }
+
+    // -----------更新課程人數
+    for (const Workshop of Workshopcart) {
+      const sqlUpdateStock = `
+    UPDATE workshop_time
+    SET registered = registered + 1
+    WHERE workshop_id = 5
+      AND date = '${Workshop.date}'
+      AND start_time = '${Workshop.beginTime}';
+  ` // 執行查詢
+      await db.query(sqlUpdateStock)
+    }
+
+    //----------更新優惠券使用次數(11.11待修改)
+    if (coupon) {
+      const sqlUpdate = `
+      UPDATE coupon_list
+      SET used = used + 1
+      WHERE id = ${coupon.coupon_list_id};
+  
+      UPDATE coupon_relation
+      SET order_id = ${orderId}
+      WHERE user_id = ${userId};
+    `
+      await db.query(sqlUpdate)
     }
 
     //利用訂單id創建課程訂單明細

@@ -89,7 +89,8 @@ export default function OrderBox() {
                           NT${(v.price * v.qty).toLocaleString()}
                         </span>
                         <span className={style['new-price']}>
-                          NT${(v.price * v.qty * 0.8).toLocaleString()}
+                          NT$
+                          {Math.floor(v.price * v.qty * 0.95).toLocaleString()}
                         </span>
                       </td>
                     </tr>
