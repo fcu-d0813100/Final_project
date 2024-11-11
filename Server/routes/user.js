@@ -287,5 +287,26 @@ router.put('/:id/password', authenticate, async function (req, res) {
   // 成功，不帶資料
   return res.json({ status: 'success', data: null })
 })
+// =================================================================
+
+// 軟刪除會員
+router.delete('/:id', function (req, res) {
+  const id = req.params.id
+  const sql = 'UPDATE user SET valid = 0 WHERE id = ?'
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: '刪除資料錯誤', error: err })
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: '無法更新 valid 欄位。',
+      })
+    }
+
+    // 成功
+    return res.json({ status: 'success', data: null })
+  })
+})
 
 export default router

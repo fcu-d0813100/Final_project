@@ -6,10 +6,11 @@ import styles from './index.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/router'
+import DeleteModal from '@/components/shared/modal-delete'
 
 export default function UpdateInfo() {
   // 從勾子的context得到註冊函式
-  const { update, getUser } = useAuth()
+  const { update, getUser, deleteUser } = useAuth()
   const router = useRouter()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
@@ -86,7 +87,6 @@ export default function UpdateInfo() {
       console.error('更新失敗:', error)
     }
   }
-
   // 初始化資料的狀態
   // const [initialUser] = useState({
   //   name: '',
@@ -114,8 +114,20 @@ export default function UpdateInfo() {
     initUserData()
   }, [])
 
-  // 生日、地址無法更新
-
+  const handleDeleteUser = async () => {
+    try {
+      await deleteUser(user.id)
+      router.push('/user/information/update')
+    } catch (error) {
+      console.error('刪除過程中發生錯誤:', error)
+    }
+  }
+  const openModal = () => {
+    setShowModal(true)
+  }
+  const closeModal = () => {
+    setShowModal(false)
+  }
   return (
     <>
       <UserSection titleCN="更新資訊" titleENG="Information">
@@ -281,9 +293,13 @@ export default function UpdateInfo() {
             <div
               className={`col-3 d-flex justify-content-end align-items-center`}
             >
-              <a href="" className={`p ${styles['delete-account']}`}>
+              <Link
+                href=""
+                onClick={(e) => handleDeleteUser(e)}
+                className={`p ${styles['delete-account']}`}
+              >
                 停用會員帳戶
-              </a>
+              </Link>
             </div>
           </div>
 

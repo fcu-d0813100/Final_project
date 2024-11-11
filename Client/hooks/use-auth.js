@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
 import { googleLogin, parseJwt } from '@/services/user'
+import { deleteUser } from 'firebase/auth'
 
 // import { register } from 'module'
 
@@ -469,6 +470,64 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // 會員軟刪除
+  const deleteUser = async (userId) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/user/${userId}`, {
+        method: 'DELETE',
+        credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const resData = await res.json()
+
+      if (resData.status === 'success') {
+        toast.success('用戶已成功標記為刪除', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        // 在刪除成功後等待兩秒並跳轉
+        setTimeout(() => {
+          router.push('/user//information/update')
+        }, 2000)
+      } else {
+        toast.error('刪除失敗，請稍後再試', {
+          style: {
+            border: '1.2px固#90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      console.error('刪除過程中發生錯誤:', error)
+      toast.error('刪除過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
   // 很簡單的保護，但還是會先瀏覽到那頁面，如果要檔的話，要加入載入動畫去檔
   // 登入路由 - 當要進入隱私路由但未登入時，會跳轉到登入路由
   const loginRoute = '/user/login/user'
@@ -541,6 +600,7 @@ export function AuthProvider({ children }) {
         update,
         setAuth,
         callbackGoogleLogin,
+        deleteUser,
       }}
     >
       {children}
