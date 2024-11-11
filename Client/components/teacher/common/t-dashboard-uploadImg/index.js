@@ -3,7 +3,7 @@ import styles from '@/components/teacher/common/t-dashboard-uploadImg/uploadImg.
 import { PiPlus } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
-export default function UploadImg({ width, height, bigText, smText, name }) {
+export default function UploadImg({ width, height, bigText, smText, name, onFileChange }) {
   const [preview, setPreview] = useState(null)
 
   // 動態生成 ID 碼
@@ -15,6 +15,7 @@ export default function UploadImg({ width, height, bigText, smText, name }) {
       const reader = new FileReader()
       reader.onload = () => {
         setPreview(reader.result) // 將圖片預覽設定為上傳的圖片
+        onFileChange(name, file)
       }
       reader.readAsDataURL(file)
     }

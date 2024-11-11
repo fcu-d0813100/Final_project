@@ -7,7 +7,13 @@ import styles from '@/components/teacher/common/upload.module.scss'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import React, { useState, useEffect } from 'react'
 
-export default function Page2({ onPreviousPage, handleSave }) {
+export default function Page2({ onPreviousPage, handleSave, setFormData }) {
+  const handleFileChange = (name, file) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: file,
+    }))
+  }
   return (
     <>
       <div className={styles.main}>
@@ -19,6 +25,7 @@ export default function Page2({ onPreviousPage, handleSave }) {
             bigText="新增細節圖"
             smText="1920 X 550 px"
             name="img_lg"
+            onFileChange={handleFileChange}
           />
           <div className=" d-flex mt-5">
             <UploadImg
@@ -27,6 +34,7 @@ export default function Page2({ onPreviousPage, handleSave }) {
               bigText="新增細節圖"
               smText="960 X 530 px"
               name="img_sm01"
+              onFileChange={handleFileChange}
             />
             <div className="mx-3"></div>
             <UploadImg
@@ -35,6 +43,7 @@ export default function Page2({ onPreviousPage, handleSave }) {
               bigText="新增細節圖"
               smText="720 X 620 px"
               name="img_sm02"
+              onFileChange={handleFileChange}
             />
           </div>
         </div>

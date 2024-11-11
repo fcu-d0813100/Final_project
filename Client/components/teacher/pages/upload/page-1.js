@@ -97,6 +97,12 @@ export default function Page1({
     toggleModal(id)
   }
   //console.log(formData)
+  const handleFileChange = (name, file) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: file,
+    }))
+  }
 
   return (
     <>
@@ -109,6 +115,7 @@ export default function Page1({
             bigText="新增封面圖"
             smText="必填"
             name="img_cover"
+            onFileChange={handleFileChange}
           />
 
           <div className={`${styles.uploadMainInfo} flex-grow-1`}>

@@ -30,21 +30,6 @@ export default function Upload(props) {
     e.preventDefault()
     const form = new FormData()
 
-    // 將圖片文件與表單資料一併加入
-    // form.append(
-    //   'img_cover',
-    //   document.querySelector('[name="img_cover"]').files[0]
-    // )
-    // form.append('img_lg', document.querySelector('[name="img_lg"]').files[0])
-    // form.append(
-    //   'img_sm01',
-    //   document.querySelector('[name="img_sm01"]').files[0]
-    // )
-    // form.append(
-    //   'img_sm02',
-    //   document.querySelector('[name="img_sm02"]').files[0]
-    // )
-
     // 其餘表單資料
     Object.keys(formData).forEach((key) => {
       form.append(key, formData[key])
@@ -99,7 +84,11 @@ export default function Upload(props) {
 
       <div>
         <Sidebar />
-        <form onSubmit={handleSubmit} method="post">
+        <form
+          onSubmit={handleSubmit}
+          method="post"
+          enctype="multipart/form-data"
+        >
           {!isPage2 ? (
             <Page1
               onNextPage={handleNextPage}
@@ -114,6 +103,7 @@ export default function Upload(props) {
             <Page2
               onPreviousPage={handlePreviousPage}
               handleSave={handleSave}
+              setFormData={setFormData}
             /> // 傳入返回頁面函數
           )}
         </form>
