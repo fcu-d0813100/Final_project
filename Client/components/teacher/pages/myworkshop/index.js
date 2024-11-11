@@ -1,4 +1,6 @@
 'use client'
+import MyWorkshopBox from '@/components/teacher/common/t-dashboard-myWorkshopBox'
+import { useAuth } from '@/hooks/use-auth'
 import Image from 'next/image'
 import Dropdown from '@/components/workshop/common/dropdown'
 import {
@@ -16,6 +18,37 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'phosphor-react'
 
 export default function MyWorkshop(props) {
+  const { auth, login, logout } = useAuth()
+  const { userData } = auth // 撈取 teacherData 資料
+  const [workshop, setWorkshop] = useState(null)
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/workshop/myWorkshop',
+        {
+          credentials: 'include', //一定要加，才會帶cookie
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      if (!response.ok) {
+        throw new Error('網路回應不成功：' + response.status)
+      }
+      const data = await response.json()
+      //const filteredData = data.find((teacher) => teacher.id === userData.id) // 篩選符合 userData.id 的資料
+      setWorkshop(...data) // 只設定符合 id 的資料
+      //console.log(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
     <>
       <TDashboardBN teacher="Gina Bettelli" />
@@ -81,48 +114,43 @@ export default function MyWorkshop(props) {
             <button>已發布</button>
             <button>垃圾桶</button>
           </div>
-          <div className={`${styles.workshopArea}`}>
-            <button className={`${styles.myWorkshop}`}>
-              <div className="d-flex">
-                <div className={styles.imgArea}>
-                  <Image
-                    height={190}
-                    width={190}
-                    className={styles.coverImg}
-                    src="/workshop/workshop_img/1-1-c.jpg"
-                    alt=""
-                  />
-                </div>
-                <div className={styles.infoText}>
-                  <h4 className="h4">妝容持久與調整技巧課程</h4>
-                  <h5 className="h5 mb-1">開課期間</h5>
-                  <p className="p">2024/09/30 - 2024/10/30</p>
-                </div>
-              </div>
 
-              <div className={styles.priceAndStatus}>
-                <h4 className="h4 m-0 me-3">NT$3200</h4>
-                {/* <p className={`ps ${styles.unUpload}`}>未發布</p> */}
-                {/* <p className={`ps ${styles.registering}`}>報名中</p> */}
-                {/* <p className={`ps ${styles.end}`}>已截止</p> */}
-                <p className={`ps ${styles.expired}`}>已過期</p>
-              </div>
+          {workshop && workshop.length > 0 ? (
+            workshop.map((item) => {
+              // 將 dates 字串轉換成陣列
+              const datesArray = item.dates ? item.dates.split(',') : []
 
-              <div href="#" className="ph d-flex gap-1">
-                <button className={styles.trash}>
-                  <PiTrash />
-                </button>
-                <button className={styles.upload}>
-                  <PiExport className="ph" />
-                </button>
-                <button className={`${styles.editBtn} h6 mx-2`}>
-                  編輯 <PiArrowRight className={`${styles.arrow} ph ms-2`}/>
-                </button>
-              </div>
-            </button>
+              // 日期格式化函式，將 YYYY-MM-DD 格式轉換為 YYYY/MM/DD
+              const formatDate = (dateString) => {
+                const [year, month, day] = dateString.split('-')
+                return `${year}/${month}/${day}`
+              }
 
-          
-          </div>
+              // 取得第一個和最後一個日期，並格式化為 YYYY/MM/DD
+              const beginDate =
+                datesArray.length > 0 ? formatDate(datesArray[0]) : ''
+              const endDate =
+                datesArray.length > 0
+                  ? formatDate(datesArray[datesArray.length - 1])
+                  : ''
+
+              return (
+                <MyWorkshopBox
+                  key={item.id}
+                  img={`/workshop/workshop_img/${item.img_cover}`}
+                  name={item.name}
+                  start_date={beginDate}
+                  end_date={endDate}
+                  price={item.price}
+                  isUpload={item.isUpload}
+                  registration_start={item.registration_start}
+                  registration_end={item.registration_end}
+                />
+              )
+            })
+          ) : (
+            <p>目前沒有任何工作坊資料。</p>
+          )}
         </div>
       </div>
     </>

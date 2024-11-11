@@ -7,7 +7,7 @@ import styles from '@/components/teacher/common/upload.module.scss'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import React, { useState, useEffect } from 'react'
 
-export default function Page2({ onPreviousPage }) {
+export default function Page2({ onPreviousPage, handleSave }) {
   return (
     <>
       <div className={styles.main}>
@@ -52,7 +52,11 @@ export default function Page2({ onPreviousPage }) {
           </button>
 
           <div className="d-flex ms-auto">
-            <button className="btn-secondary h6" type="submit">
+            <button
+              className="btn-secondary h6"
+              type="submit"
+              onClick={handleSave}
+            >
               儲存
             </button>
             <button className="btn-danger h6 ms-4">立即發布</button>

@@ -28,16 +28,40 @@ export default function Upload(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const form = new FormData()
+
+    // 將圖片文件與表單資料一併加入
+    // form.append(
+    //   'img_cover',
+    //   document.querySelector('[name="img_cover"]').files[0]
+    // )
+    // form.append('img_lg', document.querySelector('[name="img_lg"]').files[0])
+    // form.append(
+    //   'img_sm01',
+    //   document.querySelector('[name="img_sm01"]').files[0]
+    // )
+    // form.append(
+    //   'img_sm02',
+    //   document.querySelector('[name="img_sm02"]').files[0]
+    // )
+
+    // 其餘表單資料
+    Object.keys(formData).forEach((key) => {
+      form.append(key, formData[key])
+    })
+
+    // 加入 timeSchedule 資料
+    timeSchedule.forEach((time, index) => {
+      form.append(`timeSchedule[${index}]`, JSON.stringify(time))
+    })
+
     try {
       const response = await fetch(
         'http://localhost:3005/api/workshop/upload/page01',
         {
           credentials: 'include',
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ...formData, timeSchedule }),
+          body: form, // 直接將 FormData 傳送
         }
       )
 
@@ -87,7 +111,10 @@ export default function Upload(props) {
               handleSave={handleSave}
             /> // 傳入切換頁面函數
           ) : (
-            <Page2 onPreviousPage={handlePreviousPage} /> // 傳入返回頁面函數
+            <Page2
+              onPreviousPage={handlePreviousPage}
+              handleSave={handleSave}
+            /> // 傳入返回頁面函數
           )}
         </form>
       </div>
