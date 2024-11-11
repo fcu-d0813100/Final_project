@@ -11,12 +11,13 @@
 .icon-lock {
   position: absolute;
   bottom: 10px;
-  left: 30px;
+  left: 20px;
 }
 
 .form-focus {
   padding-left: 50px;
   border-radius: 5px;
+  border:$gray-300 solid 1px  ;
 }
 
 .form-focus:focus {
@@ -100,7 +101,7 @@
 
 .btn-style{
   // height: 50px;
-  width: 200px;
+  width: 250px;
   background-color: $green-700;
   color: #fff;
   border-radius: 3px;
@@ -111,4 +112,11 @@
     border: $green-500 solid 1px;
     transition: ease 0.3s;
   }
+}
+
+.input-token{
+  background-color: $gray-100;
+}
+.title{
+  color: $green-700;
 }

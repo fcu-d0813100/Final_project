@@ -23,7 +23,7 @@ const mailHtml = (otpToken) => `
       }
       .title {
         font-weight: 700;
-        font-size: 30px;
+        font-size: 20px;
       }
       .content {
         padding: 5px;
@@ -33,23 +33,28 @@ const mailHtml = (otpToken) => `
       .token-content {
         display: flex;
         justify-content: center;
-        background-color: #1c262c;
+        background-color: #4b4d3f;
         color: white;
         padding-block: 20px;
+        width: 400px;
+        height: 100px;
+
       }
       .tip {
         text-align: center;
         font-size: 20px;
-        font-weight: 900;
+        font-weight: 800;
       }
       .token {
         text-align: center;
-        font-size: 30px;
-        font-weight: 900;
+        font-size: 40px;
+        font-weight: 800;
       }
       .column {
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        margin-inline: 10px;
       }
       .center {
         display: flex;
@@ -93,14 +98,16 @@ const mailHtml = (otpToken) => `
 
 router.post('/otp', async (req, res, next) => {
   const { email } = req.body
-  if (!email) return res.json({ message: 'fail', code: '400' })
+  if (!email) return res.json({ status: 'error', message: '缺少必要資料' })
 
+  // 建立otp資料表記錄，成功回傳otp記錄物件，失敗為空物件{}
   const otp = await createOtp(email)
-  if (!otp.token) return res.json({ message: 'fail', code: '400' })
+  if (!otp.token)
+    return res.json({ status: 'error', message: 'Email錯誤或期間內重覆要求' })
 
   // 寄送email
   const mailOptions = {
-    from: `"support"<${process.env.SMTP_TO_EMAIL}>`,
+    from: `"Beautique官方"<${process.env.SMTP_TO_EMAIL}>`,
     to: email,
     subject: '重設密碼要求的電子郵件驗證碼',
     html: mailHtml(otp.token),
@@ -108,32 +115,35 @@ router.post('/otp', async (req, res, next) => {
 
   transporter.sendMail(mailOptions, (err, response) => {
     if (err) {
-      return res.status(400).json({ message: 'fail', detail: err })
+      // 失敗處理
+      // console.log(err)
+      return res.json({ status: 'error', message: '發送電子郵件失敗' })
     } else {
-      return res.json({ message: 'email sent', code: '200' })
+      // 成功回覆的json
+      return res.json({ status: 'success', data: null })
     }
   })
 })
 
 // 重設密碼用
-router.post('/reset', async (req, res, next) => {
+router.post('/reset', async (req, res) => {
   const { email, token, password } = req.body
 
-  if (!token) return res.status(400).json({ message: 'fail', code: '400' })
-
-  try {
-    // 使用 generateHash 加密新密碼
-    const hashedPassword = await generateHash(password)
-
-    // 更新密碼的數據庫函數
-    const result = await updatePassword(email, token, hashedPassword)
-
-    if (!result) return res.status(400).json({ message: 'fail', code: '400' })
-    return res.status(200).json({ message: 'success', code: '200' })
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: 'fail', code: '500', detail: error.message })
+  if (!token || !email || !password) {
+    return res.json({ status: 'error', message: '缺少必要資料' })
   }
+
+  // 加密密碼
+  const hashedPassword = await generateHash(password)
+
+  // updatePassword 中驗證 otp 的存在與合法性(是否有到期)
+  const result = await updatePassword(email, token, hashedPassword)
+
+  if (!result) {
+    return res.json({ status: 'error', message: '修改密碼失敗' })
+  }
+
+  res.json({ status: 'success', message: '密碼修改成功' })
 })
+
 export default router
