@@ -64,6 +64,10 @@ export function ProductCartProvider({ children }) {
   // 計算總數量與總金額
   const pTotalQty = productItems.reduce((acc, v) => acc + v.qty, 0)
   const pTotalPrice = productItems.reduce((acc, v) => acc + v.qty * v.price, 0)
+  const pOriginalTotalPrice = productItems.reduce(
+    (acc, v) => acc + v.qty * v.originalprice,
+    0
+  )
 
   // 初次渲染localStorage中讀取資料，設定到items狀態中
   useEffect(() => {
@@ -87,6 +91,7 @@ export function ProductCartProvider({ children }) {
         productItems,
         pTotalQty,
         pTotalPrice,
+        pOriginalTotalPrice,
         onAddProduct,
         onIncreaseProduct,
         onDecreaseProduct,

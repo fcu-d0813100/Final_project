@@ -76,13 +76,26 @@ export default function DiscountBox() {
   // 更新暫存的優惠券
   const handleCouponChange = (event) => {
     const couponId = event.target.value
+    console.log(couponId)
     setTempCoupon(couponId) // 儲存在 tempCoupon 中，按確認後才更新
   }
 
   // 確認按鈕的點擊事件，更新 selectedCoupon 並關閉彈窗
   const handleConfirm = () => {
     setSelectedCoupon(tempCoupon)
-    localStorage.setItem('selectedCoupon', tempCoupon) // 儲存到 localStorage
+    const selectedCouponObj = coupons.find(
+      (item) => item.coupon_list_id == tempCoupon
+    )
+    console.log(selectedCouponObj)
+    localStorage.setItem('selectedCoupon', tempCoupon)
+    if (tempCoupon) {
+      localStorage.setItem(
+        'selectedCouponObj',
+        JSON.stringify(selectedCouponObj)
+      )
+    } else if (!tempCoupon) {
+      localStorage.removeItem('selectedCouponObj')
+    }
     handleClose()
   }
 
@@ -90,7 +103,16 @@ export default function DiscountBox() {
     <>
       <div onClick={handleShow} className={styles['checkout_discount']}>
         <span>優惠券</span>
-        <span className="ps">{selectedCoupon || '輸入享有折扣 >'}</span>
+        <span className="ps">
+          {' '}
+          {selectedCoupon
+            ? coupons.find((coupon) => coupon.coupon_list_id == selectedCoupon)
+                ?.brand_name +
+              ' ' +
+              coupons.find((coupon) => coupon.coupon_list_id == selectedCoupon)
+                ?.name
+            : '輸入享有折扣 >'}
+        </span>
       </div>
 
       <Modal
@@ -120,7 +142,10 @@ export default function DiscountBox() {
             <option value="">選擇優惠券</option>
             {/* 動態生成優惠券選項 */}
             {coupons.map((coupon) => (
-              <option key={coupon.coupon_relation_id} value={coupon.id}>
+              <option
+                key={coupon.coupon_relation_id}
+                value={coupon.coupon_list_id}
+              >
                 {`${coupon.brand_name} ${coupon.name}`}
               </option>
             ))}

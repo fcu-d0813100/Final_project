@@ -6,7 +6,11 @@ import { useCartWorkshop } from '@/hooks/use-cartW'
 
 export default function CheckoutBox() {
   // 從use-cartP鉤子取得商品內容
-  const { pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
+  const {
+    pTotalPrice = 0,
+    pTotalQty = 0,
+    pOriginalTotalPrice = 0,
+  } = useCartProduct()
   //從use-cartＷ鉤子取得課程內容
   const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
   // 計算打折後的總和
@@ -27,7 +31,7 @@ export default function CheckoutBox() {
           </div>
           <div className={style.item}>
             <span>彩妝商品</span>
-            <span>NT${pTotalPrice.toLocaleString()}</span>
+            <span>NT${pOriginalTotalPrice.toLocaleString()}</span>
           </div>
           <div className={style.item}>
             <span>課程商品</span>
