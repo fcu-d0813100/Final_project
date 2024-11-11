@@ -7,10 +7,11 @@ import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
+import { updateProfileAvatar } from '@/services/user'
 
 export default function UpdateInfo() {
   // 從勾子的context得到註冊函式
-  const { update, getUser, deleteUser } = useAuth()
+  const { auth, update, getUser, deleteUser } = useAuth()
   const router = useRouter()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
@@ -87,20 +88,6 @@ export default function UpdateInfo() {
       console.error('更新失敗:', error)
     }
   }
-  // 初始化資料的狀態
-  // const [initialUser] = useState({
-  //   name: '',
-  //   account: '',
-  //   nickname: '',
-  //   gender: '',
-  //   birthday: '',
-  //   email: '',
-  //   img: '',
-  //   phone: '',
-  //   address: '',
-  //   create_at: '',
-  //   updated_at: 'Now()',
-  // })
 
   // 初始化會員資料
   const initUserData = async () => {
