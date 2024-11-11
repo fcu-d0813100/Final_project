@@ -34,6 +34,7 @@ const UserCoupon = () => {
     // 獲取用戶優惠券
     const fetchCoupons = async () => {
         if (!userId) {
+            toast.error('未找到使用者資訊，請先登入'); // 顯示通知
             setLoading(false);
             return;
         }
@@ -84,6 +85,91 @@ const UserCoupon = () => {
         }
     }, [userId, currentPage]);
 
+    // 处理优惠券领取逻辑
+    const handleClaimCoupon = async () => {
+        if (!couponCode) {
+            // setError('請輸入優惠券代碼');
+            toast.error('請輸入優惠券代碼'); // 顯示錯誤通知
+            return;
+        }
+        setLoading(true);
+        try {
+            // 请求后端检查优惠券是否存在
+            const response = await fetch('http://localhost:3005/api/coupons', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('取得優惠券列表失敗');
+            }
+
+            const data = await response.json();
+            const matchedCoupon = data.find((coupon) => coupon.code === couponCode);
+
+            if (!matchedCoupon) {
+                // 如果未找到匹配的優惠券
+                // setError('優惠券代碼錯誤，請重新輸入');
+                toast.error('優惠券代碼錯誤，請重新輸入'); // 顯示錯誤通知
+                return;
+            }
+
+            // 如果找到了匹配的優惠券，接下來檢查是否已領取
+            const relationResponse = await fetch(`http://localhost:3005/api/user-coupons?userId=${userId}&couponId=${matchedCoupon.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!relationResponse.ok) {
+                throw new Error('查詢優惠券領取紀錄失敗');
+            }
+
+            const relationData = await relationResponse.json();
+
+            if (relationData.length > 0) {
+                // 如果已經有該記錄，說明用戶已領取過此優惠券
+                // setError('您已領取過此優惠券');
+                toast.error('您已領取過此優惠券'); // 顯示錯誤通知
+                return;
+            }
+
+            // 如果沒有領取過，插入新的領取記錄
+            const claimResponse = await fetch('http://localhost:3005/api/user-coupons', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                    coupon_id: matchedCoupon.id,
+                }),
+            });
+
+            const claimData = await claimResponse.json();
+
+            if (claimData.success) {
+                // setMessage('優惠券領取成功！');
+                toast.success('優惠券領取成功！'); // 顯示成功通知
+                // 可選：重新獲取優惠券數據
+                fetchCoupons();
+            } else {
+                // setError(claimData.error || '領取優惠券失敗');
+                toast.error(claimData.error || '領取優惠券失敗'); // 顯示錯誤通知
+            }
+        } catch (error) {
+            console.error('發生錯誤:', error);
+            // setError('查詢優惠券時發生錯誤');
+            toast.error('查詢優惠券時發生錯誤'); // 顯示錯誤通知
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     return (
         <UserCouponSection titleCN="優惠券" titleENG="Coupon">
             <aside className={styles.right}>
@@ -96,7 +182,7 @@ const UserCoupon = () => {
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value)}
                     />
-                    <button className={`btn-primary ${styles.btnReceive}`}>領取</button>
+                    <button className={`btn-primary ${styles.btnReceive}`} onClick={handleClaimCoupon}>領取</button>
                     {/* 設置篩選按鈕 */}
                     <button onClick={() => setModalShow(true)} className={`btn ${styles.funnel}`}><IoFunnel size={25} color='#90957a' /></button>
                 </div>
@@ -114,7 +200,7 @@ const UserCoupon = () => {
                 />
 
                 {/* 載入狀態 */}
-                {loading && <p>加載中...</p>}
+                {/* {loading && <p>加載中...</p>} */}
 
                 {/* 顯示優惠券 */}
                 <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>

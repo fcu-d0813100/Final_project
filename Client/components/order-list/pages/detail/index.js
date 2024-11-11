@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss'; // 頁面樣式
-import Item from '@/components/order-list/common/item';
+import Item from '@/components/order-list/common/item-discount/comment-btn';
 import Workshop from '@/components/order-list/common/workshop';
 import OrderSection from '@/components/user/common/user-section';
+import Link from 'next/link';
 
 const OrderDetail = () => {
     const [orderData, setOrderData] = useState(null); // 用來存儲訂單資料
@@ -62,100 +63,160 @@ const OrderDetail = () => {
         return <div>無法獲取訂單詳細資料</div>; // 如果無法獲取資料，顯示錯誤訊息
     }
 
-    const { items, order_number, payment, shipping, shipping_address, name, phone, total_amount,discount_value } = orderData;
+    const { items, order_number, payment, shipping, shipping_address, name, phone, total_amount, discount_value } = orderData;
 
     return (
         <OrderSection titleCN="訂單詳情">
-   
 
-            <div className={`${styles["order-det-header"]} mt-3 d-flex justify-content-between align-items-center mb-2`}>
-                <div className="header-left d-flex align-items-center">
-                    <div className={`${styles.squ} me-3`}></div>
-                    <div className={`${styles["order-num"]} h4`}>訂單編號 {order_number}</div>
-                </div>
-                <div className={`${styles["header-right"]} p`}>
-                    {/* 顯示訂單總金額等其他資訊 */}
-                </div>
-            </div>
-
-            <div className={`${styles["order-det-content"]} d-flex flex-column border rounded-top`}>
-                {/* 訂單信息和收件信息 */}
-                <div className={`${styles.msg} d-flex justify-content-between align-items-center`}>
-                    <div className={styles["msg-left"]}>
-                        <div className={`${styles["left-title"]} h4 mb-3`}>訂單信息</div>
-                        <div className={`${styles.detail} h6 ms-3`}>
-                            <div>訂單編號：{order_number}</div>
-                            <div>付款方式：{payment}</div>
-                            <div>運送方式：{shipping}</div>
-                        </div>
+            <div className={styles.right}>
+                <div className={`${styles["order-det-header"]} mt-3 d-flex justify-content-between align-items-center mb-2`}>
+                    <div className="header-left d-flex align-items-center">
+                        <div className={`${styles.squ} me-3`}></div>
+                        <div className={`${styles["order-num"]} h4`}>訂單編號 {order_number}</div>
                     </div>
-                    <div className={styles.line}></div>
-                    <div className={styles["msg-right"]}>
-                        <div className={`${styles["right-title"]} h4 mb-3`}>收件信息</div>
-                        <div className={`${styles.detail} h6 ms-3`}>
-                            <div className="name">{name}</div>
-                            <div className="phone">{phone}</div>
-                            <div className="address">{shipping_address}</div>
-                        </div>
+                    <div className={`${styles["header-right"]} p`}>
+                        {/* 顯示訂單總金額等其他資訊 */}
                     </div>
                 </div>
 
-                {/* 渲染商品列表 */}
-                <div className={`${styles.content} ps-5 pt-5 pe-5`}>
-                    <div className={`${styles.header} h4 border-bottom p-2 mb-2`}>購買商品</div>
-                    {items.length > 0 ? (
-                        items.map((item, index) => (
-                            <div key={item.id || index}>
-                                {/* 顯示商品資料 */}
-                                {item.product_id && (
-                                    <Item
-                                        imageSrc={`/product/${item.mainimage}`}
-                                        brand={item.name}
-                                        productName={item.product_name}
-                                        color={item.color}
-                                        quantity={item.quantity}
-                                        subTotal={item.price * item.quantity}
-                                    />
-                                )}
-                                {/* 顯示工作坊資料 */}
-                                {item.wid && (
-                                    <Workshop
-                                        key={item.wid}
-                                        imageSrc={`/workshop/`}
-                                        title={item.type}
-                                        instructor={item.teachers_name}
-                                        dateRange={`${item.registration_start} - ${item.registration_end}`}
-                                        price={item.workshop_price}
-                                    />
-                                )}
+                <div className={`${styles["order-det-content"]} d-flex flex-column border rounded-top`}>
+                    {/* 訂單信息和收件信息 */}
+                    <div className={`${styles.msg} d-flex justify-content-between align-items-center`}>
+                        <div className={styles["msg-left"]}>
+                            <div className={`${styles["left-title"]} h4 mb-3`}>訂單信息</div>
+                            <div className={`${styles.detail} h6 ms-3`}>
+                                <div>訂單編號：{order_number}</div>
+                                <div>付款方式：{payment}</div>
+                                <div>運送方式：{shipping}</div>
                             </div>
-                        ))
-                    ) : (
-                        <div>無商品資料</div> // 如果 items 為空，顯示提示訊息
-                    )}
-                </div>
-
-                <div className={`${styles.footer} d-flex flex-column justify-content-end align-items-end border-top p-2`}>
-                    <div className={styles["total-text-group"]}>
-                        <div className={`total h6 p-1`}>
-                            商品小計<span>${}</span>
                         </div>
-                        {/* <div className={`total h6 p-1`}>
+                        <div className={styles.line}></div>
+                        <div className={styles["msg-right"]}>
+                            <div className={`${styles["right-title"]} h4 mb-3`}>收件信息</div>
+                            <div className={`${styles.detail} h6 ms-3`}>
+                                <div className="name">{name}</div>
+                                <div className="phone">{phone}</div>
+                                <div className="address">{shipping_address}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 渲染商品列表 */}
+                    <div className={`${styles.content} ps-5 pt-5 pe-5`}>
+                        <div className={`${styles.header} h4 border-bottom p-2 mb-2`}>購買商品</div>
+                        {items.length > 0 ? (
+                            items.map((item, index) => (
+                                <div key={item.id || index}>
+                                    {/* 顯示商品資料 */}
+                                    {item.product_id && (
+                                        <Item
+                                            imageSrc={`/product/mainimage/${item.mainimage}`}
+                                            brand={item.name}
+                                            productName={item.product_name}
+                                            color={item.color}
+                                            quantity={item.quantity}
+                                            originalPrice={item.originalprice}
+                                            discountedPrice={new Intl.NumberFormat().format(item.price)}
+                                        />
+                                    )}
+                                    {/* 顯示工作坊資料 */}
+                                    {item.wid && (
+                                        <Workshop
+                                            key={item.wid}
+                                            imageSrc={`/workshop/workshop_img/${item.type_id}-${item.wid}-c.jpg`}
+                                            title={item.type}
+                                            instructor={item.teachers_name}
+                                            dateRange={`${item.registration_start} - ${item.registration_end}`}
+                                            price={new Intl.NumberFormat().format(item.workshop_price)}
+                                        />
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <div>無商品資料</div> // 如果 items 為空，顯示提示訊息
+                        )}
+                    </div>
+
+                    <div className={`${styles.footer} d-flex flex-column justify-content-end align-items-end border-top p-2`}>
+                        <div className={styles["total-text-group"]}>
+                            <div className={`total h6 p-1`}>
+                                商品小計<span>$  {new Intl.NumberFormat().format(
+                                    items.reduce((total, item) => {
+                                        // 計算每個商品的小計
+                                        if (item.product_id) {
+                                            return total + (item.originalprice * item.quantity);  // 商品小計
+                                        }
+                                        if (item.wid) {
+                                            return total + item.workshop_price;  // 工作坊價格
+                                        }
+                                        return total;
+                                    }, 0) // 初始總金額為 0
+                                )}</span>
+                            </div>
+                            <div className={`total h6 p-1`}>
+                                商品折扣<span>$  {new Intl.NumberFormat().format(
+                                    items.reduce((total, item) => {
+                                        // 計算每個商品的小計
+                                        if (item.product_id) {
+                                            return total + ((item.originalprice - item.price) * item.quantity);  // 商品小計
+                                        }
+                                        return total;
+                                    }, 0) // 初始總金額為 0
+                                )}</span>
+                            </div>
+                            {/* <div className={`total h6 p-1`}>
                                 運費<span>${shippingFee}</span>
                             </div>
                             <div className={`total h6 p-1`}>
                                 運費折扣<span>-${shippingDiscount}</span>
                             </div> */}
-                        <div className={`total h6 p-1`}>
-                            優惠券<span>-${ discount_value}</span>
-                        </div>
-                        <div className={`${styles.total} h6 p-1 border-top border-black`}>
-                            訂單金額<span className="h4">NT$ {total_amount}</span>
+                            {discount_value !== null && (
+                                <div className="total h6 p-1">
+                                    {discount_value > 1 ? (
+                                        // 当 discount_value 大于 1 时显示优惠券金额
+                                        <>
+                                            優惠券<span>-${discount_value}</span>
+                                        </>
+                                    ) : (
+                                        // 当 discount_value 小于等于 1 时显示计算后的金额
+                                        <>
+                                            優惠券
+                                            <span>-$
+                                                {new Intl.NumberFormat().format(
+                                                    items.reduce((total, item) => {
+                                                        // 计算每个商品的小计
+                                                        if (item.product_id) {
+                                                            return total + (item.price * item.quantity);  // 商品小计
+                                                        }
+                                                        if (item.wid) {
+                                                            return total + item.workshop_price;  // 工作坊价格
+                                                        }
+                                                        return total;
+                                                    }, 0) - total_amount // 计算总金额后减去 total_amount
+                                                )}
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                            <div className={`${styles.total} h6 p-1 border-top border-black`}>
+                                訂單金額<span className="h4">NT$ {new Intl.NumberFormat().format(
+                                    items.reduce((total, item) => {
+                                        // 計算每個商品的小計
+                                        if (item.product_id) {
+                                            return total + (item.price * item.quantity);  // 商品小計
+                                        }
+                                        if (item.wid) {
+                                            return total + item.workshop_price;  // 工作坊價格
+                                        }
+                                        return total;
+                                    }, 0) // 初始總金額為 0
+                                )}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-   
         </OrderSection>
     );
 };
