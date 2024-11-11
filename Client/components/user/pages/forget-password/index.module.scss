@@ -1,0 +1,122 @@
+@import '@/styles/_variant.scss';
+
+.password-area {
+  margin-top: 85px;
+}
+
+.input-password {
+  position: relative;
+}
+
+.icon-lock {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+}
+
+.form-focus {
+  padding-left: 50px;
+  border-radius: 5px;
+  border:$gray-300 solid 1px  ;
+}
+
+.form-focus:focus {
+  border-color: $green-500;
+  box-shadow: 0 0 0 0.1rem $green-500;
+}
+
+
+
+//   &:focus {
+//     border-color: $green-500;
+//     box-shadow: 0 0 0 0.1rem $green-500;
+//   }
+// }
+
+.icon-eye {
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+}
+
+.email-text {
+  color: $red-500;
+}
+
+.form-check-input2:checked {
+  background-color: black;
+  border-color: black;
+  box-shadow: none;
+}
+
+.form-check-input2:focus {
+  box-shadow: 0 0 0 0.1rem $green-500;
+}
+
+.email-area {
+  margin-bottom: 150px;
+}
+
+.line-title-down {
+  border-top: 2px solid $green-500;
+}
+
+// @media (max-width: 1440px) {
+//   .container-pw {
+//     margin-inline: 20px;
+//   }
+// }
+
+@media (max-width: 576px) {
+  .password-area {
+    margin-top: 40px;
+  }
+
+  .email-area {
+    margin: 30px 0px;
+  }
+
+  .email-rwd {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+}
+
+.eyeiclosed {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  bottom:30%;
+  background-color: transparent;
+  border: none;
+}
+
+.span-color{
+  background-color: $green-600;
+  color:white;
+}
+
+.btn-style{
+  // height: 50px;
+  width: 250px;
+  background-color: $green-700;
+  color: #fff;
+  border-radius: 3px;
+  border: $green-700 solid 1px;
+  margin: 0;
+  &:hover {
+    background: $green-500;
+    border: $green-500 solid 1px;
+    transition: ease 0.3s;
+  }
+}
+
+.input-token{
+  background-color: $gray-100;
+}
+.title{
+  color: $green-700;
+}

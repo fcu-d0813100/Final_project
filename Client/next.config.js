@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
+    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -18,6 +19,8 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
+        port: '3005',
+        pathname: '/**',
       },
     ],
     unoptimized: true,
@@ -33,10 +36,9 @@ const nextConfig = {
   //     },
   //   ]
   // },
-}
-
-module.exports = {
   sassOptions: {
     // prependData: `@import "@/styles/global.scss";`,
   },
 }
+
+module.exports = nextConfig

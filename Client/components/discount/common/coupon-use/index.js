@@ -8,7 +8,7 @@ const Coupon = ({
     name = "",
     discount_value = "",
     minimum_amount = 0,
-    end_date = "無使用期限"
+    end_date = "無使用期限",
 }) => {
 
     const { auth } = useAuth();  // 获取用户认证信息
@@ -21,7 +21,7 @@ const Coupon = ({
     };
 
     return (
-        <div className={`${styles['coupon-lg']} d-flex align-items-center justify-content-around px-2`}>
+        <div className={`${styles['coupon-lg']} d-flex align-items-center px-2`}>
             <div className={styles.img}>
                 <img className={styles['coupon-image']} src={img} alt="Coupon Image" />
             </div>
@@ -35,7 +35,7 @@ const Coupon = ({
                 {/* 这里直接绑定 onClick 处理 edit 操作 */}
                 <Link
                     href="/cart"  // 不暴露 id
-                    className={`${styles.btn} ${styles['btn-outline-light']} d-flex justify-content-center align-items-center btn-primary p text-decoration-none`}
+                    className={`btn ${styles['btn-outline-light']} d-flex justify-content-center align-items-center btn-primary p text-decoration-none`}
                     onClick={handleCouponUse} 
                 >
                     使用

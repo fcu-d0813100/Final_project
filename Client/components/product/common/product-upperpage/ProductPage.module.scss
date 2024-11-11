@@ -81,7 +81,10 @@
         cursor: pointer;   
         outline: none;     
       }
-      
+      .stock-and-more-info{
+        display: flex;
+        align-items: center;
+      }
 
       .price {
         display: flex;

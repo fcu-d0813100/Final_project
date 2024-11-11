@@ -21,16 +21,13 @@ export default function Index({ CN }) {
     return null;
   }
 
-  // 动态生成歷史紀錄的链接
-  const historyLink = `/user/coupon/history/${userId}`;
-
   return (
     <>
       <div className={styles['post-title']}>
         <span className="h3 m-2">{CN}</span>
 
         {/* 歷史紀錄 链接，使用动态 userId */}
-        <Link href={historyLink} className={`${styles.history} text-decoration-none p d-flex align-items-center`}>
+        <Link href='/user/coupon/history' className={`${styles.history} text-decoration-none p d-flex align-items-center`}>
           歷史紀錄<FaAnglesRight className={`${styles.arrow} ms-1`} />
         </Link>
       </div>

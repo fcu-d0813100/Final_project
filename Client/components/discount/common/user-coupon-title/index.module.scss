@@ -32,13 +32,14 @@
 
 .history {
     color: $green-700;
+    padding-block: 5px;
    
 }
 /* 可选: 增加 hover 背景色变化 */
 .history:hover {
     color: #fff;
-    transition: 0.5s;
-    padding-inline: 10px;
+    transition: padding-right 0.5s ease-out;
+    padding-inline: 15px;
     padding-block: 5px;
     background-color: $green-700; /* 根据需要调整 */
     border-radius: 20px;

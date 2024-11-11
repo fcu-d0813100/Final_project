@@ -27,7 +27,7 @@
     &:hover {
       background: rgb(209, 209, 209);
       border: 3px dashed $green-400;
-      
+
       .plus {
         border: 2.5px dashed $green-400;
       }
@@ -43,6 +43,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5); // 半透明背景
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,19 +57,19 @@
   max-width: 500px;
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: none;
   position: relative;
+  text-align: left;
 
-    .close{
-        border: none;
-        background-color: white;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        color: $green-600;
-
-    }
-    .note{
-        color: $red-500;
-    }
+  .close {
+    border: none;
+    background-color: white;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: $green-600;
+  }
+  .note {
+    color: $red-500;
+  }
 }
-

@@ -3,20 +3,15 @@ import styles from '@/components/teacher/common/t-dashboard-textarea-style/texta
 import React, { useState, useEffect, Fragment } from 'react'
 
 export default function Textarea({
-  addclass='',
-  title='',
-  name='',
-  rows='',
-  width='',
-  placeholder='',
-  value=''
+  addclass = '',
+  title = '',
+  name = '',
+  rows = '',
+  width = '',
+  placeholder = '',
+  value = '',
+  onChange,
 }) {
-
-      const [inputValue, setInputValue] = useState(value) // 使用 useState 管理輸入值
-
-      const handleInputChange = (e) => {
-        setInputValue(e.target.value) // 更新輸入值
-      }
   return (
     <>
       <div className={`${addclass}`}>
@@ -32,8 +27,8 @@ export default function Textarea({
           className={`${styles.detailTextarea} p-3`}
           style={{ width: `${width}` }}
           placeholder={placeholder}
-          value={inputValue} // 設定 value 為狀態變數
-          onChange={handleInputChange} // 添加 onChange 事件
+          value={value} // 設定 value 為狀態變數
+          onChange={onChange} // 添加 onChange 事件
         ></textarea>
       </div>
     </>

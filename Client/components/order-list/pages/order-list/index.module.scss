@@ -20,7 +20,27 @@
     }
 }
 
-
 .order-list {
     gap: 10px;
+}
+
+.title {
+    border-bottom: 2px solid $green-500;
+    padding: 10px;
+    .search {
+
+        input[type="text"] {
+            width: 284px;
+            border-radius: 25px;
+            border: solid $green-700 1px;
+
+            &:focus {
+                box-shadow: 0 0 0 0.1rem $green-500;
+            }
+        }
+
+        .searchBtn {
+            border: transparent;
+        }
+    }
 }

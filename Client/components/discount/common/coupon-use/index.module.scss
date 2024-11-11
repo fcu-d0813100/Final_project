@@ -6,6 +6,8 @@
     margin-bottom: 20px;
     background-image: url("/discount/coupon/coupon-lg-black.svg");
     background-size: cover;
+    justify-content: space-around;
+    
 
     .coupon-image {
         width: 98px;
@@ -99,6 +101,7 @@
         width: 300px;
         height: 94px;
         background-image: url("/discount/coupon/coupon-sm-black.svg");
+        justify-content: space-between;
 
         .coupon-image {
             width: 60px;
@@ -106,7 +109,11 @@
         }
 
         .text {
-            width: 120px;
+<<<<<<< HEAD
+            width: 150px;
+=======
+            width: 130px;
+>>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
             .name {
                 font-size: 11px;
@@ -123,14 +130,15 @@
         }
 
         .btn-outline-light {
-            width: 50px;
-            height: 20px;
+            width: 43px;
+            height: 17px;
             font-size: 10px;
+            margin-bottom: 3px;
         }
 
         .right-ps {
             line-height: 100%;
-            font-size: 4px;
+            font-size: 6px;
         }
 
     }
