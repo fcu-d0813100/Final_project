@@ -180,7 +180,7 @@ WHERE
 
 // 儲存，未發布
 router.post(
-  '/upload/page01',
+  '/upload/isUpload0',
   upload.fields([
     { name: 'img_cover', maxCount: 1 },
     { name: 'img_lg', maxCount: 1 },
@@ -242,7 +242,7 @@ router.post(
       const newWorkshopId = result
       console.log('New Workshop ID:', newWorkshopId)
 
-      ///////
+      ///-----------------------
       // 解析 timeSchedule 資料
       const parsedTimeSchedule = createWorkshop.timeSchedule.map((item) => {
         // 確保每個項目都是一個有效的物件
@@ -253,7 +253,115 @@ router.post(
           return null
         }
       })
-      ///////
+      ///-----------------------
+
+      // 插入每筆 timeSchedule 資料
+      for (const time of parsedTimeSchedule) {
+        const sqlInsertWorkshopTime = SQL.format(
+          `
+      INSERT INTO workshop_time(
+      workshop_id, date, start_time, end_time, min_students, max_students, registered
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+     `,
+          [
+            newWorkshopId,
+            time.date,
+            time.start_time,
+            time.end_time,
+            time.min_students,
+            time.max_students,
+            0,
+          ]
+        )
+        // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+        await db.query(sqlInsertWorkshopTime)
+      }
+      // console.log('req.files' + req.files)
+      // console.log('req.body' + req.body)
+
+      res.json(result)
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ message: 'Server error', error: e.message })
+    }
+  }
+)
+// 儲存，並發布
+router.post(
+  '/upload/isUpload1',
+  upload.fields([
+    { name: 'img_cover', maxCount: 1 },
+    { name: 'img_lg', maxCount: 1 },
+    { name: 'img_sm01', maxCount: 1 },
+    { name: 'img_sm02', maxCount: 1 },
+  ]),
+  authenticate,
+  async function (req, res, next) {
+    const id = req.user.id
+    const createWorkshop = req.body
+    console.log(createWorkshop) // 打印出來檢查
+
+    // 檢查 `req.files` 是否存在，如果沒有則設置為空物件
+    const uploadedFiles = req.files || {}
+    const img_cover = uploadedFiles['img_cover']
+      ? uploadedFiles['img_cover'][0].filename
+      : null
+    const img_lg = uploadedFiles['img_lg']
+      ? uploadedFiles['img_lg'][0].filename
+      : null
+    const img_sm01 = uploadedFiles['img_sm01']
+      ? uploadedFiles['img_sm01'][0].filename
+      : null
+    const img_sm02 = uploadedFiles['img_sm02']
+      ? uploadedFiles['img_sm02'][0].filename
+      : null
+
+    try {
+      const sqlInsertWorkshop = SQL.format(
+        `
+      INSERT INTO workshop (
+        type_id, name, description, outline, notes, price, teachers_id,
+        address, img_cover, img_lg,img_sm01,img_sm02,registration_start, registration_end, isUpload, valid
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     `,
+        [
+          createWorkshop.type_id,
+          createWorkshop.name,
+          createWorkshop.description,
+          createWorkshop.outline,
+          createWorkshop.notes,
+          createWorkshop.price,
+          id,
+          createWorkshop.address,
+          img_cover,
+          img_lg,
+          img_sm01,
+          img_sm02,
+          createWorkshop.registration_start,
+          createWorkshop.registration_end,
+          1, // isUpload
+          1, // valid
+        ]
+      )
+      const [result] = await db.query(sqlInsertWorkshop)
+      console.log('Insert Result:', result)
+
+      // 取得新插入的 workshop_id
+      const newWorkshopId = result
+      console.log('New Workshop ID:', newWorkshopId)
+
+      ///-----------------------
+      // 解析 timeSchedule 資料
+      const parsedTimeSchedule = createWorkshop.timeSchedule.map((item) => {
+        // 確保每個項目都是一個有效的物件
+        try {
+          return JSON.parse(item)
+        } catch (e) {
+          console.error('Error parsing timeSchedule item:', item)
+          return null
+        }
+      })
+      ///-----------------------
 
       // 插入每筆 timeSchedule 資料
       for (const time of parsedTimeSchedule) {

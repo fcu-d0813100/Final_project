@@ -64,11 +64,23 @@ export default function Page2({ onPreviousPage, handleSave, setFormData }) {
             <button
               className="btn-secondary h6"
               type="submit"
-              onClick={handleSave}
+              onClick={(e) => {
+                e.preventDefault()
+                handleSave(e, 0) // 儲存時執行 handleSubmitisUpload0
+              }}
             >
               儲存
             </button>
-            <button className="btn-danger h6 ms-4">立即發布</button>
+            <button
+              className="btn-danger h6 ms-4"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault()
+                handleSave(e, 1) // 發布時執行 handleSubmitisUpload1
+              }}
+            >
+              立即發布
+            </button>
           </div>
         </div>
       </div>

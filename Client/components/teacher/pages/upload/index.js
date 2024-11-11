@@ -25,8 +25,8 @@ export default function Upload(props) {
     img_sm01: '',
     img_sm02: '',
   })
-
-  const handleSubmit = async (e) => {
+  //----------------------------------------------
+  const handleSubmitisUpload0 = async (e) => {
     e.preventDefault()
     const form = new FormData()
 
@@ -42,7 +42,7 @@ export default function Upload(props) {
 
     try {
       const response = await fetch(
-        'http://localhost:3005/api/workshop/upload/page01',
+        'http://localhost:3005/api/workshop/upload/isUpload0',
         {
           credentials: 'include',
           method: 'POST',
@@ -60,10 +60,50 @@ export default function Upload(props) {
       console.error('上傳失敗', error)
     }
   }
+  //----------------------------------------------
+  const handleSubmitisUpload1 = async (e) => {
+    e.preventDefault()
+    const form = new FormData()
+
+    // 其餘表單資料
+    Object.keys(formData).forEach((key) => {
+      form.append(key, formData[key])
+    })
+
+    // 加入 timeSchedule 資料
+    timeSchedule.forEach((time, index) => {
+      form.append(`timeSchedule[${index}]`, JSON.stringify(time))
+    })
+
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/workshop/upload/isUpload1',
+        {
+          credentials: 'include',
+          method: 'POST',
+          body: form, // 直接將 FormData 傳送
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('上傳資料失敗')
+      }
+
+      const result = await response.json()
+      console.log('上傳成功', result)
+    } catch (error) {
+      console.error('上傳失敗', error)
+    }
+  }
+  //----------------------------------------------
   // 儲存按鈕的處理函數，送出資料並重定向到 /teacher/myworkshop
-  const handleSave = async (e) => {
-    await handleSubmit(e) // 先送出資料
-    router.push('/teacher/myworkshop') // 然後跳轉到 /teacher/myworkshop
+  const handleSave = async (e, uploadType) => {
+    if (uploadType === 0) {
+      await handleSubmitisUpload0(e) // 儲存時執行 handleSubmitisUpload0
+    } else if (uploadType === 1) {
+      await handleSubmitisUpload1(e) // 發布時執行 handleSubmitisUpload1
+    }
+    router.push('/teacher/myworkshop') // 送出後跳轉
   }
 
   // 切換到下一頁並滾動到頂部
@@ -84,11 +124,7 @@ export default function Upload(props) {
 
       <div>
         <Sidebar />
-        <form
-          onSubmit={handleSubmit}
-          method="post"
-          encType="multipart/form-data"
-        >
+        <form method="post" encType="multipart/form-data">
           {!isPage2 ? (
             <Page1
               onNextPage={handleNextPage}
@@ -96,7 +132,6 @@ export default function Upload(props) {
               setFormData={setFormData}
               timeSchedule={timeSchedule}
               setTimeSchedule={setTimeSchedule}
-              handleSubmit={handleSubmit}
               handleSave={handleSave}
             /> // 傳入切換頁面函數
           ) : (
