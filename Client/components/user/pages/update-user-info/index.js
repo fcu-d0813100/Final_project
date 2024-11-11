@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import UserSection from '@/components/user/common/user-section'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
+import { toast, Toaster } from 'react-hot-toast'
 
 export default function UpdateInfo() {
   // 從勾子的context得到註冊函式
@@ -114,15 +114,20 @@ export default function UpdateInfo() {
     initUserData()
   }, [])
 
+  const [showModal, setShowModal] = useState(false)
+
   const handleDeleteUser = async () => {
     try {
       await deleteUser(user.id)
+      toast.success('您已成功申請停權')
       router.push('/user/information/update')
     } catch (error) {
       console.error('刪除過程中發生錯誤:', error)
     }
   }
-  const openModal = () => {
+  const openModal = (e) => {
+    e.preventDefault()
+    // 阻止表單提交
     setShowModal(true)
   }
   const closeModal = () => {
@@ -293,13 +298,22 @@ export default function UpdateInfo() {
             <div
               className={`col-3 d-flex justify-content-end align-items-center`}
             >
-              <Link
-                href=""
-                onClick={(e) => handleDeleteUser(e)}
-                className={`p ${styles['delete-account']}`}
+              <button
+                onClick={openModal}
+                className={`btn btn-danger ${styles['delete-account']}`}
               >
-                停用會員帳戶
-              </Link>
+                {' '}
+                停用會員帳戶{' '}
+              </button>{' '}
+              <DeleteModal
+                title="您確定要停用帳戶嗎 ?"
+                content="停用帳戶後，您將無法登入及享有會員權益，如需恢復帳戶，請聯繫客服以重新啟用。"
+                btnConfirm="停用帳戶"
+                btnCancel="取消"
+                ConfirmFn={handleDeleteUser}
+                show={showModal}
+                handleClose={closeModal}
+              />
             </div>
           </div>
 
