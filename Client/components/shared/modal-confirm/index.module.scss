@@ -3,20 +3,24 @@
   transform: translateX(150%);
   border-radius: 0px !important;
   width: 400px;
+  & > div > div {
+    border-radius: 0px;
+  }
   .modal-header {
     border: none;
-    padding: 30px 30px 26px;
-    font-size: 20px;
-
+    padding: 30px 30px 4px;
+    // font-size: 20px;
     button {
-      &:active {
+      &:active,
+      &:focus {
         box-shadow: none;
+        border: none;
       }
     }
   }
   .modal-body {
     border: none;
-    padding: 0 30px;
+    padding: 10px 30px 20px;
     font-size: 16px;
   }
   .modal-footer {
@@ -25,5 +29,12 @@
     padding: 26px 30px 30px;
     border: none;
     // gap: 20px;
+    button {
+      font-size: 18px; //h6 看看要不要16就好
+      &:active {
+        background-color: #616654;
+        border: none;
+      }
+    }
   }
 }
