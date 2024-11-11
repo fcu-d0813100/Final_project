@@ -495,14 +495,13 @@ export function AuthProvider({ children }) {
             secondary: '#fff',
           },
         })
-        // 在刪除成功後等待兩秒並跳轉
         setTimeout(() => {
-          router.push('/user//information/update')
+          router.push('/user/information/update')
         }, 2000)
       } else {
         toast.error('刪除失敗，請稍後再試', {
           style: {
-            border: '1.2px固#90957a',
+            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
           },
@@ -513,7 +512,6 @@ export function AuthProvider({ children }) {
         })
       }
     } catch (error) {
-      console.error('刪除過程中發生錯誤:', error)
       toast.error('刪除過程中發生錯誤，請稍後再試', {
         style: {
           border: '1.2px solid #90957a',

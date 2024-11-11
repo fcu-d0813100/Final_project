@@ -115,18 +115,42 @@ export default function UpdateInfo() {
   }, [])
 
   const [showModal, setShowModal] = useState(false)
-
   const handleDeleteUser = async () => {
     try {
+      // console.log(`開始刪除用戶，ID: ${user.id}`)
+      // console.log('用戶刪除成功')
+      toast.success('您已成功申請停權', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#626553',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
+      })
+      setShowModal(false) // 確保模態對話框被關閉
       await deleteUser(user.id)
-      toast.success('您已成功申請停權')
       router.push('/user/information/update')
     } catch (error) {
-      console.error('刪除過程中發生錯誤:', error)
+      // console.error('刪除過程中發生錯誤:', error)
+      toast.error('刪除過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
+
   const openModal = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
     // 阻止表單提交
     setShowModal(true)
   }
@@ -231,6 +255,7 @@ export default function UpdateInfo() {
                     className={styles.avatar}
                     src={`/user/img/${user.img}`}
                     alt=""
+                    priority
                   />
                 </div>
               </div>
@@ -299,8 +324,9 @@ export default function UpdateInfo() {
               className={`col-3 d-flex justify-content-end align-items-center`}
             >
               <button
+                type="button"
                 onClick={openModal}
-                className={`btn btn-danger ${styles['delete-account']}`}
+                className={` ${styles['delete-account']}`}
               >
                 {' '}
                 停用會員帳戶{' '}
