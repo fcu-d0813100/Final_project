@@ -11,7 +11,7 @@ export default function index({ children, titleCN, titleENG }) {
       <div className={styles['user-section']}>
         <SideBar />
         <div className={styles['any-section']}>
-          <OrderTitle CN={titleCN} ENG={titleENG} />
+         
           {children}
         </div>
       </div>

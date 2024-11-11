@@ -68,4 +68,83 @@ GROUP BY
     }
 });
 
+router.get('/detail/:orderId', async function (req, res, next) {
+    const orderId = req.params.orderId; 
+    console.log('Order ID:', orderId); 
+    try {
+        const sqlSelect = `SELECT 
+    o.id AS order_id,
+    o.order_number,
+    o.total_amount,
+    o.shipping_address,
+    u.name,
+    u.phone,
+    cp.id as coupon_id,
+    cp.discount_value,
+    pm.method as payment,
+    sh.method as shipping,
+    CONCAT('[', GROUP_CONCAT(
+        DISTINCT CONCAT( 
+            '{',
+    '"id":', oi.id, ',',
+    '"product_id":',IFNULL(oi.product_id, 'null'), ',',
+    '"mainimage":"', IFNULL(c.mainimage, ''), '",',
+    '"name":"', IFNULL(b.name, ''), '",',
+    '"product_name":"', IFNULL(p.product_name, ''), '",',
+    '"color":"', IFNULL(c.color, 'null'), '",',
+    '"quantity":', oi.quantity, ',',
+    '"price":', IFNULL(p.price, '0'), ',',
+    '"wid":', IFNULL(w.id, 'null'), ',',
+    '"type":"', IFNULL(wt.type, ''), '",',
+    '"teachers_name":"', IFNULL(t.name, ''), '",',
+    '"registration_start":"', IFNULL(w.registration_start, ''), '",',
+    '"registration_end":"', IFNULL(w.registration_end, ''), '",',
+    '"workshop_price":', IFNULL(w.price, '0'),
+    '}'
+        )
+    ), ']') AS items
+FROM 
+    order_list o
+JOIN 
+    order_item oi ON o.id = oi.order_id
+LEFT JOIN 
+    product_list p ON oi.product_id = p.id
+LEFT JOIN 
+    color c ON oi.color_id = c.id
+LEFT JOIN 
+    workshop w ON oi.workshop_id = w.id
+JOIN 
+    user u ON o.user_id = u.id
+JOIN
+    payment pm ON o.payment_id = pm.id
+JOIN
+    shipping sh ON o.shipping_id = sh.id
+LEFT JOIN 
+    brand b ON p.brand_id = b.id
+LEFT JOIN 
+    workshop_type wt ON w.type_id = wt.id
+LEFT JOIN 
+    teachers t ON w.teachers_id = t.id
+LEFT JOIN 
+    coupon_list cp ON o.coupon_id = cp.id
+WHERE 
+    o.id = ${orderId}
+GROUP BY 
+    o.id;`;
+        const [result] = await db.query(sqlSelect, [orderId]); // 使用參數化查詢
+
+        // 檢查結果
+        if (!result || result.length === 0) {
+            return res.status(404).json({ message: 'No order found for this user.' });
+        }
+
+        // 返回結果
+        res.json(result);
+        console.log('Query result:', result);
+    } catch (error) {
+        console.error('Database query error:', error); // 輸出錯誤日誌
+        res.status(500).json({ message: 'Error fetching order. Please try again later.' });
+    }
+});
+
 export default router;

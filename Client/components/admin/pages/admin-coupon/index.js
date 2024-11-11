@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 import AdminSection from '@/components/admin/common/coupon/admin-section-coupon';
 import CouponEdit from '@/components/discount/common/coupon-edit';
 import CouponEnd from '@/components/discount/common/coupon-end';
+import toast, { Toaster } from 'react-hot-toast'; // 引入 toast
 
 export default function Index(props) {
   const [upcomingCoupons, setUpcomingCoupons] = useState([]); // 即将开始的优惠券
@@ -31,7 +32,7 @@ export default function Index(props) {
     try {
       const response = await fetch('http://localhost:3005/api/coupons');
       if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+        throw new Error(`錯誤：${response.statusText}`);
       }
       const data = await response.json();
 
@@ -58,14 +59,17 @@ export default function Index(props) {
       setEndedCoupons(ended);
       setUpcomingCoupons(upcoming); // 新增设置即将开始的优惠券
 
+      // 成功提示
+      toast.success("優惠券已成功加載！");
+
     } catch (error) {
       console.error('Error fetching coupons:', error);
       setError(`獲取優惠券失敗：${error.message}`);
+      toast.error(`獲取優惠券失敗：${error.message}`); // 顯示錯誤提示
     } finally {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     fetchCoupons(); // 在组件加载时调用
@@ -76,12 +80,10 @@ export default function Index(props) {
   const indexOfFirstUpcomingCoupon = indexOfLastUpcomingCoupon - couponsPerPage;
   const currentUpcomingCoupons = upcomingCoupons.slice(indexOfFirstUpcomingCoupon, indexOfLastUpcomingCoupon);
 
-
   // 计算当前进行中优惠券的分页
   const indexOfLastOngoingCoupon = currentPageOngoing * couponsPerPage;
   const indexOfFirstOngoingCoupon = indexOfLastOngoingCoupon - couponsPerPage;
   const currentOngoingCoupons = ongoingCoupons.slice(indexOfFirstOngoingCoupon, indexOfLastOngoingCoupon);
-
 
   // 计算当前已结束优惠券的分页
   const indexOfLastEndedCoupon = currentPageEnded * couponsPerPage;
@@ -98,7 +100,6 @@ export default function Index(props) {
     }
   };
   
-
   // 处理分页左右按钮
   const handlePrevPage = (isOngoing) => {
     if (isOngoing) {
@@ -187,29 +188,6 @@ export default function Index(props) {
                   />
                 ))}
               </div>
-              <div className={styles.pagination}>
-                <button
-                  className={`${styles.pageBtn} ${currentPageOngoing === 1 ? styles.disabled : ''}`}
-                  onClick={() => handlePrevPage(true)}
-                >
-                  &lt;
-                </button>
-                {Math.ceil(ongoingCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(ongoingCoupons.length / couponsPerPage) }, (_, index) => (
-                  <button
-                    key={index + 1}
-                    className={`${styles.pageBtn} ${currentPageOngoing === index + 1 ? styles.active : ''}`}
-                    onClick={() => setCurrentPageOngoing(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-                <button
-                  className={`${styles.pageBtn} ${currentPageOngoing === Math.ceil(ongoingCoupons.length / couponsPerPage) ? styles.disabled : ''}`}
-                  onClick={() => handleNextPage(true)}
-                >
-                  &gt;
-                </button>
-              </div>
             </Tab.Pane>
             <Tab.Pane eventKey="/end">
               <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
@@ -225,33 +203,11 @@ export default function Index(props) {
                   />
                 ))}
               </div>
-              <div className={styles.pagination}>
-                <button
-                  className={`${styles.pageBtn} ${currentPageEnded === 1 ? styles.disabled : ''}`}
-                  onClick={() => handlePrevPage(false)}
-                >
-                  &lt;
-                </button>
-                {Math.ceil(endedCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(endedCoupons.length / couponsPerPage) }, (_, index) => (
-                  <button
-                    key={index + 1}
-                    className={`${styles.pageBtn} ${currentPageEnded === index + 1 ? styles.active : ''}`}
-                    onClick={() => setCurrentPageEnded(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-                <button
-                  className={`${styles.pageBtn} ${currentPageEnded === Math.ceil(endedCoupons.length / couponsPerPage) ? styles.disabled : ''}`}
-                  onClick={() => handleNextPage(false)}
-                >
-                  &gt;
-                </button>
-              </div>
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>
       </AdminSection>
+      <Toaster position="top-center" /> {/* 顯示 Toast 提示 */}
     </>
   );
 }
