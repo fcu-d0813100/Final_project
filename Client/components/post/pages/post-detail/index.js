@@ -8,7 +8,7 @@ import WallCard from '@/components/post/common/wall-card'
 import styles from './index.module.scss'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
-export default function Explore(props) {
+export default function PostDetail(props) {
   const { post, forceUpdate } = usePost()
   const { auth } = useAuth()
   const userId = auth.userData.id
@@ -28,7 +28,7 @@ export default function Explore(props) {
   const fetchPosts = async (tags) => {
     const queryString = tags
       .split(',')
-      .map((tag) => `tags=${encodeURIComponent(tag)}`)
+      .map((tag) => `tags=${tag}`)
       .join('&')
     const response = await fetch(
       `http://localhost:3005/api/post/?${queryString}&postId=${postId}&order=DESC`,
@@ -57,7 +57,7 @@ export default function Explore(props) {
     700: 2,
   }
   //
-  const sendHandle = async (replyId, inputValue) => {
+  const sendHandle = async (replyTargetId, replyId, inputValue) => {
     // verify form
     if (!inputValue) return
 
@@ -67,6 +67,7 @@ export default function Explore(props) {
     formData.append('postId', postId)
     formData.append('content', inputValue)
     formData.append('replyId', replyId)
+    formData.append('replyTargetId', replyTargetId)
     // Submit form
     const response = await fetch(
       'http://localhost:3005/api/post/comment_create',
@@ -116,17 +117,22 @@ export default function Explore(props) {
             className={styles['my-masonry-grid']}
             columnClassName={styles['my-masonry-grid_column']}
           >
-            {wallCard.map((post) => (
-              <WallCard
-                key={post.id}
-                href={`/post/${post.id}`}
-                imageSrc={`/post/${post.post_img}`}
-                title={post.title}
-                username={post.nickname}
-                avatarSrc={`/user/img/${post.user_img}`}
-                likeCount={post.like_count}
-              />
-            ))}
+            {wallCard.map((post) => {
+              const imgSrc = post.post_img.startsWith('post')
+                ? `http://localhost:3005/upload/${post.post_img}`
+                : `/post/${post.post_img}`
+              return (
+                <WallCard
+                  key={post.id}
+                  href={`/post/${post.id}`}
+                  imageSrc={imgSrc}
+                  title={post.title}
+                  username={post.nickname}
+                  avatarSrc={`/user/img/${post.user_img}`}
+                  likeCount={post.like_count}
+                />
+              )
+            })}
           </Masonry>
         </div>
       </div>

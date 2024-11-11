@@ -1,0 +1,62 @@
+@import '@/styles/_variant.scss';
+
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  ul {
+    justify-content: center;
+    li {
+      &:not(:first-child):not(:last-child) {
+        &:hover {
+          border-bottom: 1.5px solid $green-500;
+        }
+      }
+      a {
+        border: none;
+        color: $green-400; //非當前頁的顏色
+        &:active {
+          color: $green-500;
+        }
+        &:hover {
+          color: $green-500;
+        }
+        &:focus {
+          box-shadow: none;
+          background-color: transparent;
+        }
+
+        --bs-pagination-hover-bg: none;
+      }
+      & > span {
+        // color: $red-500 !important;
+        // border-bottom: 1px solid $green-500 !important;
+        &:not(:first-child):not(:last-child) {
+          color: $green-800 !important;
+          border-bottom: 1px solid $green-500 !important;
+        }
+
+        border: none;
+        background-color: transparent;
+        color: $green-500;
+        --bs-pagination-active-bg: none;
+        --bs-pagination-disabled-bg: none;
+
+        &:active {
+          color: $red-500;
+          background-color: transparent;
+        }
+      }
+      & > span :first-child {
+        border: none;
+      }
+    }
+    .disabled {
+      color: #000;
+    }
+  }
+  li span {
+    color: $green-700 !important;
+    font-weight: 400;
+  }
+}
