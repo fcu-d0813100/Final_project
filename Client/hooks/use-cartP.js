@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react'
+import toast from 'react-hot-toast'
 
 //------------以下是商品的鉤子
 const ProductCartContext = createContext(null)
@@ -28,6 +29,47 @@ export function ProductCartProvider({ children }) {
     }
   }
 
+  // 庫存不足通知
+  const outOfStockNotify = (stock) =>
+    toast.error(`目前庫存僅剩 ${stock} 件，請調整購買數量`, {
+      style: {
+        border: '1.2px solid #f44336',
+        padding: '12px 40px',
+        color: '#f44336',
+      },
+      iconTheme: { primary: '#f44336', secondary: '#fff' },
+    });
+
+  // 商品新增到購物車
+  const onAddProductMany = (product) => {
+    const foundIndex = productItems.findIndex(
+      (v) => v.product_id === product.product_id && v.color === product.color
+    );
+  
+    if (foundIndex !== -1) {
+      // 已存在於購物車中的商品
+      const existingProduct = productItems[foundIndex];
+      const updatedQty = existingProduct.qty + (product.quantity || 1);
+
+      if (updatedQty > product.stock) {
+        outOfStockNotify(product.stock);
+        return;
+      }
+
+      const nextProductItems = productItems.map((v, i) =>
+        i === foundIndex ? { ...v, qty: updatedQty } : v
+      );
+      setProductItems(nextProductItems);
+    } else {
+      // 新增商品至購物車
+      if (product.quantity > product.stock) {
+        outOfStockNotify(product.stock);
+        return;
+      }
+      setProductItems([{ ...product, qty: product.quantity || 1 }, ...productItems]);
+    }
+  };
+  
   // 處理遞增
   const onIncreaseProduct = (productId, color) => {
     const nextProductItems = productItems.map((v, i) => {
@@ -91,6 +133,7 @@ export function ProductCartProvider({ children }) {
         onIncreaseProduct,
         onDecreaseProduct,
         onRemoveProduct,
+        onAddProductMany,
       }}
     >
       {children}
