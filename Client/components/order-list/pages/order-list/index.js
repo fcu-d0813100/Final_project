@@ -4,6 +4,7 @@ import styles from './index.module.scss'; // 确保引入正确的样式
 import OrderSection from '@/components/order-list/common/order-section';
 import Nav from 'react-bootstrap/Nav';
 import { useAuth } from '@/hooks/use-auth';
+import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 
 export default function OrderList() {
     const { auth } = useAuth();
@@ -11,19 +12,34 @@ export default function OrderList() {
     const [orders, setOrders] = useState([]); // 保存订单列表
     const [filteredOrders, setFilteredOrders] = useState([]); // 保存过滤后的订单
     const [loading, setLoading] = useState(false); // 加载状态
+    const [searchTerm, setSearchTerm] = useState(''); // 搜索框输入内容
 
-    // 從 AuthContext 獲取 userId
+    // 从 AuthContext 获取 userId
     const userId = auth.isAuth ? auth.userData.id : null;
     console.log("User ID from auth:", userId); // 确认userId值
 
     const handleSelect = (key) => {
         setActiveKey(key); // 点击时更新 activeKey
-        filterOrders(key); // 根据选择的状态过滤订单
+        filterOrders(key, searchTerm); // 根据选择的状态过滤订单
     };
 
-    const filterOrders = (status) => {
-        const filtered = status === "全部" ? orders : orders.filter(order => order.status === status);
-        setFilteredOrders(filtered);
+    const handleSearch = () => {
+        filterOrders(activeKey, searchTerm); // 按钮点击时触发搜索
+    };
+
+    const filterOrders = (status, search) => {
+        const filteredByStatus = status === "全部" ? orders : orders.filter(order => order.status === status);
+
+        const filtered = filteredByStatus.filter(order => {
+            // 过滤条件：订单编号包含搜索内容，或者商品名称包含搜索内容
+            const orderMatches = order.order_number.includes(search);
+            const itemMatches = order.items.some(item =>
+                item.product_name.toLowerCase().includes(search.toLowerCase())
+            );
+            return orderMatches || itemMatches; // 任一条件匹配即可
+        });
+
+        setFilteredOrders(filtered); // 设置过滤后的订单
     };
 
     useEffect(() => {
@@ -60,12 +76,28 @@ export default function OrderList() {
         fetchOrders();
     }, [userId]); // 在 userId 变化时重新获取订单
 
-    useEffect(() => {
-        filterOrders(activeKey); // 在 orders 更新时也进行过滤
-    }, [orders, activeKey]);
-
     return (
         <OrderSection titleCN="購物清單">
+
+            <div className={`d-flex justify-content-between mb-3 ${styles.title}`}>
+                <div class={`${styles["title-left"]} h3 p-2"`}>訂單查詢</div>
+                <div className={`d-flex align-items-center ${styles.search}`}>
+                    <input
+                        type="text"
+                        placeholder="搜尋訂單編號或商品名稱"
+                        className={`form-control`}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)} // 实时更新搜索内容
+                    />
+                    <button
+                        className={`btn ms-2 ${styles.searchBtn}`}
+                        onClick={handleSearch} // 按钮点击时触发搜索
+                    >
+                        <HiMiniMagnifyingGlass size={24} color='#90957a' />
+                    </button>
+                </div>
+            </div>
+
             <Nav
                 className={`justify-content-center align-items-center ${styles.navBar}`}
                 variant='underline'
@@ -82,6 +114,7 @@ export default function OrderList() {
                     <Nav.Link className={`${styles.link}`} eventKey="已完成">已完成</Nav.Link>
                 </Nav.Item>
             </Nav>
+
             <div className={`${styles["order-list"]} d-flex flex-column nb-2`}>
                 {loading ? (
                     <div>加載中...</div>
@@ -90,7 +123,7 @@ export default function OrderList() {
                         <Order
                             key={order.order_id}
                             orderId={order.order_id}
-                            // orderDate={order.order_date}
+                            order_number={order.order_number}
                             totalAmount={order.total_amount}
                             status={order.status}
                             items={Array.isArray(order.items) ? order.items : []} // 确保是数组

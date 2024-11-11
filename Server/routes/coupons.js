@@ -1,82 +1,86 @@
 import express from 'express';
-import db from '#configs/db.js'; // 確保 db 對象正確導入並能使用
+import db from '#configs/db.js'; // 確保 db 物件正確導入並能使用
 const router = express.Router();
 
-
-/* GET coupons for a specific admin. */
+/* 取得所有有效的優惠券 */
 router.get('/', async (req, res) => {
   try {
-    // 定义 SQL 查询
+    // 定義 SQL 查詢
     const sqlSelect = `
-            SELECT coupon_list.*
-            FROM coupon_list
-            WHERE coupon_list.valid = 1
-            ORDER BY coupon_list.end_date ASC;`;
+      SELECT coupon_list.*
+      FROM coupon_list
+      WHERE coupon_list.valid = 1
+      ORDER BY coupon_list.end_date ASC;
+    `;
     // 執行查詢
     const [result] = await db.query(sqlSelect);
 
-    // 检查结果
+    // 檢查查詢結果
     if (result.length === 0) {
-      return res.status(404).json({ message: 'No coupons found for this admin.' });
+      return res.status(404).json({ message: '未找到有效的優惠券。' });
     }
-    console.log('Query result:', result);
-    // 返回结果
+
+    console.log('查詢結果:', result);
+    // 返回結果
     res.json(result);
   } catch (error) {
-    console.error('Database query error:', error);
-    res.status(500).json({ message: 'Error fetching coupons. Please try again later.' });
+    console.error('查詢資料庫錯誤:', error);
+    res.status(500).json({ message: '獲取優惠券時發生錯誤，請稍後再試。' });
   }
 });
 
-/* GET coupons for a specific admin. */
+/* 取得特定優惠券 */
 router.get('/:couponId', async (req, res) => {
-  const couponId = req.params.couponId; // 提取 userId
-  console.log('Coupon ID:', couponId); // 日志检查 userId
+  const couponId = req.params.couponId; // 提取優惠券ID
+  console.log('優惠券 ID:', couponId); // 日誌檢查優惠券ID
+
   try {
-    // 定义 SQL 查询
+    // 定義 SQL 查詢
     const sqlSelect = `
-          SELECT coupon_list.*
-          FROM coupon_list
-          WHERE coupon_list.id = ${couponId};`;
+      SELECT coupon_list.*
+      FROM coupon_list
+      WHERE coupon_list.id = ${couponId};
+    `;
     // 執行查詢
     const [result] = await db.query(sqlSelect);
 
-    // 检查结果
+    // 檢查查詢結果
     if (result.length === 0) {
-      return res.status(404).json({ message: 'No coupons found for this admin.' });
+      return res.status(404).json({ message: '未找到該優惠券。' });
     }
-    console.log('Query result:', result);
-    // 返回结果
+
+    console.log('查詢結果:', result);
+    // 返回結果
     res.json(result);
   } catch (error) {
-    console.error('Database query error:', error);
-    res.status(500).json({ message: 'Error fetching coupons. Please try again later.' });
+    console.error('查詢資料庫錯誤:', error);
+    res.status(500).json({ message: '獲取優惠券時發生錯誤，請稍後再試。' });
   }
 });
 
-
-/* POST create a new coupon */
+/* 創建新優惠券 */
 router.post('/create/content', async (req, res) => {
 
   const newCoupon = req.body;
-  console.log('收到的優惠券數據:', newCoupon);
+  console.log('收到的優惠券資料:', newCoupon);
 
   // 確保優惠碼存在
   if (!newCoupon.code) {
     return res.status(400).json({ status: 'error', message: '優惠碼是必填的。' });
   }
 
+  // 查詢優惠碼是否已存在
   const [rows] = await db.query(
     `SELECT * FROM coupon_list WHERE code = '${newCoupon.code}'`,
     [newCoupon.code]
-  )
+  );
   console.log('優惠碼:', newCoupon.code);  // 檢查 coupon.code 是否存在
 
   if (rows.length > 0) {
     return res.status(400).json({ status: 'error', message: '優惠碼已存在。' });
   }
 
-  // 插入新的優惠券數據到資料庫
+  // 插入新的優惠券資料到資料庫
   const [insertResult] = await db.query(
     `INSERT INTO coupon_list 
         (type_id, brand_id, code, name, discount_value, minimum_amount, start_date, end_date)
@@ -95,23 +99,37 @@ router.post('/create/content', async (req, res) => {
   console.log('優惠券插入成功:', insertResult);
 
   if (insertResult) {
-    return res.json({ status: 'success', data: null })
+    return res.json({ status: 'success', data: null });
   } else {
-    return res.json({ status: 'error', message: '新增到資料庫失敗' })
+    return res.json({ status: 'error', message: '新增到資料庫失敗' });
   }
-})
+});
 
-// 編輯修改
+/* 編輯或更新優惠券資料 */
 router.put("/:couponId", async (req, res, next) => {
-  const { couponId } = req.params; // 从 URL 参数获取 couponId
-  const updateData = req.body; // 从请求体中获取要更新的数据
+  const { couponId } = req.params; // 從 URL 參數中獲取 couponId
+  const updateData = req.body; // 從請求體中獲取要更新的資料
 
-  // 构造 SQL 更新语句
-  const { brand_id, code, name, discount_value, minimum_amount, start_date, end_date } = updateData;
+  console.log('收到的優惠券資料:', updateData);
+
+  // 從請求體中解構出優惠券資料
+  const { brand_id, code, name, discount_value, minimum_amount, start_date, end_date, valid } = updateData;
 
   try {
+    // 如果 valid == 0，表示優惠券無效，將其標記為無效
+    if (valid === 0) {
+      const [rows] = await db.query(
+        `UPDATE coupon_list SET valid = 0 WHERE id = ${couponId}`
+      );
 
-    // 使用 db.query 执行更新操作
+      if (rows.affectedRows === 0) {
+        return res.status(404).json({ message: '未找到該優惠券，無法標記為無效' });
+      }
+
+      return res.status(200).json({ status: 'success', message: '優惠券已標記為無效' });
+    }
+
+    // 否則執行一般的更新操作
     const [rows] = await db.query(
       `UPDATE coupon_list SET
         brand_id = '${brand_id}', 
@@ -120,28 +138,24 @@ router.put("/:couponId", async (req, res, next) => {
         discount_value = ${discount_value}, 
         minimum_amount = ${minimum_amount}, 
         start_date = '${start_date}', 
-        end_date = '${end_date}' 
-      WHERE id = ${couponId}`,
-      // [code, name, discount_value, minimum_amount, start_date, end_date, couponId]
+        end_date = '${end_date}' ,
+        valid = ${valid}
+      WHERE id = ${couponId}`
     );
 
-    // 检查是否有行被更新
+    // 檢查是否有行被更新
     if (rows.affectedRows === 0) {
-      return res.status(404).json({ message: '未找到優惠券' });
+      return res.status(404).json({ message: '未找到該優惠券' });
     }
 
     // 返回成功消息
     res.status(200).json({ status: 'success', message: '優惠券更新成功' });
 
   } catch (err) {
-    // 捕获错误并返回
-    console.error('更新優惠券失败:', err);
-    res.status(500).json({ message: '更新優惠券时发生错误', error: err.message });
+    // 捕獲錯誤並返回
+    console.error('更新優惠券失敗:', err);
+    res.status(500).json({ message: '更新優惠券時發生錯誤', error: err.message });
   }
 });
 
-
 export default router;
-
-
-

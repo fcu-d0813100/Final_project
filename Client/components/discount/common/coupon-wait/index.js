@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
+import { IoTimeOutline } from "react-icons/io5";
 
 const Coupon = ({
     img = "",
@@ -9,6 +10,7 @@ const Coupon = ({
     discount_value = "",
     minimum_amount = 0,
     end_date = "無使用期限",
+    start_date,
 }) => {
 
     const { auth } = useAuth();  // 获取用户认证信息
@@ -34,13 +36,13 @@ const Coupon = ({
 
                 {/* 这里直接绑定 onClick 处理 edit 操作 */}
                 <Link
-                    href="/cart"  // 不暴露 id
-                    className={`btn ${styles['btn-outline-light']} d-flex justify-content-center align-items-center btn-primary p text-decoration-none`}
+                    href="/product/product-list"
+                    className={`${styles.btn} ${styles['btn-outline-light']} d-flex justify-content-center align-items-center btn-primary p text-decoration-none`}
                     onClick={handleCouponUse} 
                 >
-                    使用
+                    稍後使用
                 </Link>
-                <div className={`${styles['right-ps']} ps`}>使用期限：{end_date}</div>
+                <div className={`${styles['right-ps']} ps`}><IoTimeOutline/> {start_date}天後生效</div>
             </div>
         </div>
     );

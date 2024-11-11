@@ -18,7 +18,7 @@ function CustomCarousel() {
     ];
 
     return (
-        <Carousel className={styles.carousel} activeIndex={index} onSelect={handleSelect} className={styles.carousel}>
+        <Carousel className={styles.carousel} activeIndex={index} onSelect={handleSelect}>
             {images.map((image, idx) => (
                 <Carousel.Item key={idx}>
                     <Link href={image.link} passHref>
