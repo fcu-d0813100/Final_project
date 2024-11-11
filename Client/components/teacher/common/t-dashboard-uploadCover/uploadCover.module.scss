@@ -1,0 +1,82 @@
+@import '@/styles/_variant.scss';
+
+.uploadCover {
+  border: 3px dashed $green-200;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+  position: relative;
+
+  .plus {
+    font-size: 60px;
+    padding: 10px;
+    border: 2.5px dashed $green-200;
+    color: $green-600;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .picUploadText {
+    color: $green-600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    span {
+      color: $gray-200;
+      transition: all 0.2s;
+    }
+  }
+  transition: all 0.2s;
+  &:hover {
+    background: rgb(209, 209, 209);
+    border: 3px dashed $green-400;
+    .plus {
+      border: 2.5px dashed $green-400;
+    }
+    span {
+      color: $gray-300;
+    }
+  }
+  .previewImage {
+    width: 92%;
+    height: 90%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 0 5px white;
+    margin-top: 12px;
+    margin-right: 5px;
+  }
+    .selectImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 0 10px white;
+  }
+  .reSelectImg {
+    width: 160px;
+    height: 45px;
+    position: absolute;
+    bottom: 40px;
+    left: calc(50% - 170px);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+  }
+    .sendImg {
+     width: 160px;
+    height: 45px;
+    position: absolute;
+    bottom: 40px;
+    left: calc(50% + 10px);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+  }
+}
+
+

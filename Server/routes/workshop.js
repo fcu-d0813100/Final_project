@@ -2,26 +2,28 @@ import express from 'express'
 import db from '#configs/db.js'
 import multer from 'multer'
 import authenticate from '#middlewares/authenticate.js'
-import fs from 'fs/promises'
+import fs, { rename } from 'fs/promises'
+import path, { resolve, extname, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
-const upload = multer()
-const router = express.Router()
 import SQL from 'sqlstring'
+const router = express.Router()
 
-// router.get('/', async function (req, res, next) {
-//   let workshop = await db //await下一行馬上使用
-//     .execute('SELECT * FROM `workshop`') //execute 回傳的值是陣列[result,fields]
-//     .then(([results, fields]) => {
-//       //再包裝
-//       return results
-//     })
-//     .catch((error) => {
-//       console.log(error)
-//       return undefined
-//     })
-//   res.render({ workshop })
-// })
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// upload image
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/workshop')
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+    cb(null, 'workshop-' + uniqueSuffix + path.extname(file.originalname))
+  },
+})
+const upload = multer({ storage: storage })
+
+router.use('/workshop', express.static(path.join(__dirname, 'public/workshop')))
 
 router.get('/', async function (req, res, next) {
   const { search = '', order, min = '', max = '' } = req.query
@@ -117,226 +119,111 @@ WHERE
 })
 
 // 儲存，未發布
-router.post('/upload/page01', authenticate, async function (req, res, next) {
-  const id = req.user.id
-  const createWorkshop = req.body
-  console.log(createWorkshop) // 打印出來檢查
+router.post(
+  '/upload/page01',
+  upload.fields([
+    { name: 'img_cover', maxCount: 1 },
+    { name: 'img_lg', maxCount: 1 },
+    { name: 'img_sm01', maxCount: 1 },
+    { name: 'img_sm02', maxCount: 1 },
+  ]),
+  authenticate,
+  async function (req, res, next) {
+    const id = req.user.id
+    const createWorkshop = req.body
+    console.log(createWorkshop) // 打印出來檢查
 
-  try {
-    const sqlInsertWorkshop = SQL.format(
-      `
+    // 檢查 `req.files` 是否存在，如果沒有則設置為空物件
+    const uploadedFiles = req.files || {}
+    const img_cover = uploadedFiles['img_cover']
+      ? uploadedFiles['img_cover'][0].filename
+      : null
+    const img_lg = uploadedFiles['img_lg']
+      ? uploadedFiles['img_lg'][0].filename
+      : null
+    const img_sm01 = uploadedFiles['img_sm01']
+      ? uploadedFiles['img_sm01'][0].filename
+      : null
+    const img_sm02 = uploadedFiles['img_sm02']
+      ? uploadedFiles['img_sm02'][0].filename
+      : null
+
+    try {
+      const sqlInsertWorkshop = SQL.format(
+        `
       INSERT INTO workshop (
         type_id, name, description, outline, notes, price, teachers_id,
-        address, registration_start, registration_end, isUpload, valid
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        address, img_cover, img_lg,img_sm01,img_sm02,registration_start, registration_end, isUpload, valid
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      `,
-      [
-        createWorkshop.type_id,
-        createWorkshop.name,
-        createWorkshop.description,
-        createWorkshop.outline,
-        createWorkshop.notes,
-        createWorkshop.price,
-        id,
-        createWorkshop.address,
-        createWorkshop.registration_start,
-        createWorkshop.registration_end,
-        0, // isUpload
-        1, // valid
-      ]
-    )
-    const [result] = await db.query(sqlInsertWorkshop)
-    console.log('Insert Result:', result)
+        [
+          createWorkshop.type_id,
+          createWorkshop.name,
+          createWorkshop.description,
+          createWorkshop.outline,
+          createWorkshop.notes,
+          createWorkshop.price,
+          id,
+          createWorkshop.address,
+          img_cover,
+          img_lg,
+          img_sm01,
+          img_sm02,
+          createWorkshop.registration_start,
+          createWorkshop.registration_end,
+          0, // isUpload
+          1, // valid
+        ]
+      )
+      const [result] = await db.query(sqlInsertWorkshop)
+      console.log('Insert Result:', result)
 
-    // 取得新插入的 workshop_id
-    const newWorkshopId = result
-    console.log('New Workshop ID:', newWorkshopId)
+      // 取得新插入的 workshop_id
+      const newWorkshopId = result
+      console.log('New Workshop ID:', newWorkshopId)
 
-    // 插入每筆 timeSchedule 資料
-    for (const time of createWorkshop.timeSchedule) {
-      const sqlInsertWorkshopTime = SQL.format(
-        `
+      // 插入每筆 timeSchedule 資料
+      for (const time of createWorkshop.timeSchedule) {
+        const sqlInsertWorkshopTime = SQL.format(
+          `
       INSERT INTO workshop_time(
       workshop_id, date, start_time, end_time, min_students, max_students, registered
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
      `,
-        [
-          newWorkshopId,
-          time.date,
-          time.start_time,
-          time.end_time,
-          time.min_students,
-          time.max_students,
-          0,
-        ]
-      )
-      // 插入 workshop_time 資料，假設 req.body 中包含時間資料
-      await db.query(sqlInsertWorkshopTime)
+          [
+            newWorkshopId,
+            time.date,
+            time.start_time,
+            time.end_time,
+            time.min_students,
+            time.max_students,
+            0,
+          ]
+        )
+        // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+        await db.query(sqlInsertWorkshopTime)
+      }
+
+      res.json(result)
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ message: 'Server error', error: e.message })
     }
-    res.json(result)
-  } catch (e) {
-    console.error(e)
-    return res.status(500).json({ message: 'Server error', error: e.message })
   }
-})
-
-//儲存未發布
+)
 // router.post(
-//   '/upload/page01',
-//   authenticate,
+//   '/upload/cover',
 //   upload.single('img_cover'),
-//   async function (req, res, next) {
-//     const id = req.user.id
-//     const createWorkshop = req.body
-//     const uploadedFile = req.file
-
-//     console.log(req.file, req.body)
-
-//     const sqlInsertWorkshop = `
-//     INSERT INTO workshop (
-//         type_id, name, description, outline, notes, price, teachers_id,
-//         address, registration_start, registration_end, isUpload, valid
-//     ) VALUES (
-//         '${createWorkshop.type_id}', '${createWorkshop.name}', '${createWorkshop.description}',
-//         '${createWorkshop.outline}', '${createWorkshop.notes}', '${createWorkshop.price}',
-//         '${id}', '${createWorkshop.address}', '${createWorkshop.registration_start}',
-//         '${createWorkshop.registration_end}', 0, 1
-//     )`
-
-//     const sqlInsertWorkshopTime = `
-//     INSERT INTO workshop_time(
-//       workshop_id, date, start_time, end_time, min_students, max_students
-//     ) VALUES(
-//       '${createWorkshop.workshop_id}', '${createWorkshop.date}', '${createWorkshop.start_time}',
-//       '${createWorkshop.end_time}', '${createWorkshop.min_students}', '${createWorkshop.max_students}'
-//     )
-// `
-
-//     try {
-//       // 插入 workshop 資料
-//       const [result] = await db.query(sqlInsertWorkshop)
-
-//       // 取得新插入的 workshop_id
-//       const newWorkshopId = result.insertId
-
-//       // 插入 workshop_time 資料，假設 req.body 中包含時間資料
-//       await db.query(sqlInsertWorkshopTime)
-
-//       if (uploadedFile) {
-//         // 使用 import.meta.url 獲取當前模組的目錄
-//         const __dirname = dirname(fileURLToPath(import.meta.url))
-//         // 設定圖片儲存路徑為 /public/workshop
-//         const destinationDir = join(__dirname, '..', 'public', 'workshop')
-//         const newFileName = `${createWorkshop.typeId}-${newWorkshopId}-c.jpg`
-//         const newFilePath = join(destinationDir, newFileName)
-
-//         // 確保目錄存在，否則創建目錄
-//         await fs.promises.mkdir(destinationDir, { recursive: true })
-
-//         // 使用 async/await 的方式重命名圖片
-//         try {
-//           await fs.promises.rename(uploadedFile.path, newFilePath)
-//           console.log('圖片已成功重命名:', newFileName)
-
-//           // 回傳成功訊息
-//           return res.json({
-//             body: req.body,
-//             file: newFileName,
-//             message: 'success',
-//             code: '200',
-//           })
-//         } catch (renameErr) {
-//           console.error('圖片重命名失敗:', renameErr)
-//           res.status(500).json({ message: '圖片重命名失敗', code: '500' })
-//         }
-//       } else {
-//         console.log('沒有上傳檔案')
-//         return res.json({ message: 'fail', code: '409' })
-//       }
-//     } catch (e) {
-//       console.error(e)
-//       return res.status(500).json({ message: 'Server error', error: e.message })
-//     }
-//   }
-// )
-
-// router.post(
-//   '/upload/page01',
 //   authenticate,
-
-//   async function (req, res, next) {
-//     const id = req.user.id
-//     const createWorkshop = req.body
-
-//     // // 確保資料的有效性，檢查必要欄位是否存在
-//     // if (
-//     //   !createWorkshop.type_id ||
-//     //   !createWorkshop.name ||
-//     //   !createWorkshop.description
-//     // ) {
-//     //   return res.status(400).json({ message: 'Missing required fields' })
-//     // }
-
-//     const sql = SQL.format(`
-//       INSERT INTO workshop (
-//         type_id, name, description, outline, notes, price, teachers_id,
-//         address, registration_start, registration_end, isUpload, valid, img_cover, img_lg, img_sm01, img_sm02
-//       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-//     `)
-//     const sqlInsertWorkshop = sql
-
-//     try {
-//       // 使用參數化查詢來執行 SQL 插入
-//       const [result] = await db.query(sqlInsertWorkshop, [
-//         createWorkshop.type_id,
-//         createWorkshop.name,
-//         createWorkshop.description,
-//         createWorkshop.outline,
-//         createWorkshop.notes,
-//         createWorkshop.price,
-//         id, // teachers_id
-//         createWorkshop.address,
-//         createWorkshop.registration_start,
-//         createWorkshop.registration_end,
-//         0, // isUpload
-//         1, // valid
-//         '', // img_cover
-//         '', // img_lg
-//         '', // img_sm01
-//         '', // img_sm02
-//       ])
-
-//       // 取得新插入的 workshop_id
-//       const newWorkshopId = result.insertId
-
-//       // 插入 workshop_time 資料
-//       const sqlInsertWorkshopTime = SQL.format(`
-//         INSERT INTO workshop_time (
-//           workshop_id, date, start_time, end_time, min_students, max_students
-//         ) VALUES (?, ?, ?, ?, ?, ?)
-//       `)
-
-//       await db.query(sqlInsertWorkshopTime, [
-//         newWorkshopId,
-//         createWorkshop.date,
-//         createWorkshop.start_time,
-//         createWorkshop.end_time,
-//         createWorkshop.min_students,
-//         createWorkshop.max_students,
-//       ])
-
-//       // 回應成功
-//       return res.json({
-//         message: 'created successfully',
-//         workshop_id: newWorkshopId,
-//       })
-//     } catch (e) {
-//       console.error(e)
-//       return res.status(500).json({ message: 'Server error', error: e.message })
-//     }
-//   }
+//   async function (req, res, next) {}
 // )
-
-router.post('/upload/page01/time', async function (req, res, next) {})
+// let ext = extname(req.file.originalname)
+// let newName = `${createWorkshop.type_id}${newWorkshopId}${ext}`
+// await rename(
+//   req.file.path,
+//   resolve(import.meta.dirname, 'public', newName)
+// )
+// req.body.myFile = newName
+// res.json({ result, file: req.file })
 
 export default router
