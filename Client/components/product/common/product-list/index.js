@@ -9,14 +9,15 @@ import 'swiper/css/pagination'
 import 'swiper/css/bundle'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { FaSearch, FaHeart, FaRegHeart } from 'react-icons/fa'
-import ProductCarousel from './ProductCarousel' // 引入新的轮播图组件
+import ProductCarousel from './ProductCarousel'   
 import Image from 'next/image'
 import { useCartProduct } from '@/hooks/use-cartP'
 import Dropdown from '@/components/product/common/product-list/dropdownList'
 import { PiCaretDown } from 'react-icons/pi'
 import Pagination from '@/components/shared/pagination'
+import { useFavorite } from '@/hooks/use-favorite'
 
-const ProductPage = ({
+const ProductPage = ({  
   products,
   onAll,
   onCategoryClick,
@@ -27,8 +28,10 @@ const ProductPage = ({
   onBrandFilterClick,
   onKeywordSearch
 }) => {
+  const { favoriteProducts, handleFavoriteClick } = useFavorite() // 使用收藏鉤子
   const router = useRouter()
   const { onAddProduct } = useCartProduct()
+  const { onAddProductMany } = useCartProduct()
 
   // 關鍵字狀態
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -59,13 +62,27 @@ const ProductPage = ({
     }
   }
   
-  // 處理收藏按鈕點擊事件
-  const handleFavoriteClick = (color_id) => {
-    setFavoriteProducts((prevFavorites) => ({
-      ...prevFavorites,
-      [color_id]: !prevFavorites[color_id],
-    }))
-  }
+//   // 處理收藏按鈕點擊事件
+// const handleFavoriteClick = (color_id) => {
+//   if (!auth.isAuth) {
+//     // 如果未登入，跳轉到登入頁面
+//     toast.error('請先登入以使用收藏功能', {
+//       style: { border: '1.2px solid #90957a', padding: '12px 40px', color: '#963827' },
+//       iconTheme: { primary: '#963827', secondary: '#fff' },
+//     })
+//     router.push('/user/login/user') // 跳轉到登入頁面
+//     return
+//   }
+
+//   // 如果已登入，加入或移除收藏
+//   setFavoriteProducts((prevFavorites) => ({
+//     ...prevFavorites,
+//     [color_id]: !prevFavorites[color_id],
+//   }))
+  
+//   // 在此處將收藏的商品新增到 `UserSection` 的收藏清單
+//   // 可以考慮用 context 或直接傳遞 state 來管理
+// }
 
   // 定義價格和品牌選項
   const priceOptions = [
@@ -82,7 +99,7 @@ const ProductPage = ({
   ]
   // 狀態管理
   const [isDropdownOpen, setIsDropdownOpen] = useState({ face: false, cheek: false, lip: false, eye: false })
-  const [favoriteProducts, setFavoriteProducts] = useState({})
+  // const [favoriteProducts, setFavoriteProducts] = useState({})
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(20)
   const [filteredProducts, setFilteredProducts] = useState(products)
@@ -301,7 +318,7 @@ const ProductPage = ({
                       className={`${styles['add-to-cart']} p btn-primary`}
                       onClick={(e) => {
                         e.stopPropagation()
-                        onAddProduct(product)
+                        onAddProductMany(product)
                         addPnotify()
                       }}
                     >

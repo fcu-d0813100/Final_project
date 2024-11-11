@@ -106,21 +106,23 @@ router.put("/:couponId", async (req, res, next) => {
   const { couponId } = req.params; // 从 URL 参数获取 couponId
   const updateData = req.body; // 从请求体中获取要更新的数据
 
+  // 构造 SQL 更新语句
+  const { brand_id, code, name, discount_value, minimum_amount, start_date, end_date } = updateData;
+
   try {
-    // 构造 SQL 更新语句
-    const { code, name, discount_value, minimum_amount, start_date, end_date } = updateData;
 
     // 使用 db.query 执行更新操作
     const [rows] = await db.query(
-      `UPDATE coupon_list SET 
-        code = ?, 
-        name = ?, 
-        discount_value = ?, 
-        minimum_amount = ?, 
-        start_date = ?, 
-        end_date = ? 
-      WHERE id = ?`,
-      [code, name, discount_value, minimum_amount, start_date, end_date, couponId]
+      `UPDATE coupon_list SET
+        brand_id = '${brand_id}', 
+        code = '${code}', 
+        name = '${name}', 
+        discount_value = ${discount_value}, 
+        minimum_amount = ${minimum_amount}, 
+        start_date = '${start_date}', 
+        end_date = '${end_date}' 
+      WHERE id = ${couponId}`,
+      // [code, name, discount_value, minimum_amount, start_date, end_date, couponId]
     );
 
     // 检查是否有行被更新

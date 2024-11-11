@@ -1,10 +1,96 @@
 import express from 'express'
 import db from '#configs/db.js'
 import cors from 'cors'
+import multer from 'multer'
+import path from 'path';
+import { fileURLToPath } from 'url'
 
-const router = express.Router()
-router.use(cors())
+const router = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// router.use(cors())
 
+// 配置文件上傳
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/upload/reviews/images'); // 確保這個目錄存在
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, 'review-' + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage }).array('mediaFiles', 5); // 最多允許上傳5個文件
+
+// 文件上傳路由
+router.post('/upload/reviews/images', upload, (req, res) => {
+  try {
+    const files = req.files.map(file => ({
+      fileName: file.filename,
+      filePath: `/upload/reviews/images/${file.filename}`,
+    }));
+    res.status(200).json({ success: true, files });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '文件上傳失敗', error });
+  }
+});
+
+
+router.use('/upload', express.static(path.join(__dirname, 'public/upload')));
+
+// 創建商品評論路由 - POST
+router.post('/create-review/:productId/:colorId', upload, async function (req, res, next) {
+  try {
+    const { productId, colorId } = req.params;
+    const { product_id, color_id, comment, rating } = req.body; // 保留其他評論的內容
+     const uploadedFiles = req.files['mediaFiles'] ? req.files['mediaFiles'].map((file) => file.filename) : [];
+    console.log('Uploaded files:', req.files);
+
+    console.log("req.body:", req.body); // 檢查是否接收到表單數據
+    console.log("req.files:", req.files); // 檢查是否接收到文件數據
+    console.log("product_id:", product_id);
+    console.log("color_id:", color_id);
+    console.log("comment:", comment);
+    console.log("rating:", rating);
+
+    // 插入評論到 order_item 表
+    const sqlInsertReview = `
+      INSERT INTO order_item (product_id, color_id, comment, rating, review_date, review_likes)
+      VALUES (${productId}, ${colorId}, '${comment}', ${rating}, NOW(), 0)
+    `;
+    const [reviewResult] = await db.query(sqlInsertReview);
+    console.log('Review Result:', reviewResult); // 確認 reviewResult 的結構
+    const orderItemId = reviewResult.insertId;
+
+   // 構建 review_file 插入語句
+   if (uploadedFiles.length > 0) {
+    const sqlInsertMediaFiles = `
+      INSERT INTO review_file (order_item_id, product_id, file_name, file_type)
+      VALUES ${uploadedFiles
+        .map((file) => `(${orderItemId}, ${productId}, '${file}', '${path.extname(file)}')`)
+        .join(', ')}
+    `;
+    console.log("SQL for inserting media files:", sqlInsertMediaFiles); // 調試用
+
+    const [mediaInsertResult] = await db.query(sqlInsertMediaFiles);
+    console.log("Media Insert Result:", mediaInsertResult); // 確認是否成功插入
+  }
+
+    res.json({
+      status: 'success',
+      message: `ID:${orderItemId} 評論和文件插入成功`,
+    });
+  } catch (error) {
+    console.error('Error creating review:', error);
+    res.status(500).json({
+      status: 'error',
+      message: '評論創建失敗',
+    });
+  }
+});
+
+// 商品列表
 router.get('/product-list', async function (req, res, next) {
   const main_category_id = parseInt(req.query.main_category_id, 10)
   console.log('Received main_category_id:', main_category_id) // 打印 main_category_id 確認接收成功
@@ -468,6 +554,124 @@ router.get('/product-list/search/:keyword', async function (req, res) {
     res.status(500).json({ error: '資料查詢錯誤' });
   }
 });
+
+// 庫存更新路由
+router.post('/product-list/update-stock/:color_id', async function (req, res) {
+  const color_id = parseInt(req.params.color_id, 10); // 從路由參數中獲取 color_id
+  const { quantity } = req.body;
+
+  console.log('Received color_id:', color_id, 'Quantity to decrease:', quantity);
+
+  try {
+    // 驗證 color_id 和 quantity 是否有效
+    if (!color_id || isNaN(color_id) || !quantity || quantity < 1) {
+      return res.status(400).json({ error: '無效的 color_id 或 quantity' });
+    }
+
+    // 更新庫存數量，將 color 表中指定 color_id 的庫存減少指定數量
+    const updateStockQuery = `
+      UPDATE color 
+      SET stock = stock - ${quantity}
+      WHERE id = ${color_id} AND stock >= ${quantity};
+    `;
+
+    const [result] = await db.query(updateStockQuery); 
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({ error: '庫存不足或 color_id 無效' });
+    }
+
+    console.log('Stock updated successfully for color_id:', color_id);
+    res.json({ message: '庫存更新成功' });
+  } catch (error) {
+    console.error('Database Query Error:', error);
+    res.status(500).json({ error: '資料庫更新錯誤' });
+  }
+});
+
+// 評論路由
+router.get('/product-list/reviews/:product_id', async (req, res) => {
+  const { product_id, color_id } = req.params;
+
+  try {
+    // 查詢評論數據及媒體文件
+    const sqlSelect = `
+      SELECT 
+        oi.id AS order_item_id,
+        oi.product_id,
+        oi.color_id,
+        oi.rating,
+        oi.review_date,
+        oi.review_likes,
+        oi.comment,
+        rf.file_name,
+        rf.file_type
+      FROM 
+        order_item oi
+      LEFT JOIN 
+        review_file rf ON oi.id = rf.order_item_id
+      WHERE 
+        oi.product_id = ${product_id} 
+      ORDER BY 
+        oi.review_date DESC;
+    `;
+
+    const [reviews] = await db.query(sqlSelect, [product_id, color_id]);
+
+    // 調試輸出，檢查查詢返回的數據
+    console.log('Fetched reviews from database:', reviews);
+
+    // 整理數據，將每個評論的媒體文件分組
+    const reviewsWithMedia = [];
+    const reviewMap = {};
+
+    reviews.forEach((review) => {
+      const {
+        order_item_id,
+        color_id,
+        rating,
+        review_date,
+        review_likes,
+        comment,
+        file_name,
+        file_type,
+      } = review;
+
+      // 如果這個評論還沒被加入到 map 中，初始化它
+      if (!reviewMap[order_item_id]) {
+        reviewMap[order_item_id] = {
+          order_item_id,
+          color_id,
+          rating,
+          review_date,
+          review_likes,
+          comment,
+          media: [],
+        };
+        reviewsWithMedia.push(reviewMap[order_item_id]);
+      }
+
+      // 如果有圖片或影片文件，將其添加到媒體列表，並生成完整的 URL
+      if (file_name) {
+        reviewMap[order_item_id].media.push({
+          file_name,
+          file_type,
+          url: `http://localhost:3005/upload/reviews/${file_type === '.mp4' ? 'videos' : 'images'}/${file_name}`,
+        });
+      }
+    });
+
+    // 調試輸出檢查 reviewsWithMedia 的內容
+    console.log('reviewsWithMedia:', reviewsWithMedia);
+    res.json(reviewsWithMedia);
+  } catch (error) {
+    console.error('Error fetching reviews and media:', error);
+    res.status(500).json({ error: '評論數據查詢錯誤' });
+  }
+});
+
+
+
 
 
 export default router

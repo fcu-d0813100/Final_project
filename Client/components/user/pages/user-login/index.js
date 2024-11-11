@@ -5,18 +5,26 @@ import { FaLine } from 'react-icons/fa6'
 import { PiEyeClosed, PiEye } from 'react-icons/pi'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
+import toast, { Toaster } from 'react-hot-toast'
+import useFirebase from '@/hooks/use-firebase'
 
 export default function UserLogin() {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const role = 'user'
-  const { auth, login, logout } = useAuth()
-  // checkbox 呈現密碼用
+  const { auth, login, callbackGoogleLogin } = useAuth()
+  const { loginGoogle, logoutFirebase } = useFirebase()
   const [showPassword, setShowPassword] = useState(false)
 
+  // 處理一般登入
   const handleLogin = () => {
+    if (auth.isAuth) {
+      toast.error('您已經登入了')
+      return
+    }
     login(account, password, role)
   }
+
   return (
     <>
       <div className={styles['bg-img']}>
@@ -61,9 +69,7 @@ export default function UserLogin() {
                   <input
                     type="text"
                     value={account}
-                    onChange={(e) => {
-                      setAccount(e.target.value)
-                    }}
+                    onChange={(e) => setAccount(e.target.value)}
                     className={styles['line-input']}
                     placeholder="請輸入帳號/信箱"
                   />
@@ -77,9 +83,7 @@ export default function UserLogin() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value)
-                    }}
+                    onChange={(e) => setPassword(e.target.value)}
                     className={`${styles['line-input']} `}
                     placeholder="請輸入英文字母及數字"
                   />
@@ -134,7 +138,16 @@ export default function UserLogin() {
                   </div>
                   <div className="col-5 d-flex justify-content-end align-items-center">
                     <FaLine className={styles['icon-line']} />
-                    <GrGoogle className={styles['icon-google']} />
+                    <GrGoogle
+                      className={styles['icon-google']}
+                      onClick={() => {
+                        if (auth.isAuth) {
+                          toast.error('您已經登入了')
+                          return
+                        }
+                        loginGoogle(callbackGoogleLogin)
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -147,6 +160,7 @@ export default function UserLogin() {
           </div>
         </div>
       </div>
+      <Toaster />
     </>
   )
 }
