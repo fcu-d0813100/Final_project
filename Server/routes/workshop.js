@@ -386,5 +386,85 @@ router.post(
     }
   }
 )
+//------------------------------------------------------------------------------------------
+// 發佈課程
+router.put('/myWorkshop/isUpload1', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateWorkshop = req.body
+  try {
+    const sql = SQL.format(
+      'UPDATE `workshop` SET `isUpload` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+      [1, updateWorkshop.id, id]
+    )
+
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+// 取消發佈（未發布狀態）
+router.put('/myWorkshop/isUpload0', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateWorkshop = req.body
+  try {
+    const sql = SQL.format(
+      'UPDATE `workshop` SET `isUpload` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+      [0, updateWorkshop.id, id]
+    )
+
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+// 軟刪除（丟垃圾桶）
+router.put('/myWorkshop/valid0', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateWorkshop = req.body
+  try {
+    const sql = SQL.format(
+      'UPDATE `workshop` SET `valid` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+      [0, updateWorkshop.id, id]
+    )
+
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+//------------------------------------------------------------------------------------------
 
 export default router

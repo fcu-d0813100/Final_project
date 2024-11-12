@@ -71,13 +71,13 @@ export default function MyWorkshopBox({
             <p className={`ps ${statusClass}`}>{statusText}</p>
           </div>
 
-          <div href="#" className="ph d-flex gap-1">
+          <div className="ph d-flex gap-1">
             {filterStatus === 'unpublished' && (
               <>
                 <button title="丟到垃圾桶" className={styles.trash}>
                   <PiTrash />
                 </button>
-                <button title="發布課程" className={styles.upload}>
+                <button title="發佈課程" className={styles.upload}>
                   <PiExport className="ph" />
                 </button>
                 <Link

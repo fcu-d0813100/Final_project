@@ -49,9 +49,8 @@ export default function MyWorkshop(props) {
   const filteredWorkshop = workshop
     ? workshop.filter((item) => {
         if (filterStatus === 'unpublished')
-          return item.valid === 1 && item.isUpload === 0
-        if (filterStatus === 'trash')
-          return item.valid === 0 && item.isUpload === 1
+          return item.isUpload === 0 && item.valid === 1
+        if (filterStatus === 'trash') return item.valid === 0
         return item.isUpload == 1 && item.valid == 1 // 已發布的條件
       })
     : []
