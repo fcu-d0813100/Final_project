@@ -20,6 +20,7 @@ export default function MyWorkshopBox({
   isUpload,
   registration_start,
   registration_end,
+  filterStatus,
 }) {
   const now = new Date()
   const regStart = new Date(registration_start)
@@ -71,18 +72,57 @@ export default function MyWorkshopBox({
           </div>
 
           <div href="#" className="ph d-flex gap-1">
-            <button className={styles.trash}>
-              <PiTrash />
-            </button>
-            <button className={styles.upload}>
-              <PiExport className="ph" />
-            </button>
-            <Link
-              href=""
-              className={`${styles.editBtn} h6 mx-2 text-decoration-none`}
-            >
-              編輯 <PiArrowRight className={`${styles.arrow} ph ms-2`} />
-            </Link>
+            {filterStatus === 'unpublished' && (
+              <>
+                <button title="丟到垃圾桶" className={styles.trash}>
+                  <PiTrash />
+                </button>
+                <button title="發布課程" className={styles.upload}>
+                  <PiExport className="ph" />
+                </button>
+                <Link
+                  href=""
+                  className={`${styles.editBtn} h6 mx-2 text-decoration-none`}
+                >
+                  編輯 <PiArrowRight className={`${styles.arrow} ph ms-2`} />
+                </Link>
+              </>
+            )}
+
+            {filterStatus === 'trash' && (
+              <>
+                <button
+                  className={`${styles.editBtn} h6 mx-2 text-decoration-none`}
+                >
+                  復原
+                </button>
+                <button
+                  className={`${styles.deleteBtn} h6 mx-2 text-decoration-none`}
+                >
+                  永久刪除
+                </button>
+              </>
+            )}
+
+            {filterStatus === 'published' && (
+              <>
+                <button title="丟到垃圾桶" className={styles.trash}>
+                  <PiTrash />
+                </button>
+                <button title="取消上傳" className={styles.upload}>
+                  <PiExport
+                    className="ph"
+                    style={{ transform: 'rotate(180deg)' }}
+                  />
+                </button>
+                <Link
+                  href=""
+                  className={`${styles.editBtn} h6 mx-2 text-decoration-none`}
+                >
+                  編輯 <PiArrowRight className={`${styles.arrow} ph ms-2`} />
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

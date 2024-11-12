@@ -3,13 +3,7 @@ import MyWorkshopBox from '@/components/teacher/common/t-dashboard-myWorkshopBox
 import { useAuth } from '@/hooks/use-auth'
 import Image from 'next/image'
 import Dropdown from '@/components/workshop/common/dropdown'
-import {
-  PiMagnifyingGlass,
-  PiCaretDown,
-  PiArrowRight,
-  PiTrash,
-  PiExport,
-} from 'react-icons/pi'
+import { PiMagnifyingGlass, PiFolderSimpleDashed } from 'react-icons/pi'
 import styles from '@/components/teacher/common/myworkshop.module.scss'
 import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
@@ -21,6 +15,7 @@ export default function MyWorkshop(props) {
   const { auth, login, logout } = useAuth()
   const { userData } = auth // 撈取 teacherData 資料
   const [workshop, setWorkshop] = useState(null)
+  const [filterStatus, setFilterStatus] = useState('unpublished')
 
   useEffect(() => {
     fetchData()
@@ -49,6 +44,18 @@ export default function MyWorkshop(props) {
       console.log(err)
     }
   }
+
+  // 根據 filterStatus 來篩選資料
+  const filteredWorkshop = workshop
+    ? workshop.filter((item) => {
+        if (filterStatus === 'unpublished')
+          return item.valid === 1 && item.isUpload === 0
+        if (filterStatus === 'trash')
+          return item.valid === 0 && item.isUpload === 1
+        return item.isUpload == 1 && item.valid == 1 // 已發布的條件
+      })
+    : []
+
   return (
     <>
       <TDashboardBN teacher="Gina Bettelli" />
@@ -110,13 +117,28 @@ export default function MyWorkshop(props) {
             </div>
           </div>
           <div className={`${styles.filterBtn} p ms-2 mb-3`}>
-            <button>未發布</button>
-            <button>已發布</button>
-            <button>垃圾桶</button>
+            <button
+              className={filterStatus === 'unpublished' ? styles.active : ''}
+              onClick={() => setFilterStatus('unpublished')}
+            >
+              未發布
+            </button>
+            <button
+              className={filterStatus === 'published' ? styles.active : ''}
+              onClick={() => setFilterStatus('published')}
+            >
+              已發布
+            </button>
+            <button
+              className={filterStatus === 'trash' ? styles.active : ''}
+              onClick={() => setFilterStatus('trash')}
+            >
+              垃圾桶
+            </button>
           </div>
 
-          {workshop && workshop.length > 0 ? (
-            workshop.map((item) => {
+          {filteredWorkshop && filteredWorkshop.length > 0 ? (
+            filteredWorkshop.map((item) => {
               // 將 dates 字串轉換成陣列
               const datesArray = item.dates ? item.dates.split(',') : []
 
@@ -145,11 +167,16 @@ export default function MyWorkshop(props) {
                   isUpload={item.isUpload}
                   registration_start={item.registration_start}
                   registration_end={item.registration_end}
+                  filterStatus={filterStatus}
                 />
               )
             })
           ) : (
-            <p>目前沒有任何工作坊資料。</p>
+            <p className={styles.noneWorkshopText}>
+              <PiFolderSimpleDashed className={styles.noneWorkshopIcon} />
+              <br />
+              目前沒有此類型課程資料
+            </p>
           )}
         </div>
       </div>

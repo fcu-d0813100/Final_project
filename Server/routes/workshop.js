@@ -85,7 +85,7 @@ router.get('/', async function (req, res, next) {
 })
 router.get('/myWorkshop', authenticate, async function (req, res, next) {
   const id = req.user.id
-  const { search = '', order, min = '', max = '' } = req.query
+  const { search = '', order } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -115,11 +115,6 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
      AND teachers.id = ${id}
 `
 
-  // 若 min 和 max 存在，則加入日期範圍篩選條件
-  if (min && max) {
-    sqlSelect += ` AND workshop_time.date BETWEEN ? AND ?`
-  }
-
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
 
   // 根據 order 值決定排序條件
@@ -133,9 +128,6 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
 
   // 設置查詢參數
   const queryParams = [`%${search}%`, `%${search}%`, `%${search}%`]
-  if (min && max) {
-    queryParams.push(min, max) // 添加 min 和 max 到查詢參數
-  }
 
   const result = await db
     .query(sqlSelect, queryParams)
