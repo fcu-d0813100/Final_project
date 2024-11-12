@@ -126,7 +126,7 @@ export default function PostUser(props) {
                 passHref
                 className={styles['post-add']}
               >
-                <PiNotePencilBold size={30} />
+                <PiNotePencilBold size={22} />
                 <span>建立</span>
               </Link>
             </div>
@@ -147,17 +147,22 @@ export default function PostUser(props) {
                     className={styles['my-masonry-grid']}
                     columnClassName={styles['my-masonry-grid_column']}
                   >
-                    {wallCard.map((post) => (
-                      <WallCard
-                        key={post.id}
-                        href={`/post/${post.id}`}
-                        imageSrc={`/post/${post.post_img}`}
-                        title={post.title}
-                        // username={post.nickname}
-                        // avatarSrc={`/user/img/${post.user_img}`}
-                        // likeCount={post.like_count}
-                      />
-                    ))}
+                    {wallCard.map((post) => {
+                      const imgSrc = post.post_img.startsWith('post')
+                        ? `http://localhost:3005/upload/${post.post_img}`
+                        : `/post/${post.post_img}`
+                      return (
+                        <WallCard
+                          key={post.id}
+                          href={`/post/${post.id}`}
+                          imageSrc={imgSrc}
+                          title={post.title}
+                          // username={post.nickname}
+                          // avatarSrc={`/user/img/${post.user_img}`}
+                          // likeCount={post.like_count}
+                        />
+                      )
+                    })}
                   </Masonry>
                 </div>
               </Tab.Pane>
