@@ -8,17 +8,17 @@ import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
 import { updateProfileAvatar } from '@/services/user'
+import { avatarBaseUrl } from '@/configs'
+import Avatar from '@/components/user/common/preview-upload-image'
+import PreviewUploadImage from '@/components/user/common/preview-upload-image'
 
 export default function UpdateInfo() {
-  // 從勾子的context得到註冊函式
+  const [selectedFile, setSelectedFile] = useState(null)
   const { auth, update, getUser, deleteUser } = useAuth()
   const router = useRouter()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     name: '',
-    // account: '',
-    // password: '',
-    // confirmPassword: '',
     nickname: '',
     gender: '',
     birthday: '',
@@ -34,14 +34,10 @@ export default function UpdateInfo() {
   const [errors, setErrors] = useState({
     name: '',
     email: '',
-    // account: '',
-    // password: '',
-    // confirmPassword: '',
   })
 
   // 多欄位共用事件函式
   const handleFieldChange = (e) => {
-    // ES6特性: 計算得來的物件屬性名稱(computed property name)
     let nextUser = { ...user, [e.target.name]: e.target.value }
 
     setUser(nextUser)
@@ -63,7 +59,6 @@ export default function UpdateInfo() {
     if (!user.email) {
       newErrors.email = 'Email為必填'
     }
-
     // 如果newErrors中的物件值中其中有一個非空白字串，代表有錯誤發生
     const hasErrors = Object.values(newErrors).some((v) => v)
 
@@ -71,6 +66,21 @@ export default function UpdateInfo() {
     return { newErrors, hasErrors }
   }
 
+  const handleFileChange = async (e) => {
+    // 上傳頭像用，有選擇檔案時再上傳
+    if (selectedFile) {
+      const formData = new FormData()
+      // 對照server上的檔案名稱 req.files.avatar
+      formData.append('img', selectedFile)
+
+      const res2 = await updateProfileAvatar(formData)
+
+      console.log(res2.data)
+      if (res2.data.status === 'success') {
+        toast.success('會員頭像修改成功')
+      }
+    }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault()
     const { newErrors, hasErrors } = checkError(user)
@@ -234,18 +244,34 @@ export default function UpdateInfo() {
                   />
                 </div>
               </div>
+
               <div className="col-3 d-flex align-items-center">
                 <div className="ratio ratio-1x1 w-75">
-                  <Image
+                  <PreviewUploadImage
+                    avatarImg={user.img}
+                    avatarBaseUrl="/user/img"
+                    defaultImg="avatar01.jpg"
+                    setSelectedFile={setSelectedFile}
+                    selectedFile={selectedFile}
+                  />
+
+                  {/* <Image
                     width={255}
                     height={255}
                     className={styles.avatar}
                     src={`/user/img/${user.img}`}
                     alt=""
                     priority
-                  />
+                  /> */}
                 </div>
               </div>
+              {/* <button
+                type="button"
+                className="btn btn-outline"
+                onClick={handleFileChange}
+              >
+                更換頭像
+              </button> */}
             </div>
           </div>
           {/* 收件資訊 */}

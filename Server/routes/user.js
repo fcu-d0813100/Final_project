@@ -216,6 +216,30 @@ router.put(
   }
 )
 
+// 更新會員檔案
+router.post(
+  '/upload-avatar',
+  authenticate,
+  upload.single('img'),
+  async (req, res) => {
+    console.log(req.file, req.body)
+
+    if (req.file) {
+      const id = req.user.id
+      const data = { img: req.file.filename }
+
+      // 對資料庫執行update
+      const [affectedRows] = await db.query(
+        'UPDATE user SET img = ? WHERE id = ?'[(data.img, id)]
+      )
+      if (!affectedRows) {
+        return res.json({ status: 'error', message: '更新失敗' })
+      }
+      return res.json({ status: 'success', data: null })
+    }
+  }
+)
+
 // =================================================================
 // post - 會員密碼更新
 // PUT - 更新會員資料(密碼更新用)
