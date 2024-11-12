@@ -22,7 +22,7 @@ export default function PostWall(props) {
   // const postId = wallCard?.id
   const tabChangeHandle = (tab) => {
     setSort(tab)
-    // setType && setType(tab)
+    setType(tab)
     router.push({
       pathname: '/post',
       query: { sort: tab },
