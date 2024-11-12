@@ -51,7 +51,7 @@ export default function MyWorkshop(props) {
         if (filterStatus === 'unpublished')
           return item.isUpload === 0 && item.valid === 1
         if (filterStatus === 'trash') return item.valid === 0
-        return item.isUpload == 1 && item.valid == 1 // 已發布的條件
+        return item.isUpload == 1 && item.valid == 1 // 已發佈的條件
       })
     : []
 

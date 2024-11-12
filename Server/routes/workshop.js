@@ -465,6 +465,39 @@ router.put('/myWorkshop/valid0', authenticate, async function (req, res) {
   }
 })
 
+// 真刪除（資料庫刪除）
+router.delete('/myWorkshop/delete', authenticate, async function (req, res) {
+  const id = req.user.id
+  const deleteWorkshop = req.body
+  console.log(deleteWorkshop)
+  try {
+    const workshopDelete = SQL.format(
+      'DELETE FROM workshop WHERE `id` = ? AND `teachers_id`=?',
+      [deleteWorkshop.id, id]
+    )
+    const timesDelete = SQL.format(
+      'DELETE FROM workshop_time WHERE `workshop_id` = ?',
+      [deleteWorkshop.id]
+    )
+
+    // 先刪除 workshop_time，再刪除 workshop
+    await db.query(timesDelete)
+    const [result] = await db.query(workshopDelete)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '刪除資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
 //------------------------------------------------------------------------------------------
 
 export default router
