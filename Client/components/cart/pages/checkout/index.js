@@ -10,7 +10,12 @@ import Seven from '../../../../pages/cart/ship'
 import { useCartProduct } from '@/hooks/use-cartP'
 import { useCartWorkshop } from '@/hooks/use-cartW'
 import { useAuth } from '@/hooks/use-auth'
-import axios from 'axios'
+import {
+  countries,
+  townships,
+  postcodes,
+} from '../../common/tw-zipcode/data-townships'
+import TWZipCode from '@//components/cart/common/tw-zipcode'
 
 export default function Checkout() {
   const router = useRouter()
@@ -171,6 +176,7 @@ export default function Checkout() {
             className="img-fluid d-none d-lg-block"
           />
         </div>
+        {/* <TWZipCode /> */}
         <div className={style.outer}>
           <div className={style.list}>
             <div className={style.order}>
@@ -218,7 +224,6 @@ export default function Checkout() {
                             ref={recipientNameRef}
                           />
                         </Form.Group>
-
                         <Form.Group
                           className="mb-3"
                           controlId="recipient-phone"
@@ -231,7 +236,6 @@ export default function Checkout() {
                             ref={recipientPhoneRef}
                           />
                         </Form.Group>
-
                         <Form.Group
                           className="mb-3"
                           controlId="recipient-email"
@@ -244,7 +248,6 @@ export default function Checkout() {
                             ref={recipientEmailRef}
                           />
                         </Form.Group>
-
                         <Row className="mb-3">
                           <Col md={6}>
                             <Form.Group controlId="recipient-city">
@@ -281,7 +284,6 @@ export default function Checkout() {
                             </Form.Group>
                           </Col>
                         </Row>
-
                         <Form.Group
                           className="mb-3"
                           controlId="recipient-address"
@@ -294,6 +296,26 @@ export default function Checkout() {
                             ref={recipientAddressRef}
                           />
                         </Form.Group>
+                        {/* //////////////////////////////////縣市連動測試 */}
+                        <Row className="mb-3">
+                          <Col md={6}>
+                            {/* 在這裡加入 TWZipCode 組件 */}
+                            <Form.Group controlId="recipient-city">
+                              <Form.Label>縣市</Form.Label>
+                              <TWZipCode
+                                initPostcode={recipientCityRef.current?.value} // 初始化郵遞區號，如果需要的話
+                                onPostcodeChange={(
+                                  country,
+                                  township,
+                                  postcode
+                                ) => {
+                                  recipientCityRef.current.value = country
+                                  recipientDistrictRef.current.value = township
+                                }}
+                              />
+                            </Form.Group>
+                          </Col>
+                        </Row>
                       </div>
                     ) : (
                       <div className={style['shipping-form']}>

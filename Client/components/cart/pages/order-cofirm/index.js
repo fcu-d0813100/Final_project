@@ -46,13 +46,14 @@ export default function OrderComfirm() {
 
   //算優惠券折價
   let discountPrice
-  if (orderData && orderData.coupon.discount_value <= 1) {
+  if (orderData?.coupon?.discount_value <= 1) {
     discountPrice =
       pTotalPrice - Math.floor(pTotalPrice * orderData.coupon.discount_value)
-  } else if (orderData && orderData.coupon.discount_value > 1) {
+  } else if (orderData?.coupon?.discount_value > 1) {
     discountPrice = orderData.coupon.discount_value
+  } else {
+    discountPrice = 0
   }
-  console.log(discountPrice)
 
   //------------送訂單到後端
   //判斷付款方式(1.貨到付款)
@@ -201,10 +202,19 @@ export default function OrderComfirm() {
                 </div>
               )}
               <hr />
-              總金額：
-              <span className={style['total_price']}>
-                NT${orderData?.totalPrice?.toLocaleString() || '未提供'}
-              </span>
+              <div className="d-flex align-items-center justify-content-end">
+                <div>
+                  <div className={style['original-p']}>
+                    原價：NT$
+                    {(pOriginalTotalPrice + wTotalPrice).toLocaleString()}
+                  </div>
+
+                  <div className={style['total_price']}>
+                    <span className="text-black"> 總金額：</span> NT$
+                    {orderData?.totalPrice?.toLocaleString() || '未提供'}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div
@@ -214,7 +224,7 @@ export default function OrderComfirm() {
                 className="btn-primary"
                 onClick={() => router.push('/cart/checkout')}
               >
-                返回
+                取消
               </button>
               <button
                 className="ms-2 btn-secondary"
