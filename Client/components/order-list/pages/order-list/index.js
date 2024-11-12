@@ -4,10 +4,7 @@ import styles from './index.module.scss'; // 确保引入正确的样式
 import OrderSection from '@/components/order-list/common/order-section';
 import Nav from 'react-bootstrap/Nav';
 import { useAuth } from '@/hooks/use-auth';
-<<<<<<< HEAD
-=======
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
 export default function OrderList() {
     const { auth } = useAuth();
@@ -15,14 +12,9 @@ export default function OrderList() {
     const [orders, setOrders] = useState([]); // 保存订单列表
     const [filteredOrders, setFilteredOrders] = useState([]); // 保存过滤后的订单
     const [loading, setLoading] = useState(false); // 加载状态
-<<<<<<< HEAD
-
-    // 從 AuthContext 獲取 userId
-=======
     const [searchTerm, setSearchTerm] = useState(''); // 搜索框输入内容
 
     // 从 AuthContext 获取 userId
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
     const userId = auth.isAuth ? auth.userData.id : null;
     console.log("User ID from auth:", userId); // 确认userId值
 
