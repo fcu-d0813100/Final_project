@@ -14,6 +14,7 @@
     flex-direction: column;
     box-shadow: none;
     height: auto;
+    border-radius: 0;
   }
 }
 /* #endregion base */
@@ -28,6 +29,9 @@
     align-items: center;
     flex: 53;
     // overflow: hidden;
+    @media (max-width: 390px) {
+      height: 390px;
+    }
     button {
       width: 8px;
       height: 8px;

@@ -8,8 +8,10 @@
     font-size: 20px;
 
     button {
-      &:active {
+      &:active,
+      &:focus {
         box-shadow: none;
+        border: none;
       }
     }
   }
