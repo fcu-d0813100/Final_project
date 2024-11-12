@@ -2,10 +2,11 @@ import express from 'express'
 import db from '#configs/db.js'
 import multer from 'multer'
 import authenticate from '#middlewares/authenticate.js'
-import fs, { rename } from 'fs/promises'
+import fs, { rename, rm } from 'fs/promises'
 import path, { resolve, extname, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import SQL from 'sqlstring'
+
 const router = express.Router()
 
 const __filename = fileURLToPath(import.meta.url)
@@ -471,6 +472,34 @@ router.delete('/myWorkshop/delete', authenticate, async function (req, res) {
   const deleteWorkshop = req.body
   console.log(deleteWorkshop)
   try {
+    // 查詢要刪除的 workshop 的所有圖片欄位
+    const [workshopData] = await db.query(
+      SQL.format(
+        'SELECT img_cover, img_lg, img_sm01, img_sm02 FROM workshop WHERE id = ? AND teachers_id = ?',
+        [deleteWorkshop.id, id]
+      )
+    )
+
+    if (workshopData.length > 0) {
+      const imgFields = ['img_cover', 'img_lg', 'img_sm01', 'img_sm02']
+      const folderPath = path.join(__dirname, '..', 'public', 'workshop') // 加上 .. 來退回上一層資料夾
+
+      for (const field of imgFields) {
+        const imgFile = workshopData[0][field]
+        if (imgFile) {
+          const imgPath = path.join(folderPath, imgFile)
+          console.log('要刪除的圖片路徑:', imgPath)
+          try {
+            // 嘗試刪除符合的檔案
+            await fs.rm(imgPath, { force: true }) // `force: true` 忽略不存在的檔案
+            console.log(`圖片已刪除: ${imgFile}`)
+          } catch (err) {
+            console.log(`圖片不存在或無法刪除: ${imgFile}`)
+          }
+        }
+      }
+    }
+
     const workshopDelete = SQL.format(
       'DELETE FROM workshop WHERE `id` = ? AND `teachers_id`=?',
       [deleteWorkshop.id, id]
