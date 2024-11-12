@@ -82,7 +82,7 @@ export default function OrderBox() {
                   {workshopItems.map((v, i) => (
                     <tr key={i}>
                       <td>{v.name}</td>
-                      <td>{v.date}</td>
+                      <td>{`${v.date}  ${v.beginTime}-${v.endTime}`}</td>
                       <td>{v.qty}</td>
                       <td>
                         <span className={style['old-price']}>

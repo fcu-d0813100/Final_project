@@ -38,10 +38,27 @@ export default function Checkout() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const coupon = JSON.parse(localStorage.getItem('selectedCouponObj'))
-      setCoupon(coupon)
-      setCouponDiscount(coupon?.discount_value || 0)
+      if (coupon && coupon.discount_value) {
+        setCoupon(coupon)
+
+        // 百分比折扣
+        if (coupon.discount_value <= 1) {
+          let PercentDiscount = Math.floor(pTotalPrice * coupon.discount_value)
+          PercentDiscount = pTotalPrice - PercentDiscount
+          setCouponDiscount(PercentDiscount)
+          // console.log(PercentDiscount)
+          // 固定金額折扣
+        } else if (coupon.discount_value > 1) {
+          setCouponDiscount(coupon.discount_value)
+        }
+      } else {
+        // 若 coupon 不存在或沒有 discount_value
+        setCoupon(null) // 清空 coupon 狀態
+        setCouponDiscount(0) // 設置折扣為 0 或其他預設值
+      }
     }
   }, [])
+
   //計算總金額
   const totalPrice =
     discountedPTotalPrice + discountedWTotalPrice - couponDiscount
@@ -348,13 +365,20 @@ export default function Checkout() {
             <div className="mb-5">
               <CheckoutBox />
             </div>
-            <button
-              type="button"
-              className={`w-100 btn btn-primary ${style['checkout-btn']}`}
-              onClick={handleCheckout}
+
+            <div
+              className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
             >
-              確認結帳
-            </button>
+              <button
+                className="btn-primary"
+                onClick={() => router.push('/cart/')}
+              >
+                返回
+              </button>
+              <button className="ms-2 btn-secondary" onClick={handleCheckout}>
+                前往結賬
+              </button>
+            </div>
           </div>
         </div>
       </div>

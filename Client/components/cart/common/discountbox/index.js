@@ -32,9 +32,14 @@ export default function DiscountBox({ onCouponSelect }) {
         credentials: 'include',
       })
       const resData = await res.json()
+      // console.log(resData)//全部優惠券獲取成功
+      // 從購物車取得商品品牌+全品項ALL
+      let productBrands = productItems.map((product) => product.brand)
+      if (productBrands.length > 0) {
+        productBrands.push('All')
+      }
 
-      // 從購物車取得商品品牌
-      const productBrands = productItems.map((product) => product.brand)
+      console.log(productBrands)
 
       if (resData.data) {
         // 篩選出有效優惠券
@@ -49,6 +54,7 @@ export default function DiscountBox({ onCouponSelect }) {
           )
         })
         setCoupons(filteredData)
+        console.log(filteredData) //篩出單一品項跟全品項優惠券成功
       } else {
         console.warn('No discount data found')
       }
@@ -140,6 +146,7 @@ export default function DiscountBox({ onCouponSelect }) {
             className={styles['form-select']}
           >
             <option value="">選擇優惠券</option>
+
             {coupons.map((coupon) => (
               <option
                 key={coupon.coupon_relation_id}
@@ -149,6 +156,11 @@ export default function DiscountBox({ onCouponSelect }) {
               </option>
             ))}
           </Form.Select>
+          <div className="ps mt-2 text-muted text-end">
+            <div>
+              <span className="text-danger">*</span>優惠券僅限彩妝商品使用
+            </div>
+          </div>
         </Modal.Body>
 
         <div className={styles['btn-comfirm']}>
