@@ -7,8 +7,7 @@ import { useAuth } from '@/hooks/use-auth'
 import styles from './index.module.scss'
 import PostIcon from '../post-icon'
 import { usePost } from '@/hooks/post/use-post'
-import Swal from 'sweetalert2'
-import ReactDOMServer from 'react-dom/server'
+import useAlert from '@/hooks/alert/use-alert'
 
 export default function ReplyInfo({
   onReplyClick = () => {},
@@ -31,6 +30,7 @@ export default function ReplyInfo({
   const userId = auth.userData.id
   const { forceUpdate } = usePost()
   const commentIdRef = useRef() //delete comment
+  const showAlert = useAlert()
   const formattedTime = commentCreateTime
     ? format(new Date(commentCreateTime), 'yyyy-MM-dd HH:mm')
     : ''
@@ -110,35 +110,13 @@ export default function ReplyInfo({
           userId,
         }),
       })
+      showAlert('刪除成功', <RiCheckboxCircleFill color="#90957A" />)
       forceUpdate()
     } catch (err) {
-      alert('刪除失敗，請稍後再試！')
+      showAlert('刪除失敗，請稍後再試！')
     }
   }
-  // ALERT
-  const showAlert = (
-    message,
-    icon = <RiCheckboxCircleFill color="#963827" />,
-    timer = 1500
-  ) => {
-    const iconHtml = ReactDOMServer.renderToString(icon)
-    Swal.fire({
-      html: `
-      <div class="custom-alert-content">
-        <span class="custom-icon">${iconHtml}</span>
-        <span>${message}</span>
-      </div>
-    `,
-      showConfirmButton: false,
-      timer: timer,
-      position: 'center',
-      width: '300px',
-      padding: '1em',
-      customClass: {
-        popup: `${styles['custom-popup']}`,
-      },
-    })
-  }
+
   return (
     <>
       {comments.comment_id === null ? (
@@ -163,22 +141,25 @@ export default function ReplyInfo({
                 </span>
                 <span>{formattedTime}</span>
               </div>
-              <span role="button" tabIndex={0} onBlur={() => setShow(false)}>
-                <PiDotsThree
-                  style={{ cursor: 'pointer' }}
-                  onClick={showMoreHandle}
-                />
-                {show && (
-                  <div className={styles['reply-delete-wrap']}>
-                    <div
-                      className={styles['reply-delete']}
-                      onClick={deleteComment}
-                    >
-                      刪除
+
+              {commentAuthorId === userId && (
+                <span role="button" tabIndex={0} onBlur={() => setShow(false)}>
+                  <PiDotsThree
+                    style={{ cursor: 'pointer' }}
+                    onClick={showMoreHandle}
+                  />
+                  {show && (
+                    <div className={styles['reply-delete-wrap']}>
+                      <div
+                        className={styles['reply-delete']}
+                        onClick={deleteComment}
+                      >
+                        刪除
+                      </div>
                     </div>
-                  </div>
-                )}
-              </span>
+                  )}
+                </span>
+              )}
             </div>
             <div className={styles['user-reply']} ref={replyRef}>
               <span>

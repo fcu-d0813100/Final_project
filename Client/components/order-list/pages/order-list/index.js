@@ -4,10 +4,7 @@ import styles from './index.module.scss'; // 确保引入正确的样式
 import OrderSection from '@/components/order-list/common/order-section';
 import Nav from 'react-bootstrap/Nav';
 import { useAuth } from '@/hooks/use-auth';
-<<<<<<< HEAD
-=======
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
 export default function OrderList() {
     const { auth } = useAuth();
@@ -15,14 +12,9 @@ export default function OrderList() {
     const [orders, setOrders] = useState([]); // 保存订单列表
     const [filteredOrders, setFilteredOrders] = useState([]); // 保存过滤后的订单
     const [loading, setLoading] = useState(false); // 加载状态
-<<<<<<< HEAD
-
-    // 從 AuthContext 獲取 userId
-=======
     const [searchTerm, setSearchTerm] = useState(''); // 搜索框输入内容
 
     // 从 AuthContext 获取 userId
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
     const userId = auth.isAuth ? auth.userData.id : null;
     console.log("User ID from auth:", userId); // 确认userId值
 
@@ -85,44 +77,45 @@ export default function OrderList() {
     }, [userId]); // 在 userId 变化时重新获取订单
 
     return (
-        <OrderSection titleCN="購物清單">
-
-            <div className={`d-flex justify-content-between mb-3 ${styles.title}`}>
-                <div class={`${styles["title-left"]} h3 p-2"`}>訂單查詢</div>
-                <div className={`d-flex align-items-center ${styles.search}`}>
-                    <input
-                        type="text"
-                        placeholder="搜尋訂單編號或商品名稱"
-                        className={`form-control`}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)} // 实时更新搜索内容
-                    />
-                    <button
-                        className={`btn ms-2 ${styles.searchBtn}`}
-                        onClick={handleSearch} // 按钮点击时触发搜索
-                    >
-                        <HiMiniMagnifyingGlass size={24} color='#90957a' />
-                    </button>
+        <OrderSection>
+            <div className={styles.top}>
+                <div className={`d-flex justify-content-between align-items-center ${styles.title}`}>
+                    <div class={`${styles["title-left"]} h3 p-2"`}>訂單查詢</div>
+                    <div className={`d-flex align-items-center ${styles.search}`}>
+                        <input
+                            type="text"
+                            placeholder="搜尋訂單編號或商品名稱"
+                            className={`form-control`}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)} // 实时更新搜索内容
+                        />
+                        <button
+                            className={`btn ms-2 ${styles.searchBtn}`}
+                            onClick={handleSearch} // 按钮点击时触发搜索
+                        >
+                            <HiMiniMagnifyingGlass size={24} color='#90957a' />
+                        </button>
+                    </div>
                 </div>
+
+                <Nav
+                    className={`justify-content-center align-items-center ${styles.navBar}`}
+                    variant='underline'
+                    activeKey={activeKey}
+                    onSelect={handleSelect}
+                >
+                    <Nav.Item>
+                        <Nav.Link className={`${styles.link}`} eventKey="全部">全部</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link className={`${styles.link}`} eventKey="處理中">處理中</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link className={`${styles.link}`} eventKey="已完成">已完成</Nav.Link>
+                    </Nav.Item>
+                </Nav>
+
             </div>
-
-            <Nav
-                className={`justify-content-center align-items-center ${styles.navBar}`}
-                variant='underline'
-                activeKey={activeKey}
-                onSelect={handleSelect}
-            >
-                <Nav.Item>
-                    <Nav.Link className={`${styles.link}`} eventKey="全部">全部</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link className={`${styles.link}`} eventKey="處理中">處理中</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link className={`${styles.link}`} eventKey="已完成">已完成</Nav.Link>
-                </Nav.Item>
-            </Nav>
-
             <div className={`${styles["order-list"]} d-flex flex-column nb-2`}>
                 {loading ? (
                     <div>加載中...</div>

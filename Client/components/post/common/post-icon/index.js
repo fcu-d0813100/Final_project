@@ -39,10 +39,10 @@ export default function PostIcon({
     comment: toggled ? <PiChatCircle /> : <PiChatCircle />,
   }
   const toggleHandle = async () => {
-    // if (!userId || userId == 0) {
-    //   setShowModal(true)
-    //   return // 未登入，直接結束函數，不進行點讚
-    // }
+    if (!userId || userId == 0) {
+      setShowModal(true)
+      return
+    }
     const newToggled = !toggled
     setToggled(newToggled)
 

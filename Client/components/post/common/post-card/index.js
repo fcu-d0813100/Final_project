@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { format } from 'date-fns'
+import { PiChatCircle } from 'react-icons/pi'
 import Image from 'next/image'
 import Carousel from 'react-bootstrap/Carousel'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -26,33 +27,43 @@ export default function PostCard({
   sendHandle,
   setCancelHandle = {},
 }) {
+  // post & user
   const { post } = usePost()
-  const postId = post?.id
   const { auth } = useAuth()
+  const postId = post?.id
   const userId = auth.userData.id
+  const isLoggedIn = !!(userId && userId !== 0)
   const router = useRouter()
+  // action
   const { liked, likeToggle, saved, saveToggle } = useAction(postId, {
     fetchLike: true,
     fetchSave: true,
   })
-
+  // data
   const [inputValue, setInputValue] = useState('')
-  const [focus, setFocus] = useState(false)
   const [replyTarget, setReplyTarget] = useState('')
   const [replyTargetId, setReplyTargetId] = useState('')
   const [reply, setReply] = useState('')
   const [replyId, setReplyId] = useState('')
+  // ui
   const [index, setIndex] = useState(0)
+  const [focus, setFocus] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
   const images = postImages.split(',')
+  const formattedTime = postCreateTime
+    ? format(new Date(postCreateTime), 'yyyy-MM-dd HH:mm')
+    : ''
+
   useEffect(() => {
     setCancelHandle(() => cancelHandle)
   }, [setCancelHandle])
 
-  const formattedTime = postCreateTime
-    ? format(new Date(postCreateTime), 'yyyy-MM-dd HH:mm')
-    : ''
+  useEffect(() => {
+    if (focus && !isLoggedIn) {
+      setShowModal(true)
+    }
+  }, [focus, isLoggedIn])
 
   const cancelHandle = (e) => {
     e && e.preventDefault()
@@ -62,10 +73,12 @@ export default function PostCard({
     setReply('')
     setReplyId('')
   }
-  const isLoggedIn = !!(auth.userData.id !== 0)
-  const replyHandle = (text, user, replyTargetId, replyId) => {
-    // notLoggedIn()return
 
+  const replyHandle = (text, user, replyTargetId, replyId) => {
+    if (!isLoggedIn) {
+      setShowModal(true)
+      return
+    }
     setReplyTargetId(replyTargetId)
     setReplyId(replyId)
     setReplyTarget(user)
@@ -73,6 +86,7 @@ export default function PostCard({
     setFocus(true)
   }
 
+  // carousel
   const handlePrev = () => {
     if (index > 0) {
       setIndex(index - 1)
@@ -128,6 +142,8 @@ export default function PostCard({
                     width={600}
                     height={650}
                     priority
+                    // layout="fill"
+                    // layout="responsive"
                   />
                 </Carousel.Item>
               )
@@ -154,9 +170,10 @@ export default function PostCard({
               <div className={`${styles['info-title']} h6`}>{title}</div>
               <div>
                 <span className={styles['info-content']}>{content}</span>
-                {tags.split(',').map((tag, index) => (
-                  <span key={index}>#{tag}</span>
-                ))}
+                {tags &&
+                  tags
+                    .split(',')
+                    .map((tag, index) => <span key={index}>#{tag}</span>)}
               </div>
               <div className={styles['info-date']}>{formattedTime}</div>
             </div>
@@ -208,14 +225,7 @@ export default function PostCard({
                 type="text"
                 className={styles['reply-input']}
                 placeholder="新增評論"
-                // onClick={notLoggedIn}
-                onFocus={
-                  isLoggedIn
-                    ? () => {
-                        setShowModal(true)
-                      }
-                    : () => setFocus(true)
-                }
+                onFocus={() => setFocus(true)}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
@@ -235,7 +245,13 @@ export default function PostCard({
                     initialToggled={saved}
                     onToggle={saveToggle}
                   />
-                  <PostIcon id={postId} icon="comment" count={commentCount} />
+                  <div onClick={() => setFocus(true)}>
+                    <div>
+                      <PiChatCircle />
+                    </div>
+                    <span>{commentCount}</span>
+                  </div>
+                  {/* <PostIcon id={postId} icon="comment" count={commentCount} /> */}
                 </div>
               ) : (
                 <div className={styles['btns']}>
@@ -258,7 +274,7 @@ export default function PostCard({
           content={`是否前往登入?`}
           btnConfirm="前往登入"
           ConfirmFn={() => {
-            router.push('/user/login')
+            router.push('/user/login/user')
           }}
           show={showModal}
           handleClose={() => setShowModal(false)}
