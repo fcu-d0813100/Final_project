@@ -5,7 +5,6 @@ import { PiNotePencilBold } from 'react-icons/pi'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import { useAuth } from '@/hooks/use-auth'
 import ModalConfirm from '@/components/shared/modal-confirm'
-import InputIME from '@/components/shared/input-amend'
 import { usePost } from '@/hooks/post/use-post'
 import Masonry from 'react-masonry-css'
 import WallCard from '@/components/post/common/wall-card'
@@ -18,11 +17,11 @@ export default function PostWall(props) {
   const router = useRouter()
   const { auth } = useAuth()
   const userId = auth.userData.id
-  const { type, setType } = usePost()
+  // const { type, setType } = usePost()
   // const postId = wallCard?.id
   const tabChangeHandle = (tab) => {
     setSort(tab)
-    setType(tab)
+    // setType(tab)
     router.push({
       pathname: '/post',
       query: { sort: tab },

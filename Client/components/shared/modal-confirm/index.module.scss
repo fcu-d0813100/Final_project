@@ -30,7 +30,10 @@
     border: none;
     // gap: 20px;
     button {
-      font-size: 18px; //h6 看看要不要16就好
+      // font-size: 18px; //h6 看看要不要16就好
+      &:hover {
+        color: #fff;
+      }
       &:active {
         background-color: #616654;
         border: none;

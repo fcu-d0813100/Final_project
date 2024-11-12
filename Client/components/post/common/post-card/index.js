@@ -274,7 +274,7 @@ export default function PostCard({
           content={`是否前往登入?`}
           btnConfirm="前往登入"
           ConfirmFn={() => {
-            router.push('/user/login')
+            router.push('/user/login/user')
           }}
           show={showModal}
           handleClose={() => setShowModal(false)}
