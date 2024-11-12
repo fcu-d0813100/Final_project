@@ -110,8 +110,13 @@
       padding: 20px 40px;
       text-align: end;
       margin-bottom: 30px;
-      span {
-        font-size: 24px;
+      span:nth-child(1) {
+        color: $gray-200;
+        text-decoration: line-through;
+        margin-inline: 8px;
+      }
+      span:nth-child(2) {
+        font-size: 20px;
         color: $red-500;
       }
     }

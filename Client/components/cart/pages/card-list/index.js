@@ -46,6 +46,7 @@ export default function CartList() {
     productItems = [],
     pTotalPrice = 0,
     pTotalQty = 0,
+    pOriginalTotalPrice = 0,
     onIncreaseProduct = () => {},
     onDecreaseProduct = () => {},
     onRemoveProduct = () => {},
@@ -60,22 +61,18 @@ export default function CartList() {
     onDecreaseWorkshop = () => {},
     onRemoveWorkshop = () => {},
   } = useCartWorkshop()
+  //課程打95折價格
+  const discountedWTotalPrice = Math.floor(wTotalPrice * 0.95)
 
   //-------------判斷是否有商品，否則隱藏
   const [showProductBox, setShowProductBox] = useState(false)
+  const [showWorkshopBox, setShowWorkshopBox] = useState(false)
   useEffect(() => {
     const productCart = JSON.parse(localStorage.getItem('productCart'))
     setShowProductBox(Array.isArray(productCart) && productCart.length > 0)
-  }, [])
-
-  //-------------判斷是否有商品，否則隱藏
-  const [showWorkshopBox, setShowWorkshopBox] = useState(false)
-  useEffect(() => {
     const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
     setShowWorkshopBox(Array.isArray(Workshopcart) && Workshopcart.length > 0)
   }, [])
-
-  //-------------建立訂單
 
   return (
     <>
@@ -183,6 +180,7 @@ export default function CartList() {
                   ))}
                   <div className={style['cosmetic_amount']}>
                     商品小計：
+                    <span>NT${pOriginalTotalPrice.toLocaleString()}</span>
                     <span>NT${pTotalPrice.toLocaleString()}</span>
                   </div>
                 </div>
@@ -251,7 +249,9 @@ export default function CartList() {
                       {/* 課程價格 */}
                       <div className={`h6 ${style.price}`}>
                         NT$
-                        {(workshop.price * workshop.qty * 0.8).toLocaleString()}
+                        {Math.floor(
+                          workshop.price * workshop.qty * 0.95
+                        ).toLocaleString()}
                         <div className={style['origin_price']}>
                           NT$ {(workshop.price * workshop.qty).toLocaleString()}
                         </div>
@@ -268,8 +268,9 @@ export default function CartList() {
                     </div>
                   ))}
                   <div className={style['course_amount']}>
-                    商品小計：{' '}
-                    <span>NT${(wTotalPrice * 0.8).toLocaleString()}</span>
+                    商品小計：
+                    <span>NT${wTotalPrice.toLocaleString()}</span>
+                    <span>NT${discountedWTotalPrice.toLocaleString()}</span>
                   </div>
                 </div>
               )}
