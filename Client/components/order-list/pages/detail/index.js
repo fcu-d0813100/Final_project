@@ -68,9 +68,8 @@ const OrderDetail = () => {
     return (
         <OrderSection titleCN="訂單詳情">
 
-            <div className={styles.right}>
-                <div className={`${styles["order-det-header"]} mt-3 d-flex justify-content-between align-items-center mb-2`}>
-                    <div className="header-left d-flex align-items-center">
+                <div className={`${styles["order-det-header"]} mt-3 justify-content-between align-items-center mb-2`}>
+                    <div className={`header-left d-flex align-items-center`}>
                         <div className={`${styles.squ} me-3`}></div>
                         <div className={`${styles["order-num"]} h4`}>訂單編號 {order_number}</div>
                     </div>
@@ -80,10 +79,13 @@ const OrderDetail = () => {
                 </div>
 
                 <div className={`${styles["order-det-content"]} d-flex flex-column border rounded-top`}>
+                <div className={`h5 ${styles.topTitle}`}>
+                    訂單已完成
+                </div>
                     {/* 訂單信息和收件信息 */}
-                    <div className={`${styles.msg} d-flex justify-content-between align-items-center`}>
+                    <div className={`${styles.msg} d-flex justify-content-between`}>
                         <div className={styles["msg-left"]}>
-                            <div className={`${styles["left-title"]} h4 mb-3`}>訂單信息</div>
+                            <div className={`${styles["left-title"]} h4 `}>訂單信息</div>
                             <div className={`${styles.detail} h6 ms-3`}>
                                 <div>訂單編號：{order_number}</div>
                                 <div>付款方式：{payment}</div>
@@ -92,7 +94,7 @@ const OrderDetail = () => {
                         </div>
                         <div className={styles.line}></div>
                         <div className={styles["msg-right"]}>
-                            <div className={`${styles["right-title"]} h4 mb-3`}>收件信息</div>
+                            <div className={`${styles["right-title"]} h4 `}>收件信息</div>
                             <div className={`${styles.detail} h6 ms-3`}>
                                 <div className="name">{name}</div>
                                 <div className="phone">{phone}</div>
@@ -102,7 +104,7 @@ const OrderDetail = () => {
                     </div>
 
                     {/* 渲染商品列表 */}
-                    <div className={`${styles.content} ps-5 pt-5 pe-5`}>
+                    <div className={`${styles.content} `}>
                         <div className={`${styles.header} h4 border-bottom p-2 mb-2`}>購買商品</div>
                         {items.length > 0 ? (
                             items.map((item, index) => (
@@ -216,7 +218,7 @@ const OrderDetail = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+           
         </OrderSection>
     );
 };
