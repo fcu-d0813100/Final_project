@@ -1,45 +1,43 @@
 import React, { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
-import styles from './discount-box.module.scss'
-import { X } from '@phosphor-icons/react'
 import Form from 'react-bootstrap/Form'
+import { X } from '@phosphor-icons/react'
+import { useRouter } from 'next/router' // 新增 useRouter
+import styles from './discount-box.module.scss'
 import { useAuth } from '@/hooks/use-auth'
 import { useCartProduct } from '@/hooks/use-cartP'
 
 export default function DiscountBox({ onCouponSelect }) {
-  // 獲取會員ID
   const { auth } = useAuth()
   const userId = auth.userData.id
-  console.log('userId:', userId)
+  const router = useRouter() // 使用 router 來導航
 
-  const { productItems } = useCartProduct() // 使用上下文中的購物車資料
-  const [coupons, setCoupons] = useState([]) // 優惠券清單
-  const [selectedCoupon, setSelectedCoupon] = useState('') // 已選的優惠券
-  const [tempCoupon, setTempCoupon] = useState('') // 暫存的優惠券
-
-  // 控制彈窗
+  const { productItems } = useCartProduct()
+  const [coupons, setCoupons] = useState([])
+  const [selectedCoupon, setSelectedCoupon] = useState('')
+  const [tempCoupon, setTempCoupon] = useState('')
   const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
 
-  // 取得優惠券
-  const getCoupon = async () => {
+  const fetchCoupons = async () => {
     if (!userId) return
+
     try {
-      const url = `http://localhost:3005/api/getCoupon?userId=${userId}`
-      const res = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      })
-      const resData = await res.json()
+      const response = await fetch(
+        `http://localhost:3005/api/getCoupon?userId=${userId}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
+      )
+      const data = await response.json()
 
-      // 從購物車取得商品品牌
-      const productBrands = productItems.map((product) => product.brand)
-
-      if (resData.data) {
-        // 篩選出有效優惠券
+      if (data?.data) {
         const now = new Date()
-        const filteredData = resData.data.filter((coupon) => {
+        const productBrands = productItems
+          .map((product) => product.brand)
+          .concat('All')
+
+        const validCoupons = data.data.filter((coupon) => {
           const startDate = new Date(coupon.start_date)
           const endDate = new Date(coupon.end_date)
           return (
@@ -48,7 +46,8 @@ export default function DiscountBox({ onCouponSelect }) {
             productBrands.includes(coupon.brand_name)
           )
         })
-        setCoupons(filteredData)
+
+        setCoupons(validCoupons)
       } else {
         console.warn('No discount data found')
       }
@@ -58,10 +57,10 @@ export default function DiscountBox({ onCouponSelect }) {
   }
 
   useEffect(() => {
-    getCoupon()
-  }, [userId, productItems]) // 當 userId 或 productItems 改變時重新獲取優惠券
+    fetchCoupons()
+  }, [userId, productItems])
 
-  // 從 localStorage 重新取得上次選擇的優惠券
+  // Load previously selected coupon from localStorage
   useEffect(() => {
     const storedCoupon = localStorage.getItem('selectedCoupon')
     if (storedCoupon) {
@@ -69,21 +68,19 @@ export default function DiscountBox({ onCouponSelect }) {
     }
   }, [])
 
-  // 更新暫存的優惠券
   const handleCouponChange = (event) => {
-    const couponId = event.target.value
-    setTempCoupon(couponId) // 儲存在 tempCoupon 中，按確認後才更新
+    setTempCoupon(event.target.value)
   }
 
-  // 確認按鈕的點擊事件，更新 selectedCoupon 並關閉彈窗
   const handleConfirm = () => {
     setSelectedCoupon(tempCoupon)
+
     const selectedCouponObj = coupons.find(
-      (item) => item.coupon_list_id == tempCoupon
+      (coupon) => coupon.coupon_list_id == tempCoupon
     )
     localStorage.setItem('selectedCoupon', tempCoupon)
 
-    if (tempCoupon && selectedCouponObj) {
+    if (selectedCouponObj) {
       localStorage.setItem(
         'selectedCouponObj',
         JSON.stringify(selectedCouponObj)
@@ -92,32 +89,41 @@ export default function DiscountBox({ onCouponSelect }) {
       localStorage.removeItem('selectedCouponObj')
     }
 
-    // 調用父組件的 onCouponSelect 回調
     if (onCouponSelect) {
       onCouponSelect(selectedCouponObj || null)
     }
 
-    handleClose()
+    setShow(false)
+  }
+
+  const handleNoCoupons = () => {
+    router.push('/') // 導航到優惠券頁面
   }
 
   return (
     <>
-      <div onClick={handleShow} className={styles['checkout_discount']}>
+      <div
+        onClick={() => setShow(true)}
+        className={styles['checkout_discount']}
+      >
         <span>優惠券</span>
         <span className="ps">
           {selectedCoupon
-            ? coupons.find((coupon) => coupon.coupon_list_id == selectedCoupon)
-                ?.brand_name +
-              ' ' +
-              coupons.find((coupon) => coupon.coupon_list_id == selectedCoupon)
-                ?.name
+            ? (() => {
+                const selected = coupons.find(
+                  (coupon) => coupon.coupon_list_id == selectedCoupon
+                )
+                return selected
+                  ? `${selected.brand_name} ${selected.name}`
+                  : '輸入享有折扣 >'
+              })()
             : '輸入享有折扣 >'}
         </span>
       </div>
 
       <Modal
         show={show}
-        onHide={handleClose}
+        onHide={() => setShow(false)}
         backdrop="static"
         keyboard={false}
         className={styles['modal']}
@@ -125,34 +131,47 @@ export default function DiscountBox({ onCouponSelect }) {
         <div className={styles['modal-header']}>
           <div
             className={styles['close-button']}
-            onClick={handleClose}
+            onClick={() => setShow(false)}
             style={{ cursor: 'pointer' }}
           >
             <X size={28} />
           </div>
         </div>
         <Modal.Body className={styles['modal-body']}>
-          <Form.Label className="h6 mt-3 mb-3">優惠券折扣 :</Form.Label>
-          <Form.Select
-            value={tempCoupon}
-            onChange={handleCouponChange}
-            aria-label="Default select example"
-            className={styles['form-select']}
-          >
-            <option value="">選擇優惠券</option>
-            {coupons.map((coupon) => (
-              <option
-                key={coupon.coupon_relation_id}
-                value={coupon.coupon_list_id}
+          {coupons.length > 0 ? (
+            <>
+              <Form.Label className="h6 mt-3 mb-3">優惠券折扣 :</Form.Label>
+              <Form.Select
+                value={tempCoupon}
+                onChange={handleCouponChange}
+                aria-label="Default select example"
+                className={styles['form-select']}
               >
-                {`${coupon.brand_name} ${coupon.name}`}
-              </option>
-            ))}
-          </Form.Select>
+                <option value="">選擇優惠券</option>
+                {coupons.map((coupon) => (
+                  <option
+                    key={coupon.coupon_relation_id}
+                    value={coupon.coupon_list_id}
+                  >
+                    {`${coupon.brand_name} ${coupon.name}`}
+                  </option>
+                ))}
+              </Form.Select>
+              <div className="ps mt-2 text-muted text-end">
+                <span className="text-danger">*</span>優惠券僅限彩妝商品使用
+              </div>
+            </>
+          ) : (
+            <div className="text-center">
+              <Form.Label className="h5 mb-4">尚無優惠券</Form.Label>
+              <div className={styles['no-coupon']} onClick={handleNoCoupons}>
+                查看優惠專區
+              </div>
+            </div>
+          )}
         </Modal.Body>
-
         <div className={styles['btn-comfirm']}>
-          <button onClick={handleConfirm}>確認</button>
+          {coupons.length > 0 && <button onClick={handleConfirm}>確認</button>}
         </div>
       </Modal>
     </>

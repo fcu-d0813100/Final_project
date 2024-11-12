@@ -133,6 +133,11 @@ export function ProductCartProvider({ children }) {
     }
   }, [productItems])
 
+  //變更優惠券時，設定到localStorage
+  useEffect(() => {
+    localStorage.setItem('selectedCoupon', selectedCoupon)
+  }, [selectedCoupon])
+
   //-----reload
 
   //導出商品內容跟方法

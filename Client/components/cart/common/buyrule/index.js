@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Form } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import style from './buy-rule.module.scss'
 
 export default function BuyRule(props) {
-  const [isChecked, setIsChecked] = useState(true)
+  // 預設為未勾選
+  const [isChecked, setIsChecked] = useState(false)
+
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked) // 切換勾選狀態
+  }
+
+  // 確保勾選框必須勾選
+  const handleSubmit = () => {
+    if (!isChecked) {
+      alert('您必須同意條款與條件才能繼續!')
+      return
+    }
+    // 提交邏輯...
   }
 
   return (
@@ -25,7 +36,9 @@ export default function BuyRule(props) {
           <br />
           5. 恕不接受海外信用卡。
           <br />
-          6.請仔細閱讀並同意本條款後使用本服務。
+          6. 已領取的優惠券僅能對彩妝商品使用(限一次)。
+          <br />
+          7. 請仔細閱讀並同意本條款後使用本服務。
           <br />
           感謝您的閱讀，祝您購物愉快!
         </p>
