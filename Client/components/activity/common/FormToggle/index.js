@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Styles from '@/components/activity/page/activity-det/index.module.scss'
 
-export default function FormToggle(props) {
+export default function FormToggle({ uid }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const toggleForm = () => setIsExpanded(!isExpanded)
@@ -12,6 +12,44 @@ export default function FormToggle(props) {
     document.getElementById('date').value = ''
     document.getElementById('people').selectedIndex = 0
     document.getElementById('remark').value = ''
+  }
+
+  const handleSubmit = async () => {
+    const name = document.getElementById('name').value
+    const phone = document.getElementById('phone').value
+    const date = document.getElementById('date').value
+    const people = document.getElementById('people').value
+    const remark = document.getElementById('remark').value
+
+    if (!name || !phone || !date || people === '請選擇人數') {
+      alert('請填寫所有必填字段')
+      return
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/activity/activity-reg/${uid}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, phone, date, people, remark }),
+        }
+      )
+
+      if (response.ok) {
+        alert('報名成功！')
+        resetForm()
+        setIsExpanded(false)
+      } else {
+        const errorData = await response.json()
+        alert(`報名失敗：${errorData.message || '請稍後再試'}`)
+      }
+    } catch (error) {
+      console.error('報名失敗：', error)
+      alert('報名失敗，請稍後再試')
+    }
   }
 
   return (
@@ -64,7 +102,13 @@ export default function FormToggle(props) {
               <button className={Styles['reset-button']} onClick={resetForm}>
                 重置
               </button>
-              <button className={Styles['submit-button']}>送出</button>
+              <button
+                className={Styles['submit-button']}
+                type="button"
+                onClick={handleSubmit}
+              >
+                送出
+              </button>
             </div>
           </>
         )}

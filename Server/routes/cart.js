@@ -2,6 +2,28 @@ import express from 'express'
 const router = express.Router()
 import db from '#configs/db.js'
 
+// //獲取會員id抓取優惠券返回前端
+// router.get('/getCoupon', async function (req, res) {
+//   const userId = req.query.userId // 從查詢參數獲取 userId
+
+//   if (!userId) {
+//     return res.status(400).json({ error: 'User ID is required' })
+//   }
+
+//   try {
+//     const sqlSelect = `SELECT *
+//     FROM
+//     coupon_relatoin`
+//     const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
+//     res.json(result)
+//   } catch (error) {
+//     console.error('Database query error:', error)
+//     res
+//       .status(500)
+//       .json({ message: 'Error fetching coupons. Please try again later.' })
+//   }
+// })
+
 //訂單提交路由
 router.post('/checkout', async function (req, res, next) {
   try {
@@ -22,32 +44,43 @@ router.post('/checkout', async function (req, res, next) {
       storeaddress,
       productCart,
       Workshopcart,
+      coupon,
+      userId,
     } = req.body
 
     //確認分解資料正確
     // console.log(paymentMethod, deliveryMethod, orderNumber, totalDiscountPrice)
     let shippingAddress
-    if (deliveryMethod == 'home') {
+    if (deliveryMethod == '1') {
       shippingAddress = homeAdress
     } else {
       shippingAddress = `${storename} ${storeaddress}`
     }
+    //處理已付款跟未付款的狀態資訊
+    let status
+    if (paymentMethod == 1) {
+      status = '未付款'
+    } else if (paymentMethod == 2) {
+      status = '已付款'
+    }
+
     const shippingId = deliveryMethod
     const paymentId = paymentMethod
 
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
     (user_id, payment_id, shipping_id, order_number, total_amount, shipping_address, coupon_id, status)
-    VALUES (1, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', NULL, '未付款')`
+    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', ${coupon.coupon_list_id}, '${status}')`
 
     const [result] = await db.query(sqlInsert, [
-      1, // user_id
+      userId, // user_id
       paymentId, // payment_id
       shippingId, // shipping_id
       orderNumber, // order_number
       totalPrice, // total_amount
       shippingAddress, // shipping_address
-      // 這裡沒有 coupon_id，所以不應該有 ?
+      status,
+      coupon.coupon_list_id,
     ])
 
     //result反回order_list的自增ID
@@ -63,6 +96,46 @@ router.post('/checkout', async function (req, res, next) {
         product.color_id,
         product.qty,
       ])
+    }
+
+    // -----------更新庫存數量
+    for (const product of productCart) {
+      const sqlUpdateStock = `
+    UPDATE color
+    SET stock = stock - ${product.qty}
+    WHERE product_id = ${product.product_id} AND id = ${product.color_id}
+  `
+      await db.query(sqlUpdateStock)
+    }
+
+    // -----------更新課程人數
+    for (const Workshop of Workshopcart) {
+      const sqlUpdateStock = `
+    UPDATE workshop_time
+    SET registered = registered + 1
+    WHERE workshop_id = 5
+      AND date = '${Workshop.date}'
+      AND start_time = '${Workshop.beginTime}';
+  ` // 執行查詢
+      await db.query(sqlUpdateStock)
+    }
+
+    //----------更新優惠券使用次數(11.11待修改)
+    if (coupon) {
+      const sqlUpdate1 = `
+        UPDATE coupon_list
+        SET used = used + 1
+        WHERE id = ${coupon.coupon_list_id};
+      `
+
+      const sqlUpdate2 = `
+        UPDATE coupon_relation
+        SET order_id = ${orderId}
+        WHERE user_id = ${userId} AND coupon_id = ${coupon.coupon_list_id};
+      `
+
+      await db.query(sqlUpdate1)
+      await db.query(sqlUpdate2)
     }
 
     //利用訂單id創建課程訂單明細

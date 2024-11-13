@@ -8,7 +8,7 @@
   gap: 50px;
   width: 100%;
   padding: 67px 190px;
-  @media (max-width: 1140px) {
+  @media (max-width: 1440px) {
     padding: 20px 50px;
   }
   @media (max-width: 390px) {
@@ -18,15 +18,36 @@
   .post-read {
     display: flex;
     justify-content: center;
+    // gap: 60px;
     position: relative;
-    a {
+    & > a {
+      position: absolute;
+      left: 0px;
       color: #000;
+      z-index: 1000;
+      border-radius: 50px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+
+      @media (max-width: 1680px) {
+        left: -40px;
+      }
+      @media (max-width: 1440px) {
+        left: -4px;
+      }
+      @media (max-width: 1280px) {
+        top: 12px;
+        left: 12px;
+        background-color: #ffffff15;
+        // box-shadow: none;
+        color: #fff;
+      }
+      @media (max-width: 1140px) {
+        left: 10px;
+      }
       svg {
-        position: absolute;
-        left: -130px;
+        // left: -130px;
         padding: 4px;
-        border-radius: 50px;
-        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+        // box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
       }
     }
   }
@@ -34,7 +55,9 @@
     text-align: center;
   }
   .post-wall {
+    padding: 0 240px;
     display: flex;
+    justify-content: center;
     gap: 25px;
     @media (max-width: 390px) {
       gap: 10px;

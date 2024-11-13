@@ -54,7 +54,16 @@
   padding: 20px 40px;
   text-align: end;
   margin-bottom: 30px;
-  span {
+  .discount {
+    margin-bottom: 5px;
+    color: $red-500;
+  }
+  .original-p {
+    color: $gray-200;
+    text-decoration: line-through;
+  }
+
+  .total_price {
     font-size: 24px;
     color: $red-500;
   }

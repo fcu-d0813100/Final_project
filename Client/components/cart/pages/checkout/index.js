@@ -9,7 +9,13 @@ import OrderBox from '../../common/orderbox'
 import Seven from '../../../../pages/cart/ship'
 import { useCartProduct } from '@/hooks/use-cartP'
 import { useCartWorkshop } from '@/hooks/use-cartW'
-import axios from 'axios'
+import { useAuth } from '@/hooks/use-auth'
+import {
+  countries,
+  townships,
+  postcodes,
+} from '../../common/tw-zipcode/data-townships'
+import TWZipCode from '@//components/cart/common/tw-zipcode'
 
 export default function Checkout() {
   const router = useRouter()
@@ -17,13 +23,50 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('cod') //預設付款
   const [orderData, setOrderData] = useState({}) // 保存訂單資料
 
+  //會員id
+  const { auth } = useAuth()
+  const userId = auth.userData.id
+
   //鉤子帶入金額跟數量
-  const { pTotalPrice = 0, pTotalQty = 0 } = useCartProduct()
+  const {
+    pTotalPrice = 0,
+    pTotalQty = 0,
+    pOriginalTotalPrice,
+  } = useCartProduct()
   const { wTotalPrice = 0, wTotalQty = 0 } = useCartWorkshop()
   //打折的價格
   const discountedPTotalPrice = pTotalPrice
-  const discountedWTotalPrice = wTotalPrice * 0.8
-  const totalPrice = discountedPTotalPrice + discountedWTotalPrice
+  const discountedWTotalPrice = Math.floor(wTotalPrice * 0.95)
+  //加入優惠券的部分
+  const [couponDiscount, setCouponDiscount] = useState(0)
+  const [coupon, setCoupon] = useState(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const coupon = JSON.parse(localStorage.getItem('selectedCouponObj'))
+      if (coupon && coupon.discount_value) {
+        setCoupon(coupon)
+
+        // 百分比折扣
+        if (coupon.discount_value <= 1) {
+          let PercentDiscount = Math.floor(pTotalPrice * coupon.discount_value)
+          PercentDiscount = pTotalPrice - PercentDiscount
+          setCouponDiscount(PercentDiscount)
+          // console.log(PercentDiscount)
+          // 固定金額折扣
+        } else if (coupon.discount_value > 1) {
+          setCouponDiscount(coupon.discount_value)
+        }
+      } else {
+        // 若 coupon 不存在或沒有 discount_value
+        setCoupon(null) // 清空 coupon 狀態
+        setCouponDiscount(0) // 設置折扣為 0 或其他預設值
+      }
+    }
+  }, [])
+
+  //計算總金額
+  const totalPrice =
+    discountedPTotalPrice + discountedWTotalPrice - couponDiscount
 
   // 使用 useRef 來存儲 input 值
   const recipientNameRef = useRef(null)
@@ -96,6 +139,8 @@ export default function Checkout() {
         productCart,
         Workshopcart,
         totalPrice,
+        coupon,
+        userId,
       }
     } else {
       orderData = {
@@ -108,6 +153,8 @@ export default function Checkout() {
         productCart,
         Workshopcart,
         totalPrice,
+        coupon,
+        userId,
       }
     }
 
@@ -129,6 +176,7 @@ export default function Checkout() {
             className="img-fluid d-none d-lg-block"
           />
         </div>
+        {/* <TWZipCode /> */}
         <div className={style.outer}>
           <div className={style.list}>
             <div className={style.order}>
@@ -176,7 +224,6 @@ export default function Checkout() {
                             ref={recipientNameRef}
                           />
                         </Form.Group>
-
                         <Form.Group
                           className="mb-3"
                           controlId="recipient-phone"
@@ -189,7 +236,6 @@ export default function Checkout() {
                             ref={recipientPhoneRef}
                           />
                         </Form.Group>
-
                         <Form.Group
                           className="mb-3"
                           controlId="recipient-email"
@@ -202,7 +248,6 @@ export default function Checkout() {
                             ref={recipientEmailRef}
                           />
                         </Form.Group>
-
                         <Row className="mb-3">
                           <Col md={6}>
                             <Form.Group controlId="recipient-city">
@@ -239,7 +284,6 @@ export default function Checkout() {
                             </Form.Group>
                           </Col>
                         </Row>
-
                         <Form.Group
                           className="mb-3"
                           controlId="recipient-address"
@@ -252,6 +296,26 @@ export default function Checkout() {
                             ref={recipientAddressRef}
                           />
                         </Form.Group>
+                        {/* //////////////////////////////////縣市連動測試 */}
+                        <Row className="mb-3">
+                          <Col md={6}>
+                            {/* 在這裡加入 TWZipCode 組件 */}
+                            <Form.Group controlId="recipient-city">
+                              <Form.Label>縣市</Form.Label>
+                              <TWZipCode
+                                initPostcode={recipientCityRef.current?.value} // 初始化郵遞區號，如果需要的話
+                                onPostcodeChange={(
+                                  country,
+                                  township,
+                                  postcode
+                                ) => {
+                                  recipientCityRef.current.value = country
+                                  recipientDistrictRef.current.value = township
+                                }}
+                              />
+                            </Form.Group>
+                          </Col>
+                        </Row>
                       </div>
                     ) : (
                       <div className={style['shipping-form']}>
@@ -323,13 +387,20 @@ export default function Checkout() {
             <div className="mb-5">
               <CheckoutBox />
             </div>
-            <button
-              type="button"
-              className={`w-100 btn btn-primary ${style['checkout-btn']}`}
-              onClick={handleCheckout}
+
+            <div
+              className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
             >
-              確認結帳
-            </button>
+              <button
+                className="btn-primary"
+                onClick={() => router.push('/cart/')}
+              >
+                返回
+              </button>
+              <button className="ms-2 btn-secondary" onClick={handleCheckout}>
+                前往結賬
+              </button>
+            </div>
           </div>
         </div>
       </div>

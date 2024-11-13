@@ -108,10 +108,14 @@
         &.focused {
           border: 1px solid $green-600;
         }
+        &.over-limit {
+          border: 1px $red-500 solid;
+          color: $red-500;
+        }
         border: 1px $green-200 solid;
         display: flex;
         justify-content: space-between;
-        align-items: end;
+        align-items: flex-end;
         gap: 10px;
         padding: 10px 16px;
         border-radius: 2px;
@@ -212,7 +216,7 @@
 
 .post-btn {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 32px;
   box-sizing: border-box;
   @media (max-width: 390px) {

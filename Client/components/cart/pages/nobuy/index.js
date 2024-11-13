@@ -9,7 +9,7 @@ export default function Nobuy() {
         <img src="/cart/nobuy.png" alt="bgc-pic" className="img-fluid" />
         <div className={style.msg}>
           <div className={style['msg-text']}>目前沒有商品</div>
-          <Link href="cart/products">
+          <Link href="product/product-list">
             <button className={style['btn-women']}>前往購物</button>
           </Link>
         </div>

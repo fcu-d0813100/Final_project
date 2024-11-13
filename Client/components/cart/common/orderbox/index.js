@@ -82,14 +82,15 @@ export default function OrderBox() {
                   {workshopItems.map((v, i) => (
                     <tr key={i}>
                       <td>{v.name}</td>
-                      <td>{v.date}</td>
+                      <td>{`${v.date}  ${v.beginTime}-${v.endTime}`}</td>
                       <td>{v.qty}</td>
                       <td>
                         <span className={style['old-price']}>
                           NT${(v.price * v.qty).toLocaleString()}
                         </span>
                         <span className={style['new-price']}>
-                          NT${(v.price * v.qty * 0.8).toLocaleString()}
+                          NT$
+                          {Math.floor(v.price * v.qty * 0.95).toLocaleString()}
                         </span>
                       </td>
                     </tr>

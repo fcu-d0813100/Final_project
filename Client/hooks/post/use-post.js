@@ -12,6 +12,7 @@ export function PostProvider({ children }) {
   const [force, setForce] = useState(false)
   const router = useRouter()
   const { postId } = router.query
+  const [type, setType] = useState('total_count')
 
   useEffect(() => {
     async function getPostCard() {
@@ -28,7 +29,9 @@ export function PostProvider({ children }) {
   }, [postId, force])
 
   return (
-    <PostContext.Provider value={{ post, forceUpdate: () => setForce(!force) }}>
+    <PostContext.Provider
+      value={{ post, forceUpdate: () => setForce(!force), type, setType }}
+    >
       {children}
     </PostContext.Provider>
   )

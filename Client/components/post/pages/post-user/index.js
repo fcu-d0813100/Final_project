@@ -11,8 +11,9 @@ import UserSection from '@/components/user/common/user-section'
 import PublishCard from '@/components/post/common/publish-card'
 import WallCard from '@/components/post/common/wall-card'
 import DeleteModal from '@/components/shared/modal-delete'
+import Pagination from '@/components/post/common/pagination'
 
-export default function Index(props) {
+export default function PostUser(props) {
   const [publishCard, setPublishCard] = useState([])
   const [wallCard, setWallCard] = useState([])
   const [showModal, setShowModal] = useState(false)
@@ -69,13 +70,39 @@ export default function Index(props) {
   useEffect(() => {
     getWallCard()
   }, [userId])
-
+  console.log(publishCard)
   const breakpoint = {
     default: 4,
     1600: 3,
     1200: 3,
     700: 2,
   }
+  const itemsPerPage = 2 // 每頁顯示的項目數量
+
+  const renderPublishCard = (post) => {
+    const imgSrc = post.post_img.startsWith('post')
+      ? `http://localhost:3005/upload/${post.post_img}` // 後端圖片路徑
+      : `/post/${post.post_img}` // 前端靜態圖片路徑
+
+    return (
+      <PublishCard
+        key={post.id}
+        postId={post.id}
+        userId={userId}
+        imageSrc={imgSrc}
+        title={post.title}
+        content={post.content}
+        createTime={post.created_at}
+        likeCount={post.like_count}
+        commentCount={post.comment_count}
+        onDelete={() => {
+          setShowModal(true)
+          setDeleteId(post.id)
+        }}
+      />
+    )
+  }
+
   return (
     <>
       <UserSection titleCN="我的貼文" titleENG="My Post">
@@ -99,39 +126,18 @@ export default function Index(props) {
                 passHref
                 className={styles['post-add']}
               >
-                <PiNotePencilBold size={30} />
+                <PiNotePencilBold size={22} />
                 <span>建立</span>
               </Link>
             </div>
             <Tab.Content>
               <Tab.Pane eventKey="/publish">
                 <div className={styles['publish-all']}>
-                  {/* http://localhost:3005/upload/${post.post_img} */}
-                  {publishCard.map((post) => {
-                    const imgSrc = post.post_img.startsWith('post')
-                      ? `http://localhost:3005/upload/${post.post_img}` // 後端圖片路徑
-                      : `/post/${post.post_img}` // 前端靜態圖片路徑
-
-                    return (
-                      <PublishCard
-                        key={post.id}
-                        postId={post.id}
-                        userId={userId}
-                        imageSrc={imgSrc}
-                        title={post.title}
-                        content={post.content}
-                        createTime={post.created_at}
-                        likeCount={post.like_count}
-                        commentCount={post.comment_count}
-                        onDelete={() => {
-                          setShowModal(true)
-                          setDeleteId(post.id)
-                        }}
-                      />
-                    )
-                  })}
-
-                  <div className={styles['pagination']}></div>
+                  <Pagination
+                    data={publishCard}
+                    itemsPerPage={itemsPerPage}
+                    renderCard={renderPublishCard}
+                  />
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="/save">
@@ -141,16 +147,22 @@ export default function Index(props) {
                     className={styles['my-masonry-grid']}
                     columnClassName={styles['my-masonry-grid_column']}
                   >
-                    {wallCard.map((post) => (
-                      <WallCard
-                        key={post.id}
-                        imageSrc={`/post/${post.post_img}`}
-                        title={post.title}
-                        username={post.nickname}
-                        avatarSrc={`/user/img/${post.user_img}`}
-                        likeCount={post.like_count}
-                      />
-                    ))}
+                    {wallCard.map((post) => {
+                      const imgSrc = post.post_img.startsWith('post')
+                        ? `http://localhost:3005/upload/${post.post_img}`
+                        : `/post/${post.post_img}`
+                      return (
+                        <WallCard
+                          key={post.id}
+                          href={`/post/${post.id}`}
+                          imageSrc={imgSrc}
+                          title={post.title}
+                          // username={post.nickname}
+                          // avatarSrc={`/user/img/${post.user_img}`}
+                          // likeCount={post.like_count}
+                        />
+                      )
+                    })}
                   </Masonry>
                 </div>
               </Tab.Pane>

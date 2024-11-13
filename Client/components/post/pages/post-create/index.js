@@ -1,67 +1,46 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Swal from 'sweetalert2'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-
 import { RxCross2, RxPlus } from 'react-icons/rx'
-import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
-import axios from 'axios'
+import { RiCheckboxCircleFill } from 'react-icons/ri'
 import Link from 'next/link'
 import UserSection from '@/components/user/common/user-section'
 import styles from './index.module.scss'
 import { useAuth } from '@/hooks/use-auth'
-import ReactDOMServer from 'react-dom/server'
-export default function Index(props) {
+import useAlert from '@/hooks/alert/use-alert'
+export default function PostCreate(props) {
+  // User Data
   const { auth } = useAuth()
   const userId = auth.userData.id
 
-  const [imgs, setImgs] = useState([])
-  //Focus
+  // Focus
   const [TitleFocus, setTitleFocus] = useState(false)
   const [ContentFocus, setContentFocus] = useState(false)
   const [tagFocus, setTagFocus] = useState(false)
 
+  // Data
+  const [imgs, setImgs] = useState([])
   const [title, setTitle] = useState('')
   const [titleLength, setTitleLength] = useState('')
   const [content, setContent] = useState('')
   const [contentLength, setContentLength] = useState('')
 
+  // Tags
   const [tagInput, setTagInput] = useState('')
   const [suggestedTags, setSuggestedTags] = useState([])
   const [selectedTags, setSelectedTags] = useState([])
+
+  // router input alert draggedItemIndex
   const router = useRouter()
   const inputRef = useRef(null)
-
+  const showAlert = useAlert()
   let draggedItemIndex = null
-  //Sweet Alert setting
-  const showAlert = (
-    message,
-    icon = <RiCloseCircleFill color="#963827" />,
-    timer = 1500
-  ) => {
-    const iconHtml = ReactDOMServer.renderToString(icon)
-    Swal.fire({
-      html: `
-      <div class="custom-alert-content">
-        <span class="custom-icon">${iconHtml}</span>
-        <span>${message}</span>
-      </div>
-    `,
-      showConfirmButton: false,
-      timer: timer,
-      position: 'center',
-      width: '300px',
-      padding: '1em',
-      customClass: {
-        popup: `${styles['custom-popup']}`,
-      },
-    })
-  }
-  //img upload
+
+  // img upload
   const inputHandle = () => {
     inputRef.current.click()
   }
-  //img upload show
+  // img upload show
   const showHandle = (e) => {
     const files = Array.from(e.target.files)
     if (files.length + imgs.length > 5) {
@@ -71,35 +50,19 @@ export default function Index(props) {
     // const nextImgs = files.map((file) => URL.createObjectURL(file))
     setImgs((prevImgs) => [...prevImgs, ...files])
   }
-  //delete img
+  // img delete
   const deleteImg = (index) => {
     if (imgs.length === 1) {
-      // Swal.fire({
-      //   html: `
-      //         <div class="custom-alert-content">
-      //           <span class="custom-icon">❌</span>
-      //           <span>請至少上傳一張圖片</span>
-      //         </div>
-      //       `,
-      //   showConfirmButton: false,
-      //   timer: 1500,
-      //   position: 'center',
-      //   width: '300px',
-      //   padding: '1em',
-      //   customClass: {
-      //     popup: `${styles['custom-popup']}`,
-      //   },
-      // })
       showAlert('請至少上傳一張圖片')
       return
     }
     setImgs((prevImgs) => prevImgs.filter((_, i) => i !== index))
   }
+  // tag delete
   const deleteTag = (index) => {
     setSelectedTags((prevTags) => prevTags.filter((_, i) => i !== index))
   }
-  //img drag
-  //拖曳圖片的索引
+  // img drag & drop
   const dragStartHandle = (index) => {
     draggedItemIndex = index
   }
@@ -125,6 +88,7 @@ export default function Index(props) {
     setContent(e.target.value)
     setContentLength(e.target.value.length)
   }
+  // tags add
   const addTagHandle = (e, tag) => {
     e.preventDefault()
     if (tagInput === '') return
@@ -133,15 +97,19 @@ export default function Index(props) {
     }
     setTagInput('')
   }
-  //動態搜尋
+  // tags search - dynamic
   useEffect(() => {
     if (tagInput) {
       const fetchTags = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:3005/api/post/tags?tagInput=${tagInput}`
+          const response = await fetch(
+            `http://localhost:3005/api/post/tags?tagInput=${tagInput}`,
+            {
+              credentials: 'include',
+            }
           )
-          setSuggestedTags(response.data)
+          const data = await response.json()
+          setSuggestedTags(data)
         } catch (error) {
           console.error('Failed to fetch tags:', error)
         }
@@ -152,6 +120,7 @@ export default function Index(props) {
     }
   }, [tagInput])
 
+  // Form submit
   const submitHandle = async (e) => {
     e.preventDefault()
     // Verify form
@@ -221,6 +190,7 @@ export default function Index(props) {
                 <div
                   className={styles['img-upload-area']}
                   onClick={inputHandle}
+                  style={imgs.length === 5 ? { display: 'none' } : {}}
                 >
                   <span className="h3">+</span>
                   <span>添加</span>
@@ -264,7 +234,7 @@ export default function Index(props) {
                 <div
                   className={`${styles['info-title']} ${
                     styles[TitleFocus ? 'focused' : '']
-                  }`}
+                  }  ${styles[titleLength > 20 ? 'over-limit' : '']}`}
                   onFocus={() => setTitleFocus(true)}
                   onBlur={() => setTitleFocus(false)}
                 >
@@ -283,7 +253,7 @@ export default function Index(props) {
                   <div
                     className={`${styles['info-content']} ${
                       styles[ContentFocus ? 'focused' : '']
-                    }`}
+                    } ${styles[contentLength > 1000 ? 'over-limit' : '']}`}
                     onFocus={() => setContentFocus(true)}
                     onBlur={() => setContentFocus(false)}
                   >
@@ -348,7 +318,7 @@ export default function Index(props) {
               </div>
             </div>
           </div>
-          {/* 按鈕 */}
+          {/* btn */}
           <div className={styles['post-btn']}>
             <button className="btn-primary h6" type="submit">
               發布

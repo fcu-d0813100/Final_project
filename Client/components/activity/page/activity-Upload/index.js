@@ -67,6 +67,13 @@ export default function Upload(props) {
 
   const validateForm = () => {
     const newErrors = {}
+    if (
+      formData.start_at &&
+      formData.end_at &&
+      formData.start_at > formData.end_at
+    ) {
+      newErrors.end_at = '活動開始日期不能比結束日期晚！'
+    }
 
     Object.entries(formData).forEach(([key, value]) => {
       if (!value.trim()) {
@@ -83,14 +90,6 @@ export default function Upload(props) {
       ) {
         newErrors.maxREG = '活動名額不能為0'
       }
-    }
-
-    if (
-      formData.start_at &&
-      formData.end_at &&
-      formData.start_at > formData.end_at
-    ) {
-      newErrors.end_at = '活動開始日期不能比結束日期晚！'
     }
 
     setErrors(newErrors)
@@ -111,7 +110,7 @@ export default function Upload(props) {
           case 'start_at':
             return msg
           case 'end_at':
-            return '請填寫報名結束時間'
+            return msg
           case 'description':
             return '請填寫課程簡介'
           default:
@@ -260,7 +259,7 @@ export default function Upload(props) {
                   </div>
                   <div className="container d-flex align-items-end justify-content-between gap-2">
                     <InputStyle
-                      addclass="col-6 me-1"
+                      addclass="col-5 me-1"
                       forText="start_at"
                       titleCh="報名開始時間"
                       titleEn=" | registration start"
@@ -270,7 +269,7 @@ export default function Upload(props) {
                       onChange={handleInputChange}
                       hasError={!!errors.start_at}
                     />
-                    <p className="col-1 d-flex justify-content-center align-items-center">
+                    <p className="col- d-flex justify-content-center align-items-center">
                       <PiArrowRight className="ph" />
                     </p>
                     <InputStyle
