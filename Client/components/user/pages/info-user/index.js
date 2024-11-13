@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import UserSection from '@/components/user/common/user-section'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'

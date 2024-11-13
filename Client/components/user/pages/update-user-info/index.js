@@ -58,16 +58,14 @@ export default function UpdateInfo() {
     }
     // 如果newErrors中的物件值中其中有一個非空白字串，代表有錯誤發生
     const hasErrors = Object.values(newErrors).some((v) => v)
-
     // 表單檢查--END---
     return { newErrors, hasErrors }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     const { newErrors, hasErrors } = checkError(user)
-    console.log('錯誤檢查:', newErrors, hasErrors)
+    // console.log('錯誤檢查:', newErrors, hasErrors)
     setErrors(newErrors)
     if (hasErrors) {
       return
@@ -77,8 +75,7 @@ export default function UpdateInfo() {
       // 如果有選擇檔案，執行更新頭像的動作
       if (selectedFile) {
         const resData = await update(user, selectedFile)
-        console.log('Response data:', resData)
-
+        // console.log('Response data:', resData)
         if (resData.status === 'success') {
           toast.success('會員頭像修改成功', {
             style: {
@@ -91,8 +88,11 @@ export default function UpdateInfo() {
               secondary: '#fff',
             },
           })
+          setTimeout(() => {
+            router.push('/user')
+          }, 2000)
         } else {
-          console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+          // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
           toast.error('更新失敗，請稍後再試', {
             style: {
               border: '1.2px solid #90957a',
@@ -107,10 +107,9 @@ export default function UpdateInfo() {
         }
       }
 
-      // 執行用戶資料的更新（不論有無選擇檔案）
+      // 執行用戶資料的更新
       const resData = await update(user)
-      console.log('用戶資料更新結果:', resData)
-
+      // console.log('用戶資料更新結果:', resData)
       if (resData.status === 'success') {
         toast.success('您已更新個人資料', {
           style: {
@@ -124,7 +123,7 @@ export default function UpdateInfo() {
           },
         })
       } else {
-        console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+        // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
         toast.error('更新失敗，請稍後再試', {
           style: {
             border: '1.2px solid #90957a',
@@ -138,7 +137,7 @@ export default function UpdateInfo() {
         })
       }
     } catch (error) {
-      console.error('更新失敗:', error)
+      // console.error('更新失敗:', error)
       toast.error('更新失敗，請稍後再試', {
         style: {
           border: '1.2px solid #90957a',
