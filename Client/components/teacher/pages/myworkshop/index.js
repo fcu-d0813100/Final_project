@@ -18,8 +18,13 @@ export default function MyWorkshop(props) {
   const [filterStatus, setFilterStatus] = useState('unpublished')
 
   useEffect(() => {
+    // 當頁面一加載，滾動到指定位置
+    window.scrollTo(0, 580)
+  }, [])
+
+  useEffect(() => {
     fetchData()
-  }, [filterStatus]) // 將 filterStatus 作為依賴項 
+  }, [filterStatus]) // 將 filterStatus 作為依賴項
 
   const fetchData = async () => {
     try {
@@ -56,7 +61,7 @@ export default function MyWorkshop(props) {
 
   return (
     <>
-      <TDashboardBN teacher="Gina Bettelli" />
+      <TDashboardBN />
 
       <div>
         <Sidebar />

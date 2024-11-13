@@ -42,7 +42,12 @@ export default function Sidebar() {
     setLinkState((prev) => {
       const newLinkState = { ...prev }
       navLinks.forEach((link) => {
-        newLinkState[link.key].active = router.pathname === link.href
+        // 檢查 router.pathname 是否為 /teacher/myworkshop 或 /teacher/workshopEdit
+        const isActive =
+          router.pathname === link.href ||
+          (link.href === '/teacher/myworkshop' &&
+            router.pathname === '/teacher/workshopEdit')
+        newLinkState[link.key].active = isActive
       })
       return newLinkState
     })
