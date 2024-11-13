@@ -8,9 +8,9 @@ export default function ItemDiscount({
     brand = "",
     productName = "",
     color = "",
-    quantity=0  ,
-    originalPrice  ,
-    discountedPrice=0 
+    quantity = 0,
+    originalPrice,
+    discountedPrice = 0
 }) {
     return (
         <div className={`${styles.item} d-flex justify-content-between align-items-center mb-2`}>
@@ -24,12 +24,13 @@ export default function ItemDiscount({
                     />
                 </div>
                 <div className={`${styles['text-group']} d-flex flex-column align-items-start`}>
-                    <div className={`p mb-2`}>{brand}</div>
+                    <div className={`p mb-2 ${styles.brand}`}>{brand}</div>
                     <div className={`${styles['item-name']} h6 mb-1`}>{productName}</div>
                     <div className={`${styles['color-group']} d-flex align-items-center`}>
-                        {/* <div className={`${styles['color-left']} d-flex justify-content-center align-items-center me-2`}>
-                            <div className={styles.color}></div>
-                        </div> */}
+                        <div className={`${styles['color-left']} d-flex justify-content-center align-items-center me-2`} >
+                            <div className={styles.color}
+                                style={{ backgroundColor: color, border: `2px solid ${color}` }}></div>
+                        </div>
                         <div className={`${styles['color-right']} ${styles.ps}`}>顏色：{color}</div>
                     </div>
                 </div>
