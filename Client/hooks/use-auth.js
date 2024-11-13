@@ -11,7 +11,7 @@ import { deleteUser } from 'firebase/auth'
 // !!注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
 export const initUserData = {
   id: 0,
-  username: '',
+  account: '',
   google_uid: '',
   line_uid: '',
   name: '',
