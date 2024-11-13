@@ -1,7 +1,11 @@
 @import '@/styles/_variant.scss';
 .modal {
-  transform: translateX(150%);
-  border-radius: 0px !important;
+  // display: flex;
+  // justify-content: center;
+  // position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  // transform: translateX(150%);
   width: 400px;
   & > div > div {
     border-radius: 0px;
@@ -9,7 +13,7 @@
   .modal-header {
     border: none;
     padding: 30px 30px 4px;
-    // font-size: 20px;
+    font-size: 20px;
     button {
       &:active,
       &:focus {
@@ -28,9 +32,9 @@
     justify-content: center;
     padding: 26px 30px 30px;
     border: none;
-    // gap: 20px;
     button {
-      // font-size: 18px; //h6 看看要不要16就好
+      width: 174px;
+      font-size: 18px;
       &:hover {
         color: #fff;
       }

@@ -4,6 +4,7 @@ import '@/styles/global.scss'
 import { WorkshopCartProvider } from '@/hooks/use-cartW'
 import { ProductCartProvider } from '@/hooks/use-cartP'
 import { AuthProvider } from '@/hooks/use-auth'
+import { ModalProvider } from '@/hooks/use-modal'
 import toast, { Toaster } from 'react-hot-toast'
 
 export default function MyApp({ Component, pageProps }) {
@@ -15,8 +16,10 @@ export default function MyApp({ Component, pageProps }) {
     <AuthProvider>
       <ProductCartProvider>
         <WorkshopCartProvider>
-          {getLayout(<Component {...pageProps} />)}
-          <Toaster position="top-center" reverseOrder={false} />
+          <ModalProvider>
+            {getLayout(<Component {...pageProps} />)}
+            <Toaster position="top-center" reverseOrder={false} />
+          </ModalProvider>
         </WorkshopCartProvider>
       </ProductCartProvider>
     </AuthProvider>

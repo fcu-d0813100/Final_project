@@ -16,7 +16,6 @@ export default function Index({
         onHide={handleClose}
         centered
         className={styles['modal']}
-        // style={{ borderRadius: 0 }}
       >
         <Modal.Header closeButton className={styles['modal-header']}>
           <Modal.Title>{title}</Modal.Title>

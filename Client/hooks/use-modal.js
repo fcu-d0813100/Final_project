@@ -6,17 +6,18 @@ import { useAuth } from '@/hooks/use-auth'
 const ModalContext = createContext()
 
 export const ModalProvider = ({ children }) => {
-  const [showModal, setShowModal] = useState(false)
+  const [show, setShow] = useState(false)
   const router = useRouter()
   const { auth } = useAuth()
   const isLoggedIn = !!auth.userData?.id
 
-  const showLoginModal = () => setShowModal(true)
-  const hideLoginModal = () => setShowModal(false)
+  const showModal = () => setShow(true)
+  const hideModal = () => setShow(false)
 
+  //convert to boolean & 取反
   const ensureLoggedIn = (callback) => {
     if (!isLoggedIn) {
-      showLoginModal()
+      showModal()
       return false
     }
     callback?.()
@@ -24,21 +25,19 @@ export const ModalProvider = ({ children }) => {
   }
 
   return (
-    <ModalContext.Provider
-      value={{ showLoginModal, hideLoginModal, ensureLoggedIn }}
-    >
+    <ModalContext.Provider value={{ ensureLoggedIn }}>
       {children}
-      {showModal && (
+      {show && (
         <ModalConfirm
           title="尚未登入會員"
           content="是否前往登入？"
           btnConfirm="前往登入"
           ConfirmFn={() => {
-            hideLoginModal()
-            router.push('/user/login/user')
+            hideModal()
+            setTimeout(() => router.push('/user/login/user'), 1000)
           }}
           show={showModal}
-          handleClose={hideLoginModal}
+          handleClose={hideModal}
         />
       )}
     </ModalContext.Provider>
