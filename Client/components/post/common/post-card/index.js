@@ -4,14 +4,13 @@ import { PiChatCircle } from 'react-icons/pi'
 import Image from 'next/image'
 import Carousel from 'react-bootstrap/Carousel'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { useAuth } from '@/hooks/use-auth'
 import { usePost } from '@/hooks/post/use-post'
-import { useRouter } from 'next/router'
 import { useAction } from '@/hooks/post/use-action'
+import { useModal } from '@/hooks/use-modal'
 import ReplyInfo from '../reply-info'
 import PostIcon from '../post-icon'
 import styles from './index.module.scss'
-import ModalConfirm from '@/components/shared/modal-confirm'
+// import ModalConfirm from '@/components/shared/modal-confirm'
 export default function PostCard({
   postAuthor,
   authorAvatar,
@@ -29,11 +28,10 @@ export default function PostCard({
 }) {
   // post & user
   const { post } = usePost()
-  const { auth } = useAuth()
   const postId = post?.id
-  const userId = auth.userData.id
-  const isLoggedIn = !!(userId && userId !== 0)
-  const router = useRouter()
+
+  const { ensureLoggedIn } = useModal()
+
   // action
   const { liked, likeToggle, saved, saveToggle } = useAction(postId, {
     fetchLike: true,
@@ -48,7 +46,6 @@ export default function PostCard({
   // ui
   const [index, setIndex] = useState(0)
   const [focus, setFocus] = useState(false)
-  const [showModal, setShowModal] = useState(false)
 
   const images = postImages.split(',')
   const formattedTime = postCreateTime
@@ -60,10 +57,10 @@ export default function PostCard({
   }, [setCancelHandle])
 
   useEffect(() => {
-    if (focus && !isLoggedIn) {
-      setShowModal(true)
+    if (focus) {
+      if (!ensureLoggedIn()) return
     }
-  }, [focus, isLoggedIn])
+  }, [focus])
 
   const cancelHandle = (e) => {
     e && e.preventDefault()
@@ -75,10 +72,8 @@ export default function PostCard({
   }
 
   const replyHandle = (text, user, replyTargetId, replyId) => {
-    if (!isLoggedIn) {
-      setShowModal(true)
-      return
-    }
+    if (!ensureLoggedIn()) return
+
     setReplyTargetId(replyTargetId)
     setReplyId(replyId)
     setReplyTarget(user)
@@ -266,7 +261,7 @@ export default function PostCard({
           </form>
         </div>
       </div>
-      {showModal && (
+      {/* {showModal && (
         <ModalConfirm
           title="尚未登入會員"
           content={`是否前往登入?`}
@@ -277,7 +272,7 @@ export default function PostCard({
           show={showModal}
           handleClose={() => setShowModal(false)}
         />
-      )}
+      )} */}
     </>
   )
 }

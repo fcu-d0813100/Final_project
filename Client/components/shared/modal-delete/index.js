@@ -23,7 +23,6 @@ export default function Index({
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className={styles['modal-body']}>
-          {' '}
           <span style={{ whiteSpace: 'pre-line' }}>{content}</span>
         </Modal.Body>
         <Modal.Footer className={styles['modal-footer']}>
