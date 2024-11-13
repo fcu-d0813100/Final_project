@@ -5,8 +5,8 @@ import Image from 'next/image'
 import Styles from '@/components/activity/page/activity-list/index.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
-import ListMobileCard from '@/components/activity/common/ListMobileCard/activity-mobile'
-import ListMonthBtn from '../../common/ListMonthBtn'
+import LoginModal from '@/components/shared/modal-confirm'
+import { useAuth } from '@/hooks/use-auth'
 import {
   PiMagnifyingGlass,
   PiHeartStraight,
@@ -18,93 +18,77 @@ import ListCarousel from '@/components/activity/common/ListCarousel/actCarousel'
 export default function Activity() {
   const [filledHearts, setFilledHearts] = useState({})
   const [active, setActive] = useState([])
-  const [originalActivities, setOriginalActivities] = useState([]) // 存儲原始活動數據
+  const [originalActivities, setOriginalActivities] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [showLoginModal, setShowLoginModal] = useState(false) // 控制 LoginModal 的显示状态
   const router = useRouter()
-
-  const toggleHeart = (id) => {
-    setFilledHearts((prevFilledHearts) => ({
-      ...prevFilledHearts,
-      [id]: !prevFilledHearts[id],
-    }))
-  }
+  const { auth } = useAuth()
+  const userId = auth.userData.id // 当前登录的 user_id
 
   useEffect(() => {
-    typeof document !== undefined
-      ? require('bootstrap/dist/js/bootstrap.bundle.min.js')
-      : null
-  }, [])
+    console.log('User ID:', userId) // 打印 userId
+  }, [userId])
+
+  const toggleHeart = async (id, isFavorite) => {
+    if (userId === 0) {
+      setShowLoginModal(true) // 如果未登录，显示 LoginModal
+      return
+    }
+
+    try {
+      const url = isFavorite
+        ? `http://localhost:3005/api/activity/unfavorite`
+        : `http://localhost:3005/api/activity/favorite`
+
+      const response = await fetch(url, {
+        method: isFavorite ? 'DELETE' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ activityId: id, userId: userId }),
+      })
+
+      if (!response.ok) {
+        throw new Error('无法更新收藏状态')
+      }
+
+      const result = await response.json()
+      console.log(result.message)
+
+      // 更新活动状态
+      setActive((prevActive) =>
+        prevActive.map((item) =>
+          item.id === id ? { ...item, is_favorite: !isFavorite } : item
+        )
+      )
+    } catch (error) {
+      console.error('收藏更新失败:', error)
+    }
+  }
 
   const fetchActivitiesByMonth = async (month) => {
     try {
       const url = month
         ? `http://localhost:3005/api/activity/month/${month}`
-        : `http://localhost:3005/api/activity`
+        : `http://localhost:3005/api/activity/${userId}`
 
       const response = await fetch(url)
       if (!response.ok) {
-        throw new Error('網路回應不成功：' + response.status)
+        throw new Error('网络响应失败：' + response.status)
       }
       const data = await response.json()
       setActive(data)
-      setOriginalActivities(data) // 存儲原始數據
+      setOriginalActivities(data)
       setSelectedMonth(month)
     } catch (err) {
-      console.error('資料庫查詢失敗:', err)
+      console.error('数据库查询失败:', err)
     }
   }
 
-  const handleSearchSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const response = await fetch(
-        `http://localhost:3005/api/activity/search?search=${encodeURIComponent(
-          searchQuery
-        )}`
-      )
-      if (!response.ok) {
-        throw new Error('網路回應不成功：' + response.status)
-      }
-      const data = await response.json()
-      setActive([...data])
-      setOriginalActivities(data) // 更新原始數據
-      setSearchQuery('')
-    } catch (err) {
-      console.error('資料庫查詢失敗:', err)
-      setActive([])
-    }
-  }
-  const fetchActivitiesByStatus = async (status) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3005/api/activity/status?status=${status}`
-      )
-      if (!response.ok) {
-        throw new Error('網路回應不成功：' + response.status)
-      }
-      const data = await response.json()
-      setActive(data)
-    } catch (err) {
-      console.error('資料庫查詢失敗:', err)
-      setActive([])
-    }
-  }
   useEffect(() => {
-    const status = router.query.status
-    if (status === '1' || status === '0') {
-      fetchActivitiesByStatus(status)
-    } else {
-      const month = router.query.month ? parseInt(router.query.month) : null
-      fetchActivitiesByMonth(month)
-    }
-  }, [router.query.status, router.query.month])
-  // 狀態篩選處理函數
-
-  useEffect(() => {
-    const month = router.query.month ? parseInt(router.query.month) : null
-    fetchActivitiesByMonth(month)
-  }, [router.query.month])
+    fetchActivitiesByMonth(selectedMonth)
+  }, [selectedMonth, userId])
 
   return (
     <>
@@ -149,12 +133,15 @@ export default function Activity() {
         <form
           className={`${Styles['search']} d-flex me-auto my-2 my-lg-0 align-items-center`}
           role="search"
-          onSubmit={handleSearchSubmit}
+          onSubmit={(e) => {
+            e.preventDefault()
+            fetchActivitiesByMonth(null)
+          }}
         >
           <input
             className="form-control me-2 rounded-pill border-dark"
             type="search"
-            placeholder="活動 |"
+            placeholder="活动 |"
             aria-label="Search"
             style={{ height: '30px' }}
             value={searchQuery}
@@ -173,28 +160,24 @@ export default function Activity() {
         </div>
       </div>
 
-      <div className="d-flex d-lg-none justify-content-center">
-        <Dropdown />
-      </div>
-
       <div className={Styles['act-main']}>
         <div className={`${Styles['month-title']} container`}>
-          {selectedMonth ? `${selectedMonth} 月的活動` : '所有活動'}
+          {selectedMonth ? `${selectedMonth} 月的活动` : '所有活动'}
         </div>
 
         {active.length === 0 ? (
           <div className={`${Styles['searchNotFound']} text-center`}>
-            <h5>未找到任何活動</h5>
-            <p>請嘗試搜尋其他關鍵字或篩選條件。</p>
+            <h5>未找到任何活动</h5>
+            <p>请尝试搜索其他关键字或筛选条件。</p>
           </div>
         ) : (
           <div className={`${Styles['act-card-sec']} container`}>
             {active.map((item, index) => {
               const now = new Date()
               const startAt = new Date(item.start_at)
-              const status = startAt > now ? '報名中' : '已截止'
+              const status = startAt > now ? '报名中' : '已截止'
               const statusClass =
-                status === '報名中' ? Styles['statusOn'] : Styles['statusOff']
+                status === '报名中' ? Styles['statusOn'] : Styles['statusOff']
 
               return (
                 <div
@@ -224,18 +207,18 @@ export default function Activity() {
                         <div className={`${Styles['card-text']} d-flex`}>
                           <div className="currentR">
                             <p className={Styles['num']}>{item.currentREG}</p>
-                            <p>目前人數</p>
+                            <p>目前人数</p>
                           </div>
                           <div className="maxR">
                             <p className={Styles['num']}>{item.maxREG}</p>
-                            <p>報名人數</p>
+                            <p>报名人数</p>
                           </div>
                           <div className="view">
                             <p className={Styles['num']}>{item.views}</p>
-                            <p>瀏覽次數</p>
+                            <p>浏览次数</p>
                           </div>
                         </div>
-                        <p className={Styles['card-det']}>詳細資訊</p>
+                        <p className={Styles['card-det']}>详细信息</p>
                         <Image
                           src={`http://localhost:3005/upload/activity/${item.img1}`}
                           width={1200}
@@ -250,25 +233,20 @@ export default function Activity() {
                         {item.start_at}~{item.end_at}
                       </div>
                       <div className={Styles['card-info']}>
-                        <p className={Styles['title']}>主辦單位 | host</p>
+                        <p className={Styles['title']}>主办单位 | host</p>
                         <p>{item.brand}</p>
-                        <p className={Styles['title']}>活動地點 | location</p>
+                        <p className={Styles['title']}>活动地点 | location</p>
                         <p>{item.address}</p>
                       </div>
                       <div className={Styles['card-footer']}>
                         <div className={statusClass}>{status}</div>
                         <div
                           className={Styles['heart-icon']}
-                          onClick={() => toggleHeart(item.id)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              toggleHeart(item.id)
-                            }
-                          }}
+                          onClick={() => toggleHeart(item.id, item.is_favorite)}
                           role="button"
                           tabIndex="0"
                         >
-                          {filledHearts[item.id] ? (
+                          {item.is_favorite ? (
                             <PiHeartStraightFill
                               size={22}
                               className={Styles['ph-heart']}
@@ -300,6 +278,21 @@ export default function Activity() {
           </div>
         )}
       </div>
+
+      {/* 显示 LoginModal，当用户未登录时按下爱心按钮弹出 */}
+      {showLoginModal && (
+        <LoginModal
+          title="尚未登入會員"
+          content={'是否前往登入?'}
+          btnConfirm={'前往登入'}
+          ConfirmFn={() => {
+            router.push('/user/login/user')
+          }}
+          show={showLoginModal}
+          onHide={() => setShowLoginModal(false)}
+        />
+      )}
+
       <Brands />
     </>
   )
