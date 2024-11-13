@@ -56,7 +56,7 @@ const Index = () => {
         delay: 3000,  // 每個幻燈片顯示 3000 毫秒
         disableOnInteraction: false,  // 用戶交互後繼續自動播放
       }}
-      speed={500}  // 幻燈片切換速度
+      speed={1000}  // 幻燈片切換速度
       onSlideChange={() => console.log('slide changed')}
     >
       {slides.map((slide, index) => (
