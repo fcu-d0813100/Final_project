@@ -67,6 +67,9 @@
 
 .delete-account {
   color: $red-500;
+  border: none;
+  background-color: transparent;
+  border-bottom: 1.5px solid $red-500;
 }
 
 .submit-area {
