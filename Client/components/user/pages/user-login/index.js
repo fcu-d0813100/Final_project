@@ -1,19 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './index.module.scss'
+import { useRouter } from 'next/router'
 import { GrGoogle } from 'react-icons/gr'
 import { FaLine } from 'react-icons/fa6'
 import { PiEyeClosed, PiEye } from 'react-icons/pi'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/use-auth'
+import { initUserData, useAuth } from '@/hooks/use-auth'
 import toast, { Toaster } from 'react-hot-toast'
 import useFirebase from '@/hooks/use-firebase'
+import {
+  lineLoginRequest,
+  lineLogout,
+  lineLoginCallback,
+  getUserById,
+  parseJwt,
+} from '@/services/user'
 
 export default function UserLogin() {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const role = 'user'
-  const { auth, login, callbackGoogleLogin } = useAuth()
+  const { auth, login, callbackGoogleLogin, setAuth } = useAuth()
   const { loginGoogle, logoutFirebase } = useFirebase()
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
 
   // 處理一般登入
@@ -24,6 +33,91 @@ export default function UserLogin() {
     }
     login(account, password, role)
   }
+
+  // 處理登出
+  const handleLineLogout = async () => {
+    if (!auth.isAuth) return
+
+    const line_uid = auth.userData.line_uid
+    console.log('傳遞的 line_uid:', line_uid)
+
+    const res = await lineLogout(line_uid)
+    console.log(res.data)
+
+    if (res.data.status === 'success') {
+      toast.success('已成功登出')
+      setAuth({
+        isAuth: false,
+        userData: initUserData,
+      })
+    } else {
+      toast.error('登出失敗')
+    }
+  }
+
+  const callbackLineLogin = async (query) => {
+    const res = await lineLoginCallback(query)
+    console.log('Callback Response:', res.data)
+
+    if (res.data.status === 'success') {
+      const jwtUser = parseJwt(res.data.data.accessToken)
+      console.log('JWT User:', jwtUser)
+
+      const res1 = await getUserById(jwtUser.id)
+      console.log('User Data Response:', res1.data)
+
+      if (res1.data && res1.data.user) {
+        const dbUser = res1.data.user
+        console.log('Database User:', dbUser)
+        const userData = { ...initUserData }
+
+        for (const key in userData) {
+          if (Object.hasOwn(dbUser, key)) {
+            userData[key] = dbUser[key] || ''
+          }
+        }
+
+        console.log('UserData:', userData)
+
+        setAuth({
+          isAuth: true,
+          userData,
+        })
+
+        toast.success('已成功登入')
+      } else {
+        console.error(
+          '登入後無法得到會員資料:',
+          res1.data.message || '未知錯誤'
+        )
+        toast.error('登入後無法得到會員資料')
+      }
+    } else {
+      console.error('已是登入狀態或登入失敗:', res.data.message || '未知錯誤')
+      toast.error('已是登入狀態或登入失敗')
+    }
+  }
+
+  // 處理登入
+  const goLineLogin = () => {
+    if (auth.isAuth) return
+    lineLoginRequest()
+  }
+
+  // 從line登入畫面後回調到本頁面用
+  useEffect(() => {
+    if (router.isReady) {
+      if (!router.query.code) return
+      callbackLineLogin(router.query)
+
+      const cleanUrl =
+        window.location.protocol +
+        '//' +
+        window.location.host +
+        window.location.pathname
+      window.history.replaceState({ path: cleanUrl }, '', cleanUrl)
+    }
+  }, [router.isReady, router.query])
 
   return (
     <>
@@ -140,7 +234,10 @@ export default function UserLogin() {
                     </Link>
                   </div>
                   <div className="col-5 d-flex justify-content-end align-items-center">
-                    <FaLine className={styles['icon-line']} />
+                    <FaLine
+                      className={styles['icon-line']}
+                      onClick={goLineLogin}
+                    />
                     <GrGoogle
                       className={styles['icon-google']}
                       onClick={() => {
