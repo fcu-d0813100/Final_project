@@ -2,8 +2,8 @@
 import { useRouter } from 'next/router'
 import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
-import Page1 from '@/components/teacher/pages/upload/page-1'
-import Page2 from '@/components/teacher/pages/upload/page-2'
+import Page1 from '@/components/teacher/pages/myworkshop-edit/page-1'
+import Page2 from '@/components/teacher/pages/myworkshop-edit/page-2'
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 
@@ -11,8 +11,6 @@ export default function WorkshopEdit(props) {
   const router = useRouter() // 使用 Next.js 的 useRouter hook 來進行頁面跳轉
   const [isPage2, setIsPage2] = useState(false) // 控制是否顯示第二頁
   const [timeSchedule, setTimeSchedule] = useState([])
-
-  const [workshop, setWorkshop] = useState({})
 
   const fetchData = async (wid) => {
     try {
@@ -22,7 +20,7 @@ export default function WorkshopEdit(props) {
       }
       const data = await response.json()
       setWorkshop(...data)
-      //console.log(data)
+      console.log(...data)
     } catch (err) {
       console.log(err)
     }
@@ -35,7 +33,7 @@ export default function WorkshopEdit(props) {
     }
   }, [router.isReady])
 
-  const [formData, setFormData] = useState({
+  const [workshop, setWorkshop] = useState({
     name: '',
     price: '',
     address: '',
@@ -157,9 +155,8 @@ export default function WorkshopEdit(props) {
           {!isPage2 ? (
             <Page1
               onNextPage={handleNextPage}
-              formData={formData}
               workshop={workshop}
-              setFormData={setFormData}
+              setWorkshop={setWorkshop}
               timeSchedule={timeSchedule}
               setTimeSchedule={setTimeSchedule}
               //handleSave={handleSave}
@@ -168,7 +165,8 @@ export default function WorkshopEdit(props) {
             <Page2
               onPreviousPage={handlePreviousPage}
               //handleSave={handleSave}
-              setFormData={setFormData}
+              setWorkshop={setWorkshop}
+              workshop={workshop}
             /> // 傳入返回頁面函數
           )}
         </form>

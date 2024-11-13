@@ -7,9 +7,14 @@ import styles from '@/components/teacher/common/upload.module.scss'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import React, { useState, useEffect } from 'react'
 
-export default function Page2({ onPreviousPage, handleSave, setFormData }) {
+export default function Page2({
+  onPreviousPage,
+  handleSave,
+  workshop,
+  setWorkshop,
+}) {
   const handleFileChange = (name, file) => {
-    setFormData((prevData) => ({
+    setWorkshop((prevData) => ({
       ...prevData,
       [name]: file,
     }))
@@ -25,6 +30,7 @@ export default function Page2({ onPreviousPage, handleSave, setFormData }) {
             bigText="新增細節圖"
             smText="1920 X 550 px"
             name="img_lg"
+            initialImage={`http://localhost:3005/workshop/${workshop.img_lg}`}
             onFileChange={handleFileChange}
           />
           <div className=" d-flex mt-5">
@@ -34,6 +40,7 @@ export default function Page2({ onPreviousPage, handleSave, setFormData }) {
               bigText="新增細節圖"
               smText="960 X 530 px"
               name="img_sm01"
+              initialImage={`http://localhost:3005/workshop/${workshop.img_sm01}`}
               onFileChange={handleFileChange}
             />
             <div className="mx-3"></div>
@@ -43,6 +50,7 @@ export default function Page2({ onPreviousPage, handleSave, setFormData }) {
               bigText="新增細節圖"
               smText="720 X 620 px"
               name="img_sm02"
+              initialImage={`http://localhost:3005/workshop/${workshop.img_sm02}`}
               onFileChange={handleFileChange}
             />
           </div>

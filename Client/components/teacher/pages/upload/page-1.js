@@ -19,7 +19,6 @@ export default function Page1({
   timeSchedule,
   setTimeSchedule,
   handleSave,
-  workshop,
 }) {
   const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
   const [selectedTime, setSelectedTime] = useState({
@@ -133,7 +132,7 @@ export default function Page1({
                   typeText="text"
                   placeholder="請輸入課程名稱"
                   name="name"
-                  value={workshop.name}
+                  value={formData.name}
                   onChange={handleChange}
                 />
                 <InputStyle

@@ -14,11 +14,12 @@ import React, { useState, useEffect } from 'react'
 
 export default function Page1({
   onNextPage,
-  formData,
-  setFormData,
+ 
+  setWorkshop,
   timeSchedule,
   setTimeSchedule,
   handleSave,
+  workshop,
 }) {
   const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
   const [selectedTime, setSelectedTime] = useState({
@@ -63,7 +64,7 @@ export default function Page1({
   // 處理表單數據變更
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({
+    setWorkshop((prevData) => ({
       ...prevData,
       [name]: value,
     }))
@@ -98,7 +99,7 @@ export default function Page1({
   }
   //console.log(formData)
   const handleFileChange = (name, file) => {
-    setFormData((prevData) => ({
+    setWorkshop((prevData) => ({
       ...prevData,
       [name]: file,
     }))
@@ -115,6 +116,7 @@ export default function Page1({
             bigText="新增封面圖"
             smText="必填"
             name="img_cover"
+            initialImage={`http://localhost:3005/workshop/${workshop.img_cover}`} // 傳入現有圖片的 URL
             onFileChange={handleFileChange}
           />
 
@@ -132,7 +134,7 @@ export default function Page1({
                   typeText="text"
                   placeholder="請輸入課程名稱"
                   name="name"
-                  value={formData.name}
+                  value={workshop.name}
                   onChange={handleChange}
                 />
                 <InputStyle
@@ -143,7 +145,7 @@ export default function Page1({
                   typeText="text"
                   placeholder="請填入金額"
                   name="price"
-                  value={formData.price}
+                  value={workshop.price}
                   onChange={handleChange}
                 />
               </div>
@@ -163,7 +165,7 @@ export default function Page1({
                     { name: 'type_id', option: '美妝產品知識', value: 6 },
                   ]}
                   name="type_id"
-                  value={formData.value}
+                  value={workshop.workshop_type_id}
                   onChange={handleChange}
                 />
 
@@ -175,7 +177,7 @@ export default function Page1({
                   typeText="text"
                   placeholder="請填入地址"
                   name="address"
-                  value={formData.address}
+                  value={workshop.address}
                   onChange={handleChange}
                 />
               </div>
@@ -188,7 +190,7 @@ export default function Page1({
                   typeText="date"
                   placeholder="Beginning Date"
                   name="registration_start"
-                  value={formData.registration_start}
+                  value={workshop.registration_start}
                   onChange={handleChange}
                 />
                 <p className="col-1 mx-1 d-flex justify-content-center align-items-center">
@@ -203,7 +205,7 @@ export default function Page1({
                   typeText="date"
                   placeholder="End Date"
                   name="registration_end"
-                  value={formData.registration_end}
+                  value={workshop.registration_end}
                   onChange={handleChange}
                 />
               </div>
@@ -220,7 +222,7 @@ export default function Page1({
               width="100%"
               placeholder="最多輸入200字"
               addclass="mb-4"
-              value={formData.description}
+              value={workshop.description}
               onChange={handleChange}
             />
             <div className="d-flex justify-content-between p-0">
@@ -231,7 +233,7 @@ export default function Page1({
                 width="93%"
                 placeholder="最多輸入120字"
                 addclass="w-100"
-                value={formData.outline}
+                value={workshop.outline}
                 onChange={handleChange}
               />
               <Textarea
@@ -241,7 +243,7 @@ export default function Page1({
                 width="100%"
                 placeholder="最多輸入120字"
                 addclass="w-100"
-                value={formData.notes}
+                value={workshop.notes}
                 onChange={handleChange}
               />
             </div>
