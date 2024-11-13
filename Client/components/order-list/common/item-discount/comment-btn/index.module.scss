@@ -10,23 +10,84 @@
 
 .item-img {
     width: 160px;
-    height: 160px;
-}
+    height: 160px; // 確保保持比例
 
+    @media (max-width: 1300px) {
+        max-width: 120px;
+        max-height: 120px;
+    }
+}
 .item-left {
     width: 400px;
+    @media (max-width: 1300px) {
+        width: 350px;
+    }
+
+    @media (max-width: 720px) {
+        width: 240px;
+    }
 }
 
 .text-group {
     width: 200px;
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        width: 100px;
+
+        .brand {
+            font-size: 11px;
+            line-height: 100%;
+        }
+
+        .item-name {
+            font-size: 16px;
+        }
+
+        .color-right {
+            font-size: 12px;
+        }
+    }
 }
 
 .count {
     width: 200px;
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        font-size: 16px;
+        width: 80px;
+        display: none;
+    }
 }
 
 .sub-total {
     width: 200px;
+    color: $red-500;
+    .del {
+        color: $gray-200;
+        font-size: 12px;
+    }
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        width: 80px;
+        font-size: 12px;
+        display: flex;
+        flex-wrap: wrap-reverse;
+        justify-content: flex-end;
+        flex-direction: column;
+        .del {
+            font-size: 8px;
+        }
+    }
+    
 }
 
 .color-right {
@@ -52,6 +113,13 @@
     border: $red-500 solid 1px;
     background-color:$red-500;
     color: white;
+    @media (max-width: 720px) {
+        line-height: 100%;
+        width: 50px;
+        padding-block: 5px;
+        font-size: 10px;
+        align-content: top;
+    }
 
     &:hover {
         border:$red-500 solid 1px;

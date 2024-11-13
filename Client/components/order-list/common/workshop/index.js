@@ -7,11 +7,12 @@ export default function Workshop({
     title = "", 
     instructor = "", 
     dateRange = "", 
+    quantity=0,
     price = 0 
 }) {
     return (
         <div className={`${styles.item} workshop d-flex justify-content-between align-items-center mb-2`}>
-            <div className={`${styles["item-left"]} d-flex justify-content-between align-items-center`}>
+            {/* <div className={`${styles["item-left"]} d-flex justify-content-between align-items-center`}> */}
                 <div className={`${styles['item-img']} ratio ratio-4x3`}>
                     <Image 
                         src={imageSrc} 
@@ -21,13 +22,14 @@ export default function Workshop({
                     />
                 </div>
                 <div className={`${styles["text-group"]} d-flex flex-column align-items-start`}>
-                    <div className={`h5 mb-2 ${styles.class}`}>{title}</div>
                     <div className={`${styles["item-name"]} ps mb-1`}>{instructor}</div>
+                    <div className={`h5 mb-2 ${styles.class}`}>{title}</div>
                 </div>
-            </div>
+            {/* </div> */}
             <div className={`${styles.count} p`}>
                 活動期間<br />{dateRange}
             </div>
+            
             <div className={`${styles["sub-total"]} text-end h6`}>NT$ {price}</div>
         </div>
     );

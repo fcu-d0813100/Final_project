@@ -1,0 +1,59 @@
+@import '@/styles/_variant.scss';
+
+.selectArea {
+  position: relative;
+  span {
+    color: $green-500;
+    font-size: 14px;
+  }
+
+  a {
+    height: 48px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1.5px solid $gray-200;
+    padding-inline: 15px;
+    text-align: left;
+    background: white;
+    text-decoration: none;
+    color: black;
+  }
+  button:focus {
+    outline: none;
+    border: 2px solid $green-500;
+    background: $gray-100;
+  }
+  .errorBorder {
+    border: 1px solid $red-500; // 紅色邊框顏色
+  }
+  ul {
+    list-style: none;
+  }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: hsl(0, 0%, 100%);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  max-height: 200px; /* 設置最大高度 */
+  overflow-y: auto; /* 超出範圍時顯示垂直滾動條 */
+
+  li {
+    padding: 8px 12px;
+    cursor: pointer;
+    &:hover {
+      background-color: $green-600;
+      color: white;
+    }
+  }
+}

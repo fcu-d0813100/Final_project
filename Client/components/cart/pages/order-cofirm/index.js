@@ -14,7 +14,7 @@ export default function OrderComfirm() {
 
   const { pTotalPrice = 0, pOriginalTotalPrice = 0 } = useCartProduct()
   const { wTotalPrice = 0 } = useCartWorkshop()
-  //打折的價格
+  //全站打95折的價格
   const discountedWTotalPrice = Math.floor(wTotalPrice * 0.95)
   const discountDifference =
     pOriginalTotalPrice - pTotalPrice + (wTotalPrice - discountedWTotalPrice)
@@ -39,11 +39,21 @@ export default function OrderComfirm() {
     setOrderData(storedOrderData)
     localStorage.setItem('orderData', JSON.stringify(storedOrderData))
   }, [])
-  // console.log(orderData)
 
   //抓取付款方式的值
-  const paymentMethod = orderData?.paymentMethod
-  const deliveryMethod = orderData?.deliveryMethod
+  const paymentMethod = orderData?.paymentMethod || 'defaultPaymentMethod'
+  const deliveryMethod = orderData?.deliveryMethod || 'defaultDeliveryMethod'
+
+  //算優惠券折價
+  let discountPrice
+  if (orderData?.coupon?.discount_value <= 1) {
+    discountPrice =
+      pTotalPrice - Math.floor(pTotalPrice * orderData.coupon.discount_value)
+  } else if (orderData?.coupon?.discount_value > 1) {
+    discountPrice = orderData.coupon.discount_value
+  } else {
+    discountPrice = 0
+  }
 
   //------------送訂單到後端
   //判斷付款方式(1.貨到付款)
@@ -102,34 +112,34 @@ export default function OrderComfirm() {
   }
 
   return (
-    <>
-      <div className="container">
-        <div className={style.step}>
-          <Image
-            src="/cart/step3.svg"
-            alt="Step2"
-            width={1400}
-            height={300}
-            className="img-fluid d-none d-lg-block"
-          />
-        </div>
-        <div className={style.outer}>
-          <div className={style.list}>
-            <div className={style.order}>
-              <div className={`h5 ${style['order-topic']}`}>
-                訂單編號：{orderNumber}
-              </div>
-              <div className={style['order-box']}>
-                <OrderBox />
-                <div className={style.shipping}>
-                  <Form className="p-4">
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        <div className={`h5 ${style['shipping-topic']}`}>
-                          配送方式
-                        </div>
-                        <div>
-                          {orderData && orderData.deliveryMethod === 'home' ? (
+    <div className="container">
+      <div className={style.step}>
+        <Image
+          src="/cart/step3.svg"
+          alt="Step2"
+          width={1400}
+          height={300}
+          className="img-fluid d-none d-lg-block"
+        />
+      </div>
+      <div className={style.outer}>
+        <div className={style.list}>
+          <div className={style.order}>
+            <div className={`h5 ${style['order-topic']}`}>
+              訂單編號：{orderNumber}
+            </div>
+            <div className={style['order-box']}>
+              <OrderBox />
+              <div className={style.shipping}>
+                <Form className="p-4">
+                  <Form.Group className="mb-3">
+                    <Form.Label>
+                      <div className={`h5 ${style['shipping-topic']}`}>
+                        配送方式
+                      </div>
+                      <div>
+                        {orderData ? (
+                          orderData.deliveryMethod === 'home' ? (
                             <div className={style.home}>
                               <span className={style.text}>
                                 收件地址 : {orderData.homeAdress}
@@ -144,77 +154,88 @@ export default function OrderComfirm() {
                           ) : (
                             <div className={style.home}>
                               <span className={style.text}>
-                                門市 : {orderData?.storename}
+                                門市 : {orderData?.storename || '未提供'}
                               </span>
 
                               <span className={style.text}>
-                                地址 : {orderData?.storeaddress}
+                                地址 : {orderData?.storeaddress || '未提供'}
                               </span>
 
                               <span className={style.text}>
-                                收件人 : {orderData?.sevenRecipientName}
+                                收件人 :{' '}
+                                {orderData?.sevenRecipientName || '未提供'}
                               </span>
 
                               <span className={style.text}>
-                                電話 : {orderData?.sevenRecipientPhone}
+                                電話 :{' '}
+                                {orderData?.sevenRecipientPhone || '未提供'}
                               </span>
                             </div>
-                          )}
-                        </div>
-                      </Form.Label>
-                    </Form.Group>
-                  </Form>
-                </div>
-
-                <Form className="p-4">
-                  <div className={style.payment}>
-                    <div className={`h5 ${style['payment-topic']}`}>
-                      付款方式
-                    </div>
-                    <div className={style.home}>
-                      {orderData?.paymentMethod === 'cod'
-                        ? '貨到付款'
-                        : '綠界 ecPay'}
-                    </div>
-                  </div>
+                          )
+                        ) : (
+                          <div>資料加載中...</div>
+                        )}
+                      </div>
+                    </Form.Label>
+                  </Form.Group>
                 </Form>
               </div>
-              <div className={style['total_amount']}>
-                <div className={style.discount}>
-                  全站95折優惠：NT${discountDifference.toLocaleString()}
-                </div>
-                {orderData && orderData.coupon && (
-                  <div className={style.discount}>
-                    {`${orderData.coupon.brand_name} ${orderData.coupon.name}：NT$${orderData.coupon.discount_value}`}
+
+              <Form className="p-4">
+                <div className={style.payment}>
+                  <div className={`h5 ${style['payment-topic']}`}>付款方式</div>
+                  <div className={style.home}>
+                    {orderData?.paymentMethod === 'cod'
+                      ? '貨到付款'
+                      : '綠界 ecPay'}
                   </div>
-                )}
-                <hr></hr>
-                總金額：
-                <span className={style['total_price']}>
-                  NT${orderData?.totalPrice.toLocaleString()}
-                </span>
+                </div>
+              </Form>
+            </div>
+            <div className={style['total_amount']}>
+              <div className={style.discount}>
+                全站95折優惠：-NT${discountDifference.toLocaleString()}
               </div>
-              {/* <BuyRule /> */}
-              <div
-                className={`mt-5 mb-5 d-xl-flex justify-content-end ${style['checkout_btn']}`}
+              {orderData?.coupon && (
+                <div className={style.discount}>
+                  {`${orderData?.coupon.brand_name} ${orderData?.coupon.name}：-NT$${discountPrice}`}
+                </div>
+              )}
+              <hr />
+              <div className="d-flex align-items-center justify-content-end">
+                <div>
+                  <div className={style['original-p']}>
+                    原價：NT$
+                    {(pOriginalTotalPrice + wTotalPrice).toLocaleString()}
+                  </div>
+
+                  <div className={style['total_price']}>
+                    <span className="text-black"> 總金額：</span> NT$
+                    {orderData?.totalPrice?.toLocaleString() || '未提供'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`mt-5 mb-5 d-xl-flex justify-content-end ${style['checkout_btn']}`}
+            >
+              <button
+                className="btn-primary"
+                onClick={() => router.push('/cart/checkout')}
               >
-                <button
-                  className="btn-primary"
-                  onClick={() => router.push('/cart/checkout')}
-                >
-                  返回
-                </button>
-                <button
-                  className="ms-2 btn-secondary"
-                  onClick={paymentMethod === 'cod' ? handleCheckout : goECPay}
-                >
-                  結賬
-                </button>
-              </div>
+                取消
+              </button>
+              <button
+                className="ms-2 btn-secondary"
+                onClick={paymentMethod === 'cod' ? handleCheckout : goECPay}
+              >
+                結賬
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

@@ -6,6 +6,7 @@ import WorkshopSelectbar from '@/components/workshop/common/workshop-selectbar'
 import WorkshopCardLg from '@/components/shared/workshop-card-lg'
 import React, { useState, useEffect } from 'react'
 
+
 export default function WorkshopAll(props) {
   const [workshop, setWorkshop] = useState([])
   const [search, setSearch] = useState('')
@@ -94,7 +95,7 @@ export default function WorkshopAll(props) {
               <WorkshopCardLg
                 key={item.id}
                 wid={item.id}
-                imgCover={`/workshop/workshop_img/${item.type_id}-${item.id}-c.jpg`}
+                imgCover={`http://localhost:3005/workshop/${item.img_cover}`}
                 name={item.name}
                 teacher={item.teacher_name}
                 beginDate={beginDate}

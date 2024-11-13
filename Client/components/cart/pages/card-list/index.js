@@ -45,7 +45,6 @@ export default function CartList() {
   const {
     productItems = [],
     pTotalPrice = 0,
-    pTotalQty = 0,
     pOriginalTotalPrice = 0,
     onIncreaseProduct = () => {},
     onDecreaseProduct = () => {},
@@ -56,7 +55,6 @@ export default function CartList() {
   const {
     workshopItems = [],
     wTotalPrice = 0,
-    wTotalQty = 0,
     onIncreaseWorkshop = () => {},
     onDecreaseWorkshop = () => {},
     onRemoveWorkshop = () => {},
@@ -99,7 +97,10 @@ export default function CartList() {
                     彩妝商品
                   </div>
                   {productItems.map((product) => (
-                    <div key={product.id} className={style['cosmetic-box']}>
+                    <div
+                      key={product.color_id}
+                      className={style['cosmetic-box']}
+                    >
                       <div className={` col-6 ${style['cosmetic-detail']}`}>
                         <div className={style['cosmetic-img']}>
                           <Image

@@ -25,76 +25,6 @@ const upload = multer({ storage: storage })
 // 靜態路徑設置
 router.use('/activity', express.static(path.join(__dirname, 'public/activity')))
 
-// 創建活動 API
-// 假設路由設置在 http://localhost:3005/api/activity-Upload
-// router.post('/insert-sample-data', async (req, res) => {
-//   try {
-//     const {
-//       CHN_name,
-//       ENG_name,
-//       maxREG,
-//       brand,
-//       address,
-//       start_at,
-//       end_at,
-//       description,
-//       img1,
-//       img2,
-//       img3,
-//     } = req.body
-
-//     if (!CHN_name || !ENG_name) {
-//       return res.status(400).json({ error: '缺少必要的欄位資料' })
-//     }
-//     const sqlInsertAct = `
-//       INSERT INTO activity
-//       (CHN_name, ENG_name, maxREG, brand, address, start_at, end_at, description, img1, img2, img3)
-//       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-//     `
-
-//     // 在這裡打印 SQL 語句和資料以便進行調試
-//     console.log('SQL Query:', sqlInsertAct)
-//     console.log('Data:', [
-//       CHN_name,
-//       ENG_name,
-//       maxREG,
-//       brand,
-//       address,
-//       start_at,
-//       end_at,
-//       description,
-//       img1,
-//       img2,
-//       img3,
-//     ])
-
-//     const [result] = await db.query(sqlInsertAct, [
-//       CHN_name,
-//       ENG_name,
-//       maxREG,
-//       brand,
-//       address,
-//       start_at,
-//       end_at,
-//       description,
-//       img1,
-//       img2,
-//       img3,
-//     ])
-
-//     res.json({
-//       status: 'success',
-//       message: `ID:${result.insertId} 假資料插入成功`,
-//     })
-//   } catch (error) {
-//     console.error('Error inserting sample data:', error) // 打印具體的錯誤信息
-//     res.status(500).json({
-//       status: 'error',
-//       message: '假資料插入失敗',
-//     })
-//   }
-// })
-
 router.post('/activity-Upload', upload.array('files'), async (req, res) => {
   try {
     const {
@@ -395,11 +325,138 @@ router.get('/top3', async (req, res) => {
     res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
+router.post('/activity-reg/:uid', upload.array('files'), async (req, res) => {
+  try {
+    const {
+      user_id,
+      eng_name,
+      chn_name,
+      applicant_name,
+      applicant_phone,
+      applicant_date,
+      applicant_amount,
+      remark,
+    } = req.body
+    console.log('接收到的資料:', req.body) // 確認 req.body 是否有資料
+    if (!eng_name || !chn_name || !user_id) {
+      return res.status(400).json({ error: '缺少必要的欄位資料' })
+    }
+
+    console.log('接收的文字數據:', {
+      user_id,
+      eng_name,
+      chn_name,
+      applicant_name,
+      applicant_phone,
+      applicant_date,
+      applicant_amount,
+      remark,
+    })
+
+    const sqlInsertAct = `
+      INSERT INTO registration_list
+      (user_id,
+      eng_name,
+      chn_name,
+      applicant_name,
+      applicant_phone,
+      applicant_date,
+      applicant_amount,
+      remark,)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
+
+    const [actResult] = await db.query(sqlInsertAct, [
+      user_id,
+      eng_name,
+      chn_name,
+      applicant_name,
+      applicant_phone,
+      applicant_date,
+      applicant_amount,
+      remark,
+    ])
+
+    const actId = actResult.insertId
+
+    res.json({
+      status: 'success',
+      message: `ID:${actId} 報名資料插入成功`,
+    })
+  } catch (error) {
+    console.error('Error creating event:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '報名資料創建失敗',
+    })
+  }
+})
+// 添加收藏
+router.post('/favorite', async (req, res) => {
+  const { activityId, userId } = req.body
+  try {
+    const sqlInsert = `INSERT INTO activity_fav (act_id, user_id) VALUES (?, ?)`
+    await db.query(sqlInsert, [activityId, userId])
+    res.status(200).json({ message: '成功添加收藏' })
+  } catch (error) {
+    console.error('添加收藏失敗:', error)
+    res.status(500).json({ error: '伺服器錯誤，無法添加收藏' })
+  }
+})
+//會員中心撈收藏資料用
+router.get('/favorite/:userId', async (req, res) => {
+  const { userId } = req.params // 获取请求参数中的 userId
+  try {
+    const sqlSelect = `
+      SELECT activity.*
+      FROM activity_fav
+      JOIN activity ON activity_fav.act_id = activity.id
+      WHERE activity_fav.user_id = ?
+    `
+
+    const [rows] = await db.query(sqlSelect, [userId])
+    res.status(200).json(rows) // 返回收藏的活动列表
+  } catch (error) {
+    console.error('查找收藏活動失敗:', error)
+    res.status(500).json({ error: '伺服器錯誤，無法查找收藏活動' })
+  }
+})
+
+// 取消收藏
+router.delete('/unfavorite', async (req, res) => {
+  const { activityId, userId } = req.body
+  try {
+    const sqlDelete = `DELETE FROM activity_fav WHERE act_id = ? AND user_id = ?`
+    await db.query(sqlDelete, [activityId, userId])
+    res.status(200).json({ message: '成功取消收藏' })
+  } catch (error) {
+    console.error('取消收藏失敗:', error)
+    res.status(500).json({ error: '伺服器錯誤，無法取消收藏' })
+  }
+})
 
 // 獲取所有活動數據
-router.get('/', async (req, res) => {
+router.get('/:userId', async (req, res) => {
+  const userId = req.params.userId
+
   try {
-    const [rows] = await db.query('SELECT * FROM activity WHERE valid = 1')
+    const [rows] = await db.query(
+      `
+      SELECT 
+        activity.*, 
+        IF(activity_fav.user_id IS NOT NULL, 1, 0) AS is_favorite
+      FROM 
+        activity
+      LEFT JOIN 
+        activity_fav ON activity.id = activity_fav.act_id AND activity_fav.user_id = ?
+      WHERE 
+        activity.valid = 1
+      ORDER BY 
+        activity.id ASC
+    `,
+      [userId]
+    )
+
     res.json(rows)
   } catch (error) {
     console.error('Failed to fetch activity:', error)

@@ -10,6 +10,7 @@ router.get('/:userId', async function (req, res, next) {
     o.id AS order_id,
     o.order_number,
     o.total_amount,
+    o.status,
     CONCAT('[', GROUP_CONCAT(
         DISTINCT CONCAT( 
             '{',
@@ -19,6 +20,7 @@ router.get('/:userId', async function (req, res, next) {
     '"name":"', IFNULL(b.name, ''), '",',
     '"product_name":"', IFNULL(p.product_name, ''), '",',
     '"color":"', IFNULL(c.color, 'null'), '",',
+    '"color_name":"', IFNULL(c.color_name, 'null'), '",',
     '"quantity":', oi.quantity, ',',
     '"price":', IFNULL(p.price, '0'), ',',
     '"originalprice":', IFNULL(p.originalprice, '0'), ',',
@@ -79,6 +81,7 @@ router.get('/detail/:orderId', async function (req, res, next) {
     o.order_number,
     o.total_amount,
     o.shipping_address,
+      o.status,
     u.name,
     u.phone,
     cp.id as coupon_id,
@@ -94,6 +97,8 @@ router.get('/detail/:orderId', async function (req, res, next) {
     '"name":"', IFNULL(b.name, ''), '",',
     '"product_name":"', IFNULL(p.product_name, ''), '",',
     '"color":"', IFNULL(c.color, 'null'), '",',
+    '"color_name":"', IFNULL(c.color_name, 'null'), '",',
+    '"stock":"', IFNULL(c.stock, 'null'), '",',
     '"quantity":', oi.quantity, ',',
     '"price":', IFNULL(p.price, '0'), ',',
      '"originalprice":', IFNULL(p.originalprice, '0'), ',',

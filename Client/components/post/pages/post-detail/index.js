@@ -5,18 +5,24 @@ import Masonry from 'react-masonry-css'
 import { usePost } from '@/hooks/post/use-post'
 import PostCard from '@/components/post/common/post-card'
 import WallCard from '@/components/post/common/wall-card'
+import ModalConfirm from '@/components/shared/modal-confirm'
+import useAlert from '@/hooks/alert/use-alert'
+import { RiCheckboxCircleFill } from 'react-icons/ri'
+
 import styles from './index.module.scss'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 export default function PostDetail(props) {
-  const { post, forceUpdate } = usePost()
+  const router = useRouter()
+  const { postId } = router.query
+  const { post, forceUpdate, type } = usePost()
   const { auth } = useAuth()
   const userId = auth.userData.id
   const [wallCard, setWallCard] = useState([])
   const [comments, setComments] = useState(post?.comments || [])
   const [cancelHandle, setCancelHandle] = useState(() => () => {})
-  const router = useRouter()
-  const { postId } = router.query
+  const [showModal, setShowModal] = useState(false)
+  const showAlert = useAlert()
   //render
   useEffect(() => {
     if (post && post.tags) {
@@ -45,20 +51,26 @@ export default function PostDetail(props) {
       setComments(post.comments)
     }
   }, [post])
+
   // 如果 post 尚未加載，顯示加載指示
   if (!post) {
     return <p></p>
   }
+
   // waterfall layout
   const breakpoint = {
     default: 5,
     1600: 4,
     1200: 3,
-    700: 2,
+    768: 2,
   }
   //
   const sendHandle = async (replyTargetId, replyId, inputValue) => {
     // verify form
+    if (userId === 0) {
+      setShowModal(true)
+      return
+    }
     if (!inputValue) return
 
     // collect form
@@ -78,11 +90,11 @@ export default function PostDetail(props) {
       }
     )
     if (response.ok) {
-      alert('提交成功')
+      showAlert('提交成功', <RiCheckboxCircleFill color="#90957A" />)
       forceUpdate()
       cancelHandle()
     } else {
-      alert('提交失敗，請再試一次！')
+      showAlert('提交失敗，請再試一次！')
     }
   }
 
@@ -90,7 +102,7 @@ export default function PostDetail(props) {
     <>
       <div className={styles['post-container']}>
         <div className={styles['post-read']}>
-          <Link href="/post">
+          <Link href={{ pathname: '/post', query: { sort: type } }}>
             <GoArrowLeft size={30} />
           </Link>
           <PostCard
@@ -136,6 +148,18 @@ export default function PostDetail(props) {
           </Masonry>
         </div>
       </div>
+      {showModal && (
+        <ModalConfirm
+          title="尚未登入會員"
+          content={`是否前往登入?`}
+          btnConfirm="前往登入"
+          ConfirmFn={() => {
+            router.push('/user/login')
+          }}
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )}
     </>
   )
 }
