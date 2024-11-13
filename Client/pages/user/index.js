@@ -4,7 +4,6 @@ import { useAuth } from '@/hooks/use-auth'
 export default function Index(props) {
   return (
     <>
-    
       <InfoUser />
     </>
   )

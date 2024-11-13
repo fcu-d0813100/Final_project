@@ -89,7 +89,9 @@ export default function UserInfo() {
                         <th>
                           地址<span> | address</span>
                         </th>
-                        <td>{userData.address}</td>
+                        <td>
+                          {`${userData.city}${userData.area}${userData.address}`}
+                        </td>
                       </tr>
                     </tbody>
                   </table>

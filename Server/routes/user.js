@@ -228,7 +228,7 @@ router.put(
     // 更新除了帳號密碼以外的資料
     try {
       const [result] = await db.query(
-        'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?, `birthday`=?, `updated_at`=? WHERE `id`=?;',
+        'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?,`city`=?, `area`=?, `address`=?, `birthday`=?, `updated_at`=? WHERE `id`=?;',
         [
           updateUser.name,
           updateUser.email,
@@ -236,6 +236,8 @@ router.put(
           imgFileName,
           updateUser.gender,
           updateUser.phone,
+          updateUser.city,
+          updateUser.area,
           updateUser.address,
           updateUser.birthday,
           new Date(),

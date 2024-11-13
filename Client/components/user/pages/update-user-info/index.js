@@ -8,12 +8,66 @@ import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
 import PreviewUploadImage from '@/components/user/common/preview-upload-image'
+import utils from '@/components/cart/common/tw-zipcode'
+import dataTownships from '@/components/cart/common/tw-zipcode'
+import {
+  countries,
+  townships,
+  postcodes,
+} from '@/components/cart/common/tw-zipcode/data-townships'
 
-export default function UpdateInfo() {
+export default function UpdateInfo({
+  initPostcode = '',
+  onPostcodeChange = (country, township, postcode) => {},
+}) {
   const [selectedFile, setSelectedFile] = useState(null)
   const { auth, update, getUser, deleteUser } = useAuth()
 
-  const router = useRouter()
+  // 串地址
+  //console.log(countries, townships, postcodes)
+
+  // 記錄陣列的索引值，預設值是-1，相當於"請選擇xxx"
+  const [countryIndex, setCountryIndex] = useState(-1)
+  const [townshipIndex, setTownshipIndex] = useState(-1)
+
+  // 郵遞區號使用字串(數字字串)
+  const [postcode, setPostcode] = useState('')
+
+  // 利用傳入時的initPostcode初始化用
+  useEffect(() => {
+    if (initPostcode) {
+      setPostcode(initPostcode)
+      // 使用initPostcode尋找對應的countryIndex, townshipIndex
+      for (let i = 0; i < postcodes.length; i++) {
+        for (let j = 0; j < postcodes[i].length; j++) {
+          if (postcodes[i][j] === initPostcode) {
+            setCountryIndex(i)
+            setTownshipIndex(j)
+            return // 跳出巢狀for迴圈
+          }
+        }
+      }
+    }
+  }, [initPostcode])
+
+  // 當countryIndex, townshipIndex均有值時，設定postcode值
+  useEffect(() => {
+    if (countryIndex > -1 && townshipIndex > -1) {
+      setPostcode(postcodes[countryIndex][townshipIndex])
+    }
+  }, [countryIndex, townshipIndex])
+
+  // 當使用者改變的countryIndex, townshipIndex，使用onPostcodeChange回傳至父母元件
+  useEffect(() => {
+    if (postcode && postcode !== initPostcode) {
+      onPostcodeChange(
+        countries[countryIndex],
+        townships[countryIndex][townshipIndex],
+        postcode
+      )
+    }
+  }, [postcode])
+
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     name: '',
@@ -23,6 +77,8 @@ export default function UpdateInfo() {
     email: '',
     img: '',
     phone: '',
+    city: '',
+    area: '',
     address: '',
     create_at: '',
     updated_at: 'Now()',
@@ -89,6 +145,7 @@ export default function UpdateInfo() {
             },
           })
           setTimeout(() => {
+            // eslint-disable-next-line no-undef
             router.push('/user')
           }, 2000)
         } else {
@@ -207,6 +264,7 @@ export default function UpdateInfo() {
   const closeModal = () => {
     setShowModal(false)
   }
+
   return (
     <>
       <UserSection titleCN="更新資訊" titleENG="Information">
@@ -343,9 +401,24 @@ export default function UpdateInfo() {
                   | city
                 </span>
               </label>
-              <select className={`form-select  ${styles['form-select2']}`}>
-                <option value="">請選擇縣市</option>
-                {/* Options omitted for brevity */}
+              <select
+                value={countryIndex}
+                onChange={(e) => {
+                  // 將字串轉成數字
+                  setCountryIndex(+e.target.value)
+                  // 重置townshipIndex的值
+                  setTownshipIndex(-1)
+                  // 重置postcode的值
+                  setPostcode('')
+                }}
+                className={`form-select  ${styles['form-select2']}`}
+              >
+                <option value="-1">選擇縣市</option>
+                {countries.map((value, index) => (
+                  <option key={index} value={index}>
+                    {value}
+                  </option>
+                ))}
               </select>
             </div>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
@@ -355,8 +428,21 @@ export default function UpdateInfo() {
                   | area
                 </span>
               </label>
-              <select className={`form-select ${styles['form-select2']}`}>
-                <option value="">請選擇區域</option>
+              <select
+                value={townshipIndex}
+                onChange={(e) => {
+                  // 將字串轉成數字
+                  setTownshipIndex(+e.target.value)
+                }}
+                className={`form-select ${styles['form-select2']}`}
+              >
+                <option value="-1">選擇區域</option>
+                {countryIndex > -1 &&
+                  townships[countryIndex].map((value, index) => (
+                    <option key={index} value={index}>
+                      {value}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
