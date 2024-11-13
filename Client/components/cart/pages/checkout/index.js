@@ -15,9 +15,57 @@ import {
   townships,
   postcodes,
 } from '../../common/tw-zipcode/data-townships'
-import TWZipCode from '@//components/cart/common/tw-zipcode'
 
-export default function Checkout() {
+export default function Checkout({
+  initPostcode = '',
+  onPostcodeChange = (country, township, postcode) => {},
+}) {
+  //----------------------------------------------套用縣市連動資料
+  // console.log(countries, townships, postcodes)
+  // 記錄陣列的索引值，預設值是-1，相當於"請選擇xxx"
+  const [countryIndex, setCountryIndex] = useState(-1)
+  const [townshipIndex, setTownshipIndex] = useState(-1)
+
+  // 郵遞區號使用字串(數字字串)
+  const [postcode, setPostcode] = useState('')
+
+  // 利用傳入時的initPostcode初始化用
+  useEffect(() => {
+    if (initPostcode) {
+      setPostcode(initPostcode)
+      // 使用initPostcode尋找對應的countryIndex, townshipIndex
+      for (let i = 0; i < postcodes.length; i++) {
+        for (let j = 0; j < postcodes[i].length; j++) {
+          if (postcodes[i][j] === initPostcode) {
+            setCountryIndex(i)
+            setTownshipIndex(j)
+            return // 跳出巢狀for迴圈
+          }
+        }
+      }
+    }
+  }, [initPostcode])
+
+  // 當countryIndex, townshipIndex均有值時，設定postcode值
+  useEffect(() => {
+    if (countryIndex > -1 && townshipIndex > -1) {
+      setPostcode(postcodes[countryIndex][townshipIndex])
+    }
+  }, [countryIndex, townshipIndex])
+
+  // 當使用者改變的countryIndex, townshipIndex，使用onPostcodeChange回傳至父母元件
+  useEffect(() => {
+    if (postcode && postcode !== initPostcode) {
+      onPostcodeChange(
+        countries[countryIndex],
+        townships[countryIndex][townshipIndex],
+        postcode
+      )
+    }
+  }, [postcode])
+  //
+
+  //-----------------------------------其他資料
   const router = useRouter()
   const [deliveryMethod, setDeliveryMethod] = useState('home') //預設物流
   const [paymentMethod, setPaymentMethod] = useState('cod') //預設付款
@@ -113,20 +161,49 @@ export default function Checkout() {
     const recipientName = recipientNameRef.current?.value
     const recipientPhone = recipientPhoneRef.current?.value
     const recipientEmail = recipientEmailRef.current?.value
-    const recipientCity = recipientCityRef.current?.value
-    const recipientDistrict = recipientDistrictRef.current?.value
+    const recipientCity = countries[countryIndex]
+    let recipientDistrict
+
+    if (townshipIndex > 0) {
+      recipientDistrict = townships[countryIndex][townshipIndex]
+    } else {
+      recipientDistrict = null
+    }
     const recipientAddress = recipientAddressRef.current?.value
     const homeAdress = `${recipientCity}${recipientDistrict}${recipientAddress}`
-    //711
+
+    // 711
     const sevenRecipientName = sevenRecipientNameRef.current?.value
     const sevenRecipientPhone = sevenRecipientPhoneRef.current?.value
     const store711Data = JSON.parse(localStorage.getItem('store711'))
     const storename = store711Data?.storename
     const storeaddress = store711Data?.storeaddress
-    //商品&課程資訊&金額
+
+    // 商品&課程資訊&金額
     const productCart = JSON.parse(localStorage.getItem('productCart'))
     const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
 
+    if (deliveryMethod === '7-11') {
+      if (
+        !sevenRecipientName ||
+        !sevenRecipientPhone ||
+        !storename ||
+        !storeaddress
+      ) {
+        alert('請填寫所有7-11寄送資訊')
+        return
+      }
+    } else {
+      if (
+        !recipientName ||
+        !recipientPhone ||
+        !recipientEmail ||
+        !recipientCity
+      ) {
+        alert('請填寫所有宅配寄送資訊')
+        return
+      }
+    }
     let orderData = {}
     if (deliveryMethod === '7-11') {
       orderData = {
@@ -158,7 +235,10 @@ export default function Checkout() {
       }
     }
 
+    // Store order data in localStorage
     localStorage.setItem('orderData', JSON.stringify(orderData))
+
+    // Alert user and navigate to order check page
     alert('訂單成立')
     router.push('/cart/order-check')
   }
@@ -255,14 +335,22 @@ export default function Checkout() {
                               <Form.Select
                                 name="recipient_city"
                                 ref={recipientCityRef}
+                                value={countryIndex}
+                                onChange={(e) => {
+                                  // 將字串轉成數字
+                                  setCountryIndex(+e.target.value)
+                                  // 重置townshipIndex的值
+                                  setTownshipIndex(-1)
+                                  // 重置postcode的值
+                                  setPostcode('')
+                                }}
                               >
-                                <option value="" disabled selected>
-                                  選擇縣市
-                                </option>
-                                <option value="台北市">台北市</option>
-                                <option value="台中市">台中市</option>
-                                <option value="高雄市">高雄市</option>
-                                <option value="桃園市">桃園市</option>
+                                <option value="-1">選擇縣市</option>
+                                {countries.map((value, index) => (
+                                  <option key={index} value={index}>
+                                    {value}
+                                  </option>
+                                ))}
                               </Form.Select>
                             </Form.Group>
                           </Col>
@@ -272,14 +360,21 @@ export default function Checkout() {
                               <Form.Select
                                 name="recipient_district"
                                 ref={recipientDistrictRef}
+                                value={townshipIndex}
+                                onChange={(e) => {
+                                  // 將字串轉成數字
+                                  setTownshipIndex(+e.target.value)
+                                }}
                               >
-                                <option value="" disabled selected>
-                                  選擇區
-                                </option>
-                                <option value="中正區">中正區</option>
-                                <option value="大安區">大安區</option>
-                                <option value="信義區">信義區</option>
-                                <option value="內湖區">內湖區</option>
+                                <option value="-1">選擇區域</option>
+                                {countryIndex > -1 &&
+                                  townships[countryIndex].map(
+                                    (value, index) => (
+                                      <option key={index} value={index}>
+                                        {value}
+                                      </option>
+                                    )
+                                  )}
                               </Form.Select>
                             </Form.Group>
                           </Col>
@@ -297,25 +392,6 @@ export default function Checkout() {
                           />
                         </Form.Group>
                         {/* //////////////////////////////////縣市連動測試 */}
-                        <Row className="mb-3">
-                          <Col md={6}>
-                            {/* 在這裡加入 TWZipCode 組件 */}
-                            <Form.Group controlId="recipient-city">
-                              <Form.Label>縣市</Form.Label>
-                              <TWZipCode
-                                initPostcode={recipientCityRef.current?.value} // 初始化郵遞區號，如果需要的話
-                                onPostcodeChange={(
-                                  country,
-                                  township,
-                                  postcode
-                                ) => {
-                                  recipientCityRef.current.value = country
-                                  recipientDistrictRef.current.value = township
-                                }}
-                              />
-                            </Form.Group>
-                          </Col>
-                        </Row>
                       </div>
                     ) : (
                       <div className={style['shipping-form']}>
