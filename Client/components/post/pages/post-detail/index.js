@@ -138,8 +138,8 @@ export default function PostDetail(props) {
                   imageSrc={imgSrc}
                   title={post.title}
                   username={post.nickname}
-                  avatarSrc={`/user/img/${post.user_img}`}
-                  likeCount={post.like_count}
+                  // avatarSrc={`/user/img/${post.user_img}`}
+                  // likeCount={post.like_count}
                 />
               )
             })}

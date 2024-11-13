@@ -153,7 +153,8 @@ export default function PostCard({
           <div className={styles['post-user']}>
             <Image
               className={styles['user-image']}
-              src={`/user/img/${authorAvatar}`}
+              // src={`/user/img/${authorAvatar}`}
+              src={`http://localhost:3005/avatar/${authorAvatar}`}
               alt="User Image"
               width={40}
               height={40}
