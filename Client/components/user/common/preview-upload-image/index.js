@@ -3,8 +3,8 @@ import Image from 'next/image'
 import styles from './index.module.scss'
 
 export default function PreviewUploadImage({
-  avatarImg = '',
-  avatarBaseUrl = '',
+  userId,
+  avatarBaseUrl = 'http://localhost:3005/avatar', // 基礎URL指向你的本地服務器
   defaultImg = 'avatar01.jpg',
   setSelectedFile,
   selectedFile,
@@ -43,7 +43,8 @@ export default function PreviewUploadImage({
       return preview
     }
 
-    if (avatarImg) {
+    if (userId) {
+      const avatarImg = `avatar${userId}.jpg`
       const avatarUrl = `${avatarBaseUrl}/${avatarImg}`
       console.log('Avatar URL:', avatarUrl)
       return avatarUrl
@@ -62,7 +63,7 @@ export default function PreviewUploadImage({
           height={255}
           className={styles.avatar}
           src={showImg()}
-          alt=""
+          alt="User Avatar"
           priority
         />
       </label>

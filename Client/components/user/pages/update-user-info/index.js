@@ -275,9 +275,9 @@ export default function UpdateInfo() {
               <div className="col-3 d-flex align-items-center">
                 <div className="ratio ratio-1x1 w-75">
                   <PreviewUploadImage
-                    avatarImg={user.img}
-                    avatarBaseUrl="/user/img"
-                    defaultImg="avatar01.jpg"
+                    userId={user.id} // 傳遞用戶ID作為變數
+                    avatarBaseUrl="http://localhost:3005/avatar" // 正確的基礎URL
+                    defaultImg="avatar01.jpg" // 默認圖片名
                     setSelectedFile={setSelectedFile}
                     selectedFile={selectedFile}
                   />

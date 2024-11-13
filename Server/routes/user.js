@@ -37,11 +37,20 @@ const storage = multer.diskStorage({
     callback(null, uploadPath)
   },
   filename: function (req, file, callback) {
-    const newFilename = req.user.id + path.extname(file.originalname)
+    // 取得用戶ID，並將 1 到 9 的 ID 進行補零處理
+    let userId = req.user.id
+    if (userId >= 1 && userId <= 9) {
+      userId = `0${userId}`
+    }
+    // 取得文件擴展名
+    const ext = path.extname(file.originalname)
+    // 組合新的文件名，格式為avatar用戶ID.擴展名
+    const newFilename = `avatar${userId}${ext}`
     console.log('New filename:', newFilename)
     callback(null, newFilename)
   },
 })
+
 const upload = multer({ storage: storage })
 
 // 定義安全的私鑰字串
