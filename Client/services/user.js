@@ -79,7 +79,7 @@ export const logout = async () => {
 export const getUserById = async (id = 0, retryCount = 1) => {
   try {
     console.log(`請求獲取用戶ID: ${id}`)
-    const response = await axiosInstance.get(`/user/${id}`, {
+    const response = await axiosInstance.get(`/user`, {
       withCredentials: true,
     })
     return response.data

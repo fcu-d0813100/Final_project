@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { initUserData, useAuth } from '@/hooks/use-auth'
-// import LineLogo from '@/components/icons/line-logo'
 import {
   lineLoginRequest,
   lineLogout,
@@ -19,11 +18,14 @@ export default function LineLogin() {
   const handleLineLogout = async () => {
     if (!auth.isAuth) return
 
-    const res = await lineLogout(auth.userData.line_uid)
+    const line_uid = auth.userData.line_uid
+    console.log('傳遞的 line_uid:', line_uid) // 日誌輸出 line_uid
+
+    const res = await lineLogout(line_uid)
 
     console.log(res.data)
 
-    // 成功登出個回復初始會員狀態
+    // 成功登出並回復初始會員狀態
     if (res.data.status === 'success') {
       toast.success('已成功登出')
 
@@ -32,27 +34,24 @@ export default function LineLogin() {
         userData: initUserData,
       })
     } else {
-      toast.error(`登出失敗`)
+      toast.error('登出失敗')
     }
   }
 
-  // 處理line登入後，要向伺服器進行登入動作
   const callbackLineLogin = async (query) => {
     const res = await lineLoginCallback(query)
-
-    console.log(res.data)
+    console.log('Callback Response:', res.data)
 
     if (res.data.status === 'success') {
-      // 從JWT存取令牌中解析出會員資料
-      // 注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
       const jwtUser = parseJwt(res.data.data.accessToken)
-      // console.log(jwtUser)
+      console.log('JWT User:', jwtUser)
 
       const res1 = await getUserById(jwtUser.id)
+      console.log('User Data Response:', res1.data)
 
       if (res1.data.status === 'success') {
-        // 只需要initUserData中的定義屬性值，詳見use-auth勾子
         const dbUser = res1.data.data.user
+        console.log('Database User:', dbUser)
         const userData = { ...initUserData }
 
         for (const key in userData) {
@@ -61,7 +60,8 @@ export default function LineLogin() {
           }
         }
 
-        // 設定到全域狀態中
+        console.log('UserData:', userData)
+
         setAuth({
           isAuth: true,
           userData,
@@ -69,47 +69,49 @@ export default function LineLogin() {
 
         toast.success('已成功登入')
       } else {
+        console.error('登入後無法得到會員資料:', res1.data.message)
         toast.error('登入後無法得到會員資料')
-        // 這裡可以讓會員登出，因為這也算登入失敗，有可能會造成資料不統一
       }
     } else {
-      toast.error(`已是登入狀態或登入失敗`)
+      console.error('已是登入狀態或登入失敗:', res.data.message)
+      toast.error('已是登入狀態或登入失敗')
     }
   }
 
   // 處理登入
   const goLineLogin = () => {
-    // 判斷是否已經登入，已登入不會再作登入
     if (auth.isAuth) return
 
-    // 從後端伺服器取得line登入網址
     lineLoginRequest()
   }
 
   // 從line登入畫面後回調到本頁面用
   useEffect(() => {
-    // 水合作用(hydration)保護，以免得不到window全域物件
     if (router.isReady) {
-      // 判斷是否有query.code(網址上沒有code是進登入頁的時候)
       if (!router.query.code) return
 
-      // 發送至後端伺服器得到line會員資料
       callbackLineLogin(router.query)
+
+      // 清理URL
+      const cleanUrl =
+        window.location.protocol +
+        '//' +
+        window.location.host +
+        window.location.pathname
+      window.history.replaceState({ path: cleanUrl }, '', cleanUrl)
     }
-    // eslint-disable-next-line
   }, [router.isReady, router.query])
 
   return (
     <>
       <h1>Line登入頁面+回調頁</h1>
 
-      <p>會員狀態:{auth.isAuth ? '已登入' : '未登入'}</p>
-      <p>會員資料:{JSON.stringify(auth.userData)}</p>
+      <p>會員狀態: {auth.isAuth ? '已登入' : '未登入'}</p>
+      <p>會員資料: {JSON.stringify(auth.userData)}</p>
       <hr />
-      <button onClick={goLineLogin}>{/* <LineLogo /> 登入 */}LINE 登入</button>
+      <button onClick={goLineLogin}>LINE 登入</button>
       <br />
       <button onClick={handleLineLogout}>LINE 登出(logout)</button>
-      {/* 土司訊息視窗用 */}
       <Toaster />
     </>
   )

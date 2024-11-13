@@ -40,24 +40,41 @@ router.get('/login', LineLogin.authJson())
 // 登出機制
 router.get('/logout', async function (req, res, next) {
   try {
-    if (!req.query.line_uid) {
+    // 檢查是否傳遞了 line_uid
+    const line_uid = req.query.line_uid
+    console.log('接收到的 line_uid:', line_uid) // 日誌輸出 line_uid
+    if (!line_uid) {
+      console.error('缺少 line_uid')
       return res.json({ status: 'error', message: '缺少必要資料' })
     }
 
     // 查詢資料
     const [dbUser] = await db.query('SELECT * FROM user WHERE line_uid = ?', [
-      req.query.line_uid,
+      line_uid,
     ])
+    console.log('查詢到的使用者:', dbUser) // 日誌輸出查詢結果
+
+    if (!dbUser || dbUser.length === 0) {
+      console.error(`找不到對應的使用者，line_uid: ${line_uid}`)
+      return res.json({ status: 'error', message: '使用者不存在' })
+    }
 
     const user = dbUser[0] // 獲取查詢結果的第一個用戶對象
-
     console.log('User Found for Logout:', user) // 這行是用於調試，確保正確獲取數據
 
     const line_access_token = user.line_access_token
 
+    if (!line_access_token) {
+      console.error('line_access_token 不存在')
+      return res.json({
+        status: 'error',
+        message: '無法獲取 line_access_token',
+      })
+    }
+
     // https://developers.line.biz/en/docs/line-login/managing-users/#logout
     // 登出時進行撤銷(revoke) access token
-    LineLogin.revoke_access_token(line_access_token)
+    await LineLogin.revoke_access_token(line_access_token)
 
     // 清除cookie
     res.clearCookie('accessToken', { httpOnly: true })
