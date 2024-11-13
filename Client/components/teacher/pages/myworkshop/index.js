@@ -19,7 +19,7 @@ export default function MyWorkshop(props) {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [filterStatus]) // 將 filterStatus 作為依賴項 
 
   const fetchData = async () => {
     try {
@@ -37,8 +37,7 @@ export default function MyWorkshop(props) {
         throw new Error('網路回應不成功：' + response.status)
       }
       const data = await response.json()
-      //const filteredData = data.find((teacher) => teacher.id === userData.id) // 篩選符合 userData.id 的資料
-      setWorkshop(...data) // 只設定符合 id 的資料
+      setWorkshop(...data) // 確保獲取到的資料即時更新
       //console.log(data)
     } catch (err) {
       console.log(err)
@@ -158,6 +157,7 @@ export default function MyWorkshop(props) {
               return (
                 <MyWorkshopBox
                   key={item.id}
+                  id={item.id}
                   img={`/workshop/workshop_img/${item.img_cover}`}
                   name={item.name}
                   start_date={beginDate}
@@ -167,6 +167,7 @@ export default function MyWorkshop(props) {
                   registration_start={item.registration_start}
                   registration_end={item.registration_end}
                   filterStatus={filterStatus}
+                  setWorkshop={setWorkshop}
                 />
               )
             })

@@ -14,12 +14,12 @@ import React, { useState, useEffect } from 'react'
 
 export default function WorkshopDetail() {
   //------吐司訊息
-  const addPnotify = () =>
-    toast.success('新增1件商品', {
+  const addToCart = () =>
+    toast.success('已成功加入購物車!', {
       style: {
-        border: '1.2px solid #90957a',
         padding: '12px 40px',
         color: '#626553',
+        
       },
       iconTheme: {
         primary: '#626553',
@@ -72,9 +72,6 @@ export default function WorkshopDetail() {
   const handleSelectTime = (time) => {
     setSelectedTime(time)
   }
-  const notify = () => {
-    toast.success('已成功加入購物車!')
-  }
 
   const handleAddToCart = (navigateToCart = false) => {
     if (selectedTime) {
@@ -88,7 +85,7 @@ export default function WorkshopDetail() {
         classId: selectedTime.key,
         price: tworkshop.price,
       })
-      notify(tworkshop.name) // 顯示成功訊息
+      addToCart()
       if (navigateToCart) {
         router.push('/cart') // 只有當參數為 true 時才跳轉
       }
