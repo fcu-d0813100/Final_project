@@ -2,34 +2,37 @@ import React from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss'; // 確保引入正確的樣式
 
-export default function Workshop({ 
-    imageSrc = "", 
-    title = "", 
-    instructor = "", 
-    dateRange = "", 
-    quantity=0,
-    price = 0 
+export default function Workshop({
+    imageSrc = "",
+    title = "",
+    instructor = "",
+    dateRange = "",
+    quantity = 0,
+    price = 0
 }) {
     return (
         <div className={`${styles.item} workshop d-flex justify-content-between align-items-center mb-2`}>
-            {/* <div className={`${styles["item-left"]} d-flex justify-content-between align-items-center`}> */}
+            <div className={`${styles["item-left"]} d-flex justify-content-between align-items-center`}>
                 <div className={`${styles['item-img']} ratio ratio-4x3`}>
-                    <Image 
-                        src={imageSrc} 
-                        alt={`Workshop: ${title}`} 
-                        width={160} 
-                        height={160} 
+                    <Image
+                        src={imageSrc}
+                        alt={`Workshop: ${title}`}
+                        width={160}
+                        height={160}
                     />
                 </div>
                 <div className={`${styles["text-group"]} d-flex flex-column align-items-start`}>
                     <div className={`${styles["item-name"]} ps mb-1`}>{instructor}</div>
                     <div className={`h5 mb-2 ${styles.class}`}>{title}</div>
+                    <div className={`${styles.time} p`}>
+                        {dateRange}
+                    </div>
                 </div>
-            {/* </div> */}
-            <div className={`${styles.count} p`}>
-                活動期間<br />{dateRange}
             </div>
-            
+            <div className={`${styles.count} text-center h6`}>
+                X{quantity}
+            </div>
+
             <div className={`${styles["sub-total"]} text-end h6`}>NT$ {price}</div>
         </div>
     );

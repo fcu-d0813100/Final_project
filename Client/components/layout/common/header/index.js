@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { PiUser, PiHandbagSimple, PiMagnifyingGlass } from 'react-icons/pi'
 import {
@@ -14,12 +14,19 @@ import {
 } from 'react-bootstrap'
 import Headroom from 'react-headroom'  // 引入 Headroom
 import styles from './index.module.scss'
+import { useAuth } from '@/hooks/use-auth';
 
 function TopBar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
+  const { auth } = useAuth();  // 使用 useAuth 來獲取用戶資料
 
   const handleClose = () => setShowOffcanvas(false)
   const handleShow = () => setShowOffcanvas(true)
+
+
+
+  // 根據 user 是否存在來決定跳轉的鏈接
+  const userLink = auth ? '/user' : '/user/login/user';
 
   return (
     <>
@@ -49,7 +56,7 @@ function TopBar() {
 
               {/* 右邊 會員中心和購物車 */}
               <Col xs={4} className={`text-end ${styles['header-icons']}`}>
-                <Link href="/user">
+                <Link href={userLink}>
                   <PiUser size={22} className="me-3" />
                 </Link>
                 <Link href="/cart">

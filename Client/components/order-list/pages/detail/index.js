@@ -125,11 +125,12 @@ const OrderDetail = () => {
                                     {item.wid && (
                                         <Workshop
                                             key={item.wid}
-                                            imageSrc={`/workshop/workshop_img/${item.type_id}-${item.wid}-c.jpg`}
+                                            imageSrc={`http://localhost:3005/workshop/${item.img_cover}`}
                                             title={item.type}
                                             instructor={item.teachers_name}
                                             dateRange={`${item.registration_start} - ${item.registration_end}`}
                                             price={new Intl.NumberFormat().format(item.workshop_price)}
+                                            quantity={item.quantity}
                                         />
                                     )}
                                 </div>

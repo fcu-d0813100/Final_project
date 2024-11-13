@@ -6,6 +6,23 @@
 
 .item {
     padding-inline: 20px;
+    @media (max-width: 500px) {
+        padding-inline: 0px;
+    }
+}
+
+.item-left {
+    width: 400px;
+    @media (max-width: 1300px) {
+        width: 350px;
+    }
+    @media (max-width: 720px) {
+        width: 300px;
+    }
+    @media (max-width: 500px) {
+        width: 250px;
+        padding-inline: 0px;
+    }
 }
 
 .item-img {
@@ -16,26 +33,34 @@
         max-width: 120px;
         max-height: 120px;
     }
-}
-.item-left {
-    width: 400px;
-    @media (max-width: 1300px) {
-        width: 350px;
-    }
-
-    @media (max-width: 720px) {
-        width: 240px;
+    @media (max-width: 500px) {
+        max-width: 110px;
+        max-height: 110px;
     }
 }
 
 .text-group {
     width: 200px;
-    @media (max-width: 1400px) {
-        width: 150px;
-    }
-
+        .item-name{
+            line-height: 120%;
+            margin-bottom: 16px;
+        }
     @media (max-width: 720px) {
-        width: 100px;
+
+        .brand {
+            font-size: 11px;
+            line-height: 100%;
+        }
+
+        .item-name {
+            font-size: 16px;
+        }
+
+        .color-right {
+            font-size: 12px;
+        }
+    }
+    @media (max-width: 500px) {
 
         .brand {
             font-size: 11px;
@@ -57,9 +82,7 @@
     @media (max-width: 1400px) {
         width: 150px;
     }
-
     @media (max-width: 720px) {
-        font-size: 16px;
         width: 80px;
         display: none;
     }
@@ -97,14 +120,21 @@
 .color-left {
     width: 30px;
     height: 30px;
-    border: 2px solid #998568;
-
+    border: 1px solid $gray-200;
     .color {
         width: 20px;
         height: 20px;
-        background-color: #998568;
+    }
+    @media (max-width: 700px) {
+        width: 15px;
+        height: 15px;
+        .color {
+            width: 11px;
+            height: 11px;
+        }
     }
 }
+
 
 .btn {
     width: 90px;
@@ -120,12 +150,10 @@
         font-size: 10px;
         align-content: top;
     }
-
     &:hover {
         border:$red-500 solid 1px;
         background-color: white;
         color:$red-500;
         transition: ease 0.3s;
     }
-
 }

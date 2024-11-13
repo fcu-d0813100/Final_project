@@ -40,7 +40,7 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                 WorkshopCartItems.push({
                     id:item.wid,
                     typeId: item.type_id,
-                    imageSrc: `/workshop/workshop_img/${item.type_id}-${item.wid}.jpg`, // 工作坊圖片路徑
+                    imageSrc: `${item.img_cover}`, // 工作坊圖片路徑
                     name: item.type, // 工作坊類型名稱
                     beginTime: item.registration_start,
                     endTime:item.registration_end,
@@ -67,7 +67,7 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
     return (
         <div className={`${styles.order} d-flex flex-column border rounded-top my-2`}>
             <Link className={`text-decoration-none ${styles.link}`} href="/user/order/detail" passHref onClick={handleClick}>
-                <div className="content ps-3 pt-3 pe-3 pb-1">
+                <div className={styles.content}>
                     <div className="header d-flex justify-content-between border-bottom pb-1 mb-2">
                         <div className="d-flex">
                             <div className={`p order-number me-5`}>訂單編號：{order_number}</div>
@@ -93,11 +93,12 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                             {item.wid && (
                                 <Workshop
                                     key={item.wid}
-                                    imageSrc={`/workshop/workshop_img/${item.type_id}-${item.wid}-c.jpg`}
+                                    imageSrc={`http://localhost:3005/workshop/${item.img_cover}`}
                                     title={item.type}
                                     instructor={item.teachers_name}
                                     dateRange={`${item.registration_start} - ${item.registration_end}`}
                                     price={new Intl.NumberFormat().format(item.workshop_price)}
+                                    quantity={item.quantity}
                                 />
                             )}
                         </div>
