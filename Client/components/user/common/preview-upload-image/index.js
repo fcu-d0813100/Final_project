@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import styles from './index.module.scss'
+
 export default function PreviewUploadImage({
   avatarImg = '',
   avatarBaseUrl = '',
@@ -25,11 +26,12 @@ export default function PreviewUploadImage({
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile])
 
-  const handleFileChang = (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0]
 
     if (file) {
       setSelectedFile(file)
+      console.log('Selected file:', file) // 調試輸出
     } else {
       setSelectedFile(null)
     }
@@ -37,14 +39,19 @@ export default function PreviewUploadImage({
 
   const showImg = () => {
     if (selectedFile) {
+      console.log('Preview URL:', preview)
       return preview
     }
 
     if (avatarImg) {
-      return avatarBaseUrl + '/' + avatarImg
+      const avatarUrl = `${avatarBaseUrl}/${avatarImg}`
+      console.log('Avatar URL:', avatarUrl)
+      return avatarUrl
     }
 
-    return avatarBaseUrl + '/' + defaultImg
+    const defaultUrl = `${avatarBaseUrl}/${defaultImg}`
+    console.log('Default URL:', defaultUrl)
+    return defaultUrl
   }
 
   return (
@@ -62,8 +69,8 @@ export default function PreviewUploadImage({
       <input
         id="file-input"
         type="file"
-        name="file"
-        onChange={handleFileChang}
+        name="avatar"
+        onChange={handleFileChange}
       />
       <button
         type="button"

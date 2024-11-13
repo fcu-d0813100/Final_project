@@ -7,9 +7,8 @@ import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
-import { updateProfileAvatar } from '@/services/user'
-import { avatarBaseUrl } from '@/configs'
-import Avatar from '@/components/user/common/preview-upload-image'
+// import { updateProfileAvatar } from '@/services/user'
+// import { avatarBaseUrl } from '@/configs'
 import PreviewUploadImage from '@/components/user/common/preview-upload-image'
 
 export default function UpdateInfo() {
@@ -39,7 +38,6 @@ export default function UpdateInfo() {
   // 多欄位共用事件函式
   const handleFieldChange = (e) => {
     let nextUser = { ...user, [e.target.name]: e.target.value }
-
     setUser(nextUser)
   }
 
@@ -66,36 +64,65 @@ export default function UpdateInfo() {
     return { newErrors, hasErrors }
   }
 
-  const handleFileChange = async (e) => {
-    // 上傳頭像用，有選擇檔案時再上傳
-    if (selectedFile) {
-      const formData = new FormData()
-      // 對照server上的檔案名稱 req.files.avatar
-      formData.append('img', selectedFile)
+  // const handleFileChange = async (e) => {
+  //   // 上傳頭像用，有選擇檔案時再上傳
+  //   if (selectedFile) {
+  //     const formData = new FormData()
+  //     // 對照server上的檔案名稱 req.files.avatar
+  //     formData.append('avatar', selectedFile)
 
-      const res2 = await updateProfileAvatar(formData)
+  //     const res2 = await updateProfileAvatar(formData)
 
-      console.log(res2.data)
-      if (res2.data.status === 'success') {
-        toast.success('會員頭像修改成功')
-      }
-    }
-  }
+  //     console.log(res2.data)
+  //     if (res2.data.status === 'success') {
+  //       toast.success('會員頭像修改成功')
+  //     }
+  //   }
+  // }
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // 檢查其他用戶資料並進行更新
     const { newErrors, hasErrors } = checkError(user)
     console.log('錯誤檢查:', newErrors, hasErrors) // 檢查錯誤狀態
     setErrors(newErrors)
     if (hasErrors) {
       return
     }
+
+    // 上傳頭像用，有選擇檔案時再上傳
+    if (selectedFile) {
+      const formData = new FormData()
+      formData.append('avatar', selectedFile)
+
+      try {
+        const res2 = await update(user, selectedFile)
+        console.log('伺服器回應:', res2) // 調試輸出
+
+        const resData = await res2.json()
+        console.log('Response data:', resData) // 調試輸出
+
+        if (resData.status === 'success') {
+          toast.success('會員頭像修改成功')
+        } else {
+          console.error('更新失敗 - 響應數據狀態錯誤:', resData.status)
+          toast.error('更新失敗，請稍後再試')
+        }
+      } catch (error) {
+        console.error('頭貼更新失敗:', error)
+        toast.error('頭貼更新失敗，請稍後再試')
+      }
+    }
+
+    // 更新用戶資料
     try {
       console.log('發送用戶資料:', user) // 確認發送的資料
       await update(user)
       console.log('更新成功')
-      router.push('/user') // 跳轉到 /user 頁面
+      // router.push('/user'); // 跳轉到 /user 頁面
     } catch (error) {
       console.error('更新失敗:', error)
+      toast.error('更新失敗，請稍後再試')
     }
   }
 
@@ -146,7 +173,7 @@ export default function UpdateInfo() {
     }
   }
 
-  const openModal = (e) => {
+  const openModal = () => {
     // e.preventDefault()
     // 阻止表單提交
     setShowModal(true)

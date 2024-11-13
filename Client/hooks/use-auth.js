@@ -361,45 +361,103 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // 更新資料
-  const update = async (user) => {
-    // 向伺服器作fetch
-    const res = await fetch('http://localhost:3005/api/user', {
-      credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'PUT', //更新時用PUT
-      body: JSON.stringify(user),
-    })
+  // // 更新資料
+  // const update = async (user) => {
+  //   // 向伺服器作fetch
+  //   const res = await fetch('http://localhost:3005/api/user', {
+  //     credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     method: 'PUT', //更新時用PUT
+  //     body: JSON.stringify(user),
+  //   })
 
-    const resData = await res.json()
-    if (resData.status === 'success') {
-      toast.success('您已更新個人資料', {
-        style: {
-          border: '1.2px solid #90957a',
-          padding: '12px 40px',
-          color: '#626553',
-        },
-        iconTheme: {
-          primary: '#626553',
-          secondary: '#fff',
-        },
+  //   const resData = await res.json()
+  //   if (resData.status === 'success') {
+  //     toast.success('您已更新個人資料', {
+  //       style: {
+  //         border: '1.2px solid #90957a',
+  //         padding: '12px 40px',
+  //         color: '#626553',
+  //       },
+  //       iconTheme: {
+  //         primary: '#626553',
+  //         secondary: '#fff',
+  //       },
+  //     })
+  //     router.push('/user')
+  //   } else {
+  //     toast.error('更新失敗，請稍後再試', {
+  //       style: {
+  //         border: '1.2px solid #90957a',
+  //         padding: '12px 40px',
+  //         color: '#963827',
+  //       },
+  //       iconTheme: {
+  //         primary: '#963827',
+  //         secondary: '#fff',
+  //       },
+  //     })
+  //   }
+  // }
+
+  const update = async (user, selectedFile) => {
+    // 建立一個 FormData 對象
+    const formData = new FormData()
+
+    // 添加使用者的其他資料到 FormData
+    formData.append('name', user.name)
+    formData.append('email', user.email)
+    formData.append('nickname', user.nickname)
+    formData.append('gender', user.gender)
+    formData.append('phone', user.phone)
+    formData.append('address', user.address)
+    formData.append('birthday', user.birthday)
+
+    // 如果有選擇新的頭貼，添加到 FormData
+    if (selectedFile) {
+      formData.append('avatar', selectedFile) // 頭貼的欄位名稱為 'avatar'
+    }
+
+    try {
+      const res = await fetch('http://localhost:3005/api/user', {
+        credentials: 'include', // 設定cookie必要設定，如果有需要授權或認證一定要加
+        method: 'PUT', // 更新時用PUT
+        body: formData, // 使用 FormData 作為 body
       })
-      router.push('/user')
-    } else {
-      toast.error('更新失敗，請稍後再試', {
-        style: {
-          border: '1.2px solid #90957a',
-          padding: '12px 40px',
-          color: '#963827',
-        },
-        iconTheme: {
-          primary: '#963827',
-          secondary: '#fff',
-        },
-      })
+
+      const resData = await res.json()
+      if (resData.status === 'success') {
+        toast.success('您已更新個人資料', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        // router.push('/user')
+      } else {
+        toast.error('更新失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      console.error('更新失敗:', error)
+      toast.error('更新失敗，請稍後再試')
     }
   }
 
