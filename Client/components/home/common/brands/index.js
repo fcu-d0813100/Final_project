@@ -11,11 +11,11 @@ export default function Brands() {
                     <div className={`h5 p-3 ${styles["sub-title"]}`}>精選品牌｜從經典到新潮，盡在掌握</div>
                 </div>
                 <div className={`${styles['img-group']} d-flex flex-wrap justify-content-center`}>
-                    <Link className={styles.bb} href="/product/home" passHref></Link>
-                    <Link className={styles.estee} href="/product/home" passHref></Link>
-                    <Link className={styles.lancome} href="/product/home" passHref></Link>
-                    <Link className={styles.nars} href="/product/home" passHref></Link>
-                    <Link className={styles.ysl} href="/product/home" passHref></Link>
+                    <Link className={styles.bb} href="/product/product-list?brand=Bobbi%20Brown" passHref></Link>
+                    <Link className={styles.estee} href="/product/product-list?brand=Estee%20Lauder" passHref></Link>
+                    <Link className={styles.lancome} href="/product/product-list?brand=LANCOME" passHref></Link>
+                    <Link className={styles.nars} href="/product/product-list?brand=NARS" passHref></Link>
+                    <Link className={styles.ysl} href="/product/product-list?brand=YSL" passHref></Link>
                 </div>
             </div>
 
