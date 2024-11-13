@@ -11,8 +11,10 @@
   @media (max-width: 1440px) {
     padding: 20px 50px;
   }
-  @media (max-width: 390px) {
+  @media screen and (max-width: 576px) {
     padding: 0;
+  }
+  @media (max-width: 390px) {
     gap: 20px;
   }
   .post-read {
