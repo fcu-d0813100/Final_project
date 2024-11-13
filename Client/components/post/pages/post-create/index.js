@@ -124,8 +124,8 @@ export default function PostCreate(props) {
   const submitHandle = async (e) => {
     e.preventDefault()
     // Verify form
-    if (titleLength > 20) {
-      showAlert('標題超過20')
+    if (titleLength > 30) {
+      showAlert('標題超過30')
       return
     }
     if (contentLength > 1000) {
@@ -234,7 +234,7 @@ export default function PostCreate(props) {
                 <div
                   className={`${styles['info-title']} ${
                     styles[TitleFocus ? 'focused' : '']
-                  }  ${styles[titleLength > 20 ? 'over-limit' : '']}`}
+                  }  ${styles[titleLength > 30 ? 'over-limit' : '']}`}
                   onFocus={() => setTitleFocus(true)}
                   onBlur={() => setTitleFocus(false)}
                 >
@@ -246,7 +246,7 @@ export default function PostCreate(props) {
                     onChange={titleHandle}
                   />
                   <div className={styles['count-tip']}>
-                    {titleLength == 0 ? 0 : titleLength}/20
+                    {titleLength == 0 ? 0 : titleLength}/30
                   </div>
                 </div>
                 <div>

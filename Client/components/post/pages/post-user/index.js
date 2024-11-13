@@ -80,16 +80,14 @@ export default function PostUser(props) {
   const itemsPerPage = 2 // 每頁顯示的項目數量
 
   const renderPublishCard = (post) => {
-    const imgSrc = post.post_img.startsWith('post')
-      ? `http://localhost:3005/upload/${post.post_img}` // 後端圖片路徑
-      : `/post/${post.post_img}` // 前端靜態圖片路徑
+    const imgSrc = `http://localhost:3005/post/${post.post_img}`
 
     return (
       <PublishCard
         key={post.id}
         postId={post.id}
         userId={userId}
-        imageSrc={imgSrc}
+        imageSrc={`http://localhost:3005/post/${post.post_img}`}
         title={post.title}
         content={post.content}
         createTime={post.created_at}
@@ -148,9 +146,8 @@ export default function PostUser(props) {
                     columnClassName={styles['my-masonry-grid_column']}
                   >
                     {wallCard.map((post) => {
-                      const imgSrc = post.post_img.startsWith('post')
-                        ? `http://localhost:3005/upload/${post.post_img}`
-                        : `/post/${post.post_img}`
+                      const imgSrc = `http://localhost:3005/post/${post.post_img}`
+
                       return (
                         <WallCard
                           key={post.id}

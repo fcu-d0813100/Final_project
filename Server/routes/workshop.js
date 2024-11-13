@@ -2,10 +2,11 @@ import express from 'express'
 import db from '#configs/db.js'
 import multer from 'multer'
 import authenticate from '#middlewares/authenticate.js'
-import fs, { rename } from 'fs/promises'
+import fs, { rename, rm } from 'fs/promises'
 import path, { resolve, extname, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import SQL from 'sqlstring'
+
 const router = express.Router()
 
 const __filename = fileURLToPath(import.meta.url)
@@ -32,6 +33,7 @@ router.get('/', async function (req, res, next) {
     workshop.name,
     workshop.price,
     workshop.type_id,
+    workshop.img_cover,
     teachers.id AS teacher_id,
     teachers.name AS teacher_name,
     GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
@@ -85,7 +87,7 @@ router.get('/', async function (req, res, next) {
 })
 router.get('/myWorkshop', authenticate, async function (req, res, next) {
   const id = req.user.id
-  const { search = '', order, min = '', max = '' } = req.query
+  const { search = '', order } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -115,11 +117,6 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
      AND teachers.id = ${id}
 `
 
-  // 若 min 和 max 存在，則加入日期範圍篩選條件
-  if (min && max) {
-    sqlSelect += ` AND workshop_time.date BETWEEN ? AND ?`
-  }
-
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
 
   // 根據 order 值決定排序條件
@@ -133,9 +130,6 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
 
   // 設置查詢參數
   const queryParams = [`%${search}%`, `%${search}%`, `%${search}%`]
-  if (min && max) {
-    queryParams.push(min, max) // 添加 min 和 max 到查詢參數
-  }
 
   const result = await db
     .query(sqlSelect, queryParams)
@@ -394,5 +388,172 @@ router.post(
     }
   }
 )
+//------------------------------------------------------------------------------------------
+// 發佈課程
+router.put('/myWorkshop/isUpload1', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateWorkshop = req.body
+  try {
+    const sql = SQL.format(
+      'UPDATE `workshop` SET `isUpload` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+      [1, updateWorkshop.id, id]
+    )
+
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+// 取消發佈（未發布狀態）
+router.put('/myWorkshop/isUpload0', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateWorkshop = req.body
+  try {
+    const sql = SQL.format(
+      'UPDATE `workshop` SET `isUpload` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+      [0, updateWorkshop.id, id]
+    )
+
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+// 軟刪除（丟垃圾桶）
+router.put('/myWorkshop/valid0', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateWorkshop = req.body
+  try {
+    const sql = SQL.format(
+      'UPDATE `workshop` SET `valid` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+      [0, updateWorkshop.id, id]
+    )
+
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+// 復原
+router.put('/myWorkshop/valid1', authenticate, async function (req, res) {
+  const id = req.user.id
+  const updateWorkshop = req.body
+  try {
+    const sql = SQL.format(
+      'UPDATE `workshop` SET `valid` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+      [1, updateWorkshop.id, id]
+    )
+
+    const [result] = await db.query(sql)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '更新到資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+// 真刪除（資料庫刪除）
+router.delete('/myWorkshop/delete', authenticate, async function (req, res) {
+  const id = req.user.id
+  const deleteWorkshop = req.body
+  console.log(deleteWorkshop)
+  try {
+    // 查詢要刪除的 workshop 的所有圖片欄位
+    const [workshopData] = await db.query(
+      SQL.format(
+        'SELECT img_cover, img_lg, img_sm01, img_sm02 FROM workshop WHERE id = ? AND teachers_id = ?',
+        [deleteWorkshop.id, id]
+      )
+    )
+
+    if (workshopData.length > 0) {
+      const imgFields = ['img_cover', 'img_lg', 'img_sm01', 'img_sm02']
+      const folderPath = path.join(__dirname, '..', 'public', 'workshop') // 加上 .. 來退回上一層資料夾
+
+      for (const field of imgFields) {
+        const imgFile = workshopData[0][field]
+        if (imgFile) {
+          const imgPath = path.join(folderPath, imgFile)
+          console.log('要刪除的圖片路徑:', imgPath)
+          try {
+            // 嘗試刪除符合的檔案
+            await fs.rm(imgPath, { force: true }) // `force: true` 忽略不存在的檔案
+            console.log(`圖片已刪除: ${imgFile}`)
+          } catch (err) {
+            console.log(`圖片不存在或無法刪除: ${imgFile}`)
+          }
+        }
+      }
+    }
+
+    const workshopDelete = SQL.format(
+      'DELETE FROM workshop WHERE `id` = ? AND `teachers_id`=?',
+      [deleteWorkshop.id, id]
+    )
+    const timesDelete = SQL.format(
+      'DELETE FROM workshop_time WHERE `workshop_id` = ?',
+      [deleteWorkshop.id]
+    )
+
+    // 先刪除 workshop_time，再刪除 workshop
+    await db.query(timesDelete)
+    const [result] = await db.query(workshopDelete)
+
+    //console.log(result)
+
+    // 檢查是否有受影響的行數
+    if (result.affectedRows) {
+      return res.json({ status: 'success', data: null })
+    } else {
+      return res.json({ status: 'error', message: '刪除資料庫失敗' })
+    }
+  } catch (error) {
+    console.error('資料庫查詢錯誤:', error.message)
+    return res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+  }
+})
+
+//------------------------------------------------------------------------------------------
 
 export default router
