@@ -1,9 +1,9 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';  // 使用 swiper 7 的 Swiper 和 SwiperSlide
 import 'swiper/css';  // 引入 swiper 7 的基本樣式
-
 import { Autoplay } from 'swiper';  // 引入 Autoplay 模塊
 import BestSellerCart from '@/components/home/common/best-seller-common'; // 引入 BestSellerCart 組件
+import styles from './index.module.scss'; // 確保引入正確的樣式
 
 const Index = () => {
   const slides = [
@@ -12,50 +12,42 @@ const Index = () => {
       bgc: "#90957a",
       bgimg: "NarsHome.svg",
       mainimage1: "NARS_LS01_M_135.webp",
-      brand1: "NARS",
-      product_name1: "特霧絲柔持色唇膏",
+      brand: "NARS",
+      product_name: "特霧絲柔持色唇膏",
       mainimage2: "NARS_LS01_M_101.webp",
-      brand2: "NARS",
-      product_name2: "特霧絲柔持色唇膏"
     },
     {
       title: "上妝輕盈無妝　感持妝無負擔",
       bgc: "#EFE6DD",
       bgimg: "EsteeLauderHome.svg",
       mainimage1: "ESTEE_LF01_M_1C0.webp",
-      brand1: "Estee Lauder",
-      product_name1: "粉持久完美持妝粉底 ",
+      brand: "Estee Lauder",
+      product_name: "粉持久完美持妝粉底 ",
       mainimage2: "ESTEE_LF01_M_2W2.webp",
-      brand2: "Estee Lauder",
-      product_name2: "粉持久完美持妝粉底 "
     },
     {
       title: "復古烈火紅｜內斂高級 誘惑撩撥",
       bgc: "#652303",
       bgimg: "yslHome.svg",
       mainimage1: "YSL_LS04_M_38.webp",
-      brand1: "YSL",
-      product_name1: "奢華緞面絲絨唇膏",
+      brand: "YSL",
+      product_name: "奢華緞面絲絨唇膏",
       mainimage2: "YSL_LS04_M_36.webp",
-      brand2: "YSL",
-      product_name2: "奢華緞面絲絨唇膏"
     },
     {
       title: "絲滑舒適　滋潤卻不黏膩",
       bgc: "#FEF3EE",
       bgimg: "bbHome.svg",
       mainimage1: "BOBBI_LG01_M_760.webp",
-      brand1: "Bobbi Brown",
-      product_name1: "晶鑽桂馥修護潤唇精華 ",
+      brand: "Bobbi Brown",
+      product_name: "晶鑽桂馥修護潤唇精華 ",
       mainimage2: "BOBBI_LG01_M_755.webp",
-      brand2: "Bobbi Brown",
-      product_name2: "晶鑽桂馥修護潤唇精華 "
     }
     // 可以根據需要添加其他幻燈片
   ];
 
   return (
-    <Swiper
+    <Swiper className={styles.bsSlide}
       modules={[Autoplay]}  // 使用 Autoplay 模塊
       spaceBetween={0}  // 幻燈片之間的距離
       slidesPerView={1}  // 每次顯示一個幻燈片
@@ -74,11 +66,9 @@ const Index = () => {
             bgc={slide.bgc}
             bgimg={slide.bgimg}
             mainimage1={slide.mainimage1}
-            brand1={slide.brand1}
-            product_name1={slide.product_name1}
+            brand={slide.brand}
+            product_name={slide.product_name}
             mainimage2={slide.mainimage2}
-            brand2={slide.brand2}
-            product_name2={slide.product_name2}
           />
         </SwiperSlide>
       ))}
