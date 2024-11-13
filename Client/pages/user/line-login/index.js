@@ -19,7 +19,7 @@ export default function LineLogin() {
     if (!auth.isAuth) return
 
     const line_uid = auth.userData.line_uid
-    console.log('傳遞的 line_uid:', line_uid) // 日誌輸出 line_uid
+    console.log('傳遞的 line_uid:', line_uid)
 
     const res = await lineLogout(line_uid)
 
