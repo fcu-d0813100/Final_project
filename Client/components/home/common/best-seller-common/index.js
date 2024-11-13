@@ -10,12 +10,10 @@ const index = ({
   bgc = "",
   bgimg = "",
   mainimage1 = "",
-  brand1 = "",
-  product_name1 = "",
+  brand = "",
+  product_name = "",
   mainimage2 = "",
-  brand2 = "",
-  product_name2 = "",
-
+ 
 }) => {
   return (
     <>
@@ -44,11 +42,11 @@ const index = ({
                   height={315}
                 />
                 <div className='text-center '>
-                  <div className={`${styles.brand} h4 mb-1`}>{brand1}</div>
+                  <div className={`${styles.brand} h4 mb-1`}>{brand}</div>
 
-                  <div className={`${styles.productName} h5`}>{product_name1}</div>
+                  <div className={`${styles.productName} h5`}>{product_name}</div>
                 </div>
-                <Link className='text-decoration-none' href={'/product/product-list'}>
+                <Link className='text-decoration-none' href={`/product/product-list?brand=${brand}`}>
                   <div className={`btn btn-danger align-content-center ${styles.preadBtn}`}>查看商品</div>
                 </Link>
               </div>
@@ -62,11 +60,11 @@ const index = ({
                   
                 />
                 <div className='text-center '>
-                  <div className={`${styles.brand} h4 mb-1`}>{brand2}</div>
+                  <div className={`${styles.brand} h4 mb-1`}>{brand}</div>
 
-                  <div className={`${styles.productName} h5`}>{product_name2}</div>
+                  <div className={`${styles.productName} h5`}>{product_name}</div>
                 </div>
-                <Link className='text-decoration-none' href={'/product/product-list'}>
+                <Link className='text-decoration-none' href={`/product/product-list?brand=${brand}`}>
                   <div className={`btn btn-danger align-content-center ${styles.preadBtn}`}>查看商品</div>
                 </Link>
               </div>
@@ -74,7 +72,7 @@ const index = ({
           </div>
 
         </div>
-        <Link className='text-decoration-none' href={'/product/product-list'}>
+        <Link className='text-decoration-none' href={`/product/product-list?brand=${brand}`}>
           <div className={`btn btn-danger align-content-center ${styles.readBtn}`}>查看商品</div>
         </Link>
       </div>
