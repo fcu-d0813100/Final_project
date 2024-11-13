@@ -22,6 +22,11 @@ export default function UserInfo() {
     fetchUserData()
   }, [])
 
+  // 構建頭像URL
+  const avatarUrl = userData.img
+    ? `http://localhost:3005/avatar/${userData.img}`
+    : 'http://localhost:3005/avatar/avatar01.jpg'
+
   if (!auth.isAuth) return <></>
 
   return (
@@ -99,7 +104,7 @@ export default function UserInfo() {
               width={255}
               height={255}
               className={styles.img}
-              src={`/user/img/${userData.img}`}
+              src={avatarUrl}
               alt=""
             />
           </div>
