@@ -58,6 +58,7 @@ export default function CartList() {
     onIncreaseWorkshop = () => {},
     onDecreaseWorkshop = () => {},
     onRemoveWorkshop = () => {},
+    onClearWorkshop = () => {},
   } = useCartWorkshop()
   //課程打95折價格
   const discountedWTotalPrice = Math.floor(wTotalPrice * 0.95)

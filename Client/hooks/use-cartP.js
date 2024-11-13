@@ -105,11 +105,20 @@ export function ProductCartProvider({ children }) {
 
   // 處理刪除
   const onRemoveProduct = (productId, color) => {
-    setProductItems(
-      productItems.filter(
-        (v) => v.product_id !== productId || v.color !== color
-      )
+    const updatedProductItems = productItems.filter(
+      (v) => v.product_id !== productId || v.color !== color
     )
+    setProductItems(updatedProductItems)
+
+    // 檢查如果 productItems 為空，則刷新頁面
+    if (updatedProductItems.length === 0) {
+      window.location.reload() // 刷新頁面
+    }
+  }
+
+  // 處理清空購物車
+  const onClearProduct = () => {
+    setProductItems([])
   }
 
   // 計算總數量與總金額
@@ -119,6 +128,7 @@ export function ProductCartProvider({ children }) {
     (acc, v) => acc + v.qty * v.originalprice,
     0
   )
+  const pCartItems = productItems.length
 
   // 初次渲染localStorage中讀取資料，設定到items狀態中
   useEffect(() => {
@@ -155,6 +165,8 @@ export function ProductCartProvider({ children }) {
         onRemoveProduct,
         onAddProductMany,
         onSelectCoupon, // 更新優惠券
+        onClearProduct, // 清空商品購物車
+        pCartItems,
       }}
     >
       {children}

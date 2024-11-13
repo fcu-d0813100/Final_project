@@ -12,21 +12,19 @@ import {
   Dropdown,
   Offcanvas,
 } from 'react-bootstrap'
-import Headroom from 'react-headroom'  // 引入 Headroom
+import Headroom from 'react-headroom' // 引入 Headroom
 import styles from './index.module.scss'
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/use-auth'
 
-function TopBar() {
+function TopBar({ cartitems }) {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
-  const { auth } = useAuth();  // 使用 useAuth 來獲取用戶資料
+  const { auth } = useAuth() // 使用 useAuth 來獲取用戶資料
 
   const handleClose = () => setShowOffcanvas(false)
   const handleShow = () => setShowOffcanvas(true)
 
-
-
   // 根據 user 是否存在來決定跳轉的鏈接
-  const userLink = auth ? '/user' : '/user/login/user';
+  const userLink = auth ? '/user' : '/user/login/user'
 
   return (
     <>
@@ -56,17 +54,21 @@ function TopBar() {
 
               {/* 右邊 會員中心和購物車 */}
               <Col xs={4} className={`text-end ${styles['header-icons']}`}>
-                <Link href={userLink}>
+                <Link href="/user">
                   <PiUser size={22} className="me-3" />
                 </Link>
                 <Link href="/cart">
-                  <PiHandbagSimple size={22} />
+                  <span className={styles['cart-icon']}>
+                    <PiHandbagSimple size={22} />
+                    {cartitems > 0 && (
+                      <span className={styles['cart-number']}>{cartitems}</span>
+                    )}
+                  </span>
                 </Link>
               </Col>
             </Row>
           </Container>
         </header>
-
 
         {/* Navbar，適用於不同螢幕尺寸的折疊和側邊欄 */}
         <Navbar expand="lg" className={styles['nav']}>
@@ -91,11 +93,21 @@ function TopBar() {
                 id="brand-nav-dropdown"
                 className={styles['li']}
               >
-                <Dropdown.Item href="/product/product-list?brand=Bobbi%20Brown">Bobbi Brown</Dropdown.Item>
-                <Dropdown.Item href="/product/product-list?brand=Estee%20Lauder">Estee Lauder</Dropdown.Item>
-                <Dropdown.Item href="/product/product-list?brand=LANCOME">Lancome</Dropdown.Item>
-                <Dropdown.Item href="/product/product-list?brand=NARS">NARS</Dropdown.Item>
-                <Dropdown.Item href="/product/product-list?brand=YSL">YSL</Dropdown.Item>
+                <Dropdown.Item href="/product/product-list?brand=Bobbi%20Brown">
+                  Bobbi Brown
+                </Dropdown.Item>
+                <Dropdown.Item href="/product/product-list?brand=Estee%20Lauder">
+                  Estee Lauder
+                </Dropdown.Item>
+                <Dropdown.Item href="/product/product-list?brand=LANCOME">
+                  Lancome
+                </Dropdown.Item>
+                <Dropdown.Item href="/product/product-list?brand=NARS">
+                  NARS
+                </Dropdown.Item>
+                <Dropdown.Item href="/product/product-list?brand=YSL">
+                  YSL
+                </Dropdown.Item>
               </NavDropdown>
               <NavDropdown
                 title="彩妝"
@@ -105,23 +117,39 @@ function TopBar() {
                 <div className={styles['dropdown-content-wrapper']}>
                   <div className={styles['dropdown-section']}>
                     <Dropdown.Header>臉部妝容</Dropdown.Header>
-                    <Dropdown.Item href="/product/product-list?main_category=1&sub_category=1">粉底</Dropdown.Item>
-                    <Dropdown.Item href="/product/product-list?main_category=1&sub_category=2">遮瑕</Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=1&sub_category=1">
+                      粉底
+                    </Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=1&sub_category=2">
+                      遮瑕
+                    </Dropdown.Item>
                   </div>
                   <div className={styles['dropdown-section']}>
                     <Dropdown.Header>雙頰妝容</Dropdown.Header>
-                    <Dropdown.Item href="/product/product-list?main_category=2&sub_category=3">腮紅</Dropdown.Item>
-                    <Dropdown.Item href="/product/product-list?main_category=2&sub_category=4">修容</Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=2&sub_category=3">
+                      腮紅
+                    </Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=2&sub_category=4">
+                      修容
+                    </Dropdown.Item>
                   </div>
                   <div className={styles['dropdown-section']}>
                     <Dropdown.Header>眼部妝容</Dropdown.Header>
-                    <Dropdown.Item href="/product/product-list?main_category=3&sub_category=5">眼影</Dropdown.Item>
-                    <Dropdown.Item href="/product/product-list?main_category=3&sub_category=6">眼線筆</Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=3&sub_category=5">
+                      眼影
+                    </Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=3&sub_category=6">
+                      眼線筆
+                    </Dropdown.Item>
                   </div>
                   <div className={styles['dropdown-section']}>
                     <Dropdown.Header>唇部彩妝</Dropdown.Header>
-                    <Dropdown.Item href="/product/product-list?main_category=4&sub_category=9">唇膏</Dropdown.Item>
-                    <Dropdown.Item href="/product/product-list?main_category=4&sub_category=10">唇彩</Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=4&sub_category=9">
+                      唇膏
+                    </Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=4&sub_category=10">
+                      唇彩
+                    </Dropdown.Item>
                   </div>
                 </div>
               </NavDropdown>
@@ -155,7 +183,10 @@ function TopBar() {
             placement="start"
             className={styles['offcanvas']}
           >
-            <Offcanvas.Header closeButton className={styles['offcanvas-header']}>
+            <Offcanvas.Header
+              closeButton
+              className={styles['offcanvas-header']}
+            >
               <Offcanvas.Title>選單</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
@@ -174,9 +205,15 @@ function TopBar() {
                   <NavDropdown.Item href="/product/product-list?brand=Estee%20Lauder">
                     Estee Lauder
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="/product/product-list?brand=LANCOME">Lancome</NavDropdown.Item>
-                  <NavDropdown.Item href="/product/product-list?brand=NARS">NARS</NavDropdown.Item>
-                  <NavDropdown.Item href="/product/product-list?brand=YSL">YSL</NavDropdown.Item>
+                  <NavDropdown.Item href="/product/product-list?brand=LANCOME">
+                    Lancome
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/product/product-list?brand=NARS">
+                    NARS
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/product/product-list?brand=YSL">
+                    YSL
+                  </NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown
                   title="彩妝"
@@ -186,23 +223,39 @@ function TopBar() {
                   <div className={styles['dropdown-content-wrapper']}>
                     <div className={styles['dropdown-section']}>
                       <Dropdown.Header>臉部妝容</Dropdown.Header>
-                      <Dropdown.Item href="/product/product-list?main_category=1&sub_category=1">粉底</Dropdown.Item>
-                      <Dropdown.Item href="/product/product-list?main_category=1&sub_category=2">遮瑕</Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=1&sub_category=1">
+                        粉底
+                      </Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=1&sub_category=2">
+                        遮瑕
+                      </Dropdown.Item>
                     </div>
                     <div className={styles['dropdown-section']}>
                       <Dropdown.Header>雙頰妝容</Dropdown.Header>
-                      <Dropdown.Item href="/product/product-list?main_category=2&sub_category=3">腮紅</Dropdown.Item>
-                      <Dropdown.Item href="/product/product-list?main_category=2&sub_category=4">修容</Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=2&sub_category=3">
+                        腮紅
+                      </Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=2&sub_category=4">
+                        修容
+                      </Dropdown.Item>
                     </div>
                     <div className={styles['dropdown-section']}>
                       <Dropdown.Header>眼部妝容</Dropdown.Header>
-                      <Dropdown.Item href="/product/product-list?main_category=3&sub_category=5">眼影</Dropdown.Item>
-                      <Dropdown.Item href="/product/product-list?main_category=3&sub_category=6">眼線筆</Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=3&sub_category=5">
+                        眼影
+                      </Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=3&sub_category=6">
+                        眼線筆
+                      </Dropdown.Item>
                     </div>
                     <div className={styles['dropdown-section']}>
                       <Dropdown.Header>唇部彩妝</Dropdown.Header>
-                      <Dropdown.Item href="/product/product-list?main_category=4&sub_category=9">唇膏</Dropdown.Item>
-                      <Dropdown.Item href="/product/product-list?main_category=4&sub_category=10">唇彩</Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=4&sub_category=9">
+                        唇膏
+                      </Dropdown.Item>
+                      <Dropdown.Item href="/product/product-list?main_category=4&sub_category=10">
+                        唇彩
+                      </Dropdown.Item>
                     </div>
                   </div>
                 </NavDropdown>
