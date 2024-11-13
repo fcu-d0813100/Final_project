@@ -90,55 +90,34 @@ router.post('/create-review/:productId/:colorId', upload, async function (req, r
   }
 });
 
-// 商品列表
-router.get('/product-list', async function (req, res, next) {
-  const main_category_id = parseInt(req.query.main_category_id, 10)
-  console.log('Received main_category_id:', main_category_id) // 打印 main_category_id 確認接收成功
+
+
+router.get('/product-list', async function (req, res) {
+  const main_category_id = parseInt(req.query.main_category_id, 10) || null;
+  const sub_category_id = parseInt(req.query.sub_category_id, 10) || null;
+  const minPrice = parseFloat(req.query.minPrice) || 0;
+  const maxPrice = parseFloat(req.query.maxPrice) || 9999999;
+  const brand = req.query.brand || null;
+  const isNewArrivals = req.query.isNewArrivals === 'true';
+  const isDiscounted = req.query.isDiscounted === 'true';
+
+  console.log('Received query params:', {
+    main_category_id,
+    sub_category_id,
+    minPrice,
+    maxPrice,
+    brand,
+    isNewArrivals,
+    isDiscounted
+  });
 
   // 基本 SQL 查詢語句
   let sqlSelect = `
-   SELECT DISTINCT
-    p.id AS product_id,
-    p.product_name,
-    p.originalprice,
-    p.price,
-    p.usages,
-    b.name AS brand,
-    mc.name AS main_category,
-    sc.name AS sub_category,
-    c.id AS color_id,
-    c.color_name,
-    c.color,
-    c.mainimage,
-    c.stock
-FROM 
-    product_list p
-JOIN 
-    brand b ON p.brand_id = b.id
-JOIN 
-    main_category mc ON p.main_category_id = mc.id
-JOIN 
-    sub_category sc ON p.sub_category_id = sc.id
-JOIN 
-    color c ON p.id = c.product_id;
-  `
-
-  const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
-  res.json(result)
-})
-
-// 新品上市篩選路由
-router.get('/product-list/new-arrivals', async function (req, res, next) {
-  console.log('Fetching New Arrivals') // 確認請求被觸發
-
-  // SQL 查詢語句，從 product_new 表篩選新品上市產品
-  const sqlSelect = `
-    SELECT 
+    SELECT DISTINCT
       p.id AS product_id,
       p.product_name,
       p.originalprice,
-      p.price,
-      p.usages,
+      ${isDiscounted ? '(p.price * 0.85)' : 'p.price'} AS price,
       b.name AS brand,
       mc.name AS main_category,
       sc.name AS sub_category,
@@ -148,30 +127,94 @@ router.get('/product-list/new-arrivals', async function (req, res, next) {
       c.mainimage,
       c.stock
     FROM 
-      product_new pn
-    JOIN 
-      color c ON pn.color_id = c.id
-    JOIN 
-      product_list p ON c.product_id = p.id
+      product_list p
     JOIN 
       brand b ON p.brand_id = b.id
     JOIN 
       main_category mc ON p.main_category_id = mc.id
     JOIN 
-      sub_category sc ON p.sub_category_id = sc.id;
-  `
+      sub_category sc ON p.sub_category_id = sc.id
+    JOIN 
+      color c ON p.id = c.product_id
+  `;
+
+  // 動態添加篩選條件
+  if (isNewArrivals) {
+    sqlSelect += ` JOIN product_new pn ON c.id = pn.color_id`;
+  }
+
+  sqlSelect += ` WHERE p.price >= ${minPrice} AND p.price <= ${maxPrice}`;
+
+  if (main_category_id) {
+    sqlSelect += ` AND p.main_category_id = ${main_category_id}`;
+  }
+  if (sub_category_id) {
+    sqlSelect += ` AND p.sub_category_id = ${sub_category_id}`;
+  }
+  if (brand) {
+    sqlSelect += ` AND b.name = '${brand}'`;
+  }
+  if (isDiscounted) {
+    sqlSelect += ` AND b.name = 'NARS'`;
+  }
+
+  sqlSelect += ` GROUP BY c.id;`;
 
   try {
-    const [result] = await db.query(sqlSelect)
-    console.log('Query Result:', result) // 打印查詢結果
-    res.json(result)
-  } catch (e) {
-    console.error('Database Query Error:', e)
-    res.status(500).json({ error: '資料查詢錯誤' })
+    const [result] = await db.query(sqlSelect);
+    console.log('Query Result:', result);
+    res.json(result);
+  } catch (error) {
+    console.error('Database Query Error:', error);
+    res.status(500).json({ error: '資料查詢錯誤' });
   }
-})
+});
 
+// // 新品上市篩選路由
+// router.get('/product-list/new-arrivals', async function (req, res, next) {
+//   console.log('Fetching New Arrivals') // 確認請求被觸發
 
+//   // SQL 查詢語句，從 product_new 表篩選新品上市產品
+//   const sqlSelect = `
+//     SELECT DISTINCT
+//       p.id AS product_id,
+//       p.product_name,
+//       p.originalprice,
+//       p.price,
+//       p.usages,
+//       b.name AS brand,
+//       mc.name AS main_category,
+//       sc.name AS sub_category,
+//       c.id AS color_id,
+//       c.color_name,
+//       c.color,
+//       c.mainimage,
+//       c.stock
+//     FROM 
+//       product_new pn
+//     JOIN 
+//       color c ON pn.color_id = c.id
+//     JOIN 
+//       product_list p ON c.product_id = p.id
+//     JOIN 
+//       brand b ON p.brand_id = b.id
+//     JOIN 
+//       main_category mc ON p.main_category_id = mc.id
+//     JOIN 
+//       sub_category sc ON p.sub_category_id = sc.id;
+//   `
+
+//   try {
+//     const [result] = await db.query(sqlSelect)
+//     console.log('Query Result:', result) // 打印查詢結果
+//     res.json(result)
+//   } catch (e) {
+//     console.error('Database Query Error:', e)
+//     res.status(500).json({ error: '資料查詢錯誤' })
+//   }
+// })
+
+// 詳細頁路由
 router.get('/product-list/:cid', async function (req, res) {
   const colorId = parseInt(req.params.cid, 10)
 
@@ -243,6 +286,7 @@ router.get('/product-list/:cid', async function (req, res) {
   }
 })
 
+// // 單一篩選版本------------------------------------------------------------------------------------------------------
 // 動態路由，使用 :main_category_id 作為參數，直接篩選 main_category_id
 router.get(
   '/product-list/category/:main_category_id',
@@ -588,6 +632,8 @@ router.post('/product-list/update-stock/:color_id', async function (req, res) {
     res.status(500).json({ error: '資料庫更新錯誤' });
   }
 });
+// 單一篩選版本-------------------------------------------------------------------------------------------
+
 
 // 評論路由
 router.get('/product-list/reviews/:product_id', async (req, res) => {
@@ -670,7 +716,90 @@ router.get('/product-list/reviews/:product_id', async (req, res) => {
   }
 });
 
+// 收藏商品
+router.post('/favorite/:color_id/:user_id', async (req, res) => {
+  const { color_id, user_id } = req.params;
 
+  if (!color_id || !user_id) {
+    return res.status(400).json({ message: '缺少必要的參數' });
+  }
+
+  try {
+    // 檢查是否已經收藏過此商品
+    const [existingFavorite] = await db.query(
+      `SELECT * FROM product_like WHERE color_id = ${req.params.color_id} AND user_id = ${req.params.user_id}`,
+      [color_id, user_id]
+    );
+
+    if (existingFavorite.length > 0) {
+      return res.status(409).json({ message: '商品已收藏' });
+    }
+
+    // 插入收藏紀錄
+    await db.query(
+    `INSERT INTO product_like (color_id, user_id, created_at) VALUES (${req.params.color_id}, ${req.params.user_id}, NOW())`,
+      [color_id, user_id]
+    );
+
+    res.status(201).json({ message: '已收藏商品' });
+  } catch (error) {
+    console.error('收藏商品錯誤:', error);
+    res.status(500).json({ message: '收藏商品失敗' });
+  }
+});
+
+// 取消收藏
+router.delete('/favorite/:color_id/:user_id', async (req, res) => {
+  const { color_id, user_id } = req.params;
+
+  if (!color_id || !user_id) {
+    return res.status(400).json({ message: '缺少必要的參數' });
+  }
+
+  try {
+    // 刪除收藏紀錄
+    const [result] = await db.query(
+      `DELETE FROM product_like WHERE color_id = ${req.params.color_id} AND user_id =  ${req.params.user_id}`,
+      [color_id, user_id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: '收藏紀錄不存在' });
+    }
+
+    res.status(200).json({ message: '已取消收藏' });
+  } catch (error) {
+    console.error('取消收藏商品錯誤:', error);
+    res.status(500).json({ message: '取消收藏失敗' });
+  }
+});
+
+
+// 查詢指定使用者的收藏清單
+router.get('/favorite/search/:user_id', async (req, res) => {
+  const { user_id } = req.params;
+
+  if (!user_id) {
+    return res.status(400).json({ message: '缺少必要的參數 user_id' });
+  }
+
+  try {
+    // 查詢指定使用者的收藏商品
+    const [favorites] = await db.query(
+      `SELECT pl.*, c.*, p.*
+       FROM product_like pl
+       JOIN color c ON pl.color_id = c.id
+       JOIN product_list p ON c.product_id = p.id
+       WHERE pl.user_id = ${req.params.user_id}`,
+      [user_id]
+    );
+
+    res.status(200).json(favorites);
+  } catch (error) {
+    console.error('查詢收藏清單錯誤:', error);
+    res.status(500).json({ message: '查詢收藏清單失敗' });
+  }
+});
 
 
 
