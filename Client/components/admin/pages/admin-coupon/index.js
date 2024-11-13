@@ -8,16 +8,16 @@ import CouponEnd from '@/components/discount/common/coupon-end';
 import toast, { Toaster } from 'react-hot-toast'; // 引入 toast
 
 export default function Index(props) {
-  const [upcomingCoupons, setUpcomingCoupons] = useState([]); // 即将开始的优惠券
-  const [ongoingCoupons, setOngoingCoupons] = useState([]); // 进行中的优惠券
-  const [endedCoupons, setEndedCoupons] = useState([]); // 已结束的优惠券
+  const [ongoingCoupons, setOngoingCoupons] = useState([]); // 進行中的優惠券
+  const [upcomingCoupons, setUpcomingCoupons] = useState([]); // 即將開始的優惠券
+  const [endedCoupons, setEndedCoupons] = useState([]); // 已結束的優惠券
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const [currentPageUpcoming, setCurrentPageUpcoming] = useState(1); // 即将开始优惠券页码
-  const [currentPageOngoing, setCurrentPageOngoing] = useState(1); // 当前进行中优惠券页码
-  const [currentPageEnded, setCurrentPageEnded] = useState(1); // 当前已结束优惠券页码
-  const couponsPerPage = 6; // 每页显示的优惠券数量
+  const [currentPageOngoing, setCurrentPageOngoing] = useState(1); // 當前進行中優惠券頁碼
+  const [currentPageUpcoming, setCurrentPageUpcoming] = useState(1); // 即將開始優惠券頁碼
+  const [currentPageEnded, setCurrentPageEnded] = useState(1); // 當前已結束優惠券頁碼
+  const couponsPerPage = 6; // 每頁顯示的優惠券數量
 
   const brandImageMap = {
     1: '/discount/coupon/brands/bobbi.svg',
@@ -27,6 +27,7 @@ export default function Index(props) {
     5: '/discount/coupon/brands/ysl.svg',
   };
 
+  // 獲取優惠券數據
   const fetchCoupons = async () => {
     setLoading(true);
     try {
@@ -36,68 +37,54 @@ export default function Index(props) {
       }
       const data = await response.json();
 
-      const currentDate = new Date(); // 获取当前日期
-      const ongoing = [];  // 进行中的优惠券
-      const ended = [];    // 已结束的优惠券
-      const upcoming = []; // 即将开始的优惠券
+      const currentDate = new Date(); // 獲取當前日期
+      const ongoing = [];  // 進行中的優惠券
+      const ended = [];    // 已結束的優惠券
+      const upcoming = []; // 即將開始的優惠券
 
-      // 分类优惠券
+      // 根據時間範圍分類優惠券
       data.forEach(coupon => {
         const startDate = new Date(coupon.start_date);
         const endDate = new Date(coupon.end_date);
 
         if (startDate > currentDate) {
-          upcoming.push(coupon); // 如果开始时间在当前时间之后，分类为即将开始
+          upcoming.push(coupon); // 如果開始時間在當前時間之後，分類為即將開始
         } else if (startDate <= currentDate && endDate >= currentDate) {
-          ongoing.push(coupon); // 如果当前时间在开始和结束时间之间，分类为进行中
+          ongoing.push(coupon); // 如果當前時間在開始和結束時間之間，分類為進行中
         } else if (endDate < currentDate) {
-          ended.push(coupon);   // 如果结束时间在当前时间之前，分类为已结束
+          ended.push(coupon);   // 如果結束時間在當前時間之前，分類為已結束
         }
       });
 
+      // 設置分類後的優惠券數據
       setOngoingCoupons(ongoing);
       setEndedCoupons(ended);
-      setUpcomingCoupons(upcoming); // 新增设置即将开始的优惠券
-<<<<<<< HEAD
-=======
+      setUpcomingCoupons(upcoming); // 設置即將開始的優惠券
 
-      // 成功提示
       toast.success("優惠券已成功加載！");
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
     } catch (error) {
-      console.error('Error fetching coupons:', error);
-      setError(`獲取優惠券失敗：${error.message}`);
       toast.error(`獲取優惠券失敗：${error.message}`); // 顯示錯誤提示
     } finally {
       setLoading(false);
     }
   };
 
-
   useEffect(() => {
-    fetchCoupons(); // 在组件加载时调用
+    fetchCoupons(); // 在組件加載時呼叫
   }, []);
 
-  // 计算当前即将开始优惠券的分页
-  const indexOfLastUpcomingCoupon = currentPageUpcoming * couponsPerPage;
-  const indexOfFirstUpcomingCoupon = indexOfLastUpcomingCoupon - couponsPerPage;
-  const currentUpcomingCoupons = upcomingCoupons.slice(indexOfFirstUpcomingCoupon, indexOfLastUpcomingCoupon);
-
-<<<<<<< HEAD
-
-=======
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
-  // 计算当前进行中优惠券的分页
+  // 計算當前進行中優惠券的分頁
   const indexOfLastOngoingCoupon = currentPageOngoing * couponsPerPage;
   const indexOfFirstOngoingCoupon = indexOfLastOngoingCoupon - couponsPerPage;
   const currentOngoingCoupons = ongoingCoupons.slice(indexOfFirstOngoingCoupon, indexOfLastOngoingCoupon);
 
-<<<<<<< HEAD
+  // 計算當前即將開始優惠券的分頁
+  const indexOfLastUpcomingCoupon = currentPageUpcoming * couponsPerPage;
+  const indexOfFirstUpcomingCoupon = indexOfLastUpcomingCoupon - couponsPerPage;
+  const currentUpcomingCoupons = upcomingCoupons.slice(indexOfFirstUpcomingCoupon, indexOfLastUpcomingCoupon);
 
-=======
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
-  // 计算当前已结束优惠券的分页
+  // 計算當前已結束優惠券的分頁
   const indexOfLastEndedCoupon = currentPageEnded * couponsPerPage;
   const indexOfFirstEndedCoupon = indexOfLastEndedCoupon - couponsPerPage;
   const currentEndedCoupons = endedCoupons.slice(indexOfFirstEndedCoupon, indexOfLastEndedCoupon);
@@ -111,12 +98,8 @@ export default function Index(props) {
       setCurrentPageEnded(1); // 切換到已結束時重置頁碼
     }
   };
-  
-<<<<<<< HEAD
 
-=======
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
-  // 处理分页左右按钮
+  // 處理分頁左右按鈕
   const handlePrevPage = (isOngoing) => {
     if (isOngoing) {
       setCurrentPageOngoing(prev => Math.max(prev - 1, 1));
@@ -203,32 +186,29 @@ export default function Index(props) {
                     expiration={coupon.end_date}
                   />
                 ))}
-<<<<<<< HEAD
               </div>
               <div className={styles.pagination}>
                 <button
-                  className={`${styles.pageBtn} ${currentPageOngoing === 1 ? styles.disabled : ''}`}
+                  className={`${styles.pageBtn} ${currentPageUpcoming === 1 ? styles.disabled : ''}`}
                   onClick={() => handlePrevPage(true)}
                 >
                   &lt;
                 </button>
-                {Math.ceil(ongoingCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(ongoingCoupons.length / couponsPerPage) }, (_, index) => (
+                {Math.ceil(upcomingCoupons.length / couponsPerPage) > 0 && Array.from({ length: Math.ceil(upcomingCoupons.length / couponsPerPage) }, (_, index) => (
                   <button
                     key={index + 1}
-                    className={`${styles.pageBtn} ${currentPageOngoing === index + 1 ? styles.active : ''}`}
-                    onClick={() => setCurrentPageOngoing(index + 1)}
+                    className={`${styles.pageBtn} ${currentPageUpcoming === index + 1 ? styles.active : ''}`}
+                    onClick={() => setCurrentPageUpcoming(index + 1)}
                   >
                     {index + 1}
                   </button>
                 ))}
                 <button
-                  className={`${styles.pageBtn} ${currentPageOngoing === Math.ceil(ongoingCoupons.length / couponsPerPage) ? styles.disabled : ''}`}
+                  className={`${styles.pageBtn} ${currentPageUpcoming === Math.ceil(upcomingCoupons.length / couponsPerPage) ? styles.disabled : ''}`}
                   onClick={() => handleNextPage(true)}
                 >
                   &gt;
                 </button>
-=======
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="/end">
@@ -245,7 +225,6 @@ export default function Index(props) {
                   />
                 ))}
               </div>
-<<<<<<< HEAD
               <div className={styles.pagination}>
                 <button
                   className={`${styles.pageBtn} ${currentPageEnded === 1 ? styles.disabled : ''}`}
@@ -269,13 +248,11 @@ export default function Index(props) {
                   &gt;
                 </button>
               </div>
-=======
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>
       </AdminSection>
-      <Toaster position="top-center" /> {/* 顯示 Toast 提示 */}
+      <Toaster position="top-center" />
     </>
   );
 }
