@@ -28,13 +28,21 @@ const ProductPage = ({
   onBrandFilterClick,
   onKeywordSearch
 }) => {
-  const { favoriteProducts, handleFavoriteClick } = useFavorite() // 使用收藏鉤子
+  const { favoriteProducts, handleFavoriteClick } = useFavorite(); // 使用收藏鉤子
   const router = useRouter()
   const { onAddProduct } = useCartProduct()
   const { onAddProductMany } = useCartProduct()
 
-  // 關鍵字狀態
-  const [searchKeyword, setSearchKeyword] = useState('')
+   // 狀態管理
+   const [isDropdownOpen, setIsDropdownOpen] = useState({ face: false, cheek: false, lip: false, eye: false })
+   // const [favoriteProducts, setFavoriteProducts] = useState({})
+   const [currentPage, setCurrentPage] = useState(1)
+   const [itemsPerPage, setItemsPerPage] = useState(20)
+   const [filteredProducts, setFilteredProducts] = useState(products)
+   const [searchKeyword, setSearchKeyword] = useState('')
+   const [sortOrder, setSortOrder] = useState('asc') // 排序方式
+
+
   // 關鍵字搜尋處理函數
   const handleSearch = async () => {
   if (searchKeyword.trim()) {
@@ -53,6 +61,17 @@ const ProductPage = ({
       }, 2000)
     }
   }
+}
+
+// 排序商品
+const sortProducts = (order) => {
+  setSortOrder(order)
+  setFilteredProducts((prevProducts) =>
+    [...prevProducts].sort((a, b) => {
+      if (order === 'asc') return a.price - b.price
+      else return b.price - a.price
+    })
+  )
 }
 
   // 按下 Enter 鍵觸發搜尋
@@ -97,12 +116,7 @@ const ProductPage = ({
     { option: 'NARS' },
     { option: 'YSL' },
   ]
-  // 狀態管理
-  const [isDropdownOpen, setIsDropdownOpen] = useState({ face: false, cheek: false, lip: false, eye: false })
-  // const [favoriteProducts, setFavoriteProducts] = useState({})
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(20)
-  const [filteredProducts, setFilteredProducts] = useState(products)
+ 
 
   // 商品排序選項
   const sortOptions = [
@@ -127,19 +141,28 @@ const ProductPage = ({
     setIsDropdownOpen((prev) => ({ ...prev, [category]: !prev[category] }))
   }
 
-  // 商品排序
-  const sortProducts = (order) => {
-    const sortedProducts = [...filteredProducts].sort((a, b) =>
-      order === 'asc' ? a.price - b.price : b.price - a.price
-    )
-    setFilteredProducts(sortedProducts)
-  }
+  // clearAndFetchProducts 函數進行改進，重置所有狀態
+const clearAndFetchProducts = async (fetchFunction) => {
+  // 重置關鍵字搜尋框
+  setSearchKeyword('')
+  
+  // 清空目前顯示的產品，並重置篩選條件（例如當前頁）
+  setFilteredProducts([])
+  setCurrentPage(1) // 重置為第一頁
+
+  // 確保異步調用結束後再更新產品
+  await fetchFunction()
+}
 
   // 每頁顯示數量變更
   const handleItemsPerPageChange = (num) => {
     setItemsPerPage(num)
     setCurrentPage(1)
   }
+  useEffect(() => {
+    setFilteredProducts(products)
+    setCurrentPage(1)
+  }, [products])
   
   // 取得分頁商品
   const indexOfLastProduct = currentPage * itemsPerPage
@@ -176,10 +199,9 @@ const ProductPage = ({
             <div className={styles['product-sidebarcontent-w']}>
               <ul>
                 <li><a href="#"><h4 style={{ color: '#90957a' }}>彩妝商城</h4></a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); onNewArrivalsClick() }} className="p">新品上市</a></li>
-                <li><a href="#" className="p">人氣商品</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); onNarsDiscountClick() }} className="p">優惠商品</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); onAll() }} className="p">所有商品</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); clearAndFetchProducts(onNewArrivalsClick) }} className="p">新品上市</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); clearAndFetchProducts(onNarsDiscountClick) }} className="p">優惠商品</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); clearAndFetchProducts(onAll) }} className="p">所有商品</a></li>
 
                 {/* 臉部分類 */}
                 <li>
@@ -245,7 +267,7 @@ const ProductPage = ({
                 name="價格"
                 items={priceOptions.map(option => ({
                   option: option.label,
-                  onClick: () => onPriceFilterClick(option.minPrice, option.maxPrice)
+                  onClick: () => clearAndFetchProducts(() => onPriceFilterClick(option.minPrice, option.maxPrice))
                 }))}
                 className={styles['dropdownTitle']}
               />
@@ -253,7 +275,7 @@ const ProductPage = ({
                 name="品牌"
                 items={brandOptions.map(option => ({
                   option: option.option,
-                  onClick: () => onBrandFilterClick(option.option)
+                  onClick: () => clearAndFetchProducts(() => onBrandFilterClick(option.option))
                 }))}
                 className={styles['dropdownTitle']}
               />
@@ -301,7 +323,7 @@ const ProductPage = ({
                     <div className={`${styles['product-new-w']} d-inline-block p5`}>NEW</div>
                     <div className={`${styles['product-sale-w']} d-inline-block p5`}>SALE</div>
                   </div>
-                  <button onClick={(e) => { e.stopPropagation(); handleFavoriteClick(product.color_id) }} style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }}>
+                  <button onClick={(e) => { e.stopPropagation();console.log('Product details:', product);  handleFavoriteClick(product) ;}} style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }}>
                     {favoriteProducts[product.color_id] ? <FaHeart color="#973929" size={24} /> : <FaRegHeart size={24} />}
                   </button>
                   <Image width={200} height={200} src={`/product/mainimage/${product.mainimage}`} className={styles['product-cardimg-w']} alt={product.product_name} />

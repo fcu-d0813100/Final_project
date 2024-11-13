@@ -8,6 +8,7 @@ import CommentBoard from '@/components/product/common/CommentBoard';
 import toast from 'react-hot-toast'
 import { useCartProduct } from '@/hooks/use-cartP'
 import { useRouter } from 'next/router'
+import { useFavorite } from '@/hooks/use-favorite'; 
 
 // productPage 此參數，為一個陣列
 const ProductPage = ({ productPage }) => {
@@ -28,6 +29,7 @@ const ProductPage = ({ productPage }) => {
   const [startIndex, setStartIndex] = useState(0);
   const [uniqueProducts, setUniqueProducts] = useState([]);
   const [animateChart, setAnimateChart] = useState(false);
+  const { favoriteProducts, handleFavoriteClick } = useFavorite(); // 收藏鉤子
 
   useEffect(() => {
     // 使用 color_id 作為鍵，將重複的 color_id 過濾，並將 info_image 合併到 images 陣列
@@ -101,12 +103,14 @@ const ProductPage = ({ productPage }) => {
     ).values()];
   }, [productPage]);
 
-  // 過濾出相同 color_id 的所有介紹圖
-  const selectedProductImages = useMemo(() => {
-    return productPage
-      .filter((product) => product.color_id === selectedProduct.color_id)
-      .map((product) => product.info_image);
-  }, [productPage, selectedProduct.color_id]);
+  // 過濾出相同 color_id 的所有介紹圖，並去除重複的圖片
+const selectedProductImages = useMemo(() => {
+  const images = productPage
+    .filter((product) => product.color_id === selectedProduct.color_id)
+    .map((product) => product.info_image);
+  // 使用 Set 去除重複的圖片
+  return [...new Set(images)];
+}, [productPage, selectedProduct.color_id]);
 
   // 每次顯示 4 張圖片，從 startIndex 開始
   const visibleThumbnails = useMemo(() => {
@@ -249,8 +253,14 @@ const ProductPage = ({ productPage }) => {
               <div className="justify-content-between align-items-center">
                 <div className="d-flex align-items-center mb-3 mt-3">
                   <div className="h6">{selectedProduct.brand}</div>
-                  <button onClick={toggleFavorite} className={`${styles['favorite-button']} ms-3`}>
-                    {isFavorite ? <FaHeart color="#973929" size={24} /> : <FaRegHeart size={24} />}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFavoriteClick(selectedProduct); // 使用收藏鉤子
+                    }}
+                    className={`${styles['favorite-button']} ms-3`}
+                  >
+                    {favoriteProducts[selectedProduct.color_id] ? <FaHeart color="#973929" size={24} /> : <FaRegHeart size={24} />}
                   </button>
                 </div>
                 <h3 className="mb-0">{selectedProduct.product_name}</h3>

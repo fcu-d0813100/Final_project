@@ -114,23 +114,14 @@ router.put('/:couponId', async (req, res, next) => {
   console.log('收到的優惠券資料:', updateData)
 
   // 從請求體中解構出優惠券資料
-  const {
-    brand_id,
-    code,
-    name,
-    discount_value,
-    minimum_amount,
-    start_date,
-    end_date,
-    valid,
-  } = updateData
+  const { brand_id, code, name, discount_value, minimum_amount, start_date, end_date, valid } = updateData;
 
   try {
     // 如果 valid == 0，表示優惠券無效，將其標記為無效
     if (valid === 0) {
       const [rows] = await db.query(
         `UPDATE coupon_list SET valid = 0 WHERE id = ${couponId}`
-      )
+      );
 
       if (rows.affectedRows === 0) {
         return res
@@ -155,7 +146,7 @@ router.put('/:couponId', async (req, res, next) => {
         end_date = '${end_date}' ,
         valid = ${valid}
       WHERE id = ${couponId}`
-    )
+    );
 
     // 檢查是否有行被更新
     if (rows.affectedRows === 0) {
