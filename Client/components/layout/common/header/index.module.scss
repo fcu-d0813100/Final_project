@@ -173,3 +173,23 @@
     box-shadow: none !important;
   }
 }
+.cart-icon {
+  position: relative;
+  .cart-number {
+    position: absolute;
+    font-size: 12px;
+    bottom: 8px;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: $red-500;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &:hover {
+    opacity: 0.8;
+  }
+}

@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap'
 import styles from './index.module.scss'
 
-function TopBar() {
+function TopBar({ cartitems }) {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
 
   const handleClose = () => setShowOffcanvas(false)
@@ -50,7 +50,12 @@ function TopBar() {
                 <PiUser size={22} className="me-3" />
               </Link>
               <Link href="/cart">
-                <PiHandbagSimple size={22} />
+                <span className={styles['cart-icon']}>
+                  <PiHandbagSimple size={22} />
+                  {cartitems > 0 && (
+                    <span className={styles['cart-number']}>{cartitems}</span>
+                  )}
+                </span>
               </Link>
             </Col>
           </Row>
