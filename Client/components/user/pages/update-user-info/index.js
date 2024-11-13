@@ -7,8 +7,6 @@ import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
-// import { updateProfileAvatar } from '@/services/user'
-// import { avatarBaseUrl } from '@/configs'
 import PreviewUploadImage from '@/components/user/common/preview-upload-image'
 
 export default function UpdateInfo() {
@@ -64,21 +62,6 @@ export default function UpdateInfo() {
     return { newErrors, hasErrors }
   }
 
-  // const handleFileChange = async (e) => {
-  //   // 上傳頭像用，有選擇檔案時再上傳
-  //   if (selectedFile) {
-  //     const formData = new FormData()
-  //     // 對照server上的檔案名稱 req.files.avatar
-  //     formData.append('avatar', selectedFile)
-
-  //     const res2 = await updateProfileAvatar(formData)
-
-  //     console.log(res2.data)
-  //     if (res2.data.status === 'success') {
-  //       toast.success('會員頭像修改成功')
-  //     }
-  //   }
-  // }
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -97,10 +80,10 @@ export default function UpdateInfo() {
 
       try {
         const res2 = await update(user, selectedFile)
-        console.log('伺服器回應:', res2) // 調試輸出
+        console.log('伺服器回應:', res2)
 
         const resData = await res2.json()
-        console.log('Response data:', resData) // 調試輸出
+        console.log('Response data:', resData)
 
         if (resData.status === 'success') {
           toast.success('會員頭像修改成功')
