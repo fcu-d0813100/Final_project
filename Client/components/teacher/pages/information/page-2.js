@@ -72,7 +72,6 @@ export default function Page2({ onPreviousPage }) {
       if (!response.ok) {
         throw new Error('更新資料失敗')
       }
-
       const result = await response.json()
       console.log('更新成功', result)
     } catch (error) {

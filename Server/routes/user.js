@@ -1,14 +1,16 @@
 import express from 'express'
 import db from '##/configs/mysql.js'
 import multer from 'multer'
+import path from 'path'
 // 檢查空物件, 轉換req.params為數字
 import { getIdParam } from '#db-helpers/db-tool.js'
 import jsonwebtoken from 'jsonwebtoken'
 // 中介軟體，存取隱私會員資料用
 import authenticate from '#middlewares/authenticate.js'
 import { generateHash, compareHash } from '##/db-helpers/password-hash.js'
+import { fileURLToPath } from 'url'
 
-const upload = multer()
+// const upload = multer()
 const router = express.Router()
 
 // // multer的設定值 - START
@@ -26,6 +28,30 @@ const router = express.Router()
 // })
 // const upload = multer({ storage: storage })
 // // multer的設定值 - END
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    const uploadPath = path.join(__dirname, '../public/avatar/')
+    console.log('Upload path:', uploadPath)
+    callback(null, uploadPath)
+  },
+  filename: function (req, file, callback) {
+    // 取得用戶ID，並將 1 到 9 的 ID 進行補零處理
+    let userId = req.user.id
+    if (userId >= 1 && userId <= 9) {
+      userId = `0${userId}`
+    }
+    // 取得文件擴展名
+    const ext = path.extname(file.originalname)
+    // 組合新的文件名，格式為avatar用戶ID.擴展名
+    const newFilename = `avatar${userId}${ext}`
+    console.log('New filename:', newFilename)
+    callback(null, newFilename)
+  },
+})
+
+const upload = multer({ storage: storage })
 
 // 定義安全的私鑰字串
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
@@ -176,45 +202,93 @@ router.post('/logout', authenticate, (req, res) => {
 router.put(
   '/',
   authenticate,
-  // upload.single('img'), // 上傳來的檔案(這是單個檔案，表單欄位名稱為avatar)
+  upload.single('avatar'), // 上傳來的檔案(這是單個檔案，表單欄位名稱為avatar)
   async (req, res) => {
-    // id可以用jwt的存取令牌(accessToken)從authenticate中得到(如果有登入的話)
     const id = req.user.id
-
     const updateUser = req.body
 
-    let result = null
+    // 取得使用者現有的頭貼
+    const [users] = await db.query('SELECT * FROM user WHERE id = ?', [id])
+    if (users.length === 0) {
+      return res.status(404).json({ status: 'error', message: '找不到該用戶' })
+    }
 
-    // 更新除了帳號密碼以外的資料的寫法
-    result = await db.query(
-      'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?,birthday=? ,`updated_at`=? WHERE `id`=?;',
-      [
-        updateUser.name,
-        updateUser.email,
-        updateUser.nickname,
-        updateUser.img,
-        // imgFileName, // 使用上傳的檔案名稱
-        updateUser.gender,
-        updateUser.phone,
-        updateUser.address,
-        updateUser.birthday,
-        new Date(),
-        id,
-      ]
-    )
+    // 使用者現有的頭貼
+    const currentImagePath = users[0].img
 
-    const [rows2] = result
-    console.log(rows2)
+    // 如果有上傳新頭貼，則使用新頭貼，否則保留現有頭貼
+    const imgFileName = req.file ? req.file.filename : currentImagePath
+    console.log('Image file name:', imgFileName)
 
-    // 檢查是否有產生影響欄位affectedRows，代表新增成功
-    if (rows2.affectedRows) {
-      return res.json({ status: 'success', data: null })
-    } else {
-      return res.json({ status: 'error', message: '更新到資料庫失敗' })
-      // 沒有更新
+    // 更新除了帳號密碼以外的資料
+    try {
+      const [result] = await db.query(
+        'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?, `birthday`=?, `updated_at`=? WHERE `id`=?;',
+        [
+          updateUser.name,
+          updateUser.email,
+          updateUser.nickname,
+          imgFileName,
+          updateUser.gender,
+          updateUser.phone,
+          updateUser.address,
+          updateUser.birthday,
+          new Date(),
+          id,
+        ]
+      )
+
+      console.log('Database update result:', result)
+
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ status: 'error', message: '找不到該用戶' })
+      }
+
+      if (req.file) {
+        return res.json({
+          status: 'success',
+          message: '會員頭像及資料更新成功',
+          data: { img: imgFileName },
+        })
+      } else {
+        return res.json({
+          status: 'success',
+          message: '會員資料更新成功',
+          data: { img: imgFileName },
+        })
+      }
+    } catch (error) {
+      console.error('更新失敗:', error)
+      return res.status(500).json({ status: 'error', message: '更新失敗' })
     }
   }
 )
+
+// // 更新會員檔案
+// router.post(
+//   '/upload-avatar',
+//   authenticate,
+//   upload.single('img'),
+//   async (req, res) => {
+//     console.log(req.file, req.body)
+
+//     if (req.file) {
+//       const id = req.user.id
+//       const data = { img: req.file.filename }
+
+//       // 對資料庫執行update
+//       const [affectedRows] = await db.query(
+//         'UPDATE user SET img = ? WHERE id = ?'[(data.img, id)]
+//       )
+//       if (!affectedRows) {
+//         return res.json({ status: 'error', message: '更新失敗' })
+//       }
+//       return res.json({ status: 'success', data: null })
+//     }
+//   }
+// )
 
 // =================================================================
 // post - 會員密碼更新
@@ -286,6 +360,27 @@ router.put('/:id/password', authenticate, async function (req, res) {
 
   // 成功，不帶資料
   return res.json({ status: 'success', data: null })
+})
+// =================================================================
+
+// 軟刪除會員
+router.delete('/:id', function (req, res) {
+  const id = req.params.id
+  const sql = 'UPDATE user SET valid = 0 WHERE id = ?'
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: '刪除資料錯誤', error: err })
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: '無法更新 valid 欄位。',
+      })
+    }
+
+    // 成功
+    return res.json({ status: 'success', data: null })
+  })
 })
 
 export default router

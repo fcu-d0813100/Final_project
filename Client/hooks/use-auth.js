@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
 import { googleLogin, parseJwt } from '@/services/user'
+import { deleteUser } from 'firebase/auth'
 
 // import { register } from 'module'
 
@@ -26,6 +27,31 @@ AuthContext.displayName = 'AuthContext'
 
 export function AuthProvider({ children }) {
   const router = useRouter()
+
+  const addFavorite = async (product) => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/favorite/${product.color_id}/${auth.userData.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('收藏失敗');
+      console.log(`Added product to favorites: ${product.color_id}`);
+    } catch (error) {
+      console.error('Error adding favorite:', error);
+    }
+  };
+
+  const removeFavorite = async (color_id) => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/favorite/${color_id}/${auth.userData.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('取消收藏失敗');
+      console.log(`Removed product from favorites with color_id: ${color_id}`);
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+    }
+  };
 
   const [auth, setAuth] = useState({
     isAuth: false, // 代表會員是否已經登入的信號值
@@ -360,45 +386,103 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // 更新資料
-  const update = async (user) => {
-    // 向伺服器作fetch
-    const res = await fetch('http://localhost:3005/api/user', {
-      credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'PUT', //更新時用PUT
-      body: JSON.stringify(user),
-    })
+  // // 更新資料
+  // const update = async (user) => {
+  //   // 向伺服器作fetch
+  //   const res = await fetch('http://localhost:3005/api/user', {
+  //     credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     method: 'PUT', //更新時用PUT
+  //     body: JSON.stringify(user),
+  //   })
 
-    const resData = await res.json()
-    if (resData.status === 'success') {
-      toast.success('您已更新個人資料', {
-        style: {
-          border: '1.2px solid #90957a',
-          padding: '12px 40px',
-          color: '#626553',
-        },
-        iconTheme: {
-          primary: '#626553',
-          secondary: '#fff',
-        },
+  //   const resData = await res.json()
+  //   if (resData.status === 'success') {
+  //     toast.success('您已更新個人資料', {
+  //       style: {
+  //         border: '1.2px solid #90957a',
+  //         padding: '12px 40px',
+  //         color: '#626553',
+  //       },
+  //       iconTheme: {
+  //         primary: '#626553',
+  //         secondary: '#fff',
+  //       },
+  //     })
+  //     router.push('/user')
+  //   } else {
+  //     toast.error('更新失敗，請稍後再試', {
+  //       style: {
+  //         border: '1.2px solid #90957a',
+  //         padding: '12px 40px',
+  //         color: '#963827',
+  //       },
+  //       iconTheme: {
+  //         primary: '#963827',
+  //         secondary: '#fff',
+  //       },
+  //     })
+  //   }
+  // }
+
+  const update = async (user, selectedFile) => {
+    // 建立一個 FormData 對象
+    const formData = new FormData()
+
+    // 添加使用者的其他資料到 FormData
+    formData.append('name', user.name)
+    formData.append('email', user.email)
+    formData.append('nickname', user.nickname)
+    formData.append('gender', user.gender)
+    formData.append('phone', user.phone)
+    formData.append('address', user.address)
+    formData.append('birthday', user.birthday)
+
+    // 如果有選擇新的頭貼，添加到 FormData
+    if (selectedFile) {
+      formData.append('avatar', selectedFile) // 頭貼的欄位名稱為 'avatar'
+    }
+
+    try {
+      const res = await fetch('http://localhost:3005/api/user', {
+        credentials: 'include', // 設定cookie必要設定，如果有需要授權或認證一定要加
+        method: 'PUT', // 更新時用PUT
+        body: formData, // 使用 FormData 作為 body
       })
-      router.push('/user')
-    } else {
-      toast.error('更新失敗，請稍後再試', {
-        style: {
-          border: '1.2px solid #90957a',
-          padding: '12px 40px',
-          color: '#963827',
-        },
-        iconTheme: {
-          primary: '#963827',
-          secondary: '#fff',
-        },
-      })
+
+      const resData = await res.json()
+      if (resData.status === 'success') {
+        toast.success('您已更新個人資料', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        // router.push('/user')
+      } else {
+        toast.error('更新失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      console.error('更新失敗:', error)
+      toast.error('更新失敗，請稍後再試')
     }
   }
 
@@ -456,6 +540,62 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.error('登出過程中發生錯誤:', error)
       toast.error('登出過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
+  // 會員軟刪除
+  const deleteUser = async (userId) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/user/${userId}`, {
+        method: 'DELETE',
+        credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const resData = await res.json()
+
+      if (resData.status === 'success') {
+        toast.success('用戶已成功標記為刪除', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        setTimeout(() => {
+          router.push('/user/information/update')
+        }, 2000)
+      } else {
+        toast.error('刪除失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      toast.error('刪除過程中發生錯誤，請稍後再試', {
         style: {
           border: '1.2px solid #90957a',
           padding: '12px 40px',
@@ -541,6 +681,9 @@ export function AuthProvider({ children }) {
         update,
         setAuth,
         callbackGoogleLogin,
+        deleteUser,
+        addFavorite,
+        removeFavorite,
       }}
     >
       {children}

@@ -130,9 +130,7 @@ export default function PostDetail(props) {
             columnClassName={styles['my-masonry-grid_column']}
           >
             {wallCard.map((post) => {
-              const imgSrc = post.post_img.startsWith('post')
-                ? `http://localhost:3005/upload/${post.post_img}`
-                : `/post/${post.post_img}`
+              const imgSrc = `http://localhost:3005/post/${post.post_img}`
               return (
                 <WallCard
                   key={post.id}
@@ -140,8 +138,8 @@ export default function PostDetail(props) {
                   imageSrc={imgSrc}
                   title={post.title}
                   username={post.nickname}
-                  avatarSrc={`/user/img/${post.user_img}`}
-                  likeCount={post.like_count}
+                  // avatarSrc={`/user/img/${post.user_img}`}
+                  // likeCount={post.like_count}
                 />
               )
             })}

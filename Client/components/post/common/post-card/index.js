@@ -103,7 +103,7 @@ export default function PostCard({
     <>
       <div className={styles['post-card3']}>
         {/* post-img with Carousel */}
-        <div className={styles['post-img']}>
+        <div className={styles['post-img-wrap']}>
           <Carousel
             indicators={true}
             activeIndex={index}
@@ -129,20 +129,17 @@ export default function PostCard({
             }
           >
             {postImages.split(',').map((image, index) => {
-              const imgSrc = image.startsWith('post')
-                ? `http://localhost:3005/upload/${image}`
-                : `/post/${image}`
-
+              const imgSrc = `http://localhost:3005/post/${image}`
               return (
                 <Carousel.Item key={index}>
                   <Image
-                    className={styles['user-image']}
+                    className={styles['post-image']}
                     src={imgSrc}
                     alt="Share Image"
-                    width={600}
-                    height={650}
+                    // width={600}
+                    // height={650}
                     priority
-                    // layout="fill"
+                    fill
                     // layout="responsive"
                   />
                 </Carousel.Item>
@@ -156,7 +153,8 @@ export default function PostCard({
           <div className={styles['post-user']}>
             <Image
               className={styles['user-image']}
-              src={`/user/img/${authorAvatar}`}
+              // src={`/user/img/${authorAvatar}`}
+              src={`http://localhost:3005/avatar/${authorAvatar}`}
               alt="User Image"
               width={40}
               height={40}

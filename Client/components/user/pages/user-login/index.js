@@ -107,9 +107,12 @@ export default function UserLogin() {
                       記住帳密
                     </label>
                   </div>
-                  <a href="#" className={`${styles['forget-ps']} ps`}>
+                  <Link
+                    href="/user/forget-password"
+                    className={`${styles['forget-ps']} ps`}
+                  >
                     忘記密碼
-                  </a>
+                  </Link>
                 </div>
                 <div className="d-grid col-12 pt-4">
                   <button
