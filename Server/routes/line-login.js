@@ -94,6 +94,11 @@ router.get(
   LineLogin.callback(
     // 登入成功的回調函式 Success callback
     async (req, res, next, token_response) => {
+      {
+        const code = req.query.code
+        const state = req.query.state
+        console.log(`收到code: ${code}, state: ${state}`)
+      }
       try {
         console.log('Token Response:', token_response)
 

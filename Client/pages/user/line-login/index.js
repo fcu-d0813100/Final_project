@@ -49,8 +49,9 @@ export default function LineLogin() {
       const res1 = await getUserById(jwtUser.id)
       console.log('User Data Response:', res1.data)
 
-      if (res1.data.status === 'success') {
-        const dbUser = res1.data.data.user
+      // 檢查用戶資料返回的結構
+      if (res1.data && res1.data.user) {
+        const dbUser = res1.data.user
         console.log('Database User:', dbUser)
         const userData = { ...initUserData }
 
@@ -69,11 +70,14 @@ export default function LineLogin() {
 
         toast.success('已成功登入')
       } else {
-        console.error('登入後無法得到會員資料:', res1.data.message)
+        console.error(
+          '登入後無法得到會員資料:',
+          res1.data.message || '未知錯誤'
+        )
         toast.error('登入後無法得到會員資料')
       }
     } else {
-      console.error('已是登入狀態或登入失敗:', res.data.message)
+      console.error('已是登入狀態或登入失敗:', res.data.message || '未知錯誤')
       toast.error('已是登入狀態或登入失敗')
     }
   }
