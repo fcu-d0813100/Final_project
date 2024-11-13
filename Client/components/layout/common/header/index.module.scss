@@ -7,8 +7,9 @@
 // }
 // header
 .header {
+  background-color: white;
   border-bottom: 1px solid #00000033;
-  z-index: 999;
+  z-index: 9999;
 }
 .head-wrap {
   padding: 16px 40px;
@@ -45,6 +46,7 @@
 
 //nav
 .nav {
+  background-color: white;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.08);
   padding-block: 0 !important;
 
@@ -171,5 +173,25 @@
   &:focus {
     border: none !important;
     box-shadow: none !important;
+  }
+}
+.cart-icon {
+  position: relative;
+  .cart-number {
+    position: absolute;
+    font-size: 12px;
+    bottom: 8px;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: $red-500;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &:hover {
+    opacity: 0.8;
   }
 }

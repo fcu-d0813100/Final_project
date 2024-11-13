@@ -70,7 +70,7 @@ router.post('/checkout', async function (req, res, next) {
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
     (user_id, payment_id, shipping_id, order_number, total_amount, shipping_address, coupon_id, status)
-    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', ${coupon.coupon_list_id}, '${status}')`
+    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', ${coupon ? coupon.coupon_list_id : 'NULL'}, '${status}')`
 
     const [result] = await db.query(sqlInsert, [
       userId, // user_id
@@ -80,7 +80,7 @@ router.post('/checkout', async function (req, res, next) {
       totalPrice, // total_amount
       shippingAddress, // shipping_address
       status,
-      coupon.coupon_list_id,
+      coupon ? coupon.coupon_list_id : null,
     ])
 
     //result反回order_list的自增ID
