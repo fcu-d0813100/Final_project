@@ -26,13 +26,13 @@
 }
 
 .text-group {
-    width: 200px;
+    width: 300px;
     @media (max-width: 1400px) {
-        width: 150px;
+        width: 200px;
     }
 
     @media (max-width: 720px) {
-        width: 100px;
+        width: 160px;
 
         .brand {
             font-size: 11px;
@@ -93,11 +93,19 @@
 .color-left {
     width: 30px;
     height: 30px;
-    border: 2px solid #998568;
+    border: 1px solid $gray-200;
 
     .color {
         width: 20px;
         height: 20px;
-        background-color: #998568;
+    }
+    @media (max-width: 500px) {
+        width: 15px;
+        height: 15px;
+        .color {
+            width: 11px;
+            height: 11px;
+        }
+
     }
 }

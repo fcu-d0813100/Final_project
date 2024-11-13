@@ -1,25 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import AdminSection from '@/components/admin/common/admin-section';
-<<<<<<< HEAD
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-=======
 import { useRouter } from 'next/router';
 import toast, { Toaster } from 'react-hot-toast'; // 引入 toast
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
 export default function Index() {
     const [coupon, setCoupon] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-<<<<<<< HEAD
-    const [couponCode, setCouponCode] = useState(""); // 用空字符串初始化
     const router = useRouter();
-
-=======
-    const router = useRouter();
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
     // 當組件加載後，從 localStorage 獲取 couponId 並根據它獲取優惠券數據
     useEffect(() => {
@@ -56,11 +45,7 @@ export default function Index() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-<<<<<<< HEAD
-        console.log("提交的優惠券資料：", coupon);  // 打印 coupon 内容，确认数据是否正确
-=======
         console.log("提交的優惠券資料：", coupon);  // 打印 coupon 內容，確認資料是否正確
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
 
         // 提交表單數據到後端
         fetch(`http://localhost:3005/api/coupons/${coupon.id}`, {
@@ -72,13 +57,8 @@ export default function Index() {
         })
             .then(response => response.json())
             .then(updatedCoupon => {
-<<<<<<< HEAD
-                setCoupon(updatedCoupon); // 更新为后端返回的数据
-                alert('優惠券更新成功！');
-=======
                 setCoupon(updatedCoupon); // 更新為後端返回的資料
                 toast.success('優惠券更新成功！'); // 使用 toast 顯示成功訊息
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
                 router.push('/admin/coupon');  // 提交後跳轉到優惠券列表頁
             })
             .catch(err => {
@@ -95,8 +75,6 @@ export default function Index() {
             return;
         }
 
-<<<<<<< HEAD
-=======
         // 確認 couponId 是否正確
         console.log("Coupon ID:", couponId);
         console.log("Coupon valid:", coupon.valid);  // 確認 valid 欄位
@@ -123,7 +101,6 @@ export default function Index() {
         }
     };
 
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
     // 如果還在加載或者有錯誤，顯示提示
     if (loading) {
         return <div>加載中...</div>;
@@ -165,11 +142,7 @@ export default function Index() {
                                 type="text"
                                 name="name"
                                 value={coupon.name}
-<<<<<<< HEAD
-                                onChange={(e) => setCouponCode(e.target.value)} 
-=======
                                 onChange={(e) => setCouponCode(e.target.value)}
->>>>>>> aefcf016f9a9a755025bcf59f95c47e8f19975e2
                             />
                         </div>
 

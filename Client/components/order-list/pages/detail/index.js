@@ -63,7 +63,7 @@ const OrderDetail = () => {
         return <div>無法獲取訂單詳細資料</div>; // 如果無法獲取資料，顯示錯誤訊息
     }
 
-    const { items, order_number, payment, shipping, shipping_address, name, phone, total_amount, discount_value } = orderData;
+    const { items, order_number, payment, shipping, shipping_address, name, phone, total_amount, discount_value,status } = orderData;
 
     return (
         <OrderSection titleCN="訂單詳情">
@@ -74,13 +74,13 @@ const OrderDetail = () => {
                         <div className={`${styles["order-num"]} h4`}>訂單編號 {order_number}</div>
                     </div>
                     <div className={`${styles["header-right"]} p`}>
-                        {/* 顯示訂單總金額等其他資訊 */}
+                        {status === "已付款" ? "已完成" : "未付款"}
                     </div>
                 </div>
 
                 <div className={`${styles["order-det-content"]} d-flex flex-column border rounded-top`}>
                 <div className={`h5 ${styles.topTitle}`}>
-                    訂單已完成
+                    訂單{status === "已付款" ? "已完成" : "未付款"}
                 </div>
                     {/* 訂單信息和收件信息 */}
                     <div className={`${styles.msg} d-flex justify-content-between`}>
