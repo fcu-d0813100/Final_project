@@ -158,7 +158,7 @@ export default function MyWorkshop(props) {
                 <MyWorkshopBox
                   key={item.id}
                   id={item.id}
-                  img={`/workshop/workshop_img/${item.img_cover}`}
+                  img={`http://localhost:3005/workshop/${item.img_cover}`}
                   name={item.name}
                   start_date={beginDate}
                   end_date={endDate}

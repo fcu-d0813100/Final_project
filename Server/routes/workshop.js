@@ -33,6 +33,7 @@ router.get('/', async function (req, res, next) {
     workshop.name,
     workshop.price,
     workshop.type_id,
+    workshop.img_cover,
     teachers.id AS teacher_id,
     teachers.name AS teacher_name,
     GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
