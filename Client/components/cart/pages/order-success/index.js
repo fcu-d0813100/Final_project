@@ -39,7 +39,7 @@ export default function OrderSuccess() {
             <div>感謝您的訂購！</div>
             <div>訂單編號：{orderNumber}</div>
           </div>
-          <Link href="/user">
+          <Link href="/user/order">
             <button className={style['btn-women']}>查看訂單</button>
           </Link>
         </div>
