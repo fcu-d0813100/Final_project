@@ -27,6 +27,31 @@ AuthContext.displayName = 'AuthContext'
 export function AuthProvider({ children }) {
   const router = useRouter()
 
+  const addFavorite = async (product) => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/favorite/${product.color_id}/${auth.userData.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('收藏失敗');
+      console.log(`Added product to favorites: ${product.color_id}`);
+    } catch (error) {
+      console.error('Error adding favorite:', error);
+    }
+  };
+
+  const removeFavorite = async (color_id) => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/favorite/${color_id}/${auth.userData.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('取消收藏失敗');
+      console.log(`Removed product from favorites with color_id: ${color_id}`);
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+    }
+  };
+
   const [auth, setAuth] = useState({
     isAuth: false, // 代表會員是否已經登入的信號值
     userData: {
@@ -541,6 +566,8 @@ export function AuthProvider({ children }) {
         update,
         setAuth,
         callbackGoogleLogin,
+        addFavorite,
+        removeFavorite,
       }}
     >
       {children}

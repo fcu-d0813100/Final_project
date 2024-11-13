@@ -70,17 +70,17 @@ router.post('/checkout', async function (req, res, next) {
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
     (user_id, payment_id, shipping_id, order_number, total_amount, shipping_address, coupon_id, status)
-    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', NULL, '${status}')`
+    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', ${coupon.coupon_list_id}, '${status}')`
 
     const [result] = await db.query(sqlInsert, [
-      1, // user_id
+      userId, // user_id
       paymentId, // payment_id
       shippingId, // shipping_id
       orderNumber, // order_number
       totalPrice, // total_amount
       shippingAddress, // shipping_address
       status,
-      // 這裡沒有 coupon_id，所以不應該有 ?
+      coupon.coupon_list_id,
     ])
 
     //result反回order_list的自增ID
@@ -122,16 +122,20 @@ router.post('/checkout', async function (req, res, next) {
 
     //----------更新優惠券使用次數(11.11待修改)
     if (coupon) {
-      const sqlUpdate = `
-      UPDATE coupon_list
-      SET used = used + 1
-      WHERE id = ${coupon.coupon_list_id};
-  
-      UPDATE coupon_relation
-      SET order_id = ${orderId}
-      WHERE user_id = ${userId};
-    `
-      await db.query(sqlUpdate)
+      const sqlUpdate1 = `
+        UPDATE coupon_list
+        SET used = used + 1
+        WHERE id = ${coupon.coupon_list_id};
+      `
+
+      const sqlUpdate2 = `
+        UPDATE coupon_relation
+        SET order_id = ${orderId}
+        WHERE user_id = ${userId} AND coupon_id = ${coupon.coupon_list_id};
+      `
+
+      await db.query(sqlUpdate1)
+      await db.query(sqlUpdate2)
     }
 
     //利用訂單id創建課程訂單明細

@@ -36,48 +36,44 @@ router.get('/:userId', async (req, res) => {
     // 傳遞分頁參數給資料庫查詢
     const [result] = await db.query(sqlSelect, [limit, offset])
 
-    if (result.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: '此用戶尚未擁有任何優惠券。' })
-    }
+        if (result.length === 0) {
+            return res.status(404).json({ success: false, message: '此用戶尚未擁有任何優惠券。' });
+        }
 
-    res.status(200).json({ success: true, data: result })
-    console.log('查詢結果:', result)
-  } catch (error) {
-    console.error('資料庫查詢錯誤:', error)
-    res.status(500).json({ message: '獲取優惠券時發生錯誤，請稍後再試。' })
-  }
-})
+        res.status(200).json({ success: true, data: result });
+        console.log('查詢結果:', result);
+    } catch (error) {
+        console.error('資料庫查詢錯誤:', error);
+        res.status(500).json({ message: '獲取優惠券時發生錯誤，請稍後再試。' });
+    }
+});
 
 // 檢查用戶是否已領取特定優惠券
 router.get('/', async (req, res) => {
   const { userId, couponId } = req.query
 
-  if (!userId || !couponId) {
-    return res.status(400).json({ error: '缺少必要的參數: userId 或 couponId' })
-  }
-
-  console.log('收到請求:', { userId, couponId }) // 日誌請求參數
-
-  try {
-    const result = await db.query(
-      `SELECT * FROM coupon_relation WHERE user_id = ${userId} AND coupon_id = ${couponId}`
-    )
-    console.log(result)
-
-    if (result[0].length > 0) {
-      return res.json({ hasClaimed: true })
-    } else {
-      return res.json({ hasClaimed: false })
+    if (!userId || !couponId) {
+        return res.status(400).json({ error: '缺少必要的參數: userId 或 couponId' });
     }
-  } catch (err) {
-    console.error('資料庫錯誤:', err) // 打印資料庫錯誤
-    return res
-      .status(500)
-      .json({ error: '資料庫查詢失敗', details: err.message })
-  }
-})
+
+    console.log('收到請求:', { userId, couponId });  // 日誌請求參數
+
+    try {
+        const result = await db.query(
+            `SELECT * FROM coupon_relation WHERE user_id = ${userId} AND coupon_id = ${couponId}`
+        );
+        console.log(result);
+
+        if (result[0].length > 0) {
+            return res.json({ hasClaimed: true });
+        } else {
+            return res.json({ hasClaimed: false });
+        }
+    } catch (err) {
+        console.error('資料庫錯誤:', err);  // 打印資料庫錯誤
+        return res.status(500).json({ error: '資料庫查詢失敗', details: err.message });
+    }
+});
 
 // 用戶領取優惠券
 router.post('/', async (req, res) => {
@@ -145,13 +141,11 @@ router.get('/history/:userId', async (req, res) => {
         .json({ success: false, message: '此用戶沒有優惠券歷史紀錄。' })
     }
 
-    res.status(200).json({ success: true, data: result })
-  } catch (error) {
-    console.error('資料庫查詢錯誤:', error) // 輸出具體的錯誤
-    res
-      .status(500)
-      .json({ message: '獲取優惠券歷史記錄時發生錯誤，請稍後再試。' })
-  }
-})
+        res.status(200).json({ success: true, data: result });
+    } catch (error) {
+        console.error('資料庫查詢錯誤:', error); // 輸出具體的錯誤
+        res.status(500).json({ message: '獲取優惠券歷史記錄時發生錯誤，請稍後再試。' });
+    }
+});
 
-export default router
+export default router;

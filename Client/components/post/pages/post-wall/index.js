@@ -5,8 +5,8 @@ import { PiNotePencilBold } from 'react-icons/pi'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import { useAuth } from '@/hooks/use-auth'
 import ModalConfirm from '@/components/shared/modal-confirm'
-import InputIME from '@/components/shared/input-amend'
-
+// import InputIME from '@/components/shared/input-amend'
+import { usePost } from '@/hooks/post/use-post'
 import Masonry from 'react-masonry-css'
 import WallCard from '@/components/post/common/wall-card'
 import styles from './index.module.scss'
@@ -18,8 +18,22 @@ export default function PostWall(props) {
   const router = useRouter()
   const { auth } = useAuth()
   const userId = auth.userData.id
+  // const { type, setType } = usePost()
   // const postId = wallCard?.id
+  const tabChangeHandle = (tab) => {
+    setSort(tab)
+    setType(tab)
+    router.push({
+      pathname: '/post',
+      query: { sort: tab },
+    })
+  }
 
+  useEffect(() => {
+    if (router.query.sort) {
+      setSort(router.query.sort)
+    }
+  }, [router.query])
   // render
   useEffect(() => {
     fetchPosts()
@@ -83,14 +97,14 @@ export default function PostWall(props) {
           </div>
           <div className={styles['post-filter']}>
             <button
-              onClick={() => setSort('total_count')}
+              onClick={() => tabChangeHandle('total_count')}
               className={sort === 'total_count' ? styles['active'] : ''}
             >
               熱門
             </button>
             <div className={styles['filter-line']}></div>
             <button
-              onClick={() => setSort('created_at')}
+              onClick={() => tabChangeHandle('created_at')}
               className={sort === 'created_at' ? styles['active'] : ''}
             >
               最新
@@ -118,8 +132,8 @@ export default function PostWall(props) {
                   imageSrc={imgSrc}
                   title={post.title}
                   username={post.nickname}
-                  avatarSrc={`/user/img/${post.user_img}`}
-                  likeCount={post.like_count}
+                  // avatarSrc={`/user/img/${post.user_img}`}
+                  // likeCount={post.like_count}
                 />
               )
             })}

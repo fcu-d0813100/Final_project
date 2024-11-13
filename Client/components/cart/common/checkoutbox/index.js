@@ -24,36 +24,41 @@ export default function CheckoutBox() {
 
   const handleCouponSelect = (selectedCouponObj) => {
     if (selectedCouponObj) {
-      setDiscount(selectedCouponObj.discount_value || 0)
+      const discountValue = selectedCouponObj.discount_value || 0
       setDiscountName(
         `${selectedCouponObj.brand_name || ''} ${selectedCouponObj.name || ''}`
       )
+
+      // 計算折扣
+      if (discountValue <= 1 && discountValue > 0) {
+        const discountAmount = Math.floor(pTotalPrice * discountValue)
+        setDiscount(pTotalPrice - discountAmount)
+      } else if (discountValue > 1) {
+        setDiscount(discountValue)
+      } else {
+        setDiscount(0)
+      }
     } else {
       setDiscount(0)
       setDiscountName('')
     }
   }
 
-  // 使用 useEffect 在選擇優惠券後及時更新
   useEffect(() => {
     const storedCouponData = localStorage.getItem('selectedCouponObj')
     if (storedCouponData) {
       const couponData = JSON.parse(storedCouponData)
-      setDiscount(couponData.discount_value || 0)
-      setDiscountName(`${couponData.brand_name || ''} ${couponData.name || ''}`)
+      handleCouponSelect(couponData)
     }
-  }, [selectedCoupon]) // 每當 selectedCoupon 改變時重新運行 useEffect
+  }, [selectedCoupon, pTotalPrice])
 
-  //------------最後總額計算
   const finalPrice =
     pOriginalTotalPrice + wTotalPrice - discountDifference - discount
 
   return (
     <>
-      {/* 傳遞 handleCouponSelect 回調給 DiscountBox */}
       <DiscountBox onCouponSelect={handleCouponSelect} />
 
-      {/* 總計盒子 */}
       <div className={style['checkout_total']}>
         <div className={style['checkout_total_box']}>
           <div className="text-end pb-1">
@@ -67,10 +72,8 @@ export default function CheckoutBox() {
           )}
           {wTotalPrice !== 0 && (
             <div className={style.item}>
-              <>
-                <span>課程商品</span>
-                <span>NT${wTotalPrice.toLocaleString()}</span>
-              </>
+              <span>課程商品</span>
+              <span>NT${wTotalPrice.toLocaleString()}</span>
             </div>
           )}
           <div className={`${style.item} ${style['discount_item']}`}>
@@ -80,7 +83,7 @@ export default function CheckoutBox() {
           {discount !== 0 && (
             <div className={`${style.item} ${style['discount_item']}`}>
               <span>{discountName}</span>
-              <span>-NT${discount}</span>
+              <span>-NT${discount.toLocaleString()}</span>
             </div>
           )}
         </div>
