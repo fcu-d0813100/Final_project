@@ -391,7 +391,7 @@ export function AuthProvider({ children }) {
       })
     }
   }
-
+  // 更新會員資料
   const update = async (user, selectedFile) => {
     const formData = new FormData()
     formData.append('name', user.name)
@@ -399,6 +399,8 @@ export function AuthProvider({ children }) {
     formData.append('nickname', user.nickname)
     formData.append('gender', user.gender)
     formData.append('phone', user.phone)
+    formData.append('city', user.city)
+    formData.append('area', user.area)
     formData.append('address', user.address)
     formData.append('birthday', user.birthday)
 

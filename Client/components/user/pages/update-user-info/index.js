@@ -8,8 +8,8 @@ import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
 import PreviewUploadImage from '@/components/user/common/preview-upload-image'
-import utils from '@/components/cart/common/tw-zipcode'
-import dataTownships from '@/components/cart/common/tw-zipcode'
+// import utils from '@/components/cart/common/tw-zipcode'
+// import dataTownships from '@/components/cart/common/tw-zipcode'
 import {
   countries,
   townships,
@@ -94,6 +94,32 @@ export default function UpdateInfo({
   const handleFieldChange = (e) => {
     let nextUser = { ...user, [e.target.name]: e.target.value }
     setUser(nextUser)
+  }
+
+  const handleCityChange = (e) => {
+    const newCountryIndex = +e.target.value
+    setCountryIndex(newCountryIndex)
+    setTownshipIndex(-1)
+    setPostcode('')
+
+    if (newCountryIndex > -1) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        city: countries[newCountryIndex], // 更新 city
+      }))
+    }
+  }
+
+  const handleAreaChange = (e) => {
+    const newTownshipIndex = +e.target.value
+    setTownshipIndex(newTownshipIndex)
+
+    if (newTownshipIndex > -1) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        area: townships[countryIndex][newTownshipIndex], // 更新 area
+      }))
+    }
   }
 
   const checkError = (user) => {
@@ -211,9 +237,31 @@ export default function UpdateInfo({
 
   // 初始化會員資料
   const initUserData = async () => {
-    const user = await getUser()
-    // setUser({ ...user, password: '', confirmPassword: '' })
-    setUser(user)
+    const userData = await getUser()
+    setUser(userData)
+
+    // 查找對應的 countryIndex 和 townshipIndex
+    let initialCountryIndex = -1
+    let initialTownshipIndex = -1
+
+    countries.forEach((country, i) => {
+      if (country === userData.city) {
+        initialCountryIndex = i
+        townships[i].forEach((township, j) => {
+          if (township === userData.area) {
+            initialTownshipIndex = j
+          }
+        })
+      }
+    })
+
+    setCountryIndex(initialCountryIndex)
+    setTownshipIndex(initialTownshipIndex)
+
+    // 設置對應的郵遞區號（如果有）
+    if (initialCountryIndex > -1 && initialTownshipIndex > -1) {
+      setPostcode(postcodes[initialCountryIndex][initialTownshipIndex])
+    }
   }
 
   // 本頁一開始render後就會設定到user狀態中
@@ -395,23 +443,17 @@ export default function UpdateInfo({
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
           >
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                縣市{' '}
+              <label htmlFor="city" className={`form-label pb-2 fw-bold`}>
+                縣市
                 <span className={`ps fw-bold ${styles['info-address']}`}>
                   | city
                 </span>
-              </label>
+              </label>{' '}
               <select
+                name="city"
                 value={countryIndex}
-                onChange={(e) => {
-                  // 將字串轉成數字
-                  setCountryIndex(+e.target.value)
-                  // 重置townshipIndex的值
-                  setTownshipIndex(-1)
-                  // 重置postcode的值
-                  setPostcode('')
-                }}
-                className={`form-select  ${styles['form-select2']}`}
+                onChange={handleCityChange}
+                className={`form-select ${styles['form-select2']}`}
               >
                 <option value="-1">選擇縣市</option>
                 {countries.map((value, index) => (
@@ -422,18 +464,16 @@ export default function UpdateInfo({
               </select>
             </div>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                區域{' '}
+              <label htmlFor="area" className={`form-label pb-2 fw-bold`}>
+                區域
                 <span className={` ps fw-bold ${styles['info-address']}`}>
                   | area
                 </span>
-              </label>
+              </label>{' '}
               <select
+                name="area"
                 value={townshipIndex}
-                onChange={(e) => {
-                  // 將字串轉成數字
-                  setTownshipIndex(+e.target.value)
-                }}
+                onChange={handleAreaChange}
                 className={`form-select ${styles['form-select2']}`}
               >
                 <option value="-1">選擇區域</option>
@@ -446,16 +486,16 @@ export default function UpdateInfo({
               </select>
             </div>
             <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                地址{' '}
+              <label htmlFor="address" className={`form-label pb-2 fw-bold`}>
+                地址
                 <span className={`ps ${styles['info-address']} fw-bold`}>
                   | address
                 </span>
-              </label>
+              </label>{' '}
               <input
                 type="text"
                 className={`form-control ${styles['form-control2']}`}
-                name="streetAddress"
+                name="address"
                 placeholder="請輸入完整地址"
                 value={user.address}
                 onChange={handleFieldChange}
