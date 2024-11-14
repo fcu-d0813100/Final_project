@@ -50,7 +50,7 @@ export function AuthProvider({ children }) {
   const removeFavoriteWorkshop = async (workshop_id) => {
     try {
       const response = await fetch(
-        `http://localhost:3005/api/workshop/favorite/${workshop.workshop_id}/${auth.userData.id}`,
+        `http://localhost:3005/api/workshop/favorite/${workshop_id}/${auth.userData.id}`,
         {
           method: 'DELETE',
         }

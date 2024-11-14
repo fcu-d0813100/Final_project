@@ -174,6 +174,8 @@ export default function WorkshopDetail() {
 
         <div className="d-flex justify-content-between align-items-end pb-2">
           <WorkshopAddCartInfo
+            wid={tworkshop.id}
+            // 要加這個我的收藏才能帶到id
             name={tworkshop.name}
             registrationStart={tworkshop.registration_start}
             registrationEnd={tworkshop.registration_end}

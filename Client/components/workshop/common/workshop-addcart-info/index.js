@@ -2,6 +2,7 @@
 import styles from '@/components/workshop/common/workshop-detail.module.scss'
 import { PiHeartStraight, PiHeartStraightFill } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
+import { useFavoriteWorkshop } from '@/hooks/use-favorite-workshop'
 
 export default function WorkshopAddCartInfo({
   wid = '',
@@ -10,14 +11,8 @@ export default function WorkshopAddCartInfo({
   registrationEnd,
   price,
 }) {
-  const [favoriteWorkshops, setFavoriteWorkshops] = useState({})
-
-  const handleFavoriteClick = (id) => {
-    setFavoriteWorkshops((prevFavorites) => ({
-      ...prevFavorites,
-      [id]: !prevFavorites[id],
-    }))
-  }
+  const { favoriteWorkshop, handleFavoriteWorkshopClick } =
+    useFavoriteWorkshop()
   return (
     <>
       <div>
@@ -32,13 +27,18 @@ export default function WorkshopAddCartInfo({
         <p className="d-flex align-items-center">
           {/* 愛心收藏按鈕 */}
           <button
-            className={`border-0 bg-white d-flex align-items-center ph`}
+            className="border-0 bg-white d-flex align-items-center ph"
             onClick={(e) => {
               e.preventDefault()
-              handleFavoriteClick(wid)
+              if (wid) {
+                handleFavoriteWorkshopClick({ workshop_id: wid })
+                // console.log('workshop details:', { workshop_id: wid })
+              } else {
+                console.error('Error: workshop_id is undefined')
+              }
             }}
           >
-            {favoriteWorkshops[wid] ? (
+            {favoriteWorkshop[wid] ? (
               <PiHeartStraightFill color="#973929" />
             ) : (
               <PiHeartStraight />

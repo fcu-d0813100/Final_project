@@ -20,7 +20,8 @@ export default function WorkshopCardLg({
   price = '',
   status = '',
 }) {
-  const { favoriteWorkshop, handleFavoriteClick } = useFavoriteWorkshop()
+  const { favoriteWorkshop, handleFavoriteWorkshopClick } =
+    useFavoriteWorkshop()
 
   return (
     <Link href={`/workshop/detail/${wid}`} className={`${styles.workshop} p-0`}>
@@ -45,7 +46,7 @@ export default function WorkshopCardLg({
                 className={styles.heart}
                 onClick={(e) => {
                   e.preventDefault()
-                  handleFavoriteClick({ workshop_id: wid }) // 傳遞一個包含 workshop_id 的物件
+                  handleFavoriteWorkshopClick({ workshop_id: wid }) // 傳遞一個包含 workshop_id 的物件
                   console.log('workshop details:', { workshop_id: wid })
                 }}
               >

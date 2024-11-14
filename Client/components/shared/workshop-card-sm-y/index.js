@@ -17,14 +17,8 @@ export default function WorkshopCardSm({
   price = '',
   status = '',
 }) {
-  const [favoriteWorkshops, setFavoriteWorkshops] = useState({})
+  const [favoriteWorkshops, handleFavoriteClick] = useState({})
 
-  const handleFavoriteClick = (id) => {
-    setFavoriteWorkshops((prevFavorites) => ({
-      ...prevFavorites,
-      [id]: !prevFavorites[id],
-    }))
-  }
   return (
     <>
       <a href="#" className={`${styles.workshop} p-0`}>
