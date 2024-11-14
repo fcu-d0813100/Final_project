@@ -127,20 +127,14 @@ export default function Page1({
     }))
   }
 
-  // 取得目前的類別名稱
-  const [selectedType, setSelectedType] = useState('類別')
-  useEffect(() => {
-    const foundType = [
-      { name: 'type_id', option: '基礎化妝', value: 1 },
-      { name: 'type_id', option: '新娘化妝', value: 2 },
-      { name: 'type_id', option: '時尚與攝影化妝', value: 3 },
-      { name: 'type_id', option: '韓系美妝', value: 4 },
-      { name: 'type_id', option: '特效化妝', value: 5 },
-      { name: 'type_id', option: '美妝產品知識', value: 6 },
-    ].find((item) => item.value === Number(workshop.workshop_type_id))
-    console.log('Selected Type:', foundType?.option) // 檢查是否獲取正確的名稱
-    setSelectedType(foundType?.option || '類別')
-  }, [workshop.workshop_type_id])
+  // 更新課程類別
+  const handleTypeChange = (e) => {
+    const { value } = e.target
+    setWorkshop((prevData) => ({
+      ...prevData,
+      workshop_type_id: value, // 更新 workshop_type_id
+    }))
+  }
 
   return (
     <>
@@ -188,7 +182,7 @@ export default function Page1({
               </div>
               <div className="container d-flex gap-4 mb-3">
                 <SelectInput
-                  initName={selectedType} // 動態設定顯示的名稱
+                  initName={workshop.workshop_type_id} // 動態設定顯示的名稱
                   addClass="col-5"
                   forText="type_id"
                   titleCh="課程類別"
@@ -203,7 +197,7 @@ export default function Page1({
                   ]}
                   name="type_id"
                   value={workshop.workshop_type_id}
-                  onChange={handleChange}
+                  onChange={handleTypeChange}
                 />
 
                 <InputStyle
