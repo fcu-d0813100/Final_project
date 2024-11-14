@@ -8,6 +8,7 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import DetCarousel from '@/components/activity/common/DetCarousel'
 import axios from 'axios'
 import { useAuth } from '@/hooks/use-auth'
+
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 export default function ActivityDet() {
@@ -17,12 +18,12 @@ export default function ActivityDet() {
   const router = useRouter()
   const { id } = router.query
 
-  // 加載 Google Maps API
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   })
-
-  // 從 API 獲取活動詳細信息
+  const padZero = (num) => {
+    return num > 0 && num < 10 ? `0${num}` : num
+  }
   useEffect(() => {
     if (!id) return
 
@@ -40,7 +41,6 @@ export default function ActivityDet() {
     fetchActivityData()
   }, [id])
 
-  // 從 API 獲取前三高瀏覽量的活動
   useEffect(() => {
     const fetchTop3Activities = async () => {
       try {
@@ -67,7 +67,6 @@ export default function ActivityDet() {
     fetchTop3Activities()
   }, [])
 
-  // 通過地址獲取地理坐標
   useEffect(() => {
     if (activityData && activityData.address) {
       const geocodeAddress = async () => {
@@ -124,7 +123,7 @@ export default function ActivityDet() {
         <div className={`${Styles['sec3']} container d-flex flex-wrap`}>
           <div className={`${Styles['googleMap']} col-md-6`}>
             <GoogleMap
-              mapContainerStyle={{ width: '100%', height: '500px' }}
+              mapContainerStyle={{ width: '100%', height: '400px' }}
               center={coordinates}
               zoom={15}
             >
@@ -163,20 +162,27 @@ export default function ActivityDet() {
         </div>
         <div className={Styles['sec4']} container>
           <div className={Styles['item']}>
-            <p className={Styles['number']}>{activityData.currentREG}</p>
+            <p className={Styles['number']}>
+              {padZero(activityData.currentREG)}
+            </p>
             <p className={Styles['text']}>報名人數</p>
           </div>
           <div className={Styles['item']}>
-            <p className={Styles['number']}>{activityData.maxREG}</p>
+            <p className={Styles['number']}>{padZero(activityData.maxREG)}</p>
             <p className={Styles['text']}>名額</p>
           </div>
           <div className={Styles['item']}>
-            <p className={Styles['number']}>{activityData.views}</p>
+            <p className={Styles['number']}>{padZero(activityData.views)}</p>
             <p className={Styles['text']}>瀏覽次數</p>
           </div>
         </div>
         <div className={Styles['sec5']}>
-          <FormToggle />
+          <FormToggle
+            ENG_name={activityData.ENG_name}
+            CHN_name={activityData.CHN_name}
+            start_at={activityData.start_at}
+            end_at={activityData.end_at}
+          />
           <DetCarousel cardsData={cardsData} />
         </div>
       </div>

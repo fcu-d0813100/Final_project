@@ -13,6 +13,7 @@ const ProductList = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [isNewArrivals, setIsNewArrivals] = useState(false);
   const [isDiscounted, setIsDiscounted] = useState(false);
+  const [filterToggle, setFilterToggle] = useState(false);
 
   // 根據 URL 參數設定初始篩選條件
   useEffect(() => {
@@ -24,7 +25,8 @@ const ProductList = () => {
   // 篩選函數
   const applyFilters = async () => {
     try {
-      let apiUrl = 'http://localhost:3005/api/product/product-list';
+      // let apiUrl = 'http://localhost:3005/api/product/product-list';
+      let baseUrl = 'http://localhost:3005/api/product/product-list';
 
       // 動態生成查詢參數
       const params = new URLSearchParams();
@@ -37,8 +39,14 @@ const ProductList = () => {
       if (selectedBrand) params.append('brand', selectedBrand);
       if (isNewArrivals) params.append('isNewArrivals', 'true');
       if (isDiscounted) params.append('isDiscounted', 'true');
+      if (filterToggle === 'popular') params.append('isPopular', 'true');
 
-      apiUrl += `?${params.toString()}`;
+      // apiUrl += `?${params.toString()}`;
+
+      // 使用 URLSearchParams.toString() 構建查詢字符串，這樣就不會出現重複的參數
+    const queryString = params.toString();
+    const apiUrl = `${baseUrl}?${queryString}`;
+    console.log('Requesting API with URL:', apiUrl);
 
       const response = await fetch(apiUrl);
       if (!response.ok) throw new Error('網路回應不成功：' + response.status);
@@ -52,7 +60,7 @@ const ProductList = () => {
   // 當篩選條件改變時應用篩選
   useEffect(() => {
     applyFilters();
-  }, [selectedCategory, selectedSubCategory, selectedPriceRange, selectedBrand, isNewArrivals, isDiscounted]);
+  }, [selectedCategory, selectedSubCategory, selectedPriceRange, selectedBrand, isNewArrivals, isDiscounted, filterToggle]);
 
   // 當選擇主要分類時
   const handleCategorySelect = (categoryId) => {
@@ -77,11 +85,15 @@ const ProductList = () => {
   // 當選擇價格範圍時
   const handlePriceSelect = (minPrice, maxPrice) => {
     setSelectedPriceRange({ min: minPrice, max: maxPrice });
+    // 這裡不重置其他篩選函數，才能達到複合篩選
   };
 
   // 當選擇品牌時
   const handleBrandSelect = (brandName) => {
-    setSelectedBrand(brandName);
+    if (selectedBrand !== brandName) {
+      setSelectedBrand(brandName);
+    }
+    // 這裡不重置其他篩選函數，才能達到複合篩選
   };
 
   // 新品上市
@@ -93,6 +105,18 @@ const ProductList = () => {
     setSelectedPriceRange(null);
     setSelectedBrand(null);
   };
+
+  // 人氣商品篩選
+  const handlePopularClick = () => {
+  setIsNewArrivals(false);
+  setIsDiscounted(false);
+  setSelectedCategory(null);
+  setSelectedSubCategory(null);
+  setSelectedPriceRange(null);
+  setSelectedBrand(null);
+  setFilterToggle('popular'); // 設置為人氣商品篩選
+};
+
 
   // 優惠商品
   const handleDiscountClick = () => {
@@ -117,6 +141,8 @@ const ProductList = () => {
       setSelectedBrand(null);
       setIsNewArrivals(false);
       setIsDiscounted(false);
+      setFilterToggle(false);
+      // setFilterToggle(false);
     } catch (err) {
       console.log(err);
     }
@@ -147,6 +173,7 @@ const ProductList = () => {
         onPriceFilterClick={handlePriceSelect}
         onBrandFilterClick={handleBrandSelect}
         onKeywordSearch={fetchProductsByKeyword}
+        onHandlePopularClick={handlePopularClick}
       />
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { X } from '@phosphor-icons/react'
-import { useRouter } from 'next/router' // 新增 useRouter
+import { useRouter } from 'next/router'
 import styles from './discount-box.module.scss'
 import { useAuth } from '@/hooks/use-auth'
 import { useCartProduct } from '@/hooks/use-cartP'
@@ -10,89 +10,42 @@ import { useCartProduct } from '@/hooks/use-cartP'
 export default function DiscountBox({ onCouponSelect }) {
   const { auth } = useAuth()
   const userId = auth.userData.id
-  const router = useRouter() // 使用 router 來導航
+  const router = useRouter()
 
-  const { productItems } = useCartProduct()
-  const [coupons, setCoupons] = useState([])
-  const [selectedCoupon, setSelectedCoupon] = useState('')
+  const {
+    productItems,
+    coupons,
+    selectedCoupon,
+    loadCoupons,
+    selectCoupon,
+    removeCoupon,
+  } = useCartProduct()
+
   const [tempCoupon, setTempCoupon] = useState('')
   const [show, setShow] = useState(false)
 
-  const fetchCoupons = async () => {
-    if (!userId) return
-
-    try {
-      const response = await fetch(
-        `http://localhost:3005/api/getCoupon?userId=${userId}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        }
-      )
-      const data = await response.json()
-
-      if (data?.data) {
-        const now = new Date()
-        const productBrands = productItems
-          .map((product) => product.brand)
-          .concat('All')
-
-        const validCoupons = data.data.filter((coupon) => {
-          const startDate = new Date(coupon.start_date)
-          const endDate = new Date(coupon.end_date)
-          return (
-            startDate <= now &&
-            endDate >= now &&
-            productBrands.includes(coupon.brand_name)
-          )
-        })
-
-        setCoupons(validCoupons)
-      } else {
-        console.warn('No discount data found')
-      }
-    } catch (error) {
-      console.error('Failed to fetch coupon data:', error)
-    }
-  }
-
   useEffect(() => {
-    fetchCoupons()
+    loadCoupons(userId, productItems)
   }, [userId, productItems])
 
-  // Load previously selected coupon from localStorage
-  useEffect(() => {
-    const storedCoupon = localStorage.getItem('selectedCoupon')
-    if (storedCoupon) {
-      setSelectedCoupon(storedCoupon)
-    }
-  }, [])
-
-  const handleCouponChange = (event) => {
-    setTempCoupon(event.target.value)
-  }
-
   const handleConfirm = () => {
-    setSelectedCoupon(tempCoupon)
-
-    const selectedCouponObj = coupons.find(
-      (coupon) => coupon.coupon_list_id == tempCoupon
-    )
-    localStorage.setItem('selectedCoupon', tempCoupon)
-
-    if (selectedCouponObj) {
-      localStorage.setItem(
-        'selectedCouponObj',
-        JSON.stringify(selectedCouponObj)
-      )
+    if (tempCoupon === '') {
+      // 如果選擇的是 "選擇優惠券" 則取消已選優惠券
+      removeCoupon()
+      if (onCouponSelect) {
+        onCouponSelect(null) // 傳遞 null 以表示沒有選擇任何優惠券
+      }
     } else {
-      localStorage.removeItem('selectedCouponObj')
+      const selected = coupons.find(
+        (coupon) => coupon.coupon_list_id == tempCoupon
+      )
+      if (selected) {
+        selectCoupon(selected)
+        if (onCouponSelect) {
+          onCouponSelect(selected)
+        }
+      }
     }
-
-    if (onCouponSelect) {
-      onCouponSelect(selectedCouponObj || null)
-    }
-
     setShow(false)
   }
 
@@ -109,14 +62,7 @@ export default function DiscountBox({ onCouponSelect }) {
         <span>優惠券</span>
         <span className="ps">
           {selectedCoupon
-            ? (() => {
-                const selected = coupons.find(
-                  (coupon) => coupon.coupon_list_id == selectedCoupon
-                )
-                return selected
-                  ? `${selected.brand_name} ${selected.name}`
-                  : '輸入享有折扣 >'
-              })()
+            ? `${selectedCoupon.brand_name} ${selectedCoupon.name}`
             : '輸入享有折扣 >'}
         </span>
       </div>
@@ -143,7 +89,7 @@ export default function DiscountBox({ onCouponSelect }) {
               <Form.Label className="h6 mt-3 mb-3">優惠券折扣 :</Form.Label>
               <Form.Select
                 value={tempCoupon}
-                onChange={handleCouponChange}
+                onChange={(e) => setTempCoupon(e.target.value)}
                 aria-label="Default select example"
                 className={styles['form-select']}
               >

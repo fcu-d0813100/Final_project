@@ -49,6 +49,8 @@ export default function CartList() {
     onIncreaseProduct = () => {},
     onDecreaseProduct = () => {},
     onRemoveProduct = () => {},
+    coupons,
+    selectedCoupon,
   } = useCartProduct()
 
   // 從use-cartW鉤子取得課程內容
@@ -72,6 +74,12 @@ export default function CartList() {
     const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
     setShowWorkshopBox(Array.isArray(Workshopcart) && Workshopcart.length > 0)
   }, [])
+
+  // console.log(coupons)
+  let discountValue = 1
+  if (selectedCoupon && selectedCoupon.discount_value <= 1) {
+    discountValue = selectedCoupon.discount_value
+  }
 
   return (
     <>
@@ -112,6 +120,14 @@ export default function CartList() {
                           />
                         </div>
                         <div className={style['cosmetic-text']}>
+                          {/* 如果有折扣，顯示提示文字 */}
+                          {selectedCoupon &&
+                            selectedCoupon.discount_value <= 1 && (
+                              <div className="ps text-danger">
+                                再享受 {selectedCoupon.discount_value * 100}%
+                                折扣
+                              </div>
+                            )}
                           <div className="ps">{product.brand}</div>
                           <div className="h6 mb-3">{product.product_name}</div>
                           <div className={style['sub_text']}>
@@ -160,7 +176,12 @@ export default function CartList() {
                       {/* 商品價格 */}
                       <div className={`h6 ${style.price}`}>
                         NT$
-                        {(product.price * product.qty).toLocaleString()}
+                        {(selectedCoupon && selectedCoupon.discount_value <= 1
+                          ? Math.floor(
+                              product.price * product.qty * discountValue
+                            )
+                          : product.price * product.qty
+                        ).toLocaleString()}
                         <div className={style['origin_price']}>
                           NT$
                           {(
@@ -168,6 +189,7 @@ export default function CartList() {
                           ).toLocaleString()}
                         </div>
                       </div>
+
                       <div className={style.trash}>
                         <button
                           type="button"
@@ -181,9 +203,25 @@ export default function CartList() {
                     </div>
                   ))}
                   <div className={style['cosmetic_amount']}>
-                    商品小計：
-                    <span>NT${pOriginalTotalPrice.toLocaleString()}</span>
-                    <span>NT${pTotalPrice.toLocaleString()}</span>
+                    {selectedCoupon && selectedCoupon.discount_value <= 1 && (
+                      <div className="ps text-danger">
+                        再享受 {selectedCoupon.discount_value * 100}% 折扣
+                      </div>
+                    )}
+                    {/* 如果有優惠券，顯示折扣提示文字 */}
+                    <span className={style['title']}> 商品小計：</span>
+                    <span className={style['origin-price']}>
+                      NT${pOriginalTotalPrice.toLocaleString()}
+                    </span>
+                    {/* 判斷是否有優惠券，顯示折扣後的價格 */}
+                    <span className={style['discount-price']}>
+                      NT$
+                      {selectedCoupon && selectedCoupon.discount_value <= 1
+                        ? Math.floor(
+                            pTotalPrice * discountValue
+                          ).toLocaleString()
+                        : pTotalPrice.toLocaleString()}
+                    </span>
                   </div>
                 </div>
               )}

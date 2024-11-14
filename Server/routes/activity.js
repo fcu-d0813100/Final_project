@@ -6,6 +6,10 @@ import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+//--------------------------------------管理員上架與編輯-----------------------------------------------
+//--------------------------------------管理員上架與編輯-----------------------------------------------
+//--------------------------------------管理員上架與編輯-----------------------------------------------
+
 // 路徑與上傳設置
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -214,9 +218,15 @@ router.put('/delete/:id', async function (req, res, next) {
     res.status(500).json({ status: 'error', message: '刪除活動失敗' })
   }
 })
+
+//--------------------------------------活動列表及活動細節-----------------------------------------------
+//--------------------------------------活動列表及活動細節-----------------------------------------------
+//--------------------------------------活動列表及活動細節-----------------------------------------------
+
 // 搜索活動數據
-router.get('/search', async (req, res) => {
+router.get('/search/:userId', async (req, res) => {
   const { search } = req.query // 從查詢參數中獲取 search
+  const { userId } = req.params // 從路徑參數中獲取 userId
 
   try {
     // 檢查是否提供了 search 參數
@@ -224,13 +234,22 @@ router.get('/search', async (req, res) => {
       return res.status(400).json({ error: '缺少搜尋參數' })
     }
 
-    // 使用 LIKE 語法進行模糊搜索，忽略大小寫
+    // 使用 LIKE 語法進行模糊搜索，並連接 activity_fav 表，根據 userId 判斷是否收藏
     const [rows] = await db.query(
-      `SELECT * FROM activity 
-       WHERE LOWER(brand) LIKE LOWER(?) 
-       OR LOWER(ENG_name) LIKE LOWER(?) 
-       OR LOWER(CHN_name) LIKE LOWER(?) AND valid = 1`,
-      [`%${search}%`, `%${search}%`, `%${search}%`]
+      `SELECT 
+        activity.*, 
+        IF(activity_fav.user_id IS NOT NULL, 1, 0) AS is_favorite
+      FROM 
+        activity
+      LEFT JOIN 
+        activity_fav ON activity.id = activity_fav.act_id AND activity_fav.user_id = ?
+      WHERE 
+        (LOWER(activity.brand) LIKE LOWER(?) 
+         OR LOWER(activity.ENG_name) LIKE LOWER(?) 
+         OR LOWER(activity.CHN_name) LIKE LOWER(?))
+        AND activity.valid = 1
+        ORDER BY activity.id ASC`,
+      [userId, `%${search}%`, `%${search}%`, `%${search}%`]
     )
 
     if (rows.length === 0) {
@@ -243,9 +262,11 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
+
 //搜尋狀態
-router.get('/status', async (req, res) => {
+router.get('/status/:userId', async (req, res) => {
   const { status } = req.query // 獲取查詢參數 status
+  const { userId } = req.params
 
   try {
     const currentDate = new Date()
@@ -253,15 +274,39 @@ router.get('/status', async (req, res) => {
     let query
     if (status === '0') {
       // 顯示開始時間小於當前時間的活動（報名中）
-      query = 'SELECT * FROM activity WHERE start_at < ? AND valid = 1'
+      query = `
+        SELECT 
+          activity.*, 
+          IF(activity_fav.user_id IS NOT NULL, 1, 0) AS is_favorite
+        FROM 
+          activity
+        LEFT JOIN 
+          activity_fav ON activity.id = activity_fav.act_id AND activity_fav.user_id = ?
+        WHERE 
+          activity.start_at < ? 
+          AND activity.valid = 1
+        ORDER BY activity.id ASC
+      `
     } else if (status === '1') {
       // 顯示開始時間大於當前時間的活動（已截止）
-      query = 'SELECT * FROM activity WHERE start_at > ? AND valid = 1'
+      query = `
+        SELECT 
+          activity.*, 
+          IF(activity_fav.user_id IS NOT NULL, 1, 0) AS is_favorite
+        FROM 
+          activity
+        LEFT JOIN 
+          activity_fav ON activity.id = activity_fav.act_id AND activity_fav.user_id = ?
+        WHERE 
+          activity.start_at > ? 
+          AND activity.valid = 1
+        ORDER BY activity.id ASC
+      `
     } else {
       return res.status(400).json({ error: '無效的狀態參數' })
     }
 
-    const [rows] = await db.query(query, [currentDate])
+    const [rows] = await db.query(query, [userId, currentDate])
 
     if (rows.length === 0) {
       return res.status(404).json({ error: '活動未找到' })
@@ -273,6 +318,7 @@ router.get('/status', async (req, res) => {
     res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
+//根據ID撈取單一筆活活動資料
 router.get('/id', async (req, res) => {
   const { id } = req.query // 獲取查詢參數 id
 
@@ -325,25 +371,36 @@ router.get('/top3', async (req, res) => {
     res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
-router.post('/activity-reg/:uid', upload.array('files'), async (req, res) => {
+router.post('/activity-reg/:userId', async (req, res) => {
+  const { userId } = req.params
+  const {
+    ENG_name: eng_name,
+    CHN_name: chn_name,
+    name: applicant_name,
+    phone: applicant_phone,
+    date: applicant_date,
+    people: applicant_amount,
+    remark,
+  } = req.body
+
   try {
-    const {
-      user_id,
-      eng_name,
-      chn_name,
-      applicant_name,
-      applicant_phone,
-      applicant_date,
-      applicant_amount,
-      remark,
-    } = req.body
-    console.log('接收到的資料:', req.body) // 確認 req.body 是否有資料
-    if (!eng_name || !chn_name || !user_id) {
-      return res.status(400).json({ error: '缺少必要的欄位資料' })
+    // 從 activity 資料表中獲取 currentREG 欄位的值
+    const [activityRows] = await db.query(
+      'SELECT currentREG FROM activity WHERE eng_name = ? AND chn_name = ?',
+      [eng_name, chn_name]
+    )
+
+    if (activityRows.length === 0) {
+      return res.status(404).json({ error: '未找到對應的活動' })
     }
 
-    console.log('接收的文字數據:', {
-      user_id,
+    // 計算新的 currentREG 值
+    const currentREG = Number(activityRows[0].currentREG)
+    const updatedREG = currentREG + Number(applicant_amount)
+
+    // 插入新的報名記錄到 registration_list 資料表
+    await db.query('INSERT INTO registration_list SET ?', {
+      user_id: userId,
       eng_name,
       chn_name,
       applicant_name,
@@ -353,44 +410,19 @@ router.post('/activity-reg/:uid', upload.array('files'), async (req, res) => {
       remark,
     })
 
-    const sqlInsertAct = `
-      INSERT INTO registration_list
-      (user_id,
-      eng_name,
-      chn_name,
-      applicant_name,
-      applicant_phone,
-      applicant_date,
-      applicant_amount,
-      remark,)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `
+    // 更新 activity 資料表中的 currentREG 欄位
+    await db.query(
+      'UPDATE activity SET currentREG = ? WHERE eng_name = ? AND chn_name = ?',
+      [updatedREG, eng_name, chn_name]
+    )
 
-    const [actResult] = await db.query(sqlInsertAct, [
-      user_id,
-      eng_name,
-      chn_name,
-      applicant_name,
-      applicant_phone,
-      applicant_date,
-      applicant_amount,
-      remark,
-    ])
-
-    const actId = actResult.insertId
-
-    res.json({
-      status: 'success',
-      message: `ID:${actId} 報名資料插入成功`,
-    })
+    res.status(200).json({ message: '報名成功' })
   } catch (error) {
-    console.error('Error creating event:', error)
-    res.status(500).json({
-      status: 'error',
-      message: '報名資料創建失敗',
-    })
+    console.error('資料庫操作錯誤:', error)
+    res.status(400).json({ error: '資料庫操作錯誤' })
   }
 })
+
 // 添加收藏
 router.post('/favorite', async (req, res) => {
   const { activityId, userId } = req.body
@@ -403,7 +435,7 @@ router.post('/favorite', async (req, res) => {
     res.status(500).json({ error: '伺服器錯誤，無法添加收藏' })
   }
 })
-//會員中心撈收藏資料用
+//會員中心撈收藏資料用(針對特定user做撈取)
 router.get('/favorite/:userId', async (req, res) => {
   const { userId } = req.params // 获取请求参数中的 userId
   try {
@@ -435,7 +467,7 @@ router.delete('/unfavorite', async (req, res) => {
   }
 })
 
-// 獲取所有活動數據
+// 獲取所有活動數據(根據每個用戶的收藏顯示出活動列表)
 router.get('/:userId', async (req, res) => {
   const userId = req.params.userId
 
@@ -464,20 +496,52 @@ router.get('/:userId', async (req, res) => {
   }
 })
 
-// 獲取特定月份的活動數據
-router.get('/month/:month', async (req, res) => {
-  const { month } = req.params // 獲取路徑參數中的 month
+// 獲取特定月份的活動數據(登出的路由)
+// router.get('/month/:month', async (req, res) => {
+//   const { month } = req.params // 獲取路徑參數中的 month
+//   try {
+//     const [rows] = await db.query(
+//       'SELECT * FROM activity WHERE MONTH(start_at) = ? AND valid = 1',
+//       [month]
+//     )
+
+//     if (rows.length === 0) {
+//       return res.status(404).json({ error: '活動未找到' })
+//     }
+
+//     res.json(rows) // 返回所有符合條件的活動
+//   } catch (error) {
+//     console.error('Failed to fetch activity details:', error)
+//     res.status(500).json({ error: '無法獲取活動詳細信息' })
+//   }
+// })
+router.get('/month/:month/:userId', async (req, res) => {
+  const { month, userId } = req.params // 获取路径参数中的 month 和 userId
+
   try {
     const [rows] = await db.query(
-      'SELECT * FROM activity WHERE MONTH(start_at) = ? AND valid = 1',
-      [month]
+      `
+      SELECT 
+        activity.*, 
+        IF(activity_fav.user_id IS NOT NULL, 1, 0) AS is_favorite
+      FROM 
+        activity
+      LEFT JOIN 
+        activity_fav ON activity.id = activity_fav.act_id AND activity_fav.user_id = ?
+      WHERE 
+        MONTH(activity.start_at) = ? 
+        AND activity.valid = 1
+      ORDER BY 
+        activity.id ASC
+      `,
+      [userId, month]
     )
 
     if (rows.length === 0) {
       return res.status(404).json({ error: '活動未找到' })
     }
 
-    res.json(rows) // 返回所有符合條件的活動
+    res.json(rows) // 返回所有符合条件的活动
   } catch (error) {
     console.error('Failed to fetch activity details:', error)
     res.status(500).json({ error: '無法獲取活動詳細信息' })

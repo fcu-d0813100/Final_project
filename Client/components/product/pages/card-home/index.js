@@ -1,87 +1,44 @@
 // pages/card-home/index.js
-import React from 'react'
-import ProductCardContainer1 from '@/components/product/common/product-container1'
-import ProductCardContainer2 from '@/components/product/common/product-container2'
-
-const products = [
-  {
-    brand: 'YSL',
-    name: '時尚印記啞光唇釉',
-    originalPrice: 2080,
-    salePrice: 1580,
-    imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-    color: '#e3a790',
-  },
-  {
-    brand: 'NARS',
-    name: '唇膏',
-    originalPrice: 1900,
-    salePrice: 1400,
-    imageUrl: '/product/NARS_LS01_M_133.webp',
-    color: '#732111',
-  },
-  {
-    brand: 'LANCOME',
-    name: '絕對完美柔霧唇膏',
-    originalPrice: 2500,
-    salePrice: 2200,
-    imageUrl: '/product/LANCOME_LS01_M_196.webp',
-    color: '#8f352d',
-  },
-  {
-    id: 1,
-    brand: 'YSL',
-    name: '時尚印記啞光唇釉',
-    originalPrice: 2080,
-    salePrice: 1580,
-    imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-    color: '#e3a790',
-  },
-  {
-    id: 2,
-    brand: 'YSL',
-    name: '時尚印記啞光唇釉',
-    originalPrice: 2080,
-    salePrice: 1580,
-    imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-    color: '#e3a790',
-  },
-  {
-    id: 3,
-    brand: 'NARS',
-    name: '唇膏',
-    originalPrice: 1900,
-    salePrice: 1400,
-    imageUrl: '/product/NARS_LS01_M_133.webp',
-    color: '#732111',
-  },
-  {
-    id: 4,
-    brand: 'LANCOME',
-    name: '絕對完美柔霧唇膏',
-    originalPrice: 2500,
-    salePrice: 2200,
-    imageUrl: '/product/LANCOME_LS01_M_196.webp',
-    color: '#8f352d',
-  },
-  {
-    id: 5,
-    brand: 'YSL',
-    name: '時尚印記啞光唇釉',
-    originalPrice: 2080,
-    salePrice: 1580,
-    imageUrl: '/product/NARS_ES01_M_ADULTS.webp',
-    color: '#e3a790',
-  },
-  // 可以繼續添加其他商品
-]
+import React, { useEffect, useState } from 'react'
+import CardCarousel from '@/components/product/common/product-container1'
+import CardCarousel2 from '@/components/product/common/product-container2'
 
 const CardHomePage = () => {
+  const [newArrivalProducts, setNewArrivalProducts] = useState([])
+  const [popularProducts, setPopularProducts] = useState([])
+
+  useEffect(() => {
+    // Fetch 新品上市商品資料
+    const fetchNewArrivals = async () => {
+      try {
+        const response = await fetch(`http://localhost:3005/api/product/product-list?isNewArrivals=true&timestamp=${Date.now()}`)
+        if (!response.ok) throw new Error('Failed to fetch new arrivals')
+        const data = await response.json()
+        setNewArrivalProducts(data)
+      } catch (error) {
+        console.error('Error fetching new arrivals:', error)
+      }
+    }
+  // Fetch 人氣商品資料
+  const fetchPopularProducts = async () => {
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/product-list?isPopular=true&timestamp=${Date.now()}`)
+      if (!response.ok) throw new Error('Failed to fetch popular products')
+      const data = await response.json()
+      setPopularProducts(data.slice(0, 8))
+    } catch (error) {
+      console.error('Error fetching popular products:', error)
+    }
+  }
+    fetchNewArrivals()
+    fetchPopularProducts()
+  }, [])
+
   return (
     <div>
-      <ProductCardContainer1 products={products} />
+      <CardCarousel products={newArrivalProducts} />
       <hr />
-      <ProductCardContainer2 products={products} />
+      <CardCarousel2 products={popularProducts} />
     </div>
   )
 }
