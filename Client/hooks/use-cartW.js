@@ -54,7 +54,17 @@ export function WorkshopCartProvider({ children }) {
   const onRemoveWorkshop = (workshopId) => {
     const nextWorkshopItems = workshopItems.filter((v) => v.id !== workshopId)
     setWorkshopItems(nextWorkshopItems)
+
+    // 檢查如果 workshopItems 為空，則刷新頁面
+    if (nextWorkshopItems.length === 0) {
+      window.location.reload() // 刷新頁面
+    }
   }
+
+  // 處理課程清空
+  const onClearWorkshop = () => setWorkshopItems([])
+
+  const wCartItems = workshopItems.length
 
   // 計算課程總數量與總金額
   const wTotalQty = workshopItems.reduce((acc, v) => acc + v.qty, 0)
@@ -84,6 +94,8 @@ export function WorkshopCartProvider({ children }) {
         onDecreaseWorkshop,
         onIncreaseWorkshop,
         onRemoveWorkshop,
+        onClearWorkshop, // 清空課程購物車
+        wCartItems,
       }}
     >
       {children}

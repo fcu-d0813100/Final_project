@@ -12,6 +12,7 @@ import PreviewUploadImage from '@/components/user/common/preview-upload-image'
 export default function UpdateInfo() {
   const [selectedFile, setSelectedFile] = useState(null)
   const { auth, update, getUser, deleteUser } = useAuth()
+
   const router = useRouter()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
@@ -57,55 +58,97 @@ export default function UpdateInfo() {
     }
     // 如果newErrors中的物件值中其中有一個非空白字串，代表有錯誤發生
     const hasErrors = Object.values(newErrors).some((v) => v)
-
     // 表單檢查--END---
     return { newErrors, hasErrors }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    // 檢查其他用戶資料並進行更新
     const { newErrors, hasErrors } = checkError(user)
-    console.log('錯誤檢查:', newErrors, hasErrors) // 檢查錯誤狀態
+    // console.log('錯誤檢查:', newErrors, hasErrors)
     setErrors(newErrors)
     if (hasErrors) {
       return
     }
 
-    // 上傳頭像用，有選擇檔案時再上傳
-    if (selectedFile) {
-      const formData = new FormData()
-      formData.append('avatar', selectedFile)
-
-      try {
-        const res2 = await update(user, selectedFile)
-        console.log('伺服器回應:', res2)
-
-        const resData = await res2.json()
-        console.log('Response data:', resData)
-
-        if (resData.status === 'success') {
-          toast.success('會員頭像修改成功')
-        } else {
-          console.error('更新失敗 - 響應數據狀態錯誤:', resData.status)
-          toast.error('更新失敗，請稍後再試')
-        }
-      } catch (error) {
-        console.error('頭貼更新失敗:', error)
-        toast.error('頭貼更新失敗，請稍後再試')
-      }
-    }
-
-    // 更新用戶資料
     try {
-      console.log('發送用戶資料:', user) // 確認發送的資料
-      await update(user)
-      console.log('更新成功')
-      // router.push('/user'); // 跳轉到 /user 頁面
+      // 如果有選擇檔案，執行更新頭像的動作
+      if (selectedFile) {
+        const resData = await update(user, selectedFile)
+        // console.log('Response data:', resData)
+        if (resData.status === 'success') {
+          toast.success('會員頭像修改成功', {
+            style: {
+              border: '1.2px solid #90957a',
+              padding: '12px 40px',
+              color: '#626553',
+            },
+            iconTheme: {
+              primary: '#626553',
+              secondary: '#fff',
+            },
+          })
+          setTimeout(() => {
+            router.push('/user')
+          }, 2000)
+        } else {
+          // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+          toast.error('更新失敗，請稍後再試', {
+            style: {
+              border: '1.2px solid #90957a',
+              padding: '12px 40px',
+              color: '#963827',
+            },
+            iconTheme: {
+              primary: '#963827',
+              secondary: '#fff',
+            },
+          })
+        }
+      }
+
+      // 執行用戶資料的更新
+      const resData = await update(user)
+      // console.log('用戶資料更新結果:', resData)
+      if (resData.status === 'success') {
+        toast.success('您已更新個人資料', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+      } else {
+        // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+        toast.error('更新失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
     } catch (error) {
-      console.error('更新失敗:', error)
-      toast.error('更新失敗，請稍後再試')
+      // console.error('更新失敗:', error)
+      toast.error('更新失敗，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
