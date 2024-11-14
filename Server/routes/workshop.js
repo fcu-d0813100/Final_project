@@ -556,7 +556,7 @@ router.delete('/myWorkshop/delete', authenticate, async function (req, res) {
 
 //------------------------------------------------------------------------------------------
 // 加入收藏
-router.post('/favorites/:workshop_id/:user_id', async (req, res) => {
+router.post('/favorite/:workshop_id/:user_id', async (req, res) => {
   const { workshop_id, user_id } = req.params
 
   if (!workshop_id || !user_id) {
@@ -588,7 +588,7 @@ router.post('/favorites/:workshop_id/:user_id', async (req, res) => {
 })
 
 // 取消收藏
-router.delete('/favorites/:workshop_id/:user_id', async (req, res) => {
+router.delete('/favorite/:workshop_id/:user_id', async (req, res) => {
   const { workshop_id, user_id } = req.params
 
   if (!workshop_id || !user_id) {
@@ -615,7 +615,7 @@ router.delete('/favorites/:workshop_id/:user_id', async (req, res) => {
 
 // 查詢指定使用者的收藏清單
 // 查詢指定使用者的收藏課程
-router.get('/favorites/:user_id', async (req, res) => {
+router.get('/favorite/search/:user_id', async (req, res) => {
   const { user_id } = req.params
 
   if (!user_id) {
