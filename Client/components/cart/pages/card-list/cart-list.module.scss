@@ -102,7 +102,6 @@
       }
     }
 
-    .cosmetic_amount,
     .course_amount {
       background-color: $gray-100;
       border: 1px solid $gray-200;
@@ -116,6 +115,27 @@
         margin-inline: 8px;
       }
       span:nth-child(2) {
+        font-size: 20px;
+        color: $red-500;
+      }
+    }
+
+    .cosmetic_amount {
+      background-color: $gray-100;
+      border: 1px solid $gray-200;
+      border-radius: 0 0 5px 5px;
+      padding: 20px 40px;
+      text-align: end;
+      margin-bottom: 30px;
+      .title {
+        font-size: 16px;
+      }
+      .origin-price {
+        color: $gray-200;
+        text-decoration: line-through;
+        margin-inline: 8px;
+      }
+      .discount-price {
         font-size: 20px;
         color: $red-500;
       }

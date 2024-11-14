@@ -80,7 +80,7 @@ export default function CheckoutBox() {
             <span>全站95折優惠</span>
             <span>-NT${discountDifference.toLocaleString()}</span>
           </div>
-          {discount !== 0 && (
+          {selectedCoupon && (
             <div className={`${style.item} ${style['discount_item']}`}>
               <span>{discountName}</span>
               <span>-NT${discount.toLocaleString()}</span>
