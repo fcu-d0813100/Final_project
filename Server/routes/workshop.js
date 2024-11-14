@@ -555,5 +555,105 @@ router.delete('/myWorkshop/delete', authenticate, async function (req, res) {
 })
 
 //------------------------------------------------------------------------------------------
+// 加入收藏
+router.post('/favorites/:workshop_id/:user_id', async (req, res) => {
+  const { workshop_id, user_id } = req.params
+
+  if (!workshop_id || !user_id) {
+    return res.status(400).json({ message: '缺少必要的參數' })
+  }
+
+  try {
+    // 檢查課程收藏狀態
+    const [existingFavorite] = await db.query(
+      `SELECT * FROM workshop_like WHERE workshop_id = ${req.params.workshop_id} AND user_id = ${req.params.user_id}`,
+      [workshop_id, user_id]
+    )
+
+    if (existingFavorite.length > 0) {
+      return res.status(409).json({ message: '課程已收藏' })
+    }
+
+    // 插入收藏紀錄
+    await db.query(
+      `INSERT INTO workshop_like (workshop_id, user_id, created_at) VALUES (${req.params.workshop_id}, ${req.params.user_id}, NOW())`,
+      [workshop_id, user_id]
+    )
+
+    res.status(201).json({ message: '課程已收藏' })
+  } catch (error) {
+    console.error('收藏課程錯誤:', error)
+    res.status(500).json({ message: '課程收藏失敗' })
+  }
+})
+
+// 取消收藏
+router.delete('/favorites/:workshop_id/:user_id', async (req, res) => {
+  const { workshop_id, user_id } = req.params
+
+  if (!workshop_id || !user_id) {
+    return res.status(400).json({ message: '缺少必要的參數' })
+  }
+
+  try {
+    // 刪除收藏紀錄
+    const [result] = await db.query(
+      `DELETE FROM product_like WHERE workshop_id = ${req.params.workshop_id} AND user_id =  ${req.params.user_id}`,
+      [workshop_id, user_id]
+    )
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: '收藏紀錄不存在' })
+    }
+
+    res.status(200).json({ message: '已取消收藏' })
+  } catch (error) {
+    console.error('取消收藏錯誤:', error)
+    res.status(500).json({ message: '取消收藏失敗' })
+  }
+})
+
+// 查詢指定使用者的收藏清單
+// 查詢指定使用者的收藏課程
+router.get('/favorites/:user_id', async (req, res) => {
+  const { user_id } = req.params
+
+  if (!user_id) {
+    return res.status(400).json({ message: '缺少必要的參數 user_id' })
+  }
+
+  try {
+    const [favorites] = await db.query(
+      `SELECT
+         wl.*, 
+         w.*, 
+         t.name AS teacher_name, 
+         GROUP_CONCAT(wt.date ORDER BY wt.date ASC) AS dates,
+         wt.registration_start,
+         wt.registration_end,
+         wt.isUpload,
+         wt.valid,
+         wt.type AS workshop_type_type
+       FROM 
+         workshop_like wl
+       JOIN 
+         workshop w ON wl.workshop_id = w.id
+       JOIN 
+         teachers t ON w.teachers_id = t.id
+       LEFT JOIN 
+         workshop_time wt ON wt.workshop_id = w.id
+       WHERE 
+         wl.user_id = ?
+       GROUP BY 
+         w.id`,
+      [user_id]
+    )
+
+    res.status(200).json(favorites)
+  } catch (error) {
+    console.error('查詢過程中發生錯誤:', error)
+    res.status(500).json({ message: '查詢過程中發生錯誤，請稍後再試' })
+  }
+})
 
 export default router

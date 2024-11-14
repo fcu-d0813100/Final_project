@@ -1,9 +1,14 @@
 'use client'
 import styles from '@/components/shared/workshop-card-sm-y/index.module.scss'
-import { PiArrowRight, PiHeartStraight } from 'react-icons/pi'
+import {
+  PiArrowRight,
+  PiHeartStraight,
+  PiHeartStraightFill,
+} from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 export default function WorkshopCardSm({
+  wid = '',
   imgCover = '',
   name = '',
   teacher = '',
@@ -12,6 +17,14 @@ export default function WorkshopCardSm({
   price = '',
   status = '',
 }) {
+  const [favoriteWorkshops, setFavoriteWorkshops] = useState({})
+
+  const handleFavoriteClick = (id) => {
+    setFavoriteWorkshops((prevFavorites) => ({
+      ...prevFavorites,
+      [id]: !prevFavorites[id],
+    }))
+  }
   return (
     <>
       <a href="#" className={`${styles.workshop} p-0`}>
@@ -31,7 +44,20 @@ export default function WorkshopCardSm({
                 className={`h5 ${styles.wTitle} d-flex align-items-center justify-content-between`}
               >
                 {name}
-                <PiHeartStraight className="me-3" />
+                {/* 愛心收藏按鈕 */}
+                <button
+                  className={styles.heart}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleFavoriteClick(wid)
+                  }}
+                >
+                  {favoriteWorkshops[wid] ? (
+                    <PiHeartStraightFill color="#973929" className="me-3" />
+                  ) : (
+                    <PiHeartStraight className="me-3" />
+                  )}
+                </button>
               </h4>
             </div>
             <div className={styles.wDetail}>
