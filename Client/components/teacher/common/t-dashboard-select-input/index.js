@@ -35,12 +35,13 @@ export default function SelectInput({
         <span> {titleEn}</span>
       </label>
 
-      <a
+      <button
+        type="button"
         className="d-flex align-items-center justify-content-between"
         onClick={toggleDropdown}
       >
         {selectedOption} <PiCaretDown />
-      </a>
+      </button>
 
       {isOpen && (
         <ul className={styles.dropdownMenu}>

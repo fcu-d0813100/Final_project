@@ -153,7 +153,8 @@ router.get('/:wid', async function (req, res, next) {
   GROUP_CONCAT(workshop_time.end_time ORDER BY workshop_time.date ASC) AS end_times,
   GROUP_CONCAT(workshop_time.id ORDER BY workshop_time.date ASC) AS time_id,
   GROUP_CONCAT(workshop_time.registered ORDER BY workshop_time.date ASC) AS workshop_time_registered,
-  GROUP_CONCAT(workshop_time.max_students ORDER BY workshop_time.date ASC) AS max_students
+  GROUP_CONCAT(workshop_time.max_students ORDER BY workshop_time.date ASC) AS max_students,
+  GROUP_CONCAT(workshop_time.min_students ORDER BY workshop_time.date ASC) AS min_students
   
  FROM
     workshop

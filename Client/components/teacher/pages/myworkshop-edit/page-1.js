@@ -14,7 +14,6 @@ import React, { useState, useEffect } from 'react'
 
 export default function Page1({
   onNextPage,
- 
   setWorkshop,
   timeSchedule,
   setTimeSchedule,
@@ -53,6 +52,29 @@ export default function Page1({
     '18:00',
     '18:30',
   ]
+
+  useEffect(() => {
+    // 初始化 timeSchedule 的值，從 workshop 中解析出各項陣列
+    const initialTimeSchedule = (
+      workshop.dates ? workshop.dates.split(',') : []
+    ).map((date, index) => ({
+      id: workshop.time_id ? workshop.time_id.split(',')[index] : null,
+      date,
+      start_time: workshop.start_times
+        ? workshop.start_times.split(',')[index].slice(0, 5)
+        : '',
+      end_time: workshop.end_times
+        ? workshop.end_times.split(',')[index].slice(0, 5)
+        : '',
+      min_students: workshop.min_students
+        ? workshop.min_students.split(',')[index]
+        : '',
+      max_students: workshop.max_students
+        ? workshop.max_students.split(',')[index]
+        : '',
+    }))
+    setTimeSchedule(initialTimeSchedule)
+  }, [workshop, setTimeSchedule])
 
   const handleAddTime = (newTime) => {
     setTimeSchedule((prevSchedule) => [
@@ -105,6 +127,21 @@ export default function Page1({
     }))
   }
 
+  // 取得目前的類別名稱
+  const [selectedType, setSelectedType] = useState('類別')
+  useEffect(() => {
+    const foundType = [
+      { name: 'type_id', option: '基礎化妝', value: 1 },
+      { name: 'type_id', option: '新娘化妝', value: 2 },
+      { name: 'type_id', option: '時尚與攝影化妝', value: 3 },
+      { name: 'type_id', option: '韓系美妝', value: 4 },
+      { name: 'type_id', option: '特效化妝', value: 5 },
+      { name: 'type_id', option: '美妝產品知識', value: 6 },
+    ].find((item) => item.value === Number(workshop.workshop_type_id))
+    console.log('Selected Type:', foundType?.option) // 檢查是否獲取正確的名稱
+    setSelectedType(foundType?.option || '類別')
+  }, [workshop.workshop_type_id])
+
   return (
     <>
       <div className={styles.main}>
@@ -151,7 +188,7 @@ export default function Page1({
               </div>
               <div className="container d-flex gap-4 mb-3">
                 <SelectInput
-                  initName="類別"
+                  initName={selectedType} // 動態設定顯示的名稱
                   addClass="col-5"
                   forText="type_id"
                   titleCh="課程類別"

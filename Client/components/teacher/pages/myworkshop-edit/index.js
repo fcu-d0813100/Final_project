@@ -39,6 +39,7 @@ export default function WorkshopEdit(props) {
     address: '',
     registration_start: '',
     registration_end: '',
+    workshop_type_id: '',
     description: '',
     outline: '',
     notes: '',

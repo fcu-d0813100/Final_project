@@ -1,5 +1,5 @@
 'use client'
-import InputIME from '@/components/shared/input-ime.js'
+import InputIME from '@/components/shared/input-ime/index.js'
 import Dropdown from '@/components/teacher/common/teacher-dropdown'
 import styles from '@/components/teacher/common/teachers.module.scss'
 import Image from 'next/image'
