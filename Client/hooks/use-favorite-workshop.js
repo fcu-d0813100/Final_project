@@ -33,10 +33,13 @@ export function useFavoriteWorkshop() {
     }
   }
 
+  // // 處理收藏按鈕點擊事件
   // const handleFavoriteWorkshopClick = async (workshop) => {
-  //   console.log('Workshop details:', workshop)
+  //   const { workshop_id } = workshop
+  //   console.log('Workshop details:', workshop) // 打印 product 的內容
 
   //   if (!auth.isAuth) {
+  //     // 如果未登入，跳轉到登入頁面
   //     toast.error('請先登入以使用收藏功能', {
   //       style: {
   //         border: '1.2px solid #90957a',
@@ -49,9 +52,8 @@ export function useFavoriteWorkshop() {
   //     return
   //   }
 
-  //   const { workshop_id } = workshop
-  //   if (!workshop) {
-  //     console.error('Error: workshop_id is undefined')
+  //   if (!workshop || !workshop_id) {
+  //     console.error('Error: workshop or workshop_id is missing')
   //     return
   //   }
 
@@ -74,7 +76,8 @@ export function useFavoriteWorkshop() {
   //         [workshop_id]: true,
   //       }))
   //       setfavoritesWorkshopList([...favoritesWorkshopList, workshop])
-  //       toast.success('您已收藏此課程', {
+  //       // 成功收藏後顯示提示信息
+  //       toast.success('您已收藏此商品', {
   //         style: {
   //           border: '1.2px solid #626553',
   //           padding: '12px 40px',
@@ -82,7 +85,8 @@ export function useFavoriteWorkshop() {
   //         },
   //         iconTheme: { primary: '#626553', secondary: '#fff' },
   //       })
-  //       // router.push('/user/favorite') // 跳轉到收藏頁面
+  //       // 成功收藏後，跳轉到收藏頁面
+  //       router.push('/user/favorite')
   //     }
   //   } catch (error) {
   //     console.error('Error adding/removing favorite:', error)
@@ -92,6 +96,19 @@ export function useFavoriteWorkshop() {
   const handleFavoriteWorkshopClick = async (workshop) => {
     const { workshop_id } = workshop // 直接從 workshop 中提取 workshop_id
     console.log('Workshop details:', workshop)
+    if (!auth.isAuth) {
+      // 如果未登入，跳轉到登入頁面
+      toast.error('請先登入以使用收藏功能', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: { primary: '#963827', secondary: '#fff' },
+      })
+      router.push('/user/login/user') // 跳轉到登入頁面
+      return
+    }
 
     if (!workshop || !workshop_id) {
       console.error('Error: workshop or workshop_id is missing')

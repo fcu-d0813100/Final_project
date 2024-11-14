@@ -7,6 +7,9 @@ import {
 } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useFavoriteWorkshop } from '@/hooks/use-favorite-workshop'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 export default function WorkshopCardSm({
   wid = '',
   imgCover = '',
@@ -17,11 +20,14 @@ export default function WorkshopCardSm({
   price = '',
   status = '',
 }) {
-  const [favoriteWorkshops, handleFavoriteClick] = useState({})
-
+  const { favoriteWorkshop, handleFavoriteWorkshopClick } =
+    useFavoriteWorkshop()
   return (
     <>
-      <a href="#" className={`${styles.workshop} p-0`}>
+      <Link
+        href={`/workshop/detail/${wid}`}
+        className={`${styles.workshop} p-0`}
+      >
         <div className={styles.workshopImg}>
           <Image
             height={615}
@@ -43,10 +49,11 @@ export default function WorkshopCardSm({
                   className={styles.heart}
                   onClick={(e) => {
                     e.preventDefault()
-                    handleFavoriteClick(wid)
+                    handleFavoriteWorkshopClick({ workshop_id: wid }) // 傳遞一個包含 workshop_id 的物件
+                    console.log('workshop details:', { workshop_id: wid })
                   }}
                 >
-                  {favoriteWorkshops[wid] ? (
+                  {favoriteWorkshop[wid] ? (
                     <PiHeartStraightFill color="#973929" className="me-3" />
                   ) : (
                     <PiHeartStraight className="me-3" />
@@ -78,7 +85,7 @@ export default function WorkshopCardSm({
             </div>
           </div>
         </div>
-      </a>
+      </Link>
     </>
   )
 }
