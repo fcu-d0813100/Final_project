@@ -9,8 +9,20 @@ export default function ItemDiscount({
     color="", 
     quantity,
     originalPrice,
-    discountedPrice 
+    discountedPrice,
+    productId, 
+    colorId     
 }) {
+     console.log("imageSrc:", imageSrc);
+     console.log("brand:", brand);
+     console.log("productName:", productName);
+     console.log("color:", color);
+     console.log("quantity:", quantity);
+     console.log("originalPrice:", originalPrice);
+     console.log("discountedPrice:", discountedPrice);
+     console.log("productId:", productId);
+     console.log("colorId:", colorId);
+
     return (
         <div className={`${styles.item} d-flex justify-content-between align-items-center mb-2`}>
             <div className={`${styles['item-left']} d-flex justify-content-between align-items-center`}>
@@ -35,7 +47,22 @@ export default function ItemDiscount({
             </div>
             <div className={`${styles.count} text-center`}>x{quantity}</div>
             <div className={`${styles['sub-total']} text-end h6`}>
-                <del className={`p ${styles.del}`}>NT$ {originalPrice}</del> NT$ {discountedPrice}
+                <del className={`p ${styles.del}`}>NT$ {originalPrice}
+                </del> NT$ {discountedPrice}
+                {/* <Link href={`/user/order/detail/comment?productId=${productId}&colorId=${colorId}`}><button className={`${styles.btn} p mt-2`}>評論</button></Link> */}
+                <Link href={{
+                    pathname: '/user/order/detail/comment',
+                    query: {
+                        productId: productId,  
+                        colorId: colorId,      
+                        productName: productName,
+                        brand: brand,
+                        color: color,
+                        imageSrc: imageSrc
+                    }
+                }}>
+                <button className={`${styles.btn} p mt-2`}>評論</button>
+                </Link>
             </div>
         </div>
     );

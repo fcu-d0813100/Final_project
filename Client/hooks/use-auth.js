@@ -27,6 +27,7 @@ AuthContext.displayName = 'AuthContext'
 export function AuthProvider({ children }) {
   const router = useRouter()
 
+  // 加入收藏函數
   const addFavorite = async (product) => {
     try {
       const response = await fetch(`http://localhost:3005/api/product/favorite/${product.color_id}/${auth.userData.id}`, {
@@ -40,6 +41,7 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // 移除收藏函數
   const removeFavorite = async (color_id) => {
     try {
       const response = await fetch(`http://localhost:3005/api/product/favorite/${color_id}/${auth.userData.id}`, {

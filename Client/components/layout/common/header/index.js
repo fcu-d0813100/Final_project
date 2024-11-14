@@ -80,11 +80,11 @@ function TopBar() {
               id="brand-nav-dropdown"
               className={styles['li']}
             >
-              <Dropdown.Item href="product-list?brand=Bobbi%20Brown">Bobbi Brown</Dropdown.Item>
-              <Dropdown.Item href="product-list?brand=Estee%20Lauder">Estee Lauder</Dropdown.Item>
-              <Dropdown.Item href="product-list?brand=LANCOME">Lancome</Dropdown.Item>
-              <Dropdown.Item href="product-list?brand=NARS">NARS</Dropdown.Item>
-              <Dropdown.Item href="product-list?brand=YSL">YSL</Dropdown.Item>
+              <Dropdown.Item href="/product/product-list?brand=Bobbi%20Brown">Bobbi Brown</Dropdown.Item>
+              <Dropdown.Item href="/product/product-list?brand=Estee%20Lauder">Estee Lauder</Dropdown.Item>
+              <Dropdown.Item href="/product/product-list?brand=LANCOME">Lancome</Dropdown.Item>
+              <Dropdown.Item href="/product/product-list?brand=NARS">NARS</Dropdown.Item>
+              <Dropdown.Item href="/product/product-list?brand=YSL">YSL</Dropdown.Item>
             </NavDropdown>
             <NavDropdown
               title="彩妝"

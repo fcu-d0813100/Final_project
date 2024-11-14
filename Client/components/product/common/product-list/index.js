@@ -26,11 +26,11 @@ const ProductPage = ({
   onNarsDiscountClick,
   onPriceFilterClick,
   onBrandFilterClick,
-  onKeywordSearch
+  onKeywordSearch,
+  onHandlePopularClick
 }) => {
   const { favoriteProducts, handleFavoriteClick } = useFavorite(); // 使用收藏鉤子
   const router = useRouter()
-  const { onAddProduct } = useCartProduct()
   const { onAddProductMany } = useCartProduct()
 
    // 狀態管理
@@ -200,6 +200,7 @@ const clearAndFetchProducts = async (fetchFunction) => {
               <ul>
                 <li><a href="#"><h4 style={{ color: '#90957a' }}>彩妝商城</h4></a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); clearAndFetchProducts(onNewArrivalsClick) }} className="p">新品上市</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); clearAndFetchProducts(onHandlePopularClick) }} className="p">人氣商品</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); clearAndFetchProducts(onNarsDiscountClick) }} className="p">優惠商品</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); clearAndFetchProducts(onAll) }} className="p">所有商品</a></li>
 
