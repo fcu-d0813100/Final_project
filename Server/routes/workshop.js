@@ -569,7 +569,36 @@ router.put(
   async function (req, res, next) {
     const id = req.user.id
     const updateWorkshop = req.body
-    console.log(updateWorkshop) // 打印出來檢查
+    // console.log(updateWorkshop)
+
+    // 查詢要刪除的 workshop 的所有圖片欄位
+    const [workshopData] = await db.query(
+      SQL.format(
+        'SELECT img_cover, img_lg, img_sm01, img_sm02 FROM workshop WHERE id = ? AND teachers_id = ?',
+        [updateWorkshop.id, id]
+      )
+    )
+
+    if (workshopData.length > 0) {
+      const imgFields = ['img_cover', 'img_lg', 'img_sm01', 'img_sm02']
+      const folderPath = path.join(__dirname, '..', 'public', 'workshop') // 加上 .. 來退回上一層資料夾
+
+      for (const field of imgFields) {
+        const imgFile = workshopData[0][field]
+        // 僅刪除有更新的圖片
+        if (imgFile && req.files && req.files[field]) {
+          const imgPath = path.join(folderPath, imgFile)
+          console.log('要刪除的圖片路徑:', imgPath)
+          try {
+            // 嘗試刪除符合的檔案
+            await fs.rm(imgPath, { force: true }) // `force: true` 忽略不存在的檔案
+            console.log(`圖片已刪除: ${imgFile}`)
+          } catch (err) {
+            console.log(`圖片不存在或無法刪除: ${imgFile}`)
+          }
+        }
+      }
+    }
 
     // 檢查 `req.files` 是否存在，如果沒有則設置為空物件
     const updateFiles = req.files || {}
@@ -579,15 +608,15 @@ router.put(
 
     const img_lg = updateFiles['img_lg']
       ? updateFiles['img_lg'][0].filename
-      : updateWorkshop.img_lg // 同上
+      : updateWorkshop.img_lg
 
     const img_sm01 = updateFiles['img_sm01']
       ? updateFiles['img_sm01'][0].filename
-      : updateWorkshop.img_sm01 // 同上
+      : updateWorkshop.img_sm01
 
     const img_sm02 = updateFiles['img_sm02']
       ? updateFiles['img_sm02'][0].filename
-      : updateWorkshop.img_sm02 // 同上
+      : updateWorkshop.img_sm02
 
     try {
       const sqlUpdateWorkshop = SQL.format(
