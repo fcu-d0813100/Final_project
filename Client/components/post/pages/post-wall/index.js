@@ -10,6 +10,7 @@ import { usePost } from '@/hooks/post/use-post'
 import Masonry from 'react-masonry-css'
 import WallCard from '@/components/post/common/wall-card'
 import styles from './index.module.scss'
+import InputIME from '@/components/shared/input-ime/index.js'
 export default function PostWall(props) {
   const [wallCard, setWallCard] = useState([])
   const [search, setSearch] = useState('')
@@ -85,12 +86,13 @@ export default function PostWall(props) {
               <span>建立</span>
             </button>
             <div className={styles['post-search']}>
-              <input
+              <InputIME
                 type="text"
                 placeholder="任意關鍵字｜"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 // onKeyDown={keyDownHandle}
+                className={styles['post-search-input']}
               />
               <PiMagnifyingGlass size={22} />
             </div>
