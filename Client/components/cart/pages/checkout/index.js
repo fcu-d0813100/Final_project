@@ -108,6 +108,7 @@ export default function Checkout({
         // 若 coupon 不存在或沒有 discount_value
         setCoupon(null) // 清空 coupon 狀態
         setCouponDiscount(0) // 設置折扣為 0 或其他預設值
+        localStorage.removeItem('selectedCouponObj')
       }
     }
   }, [])
@@ -235,10 +236,8 @@ export default function Checkout({
       }
     }
 
-    // Store order data in localStorage
     localStorage.setItem('orderData', JSON.stringify(orderData))
 
-    // Alert user and navigate to order check page
     alert('訂單成立')
     router.push('/cart/order-check')
   }
