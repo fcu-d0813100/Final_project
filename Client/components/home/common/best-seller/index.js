@@ -12,36 +12,44 @@ const Index = () => {
       bgc: "#90957a",
       bgimg: "NarsHome.svg",
       mainimage1: "NARS_LS01_M_135.webp",
+      pd_id1:109,
       brand: "NARS",
       product_name: "特霧絲柔持色唇膏",
       mainimage2: "NARS_LS01_M_101.webp",
+      pd_id2:105,
     },
     {
       title: "上妝輕盈無妝　感持妝無負擔",
       bgc: "#EFE6DD",
       bgimg: "EsteeLauderHome.svg",
       mainimage1: "ESTEE_LF01_M_1C0.webp",
+      pd_id1:120,
       brand: "Estee Lauder",
       product_name: "粉持久完美持妝粉底 ",
       mainimage2: "ESTEE_LF01_M_2W2.webp",
+      pd_id2:124,
     },
     {
       title: "復古烈火紅｜內斂高級 誘惑撩撥",
       bgc: "#652303",
       bgimg: "yslHome.svg",
       mainimage1: "YSL_LS04_M_38.webp",
+      pd_id1:247,
       brand: "YSL",
       product_name: "奢華緞面絲絨唇膏",
       mainimage2: "YSL_LS04_M_36.webp",
+      pd_id2:250,
     },
     {
       title: "絲滑舒適　滋潤卻不黏膩",
       bgc: "#FEF3EE",
       bgimg: "bbHome.svg",
       mainimage1: "BOBBI_LG01_M_760.webp",
+      pd_id1:68,
       brand: "Bobbi Brown",
       product_name: "晶鑽桂馥修護潤唇精華 ",
       mainimage2: "BOBBI_LG01_M_755.webp",
+      pd_id2:66,
     }
     // 可以根據需要添加其他幻燈片
   ];
@@ -69,6 +77,8 @@ const Index = () => {
             brand={slide.brand}
             product_name={slide.product_name}
             mainimage2={slide.mainimage2}
+            pd_id1={slide.pd_id1}
+            pd_id2={slide.pd_id2}
           />
         </SwiperSlide>
       ))}

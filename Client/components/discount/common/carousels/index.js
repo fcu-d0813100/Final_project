@@ -15,6 +15,7 @@ function CustomCarousel() {
         { src: '/discount/nars-1920.svg', alt: 'First slide', link: '/discount/nars' },
         { src: '/discount/nars2-1920.svg', alt: 'Second slide', link: '/discount/nars2' },
         { src: '/discount/ysl-1920.svg', alt: 'Third slide', link: '/discount/ysl' },
+        { src: '/discount/bb-1920.svg', alt: 'Third slide', link: '/discount/bb' },
     ];
 
     return (

@@ -39,11 +39,11 @@ export default function Discount() {
           </Link> / 優惠活動
         </div>
         <section className={styles["discount-group"]}>
-          <Link className={styles.discount} href="/discount/nars2">
-            <img className={styles.img} src='/discount/nars-discount2.svg' alt="NARS 優惠" />
-          </Link>
           <Link className={styles.discount} href="/discount/nars">
             <img className={styles.img} src='/discount/nars-discount.svg' alt="NARS 優惠" />
+          </Link>
+          <Link className={styles.discount} href="/discount/nars2">
+            <img className={styles.img} src='/discount/nars-discount2.svg' alt="NARS 優惠" />
           </Link>
           <Link className={styles.discount} href="/discount/ysl">
             <img className={styles.img} src='/discount/ysl-discount.svg' alt="YSL 優惠" />

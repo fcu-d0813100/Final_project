@@ -24,7 +24,7 @@
 .item-img {
     width: 160px;
     height: 160px; // 確保保持比例
-
+ 
     @media (max-width: 1300px) {
         max-width: 120px;
         max-height: 120px;

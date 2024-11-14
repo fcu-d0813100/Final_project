@@ -5,6 +5,10 @@
   justify-content: center;
   align-items: center;
   padding-block: 20px;
+  @media (max-width: 600px) {
+
+    font-size: 16px;
+}
 }
 
 .nav-link .link-style {
@@ -23,12 +27,18 @@
     color: black;
     border-bottom: 2px $red-500 solid;
   }
+  @media (max-width: 600px) {
+    width: 100px;
+}
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   margin-block: 45px;
+  @media (max-width: 600px) {
+    margin-block: 25px;
+}
 }
 
 .pageBtn {
@@ -39,11 +49,11 @@
   border: 2px solid transparent;
 
   &:hover {
-    border-bottom: 2px solid $green-500;
+    border-bottom: 2px solid $green-700;
     cursor: pointer; // Ensure pointer on hover
   }
   &.active {
-    color: $green-500; // Active page number color
+    color: $green-700; // Active page number color
     border-bottom: 2px solid $green-500;
   }
 }

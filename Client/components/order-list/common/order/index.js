@@ -42,8 +42,9 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                     typeId: item.type_id,
                     imageSrc: `${item.img_cover}`, // 工作坊圖片路徑
                     name: item.type, // 工作坊類型名稱
-                    beginTime: item.registration_start,
-                    endTime:item.registration_end,
+                    date: item.ws_date,
+                    beginTime:item.start_time,
+                    endTime:item.end_time,
                     qty: item.quantity,
                     price: item.workshop_price,
                 });
@@ -96,7 +97,8 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                                     imageSrc={`http://localhost:3005/workshop/${item.img_cover}`}
                                     title={item.type}
                                     instructor={item.teachers_name}
-                                    dateRange={`${item.registration_start} - ${item.registration_end}`}
+                                    date={`${item.ws_date}`}
+                                    time={`${item.start_time} - ${item.end_time}`}
                                     price={new Intl.NumberFormat().format(item.workshop_price)}
                                     quantity={item.quantity}
                                 />
@@ -110,11 +112,11 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                 <div className={`total p-2`}>
                     訂單金額：<span className="h4">NT$ {new Intl.NumberFormat().format(totalAmount)}</span>
                 </div>
-                <div className="botton-group d-flex justify-content-end p-2">
-                    <div className="btn btn-primary align-content-center h6 me-3" onClick={handleBuyAgain}>
+                <div className="botton-group d-flex justify-content-end p-2 h6">
+                    <div className={`${styles.btn} btn-primary align-content-center me-3`} onClick={handleBuyAgain}>
                         再買一次
                     </div>
-                    <div className="btn btn-primary align-content-center h6">評論</div>
+                    <div className={`${styles.btn}  btn-primary align-content-center`}>評論</div>
                 </div>
             </div>
         </div>
