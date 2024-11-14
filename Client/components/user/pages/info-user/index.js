@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import UserSection from '@/components/user/common/user-section'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -21,6 +20,11 @@ export default function UserInfo() {
   useEffect(() => {
     fetchUserData()
   }, [])
+
+  // 構建頭像URL
+  const avatarUrl = userData.img
+    ? `http://localhost:3005/avatar/${userData.img}`
+    : 'http://localhost:3005/avatar/avatar01.jpg'
 
   if (!auth.isAuth) return <></>
 
@@ -99,7 +103,7 @@ export default function UserInfo() {
               width={255}
               height={255}
               className={styles.img}
-              src={`/user/img/${userData.img}`}
+              src={avatarUrl}
               alt=""
             />
           </div>

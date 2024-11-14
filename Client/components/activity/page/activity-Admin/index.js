@@ -16,7 +16,9 @@ export default function Index() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3005/api/activity')
+        const response = await fetch(
+          'http://localhost:3005/api/activity/${userId}'
+        )
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`)
         }

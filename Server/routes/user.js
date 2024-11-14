@@ -207,14 +207,19 @@ router.put(
     const id = req.user.id
     const updateUser = req.body
 
+    console.log('更新請求的使用者ID:', id)
+    console.log('更新請求的數據:', updateUser)
+
     // 取得使用者現有的頭貼
     const [users] = await db.query('SELECT * FROM user WHERE id = ?', [id])
     if (users.length === 0) {
+      console.log('找不到該用戶')
       return res.status(404).json({ status: 'error', message: '找不到該用戶' })
     }
 
     // 使用者現有的頭貼
     const currentImagePath = users[0].img
+    console.log('使用者現有的頭貼:', currentImagePath)
 
     // 如果有上傳新頭貼，則使用新頭貼，否則保留現有頭貼
     const imgFileName = req.file ? req.file.filename : currentImagePath
@@ -241,18 +246,21 @@ router.put(
       console.log('Database update result:', result)
 
       if (result.affectedRows === 0) {
+        console.log('更新失敗: 找不到該用戶')
         return res
           .status(404)
           .json({ status: 'error', message: '找不到該用戶' })
       }
 
       if (req.file) {
+        console.log('會員頭像及資料更新成功')
         return res.json({
           status: 'success',
           message: '會員頭像及資料更新成功',
           data: { img: imgFileName },
         })
       } else {
+        console.log('會員資料更新成功')
         return res.json({
           status: 'success',
           message: '會員資料更新成功',

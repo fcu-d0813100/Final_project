@@ -1,5 +1,5 @@
 'use client'
-import InputIME from '@/components/shared/input-ime.js'
+import InputIME from '@/components/shared/input-ime/index.js'
 import styles from '@/components/workshop/common/workshops.module.scss'
 import { PiMagnifyingGlass, PiCaretDown, PiArrowRight } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'

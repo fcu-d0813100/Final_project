@@ -4,7 +4,7 @@ import styles from './index.module.scss'
 
 export default function PreviewUploadImage({
   userId,
-  avatarBaseUrl = 'http://localhost:3005/avatar', // 基礎URL指向你的本地服務器
+  avatarBaseUrl = 'http://localhost:3005/public/avatar', // 基礎URL指向你的本地服務器
   defaultImg = 'avatar01.jpg',
   setSelectedFile,
   selectedFile,
@@ -44,7 +44,8 @@ export default function PreviewUploadImage({
     }
 
     if (userId) {
-      const avatarImg = `avatar${userId}.jpg`
+      const paddedUserId = userId < 10 ? `0${userId}` : userId
+      const avatarImg = `avatar${paddedUserId}.jpg`
       const avatarUrl = `${avatarBaseUrl}/${avatarImg}`
       console.log('Avatar URL:', avatarUrl)
       return avatarUrl
