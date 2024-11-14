@@ -556,5 +556,108 @@ router.delete('/myWorkshop/delete', authenticate, async function (req, res) {
 })
 
 //------------------------------------------------------------------------------------------
+// 更新
+router.put(
+  '/edit/save',
+  upload.fields([
+    { name: 'img_cover', maxCount: 1 },
+    { name: 'img_lg', maxCount: 1 },
+    { name: 'img_sm01', maxCount: 1 },
+    { name: 'img_sm02', maxCount: 1 },
+  ]),
+  authenticate,
+  async function (req, res, next) {
+    const id = req.user.id
+    const updateWorkshop = req.body
+    console.log(updateWorkshop) // 打印出來檢查
+
+    // 檢查 `req.files` 是否存在，如果沒有則設置為空物件
+    const updateFiles = req.files || {}
+    const img_cover = updateFiles['img_cover']
+      ? updateFiles['img_cover'][0].filename
+      : updateWorkshop.img_cover // 如果沒有新圖片，使用舊圖片名稱
+
+    const img_lg = updateFiles['img_lg']
+      ? updateFiles['img_lg'][0].filename
+      : updateWorkshop.img_lg // 同上
+
+    const img_sm01 = updateFiles['img_sm01']
+      ? updateFiles['img_sm01'][0].filename
+      : updateWorkshop.img_sm01 // 同上
+
+    const img_sm02 = updateFiles['img_sm02']
+      ? updateFiles['img_sm02'][0].filename
+      : updateWorkshop.img_sm02 // 同上
+
+    try {
+      const sqlUpdateWorkshop = SQL.format(
+        'UPDATE `workshop` SET `type_id` = ?, `name` = ?, `description` = ?, `outline` = ?, `notes` = ?, `price` = ?, `address` = ?, `img_cover` = ?, `img_lg` = ?, `img_sm01` = ?, `img_sm02` = ?, `registration_start` = ?, `registration_end` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+        [
+          updateWorkshop.type_id,
+          updateWorkshop.name,
+          updateWorkshop.description,
+          updateWorkshop.outline,
+          updateWorkshop.notes,
+          updateWorkshop.price,
+          updateWorkshop.address,
+          img_cover,
+          img_lg,
+          img_sm01,
+          img_sm02,
+          updateWorkshop.registration_start,
+          updateWorkshop.registration_end,
+          updateWorkshop.id,
+          id,
+        ]
+      )
+
+      const [result] = await db.query(sqlUpdateWorkshop)
+      console.log('Insert Result:', result)
+
+      // 取得新插入的 workshop_id
+      // const newWorkshopId = result
+      // console.log('New Workshop ID:', newWorkshopId)
+
+      ///-----------------------
+      // 解析 timeSchedule 資料
+      const parsedTimeSchedule = updateWorkshop.timeSchedule.map((item) => {
+        // 確保每個項目都是一個有效的物件
+        try {
+          return JSON.parse(item)
+        } catch (e) {
+          console.error('Error parsing timeSchedule item:', item)
+          return null
+        }
+      })
+      ///-----------------------
+
+      // 插入每筆 timeSchedule 資料
+      for (const time of parsedTimeSchedule) {
+        const sqlUpdateWorkshopTime = SQL.format(
+          'UPDATE `workshop_time` SET `date` = ?, `start_time` = ?, `end_time` = ?, `min_students` = ?, `max_students` = ? WHERE `workshop_time`.`id` = ? ',
+          [
+            time.date,
+            time.start_time,
+            time.end_time,
+            time.min_students,
+            time.max_students,
+            time.id,
+          ]
+        )
+        // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+        await db.query(sqlUpdateWorkshopTime)
+      }
+      console.log('req.files' + req.files)
+      console.log('req.body' + req.body)
+
+      res.json(result)
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ message: 'Server error', error: e.message })
+    }
+  }
+)
+
+// 更新，並立即發布
 
 export default router

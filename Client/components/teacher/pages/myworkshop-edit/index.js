@@ -54,85 +54,40 @@ export default function WorkshopEdit(props) {
     window.scrollTo(0, 580)
   }, [])
   //----------------------------------------------
-  // const handleSubmitisUpload0 = async (e) => {
-  //   e.preventDefault()
-  //   const form = new FormData()
+  const handleSubmitUpdateSave = async (e) => {
+    e.preventDefault()
+    const form = new FormData()
 
-  //   // 其餘表單資料
-  //   Object.keys(formData).forEach((key) => {
-  //     form.append(key, formData[key])
-  //   })
+    // 其餘表單資料
+    Object.keys(workshop).forEach((key) => {
+      form.append(key, workshop[key])
+    })
 
-  //   // 加入 timeSchedule 資料
-  //   timeSchedule.forEach((time, index) => {
-  //     form.append(`timeSchedule[${index}]`, JSON.stringify(time))
-  //   })
+    // 加入 timeSchedule 資料
+    timeSchedule.forEach((time, index) => {
+      form.append(`timeSchedule[${index}]`, JSON.stringify(time))
+    })
 
-  //   try {
-  //     const response = await fetch(
-  //       'http://localhost:3005/api/workshop/upload/isUpload0',
-  //       {
-  //         credentials: 'include',
-  //         method: 'POST',
-  //         body: form, // 直接將 FormData 傳送
-  //       }
-  //     )
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/workshop/edit/save',
+        {
+          credentials: 'include',
+          method: 'PUT',
+          body: form, // 直接將 FormData 傳送
+        }
+      )
 
-  //     if (!response.ok) {
-  //       throw new Error('上傳資料失敗')
-  //     }
+      if (!response.ok) {
+        throw new Error('上傳資料失敗')
+      }
 
-  //     const result = await response.json()
-  //     console.log('上傳成功', result)
-  //   } catch (error) {
-  //     console.error('上傳失敗', error)
-  //   }
-  // }
-  // //----------------------------------------------
-  // const handleSubmitisUpload1 = async (e) => {
-  //   e.preventDefault()
-  //   const form = new FormData()
-
-  //   // 其餘表單資料
-  //   Object.keys(formData).forEach((key) => {
-  //     form.append(key, formData[key])
-  //   })
-
-  //   // 加入 timeSchedule 資料
-  //   timeSchedule.forEach((time, index) => {
-  //     form.append(`timeSchedule[${index}]`, JSON.stringify(time))
-  //   })
-
-  //   try {
-  //     const response = await fetch(
-  //       'http://localhost:3005/api/workshop/upload/isUpload1',
-  //       {
-  //         credentials: 'include',
-  //         method: 'POST',
-  //         body: form, // 直接將 FormData 傳送
-  //       }
-  //     )
-
-  //     if (!response.ok) {
-  //       throw new Error('上傳資料失敗')
-  //     }
-
-  //     const result = await response.json()
-  //     console.log('上傳成功', result)
-  //   } catch (error) {
-  //     console.error('上傳失敗', error)
-  //   }
-  // }
-  //----------------------------------------------
-  // 儲存按鈕的處理函數，送出資料並重定向到 /teacher/myworkshop
-  // const handleSave = async (e, uploadType) => {
-  //   if (uploadType === 0) {
-  //     await handleSubmitisUpload0(e) // 儲存時執行 handleSubmitisUpload0
-  //   } else if (uploadType === 1) {
-  //     await handleSubmitisUpload1(e) // 發布時執行 handleSubmitisUpload1
-  //   }
-  //   router.push('/teacher/myworkshop') // 送出後跳轉
-  // }
+      const result = await response.json()
+      console.log('上傳成功', result)
+    } catch (error) {
+      console.error('上傳失敗', error)
+    }
+  }
 
   // 切換到下一頁並滾動到頂部
   const handleNextPage = () => {
@@ -160,12 +115,11 @@ export default function WorkshopEdit(props) {
               setWorkshop={setWorkshop}
               timeSchedule={timeSchedule}
               setTimeSchedule={setTimeSchedule}
-              //handleSave={handleSave}
             /> // 傳入切換頁面函數
           ) : (
             <Page2
               onPreviousPage={handlePreviousPage}
-              //handleSave={handleSave}
+              handleSave={handleSubmitUpdateSave}
               setWorkshop={setWorkshop}
               workshop={workshop}
             /> // 傳入返回頁面函數

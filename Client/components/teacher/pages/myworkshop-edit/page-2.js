@@ -16,7 +16,7 @@ export default function Page2({
   const handleFileChange = (name, file) => {
     setWorkshop((prevData) => ({
       ...prevData,
-      [name]: file,
+      [name]: file || prevData[name], // 如果沒有新圖片，保留原始圖片 URL
     }))
   }
   return (
@@ -72,10 +72,7 @@ export default function Page2({
             <button
               className="btn-secondary h6"
               type="submit"
-              onClick={(e) => {
-                e.preventDefault()
-                handleSave(e, 0) // 儲存時執行 handleSubmitisUpload0
-              }}
+              onClick={handleSave}
             >
               儲存
             </button>
@@ -84,7 +81,7 @@ export default function Page2({
               type="submit"
               onClick={(e) => {
                 e.preventDefault()
-                handleSave(e, 1) // 發布時執行 handleSubmitisUpload1
+                handleSave
               }}
             >
               立即發布

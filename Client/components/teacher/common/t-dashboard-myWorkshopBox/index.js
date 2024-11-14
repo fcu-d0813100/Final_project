@@ -275,7 +275,7 @@ export default function MyWorkshopBox({
             </div>
 
             <div className={styles.priceAndStatus}>
-              <h4 className="h4 m-0 me-3">{price}</h4>
+              <h4 className="h4 m-0 me-3">NT$ {price}</h4>
               <p className={`ps ${statusClass}`}>{statusText}</p>
             </div>
 

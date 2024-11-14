@@ -17,8 +17,8 @@ export default function Page1({
   setWorkshop,
   timeSchedule,
   setTimeSchedule,
-  handleSave,
   workshop,
+  handleSubmit,
 }) {
   const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
   const [selectedTime, setSelectedTime] = useState({
@@ -445,10 +445,7 @@ export default function Page1({
           <button
             className="btn-secondary h6 me-4"
             type="submit"
-            onClick={(e) => {
-              e.preventDefault()
-              handleSave(e, 0) // 儲存時執行 handleSubmitisUpload0
-            }}
+            onClick={handleSubmit}
           >
             儲存
           </button>

@@ -43,7 +43,7 @@ export default function UploadImg({
       return (
         <img
           src={preview || initialImage}
-          alt="預覽"
+          alt=""
           className={styles.previewImage}
         />
       )
