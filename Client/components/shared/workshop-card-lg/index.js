@@ -7,6 +7,8 @@ import {
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useFavoriteWorkshop } from '@/hooks/use-favorite-workshop'
+import { CloudFog } from '@phosphor-icons/react/dist/ssr'
 
 export default function WorkshopCardLg({
   wid = '',
@@ -18,14 +20,7 @@ export default function WorkshopCardLg({
   price = '',
   status = '',
 }) {
-  const [favoriteWorkshops, setFavoriteWorkshops] = useState({})
-
-  const handleFavoriteClick = (id) => {
-    setFavoriteWorkshops((prevFavorites) => ({
-      ...prevFavorites,
-      [id]: !prevFavorites[id],
-    }))
-  }
+  const { favoriteWorkshop, handleFavoriteClick } = useFavoriteWorkshop()
 
   return (
     <Link href={`/workshop/detail/${wid}`} className={`${styles.workshop} p-0`}>
@@ -50,10 +45,11 @@ export default function WorkshopCardLg({
                 className={styles.heart}
                 onClick={(e) => {
                   e.preventDefault()
-                  handleFavoriteClick(wid)
+                  handleFavoriteClick({ workshop_id: wid }) // 傳遞一個包含 workshop_id 的物件
+                  console.log('workshop details:', { workshop_id: wid })
                 }}
               >
-                {favoriteWorkshops[wid] ? (
+                {favoriteWorkshop[wid] ? (
                   <PiHeartStraightFill color="#973929" className="me-3" />
                 ) : (
                   <PiHeartStraight className="me-3" />

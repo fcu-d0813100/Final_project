@@ -6,7 +6,6 @@ import WorkshopSelectbar from '@/components/workshop/common/workshop-selectbar'
 import WorkshopCardLg from '@/components/shared/workshop-card-lg'
 import React, { useState, useEffect } from 'react'
 
-
 export default function WorkshopAll(props) {
   const [workshop, setWorkshop] = useState([])
   const [search, setSearch] = useState('')
@@ -26,7 +25,7 @@ export default function WorkshopAll(props) {
       }
       const data = await response.json()
       setWorkshop(...data) // 設置工作坊資料
-      console.log(...data);
+      console.log(...data)
     } catch (err) {
       console.log(err)
     }

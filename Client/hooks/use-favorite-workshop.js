@@ -1,31 +1,30 @@
-// hooks/useFavorite.js
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/use-auth'
 
 export function useFavoriteWorkshop() {
-  const { auth, addFavorite, removeFavorite } = useAuth() // 取得登入狀態和收藏操作方法
-  const [favoriteWorkshops, setFavoriteWorkshops] = useState({})
+  const { auth, addFavoriteWorkshop, removeFavoriteWorkshop } = useAuth() // 取得登入狀態和收藏操作方法
+  const [favoriteWorkshop, setFavoriteWorkshop] = useState({})
   const [favoritesList, setFavoritesList] = useState([]) // 儲存收藏列表
   const router = useRouter()
 
   useEffect(() => {
     if (auth.isAuth) {
-      fetchFavorites() // 登入後加載收藏列表
+      fetchFavoritesWorkshop() // 登入後加載收藏列表
     }
   }, [auth.isAuth])
 
-  const fetchFavorites = async () => {
+  const fetchFavoritesWorkshop = async () => {
     try {
       const response = await fetch(
         `http://localhost:3005/api/workshop/favorite/search/${auth.userData.id}`
       )
       const data = await response.json()
       setFavoritesList(data)
-      setFavoriteWorkshops(
+      setFavoriteWorkshop(
         data.reduce((acc, workshop) => {
-          acc[workshop.workshop_id] = true
+          acc[workshop.workshop_id] = true // 確保使用的是 workshop_id
           return acc
         }, {})
       )
@@ -34,12 +33,10 @@ export function useFavoriteWorkshop() {
     }
   }
 
-  // 處理收藏按鈕點擊事件
   const handleFavoriteClick = async (workshop) => {
     console.log('Workshop details:', workshop)
 
     if (!auth.isAuth) {
-      // 如果未登入，跳轉到登入頁面
       toast.error('請先登入以使用收藏功能', {
         style: {
           border: '1.2px solid #90957a',
@@ -54,14 +51,14 @@ export function useFavoriteWorkshop() {
 
     const { workshop_id } = workshop
     if (!workshop_id) {
-      console.error('Error: color_id is undefined')
+      console.error('Error: workshop_id is undefined')
       return
     }
 
     try {
-      if (favoriteWorkshops[workshop_id]) {
-        await removeFavorite(workshop_id, auth.userData.id) // 移除收藏
-        setFavoriteWorkshops((prevFavorites) => ({
+      if (favoriteWorkshop[workshop_id]) {
+        await removeFavoriteWorkshop(workshop_id, auth.userData.id) // 移除收藏
+        setFavoriteWorkshop((prevFavorites) => ({
           ...prevFavorites,
           [workshop_id]: false,
         }))
@@ -69,13 +66,12 @@ export function useFavoriteWorkshop() {
           favoritesList.filter((item) => item.workshop_id !== workshop_id)
         )
       } else {
-        await addFavorite(workshop, auth.userData.id) // 添加到收藏
-        setFavoriteWorkshops((prevFavorites) => ({
+        await addFavoriteWorkshop(workshop, auth.userData.id) // 添加到收藏
+        setFavoriteWorkshop((prevFavorites) => ({
           ...prevFavorites,
           [workshop_id]: true,
         }))
         setFavoritesList([...favoritesList, workshop])
-        // 成功收藏後顯示提示信息
         toast.success('您已收藏此課程', {
           style: {
             border: '1.2px solid #626553',
@@ -84,13 +80,12 @@ export function useFavoriteWorkshop() {
           },
           iconTheme: { primary: '#626553', secondary: '#fff' },
         })
-        // 成功收藏後，跳轉到收藏頁面
-        router.push('/user/favorite')
+        // router.push('/user/favorite') // 跳轉到收藏頁面
       }
     } catch (error) {
       console.error('Error adding/removing favorite:', error)
     }
   }
 
-  return { favoriteWorkshops, handleFavoriteClick, favoritesList }
+  return { favoriteWorkshop, handleFavoriteClick, favoritesList }
 }

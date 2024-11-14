@@ -8,7 +8,7 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { useFavorite } from '@/hooks/use-favorite'
 import toast from 'react-hot-toast'
-import { useCartProduct } from '@/hooks/use-cartP' 
+import { useCartProduct } from '@/hooks/use-cartP'
 import { useRouter } from 'next/router'
 
 // 自定義上一頁箭頭
@@ -48,8 +48,8 @@ const NextArrow = ({ onClick }) => (
 )
 
 const CardCarousel = ({ products }) => {
-  console.log(products);
-  const { favoriteProducts, handleFavoriteClick } = useFavorite();
+  console.log(products)
+  const { favoriteProducts, handleFavoriteClick } = useFavorite()
   const { onAddProductMany } = useCartProduct()
   const router = useRouter()
 
@@ -76,14 +76,18 @@ const CardCarousel = ({ products }) => {
   const handleAddToCart = (product) => {
     onAddProductMany(product)
     toast.success('已加入購物車', {
-      style: { border: '1.2px solid #626553', padding: '12px 40px', color: '#626553' },
+      style: {
+        border: '1.2px solid #626553',
+        padding: '12px 40px',
+        color: '#626553',
+      },
       iconTheme: { primary: '#626553', secondary: '#fff' },
     })
   }
 
   const handleCardClick = (color_id) => {
-    router.push(`/product/product-list/${color_id}`);
-  };
+    router.push(`/product/product-list/${color_id}`)
+  }
 
   return (
     <div
@@ -94,12 +98,11 @@ const CardCarousel = ({ products }) => {
           <span className={`${styles['new-arrivalc']} h3`}>新品上市</span>
           <span className={`${styles['new-arrival']} h2-L`}>New Arrival</span>
         </div>
-        {products.length > 0 && (   // 確保有內容再渲染，否則會渲染空內容
+        {products.length > 0 && ( // 確保有內容再渲染，否則會渲染空內容
           <Slider
             {...settings}
             className={`${styles['product-card-container1']} ${cardStyles['d-flex']}`}
           >
-            
             {products.map((product) => (
               <div
                 key={product.color_id}
@@ -107,7 +110,9 @@ const CardCarousel = ({ products }) => {
                 className={`${styles['product-card-w']} col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 text-center`}
               >
                 <div className={styles['info']}>
-                  <div className={`${styles['product-new-w']} d-inline-block ps`}>
+                  <div
+                    className={`${styles['product-new-w']} d-inline-block ps`}
+                  >
                     NEW
                   </div>
                   <div
@@ -122,7 +127,11 @@ const CardCarousel = ({ products }) => {
 
                 {/* 愛心收藏按鈕 */}
                 <button
-                  onClick={(e) => { e.stopPropagation();console.log('Product details:', product);  handleFavoriteClick(product) ;}}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    console.log('Product details:', product)
+                    handleFavoriteClick(product)
+                  }}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -172,7 +181,10 @@ const CardCarousel = ({ products }) => {
                   </div>
                   <button
                     className={`${styles['add-to-cart']} p btn-primary`}
-                    onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleAddToCart(product)
+                    }}
                   >
                     加入購物車
                   </button>

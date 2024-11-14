@@ -564,9 +564,8 @@ router.post('/favorite/:workshop_id/:user_id', async (req, res) => {
   }
 
   try {
-    // 檢查課程收藏狀態
     const [existingFavorite] = await db.query(
-      `SELECT * FROM workshop_like WHERE workshop_id = ${req.params.workshop_id} AND user_id = ${req.params.user_id}`,
+      `SELECT * FROM workshop_like WHERE workshop_id = ${workshop_id} AND user_id = ${user_id}`,
       [workshop_id, user_id]
     )
 
@@ -574,9 +573,8 @@ router.post('/favorite/:workshop_id/:user_id', async (req, res) => {
       return res.status(409).json({ message: '課程已收藏' })
     }
 
-    // 插入收藏紀錄
     await db.query(
-      `INSERT INTO workshop_like (workshop_id, user_id, created_at) VALUES (${req.params.workshop_id}, ${req.params.user_id}, NOW())`,
+      `INSERT INTO workshop_like (workshop_id, user_id, created_at) VALUES (${workshop_id}, ${user_id}, NOW())`,
       [workshop_id, user_id]
     )
 
@@ -596,9 +594,8 @@ router.delete('/favorite/:workshop_id/:user_id', async (req, res) => {
   }
 
   try {
-    // 刪除收藏紀錄
     const [result] = await db.query(
-      `DELETE FROM product_like WHERE workshop_id = ${req.params.workshop_id} AND user_id =  ${req.params.user_id}`,
+      `DELETE FROM workshop_like WHERE workshop_id = ${workshop_id} AND user_id = ${user_id}`,
       [workshop_id, user_id]
     )
 
@@ -613,8 +610,7 @@ router.delete('/favorite/:workshop_id/:user_id', async (req, res) => {
   }
 })
 
-// 查詢指定使用者的收藏清單
-// 查詢指定使用者的收藏課程
+// 查詢收藏列表
 router.get('/favorite/search/:user_id', async (req, res) => {
   const { user_id } = req.params
 
@@ -625,27 +621,35 @@ router.get('/favorite/search/:user_id', async (req, res) => {
   try {
     const [favorites] = await db.query(
       `SELECT
-         wl.*, 
-         w.*, 
-         t.name AS teacher_name, 
-         GROUP_CONCAT(wt.date ORDER BY wt.date ASC) AS dates,
-         wt.registration_start,
-         wt.registration_end,
-         wt.isUpload,
-         wt.valid,
-         wt.type AS workshop_type_type
+         workshop_like.user_id,
+         workshop_like.workshop_id,
+         workshop.id,
+         workshop.name,
+         workshop.price,
+         workshop.type_id,
+         workshop.img_cover,
+         teachers.id AS teacher_id,
+         teachers.name AS teacher_name,
+         GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
+         workshop.registration_start,
+         workshop.registration_end,
+         workshop.isUpload,
+         workshop.valid,
+         workshop_type.type AS workshop_type_type
        FROM 
-         workshop_like wl
+         workshop_like
        JOIN 
-         workshop w ON wl.workshop_id = w.id
+         workshop ON workshop_like.workshop_id = workshop.id
        JOIN 
-         teachers t ON w.teachers_id = t.id
+         teachers ON workshop.teachers_id = teachers.id
        LEFT JOIN 
-         workshop_time wt ON wt.workshop_id = w.id
+         workshop_time ON workshop_time.workshop_id = workshop.id
+       LEFT JOIN 
+         workshop_type ON workshop.type_id = workshop_type.id
        WHERE 
-         wl.user_id = ?
+         workshop_like.user_id = ${req.params.user_id}
        GROUP BY 
-         w.id`,
+         workshop.id`,
       [user_id]
     )
 

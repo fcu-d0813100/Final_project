@@ -27,7 +27,43 @@ AuthContext.displayName = 'AuthContext'
 
 export function AuthProvider({ children }) {
   const router = useRouter()
+  // 課程收藏-----------------------------//
+  // 加入收藏
+  const addFavoriteWorkshop = async (workshop) => {
+    try {
+      // 使用 workshop.workshop_id 而非 workshop.id
+      const response = await fetch(
+        `http://localhost:3005/api/workshop/favorite/${workshop.workshop_id}/${auth.userData.id}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+      if (!response.ok) throw new Error('收藏失敗')
+      console.log(`Added product to favorites: ${workshop.workshop_id}`)
+    } catch (error) {
+      console.error('Error adding favorite:', error)
+    }
+  }
 
+  // 移除收藏函數
+  const removeFavoriteWorkshop = async (workshop_id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/workshop/favorite/${workshop.workshop_id}/${auth.userData.id}`,
+        {
+          method: 'DELETE',
+        }
+      )
+      if (!response.ok) throw new Error('取消收藏失敗')
+      console.log(
+        `Removed workshop from favorites with workshop_id: ${workshop_id}`
+      )
+    } catch (error) {
+      console.error('Error removing favorite:', error)
+    }
+  }
+  // 商品收藏-----------------------------//
   // 加入收藏函數
   const addFavorite = async (product) => {
     try {
@@ -173,7 +209,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // 處理Google登入
+  // Google登入
   const callbackGoogleLogin = async (providerData) => {
     console.log('Google登入資料:', providerData)
 
@@ -296,7 +332,6 @@ export function AuthProvider({ children }) {
           }
         }, 2000)
       } else {
-        // 根據不同錯誤訊息顯示相應的吐司提示
         switch (resData.message) {
           case '身份不符合':
             toast.error('您無登入權限', {
@@ -630,6 +665,8 @@ export function AuthProvider({ children }) {
         deleteUser,
         addFavorite,
         removeFavorite,
+        addFavoriteWorkshop,
+        removeFavoriteWorkshop,
       }}
     >
       {children}
