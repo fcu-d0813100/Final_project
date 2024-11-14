@@ -55,32 +55,60 @@ router.post('/create-order', authenticate, async (req, res) => {
 })
 
 router.get('/reserve', async (req, res) => {
-  if (!req.query.orderId) {
-    return res.json({ status: 'error', message: 'Order ID 不存在' })
-  }
+  // if (!req.query.orderId) {
+  //   return res.json({ status: 'error', message: 'Order ID 不存在' })
+  // }
 
-  const orderId = req.query.orderId
-  const redirectUrls = {
-    confirmUrl: process.env.REACT_REDIRECT_CONFIRM_URL,
-    cancelUrl: process.env.REACT_REDIRECT_CANCEL_URL,
-  }
+  // const orderId = req.query.orderId
+  // const redirectUrls = {
+  //   confirmUrl: process.env.REACT_REDIRECT_CONFIRM_URL,
+  //   cancelUrl: process.env.REACT_REDIRECT_CANCEL_URL,
+  // }
 
-  const sqlSelectOrder = `SELECT * FROM Purchase_Order WHERE id = '${orderId}'`
-  const [orderRecord] = await db.query(sqlSelectOrder)
-  const order = JSON.parse(orderRecord[0].order_info)
+  // const sqlSelectOrder = `SELECT * FROM Purchase_Order WHERE id = '${orderId}'`
+  // const [orderRecord] = await db.query(sqlSelectOrder)
+  // const order = JSON.parse(orderRecord[0].order_info)
+
+  const testOrder = {
+    amount: 1500,
+    currency: 'TWD',
+    orderId: '202112160123213210663',
+    packages: [
+      {
+        id: 'c99abc79-3b29-4f40-8851-555785623',
+        amount: 1500,
+        products: [
+          {
+            name: 'Product Name1',
+            quantity: 1,
+            price: 500,
+          },
+          {
+            name: 'Product Name2',
+            quantity: 2,
+            price: 500,
+          },
+        ],
+      },
+    ],
+    redirectUrls: {
+      confirmUrl: 'http://localhost:3000/pay-confirm',
+      cancelUrl: 'http://localhost:3000/pay-cancel',
+    },
+  }
 
   try {
     const linePayResponse = await linePayClient.request.send({
-      body: { ...order, redirectUrls },
+      body: testOrder,
     })
 
-    const reservation = { ...order, ...linePayResponse.body.info }
-    const sqlUpdateOrder = `
-      UPDATE Purchase_Order 
-      SET reservation = '${JSON.stringify(reservation)}', transaction_id = '${reservation.transactionId}'
-      WHERE id = '${orderId}'
-    `
-    await db.query(sqlUpdateOrder)
+    // const reservation = { ...order, ...linePayResponse.body.info }
+    // const sqlUpdateOrder = `
+    //   UPDATE Purchase_Order
+    //   SET reservation = '${JSON.stringify(reservation)}', transaction_id = '${reservation.transactionId}'
+    //   WHERE id = '${orderId}'
+    // `
+    // await db.query(sqlUpdateOrder)
 
     res.redirect(linePayResponse.body.info.paymentUrl.web)
   } catch (error) {

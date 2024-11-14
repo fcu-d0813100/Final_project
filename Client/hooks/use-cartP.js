@@ -211,16 +211,6 @@ export function ProductCartProvider({ children }) {
     localStorage.removeItem('selectedCouponObj')
   }
 
-  // console.log(selectedCoupon)
-  // const checkCouponValidity = (productItems) => {
-  //   if (
-  //     selectedCoupon &&
-  //     !productItems.some((item) => item.brand === selectedCoupon.brand_name)
-  //   ) {
-  //     removeCoupon()
-  //   }
-  // }
-
   //-----reload
 
   //導出商品內容跟方法

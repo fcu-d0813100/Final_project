@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 export default function OrderBox() {
   // 從use-cartP鉤子取得商品內容
-  const { productItems = [] } = useCartProduct()
+  const { productItems = [], selectedCoupon } = useCartProduct()
   // 從use-cartW鉤子取得課程內容
   const { workshopItems = [] } = useCartWorkshop()
 
@@ -21,6 +21,12 @@ export default function OrderBox() {
     workshopItems.length > 0
       ? `/workshop/workshop_img/${workshopItems[0].typeId}-${workshopItems[0].id}-c.jpg`
       : null
+
+  //優惠券折扣
+  let discountValue = 1
+  if (selectedCoupon && selectedCoupon.discount_value <= 1) {
+    discountValue = selectedCoupon.discount_value
+  }
 
   return (
     <div className={style['order-box']}>
@@ -65,19 +71,39 @@ export default function OrderBox() {
                   {/* 商品資料 */}
                   {productItems.map((v, i) => (
                     <tr key={i}>
-                      <td>{v.product_name}</td>
+                      <td>
+                        <div className="text-danger ps">
+                          {/* 如果有折扣，顯示提示文字 */}
+                          {selectedCoupon &&
+                            selectedCoupon.discount_value <= 1 && (
+                              <span className={style['discount-text']}>
+                                再享受 {selectedCoupon.discount_value * 100}%
+                                折扣
+                              </span>
+                            )}
+                        </div>
+                        {v.product_name}
+                      </td>
                       <td>{v.color_name}</td>
                       <td>{v.qty}</td>
                       <td>
+                        {/* 顯示原價 */}
                         <span className={style['old-price']}>
                           NT${(v.originalprice * v.qty).toLocaleString()}
                         </span>
+                        {/* 顯示打折後價格 */}
                         <span className={style['new-price']}>
-                          NT${(v.price * v.qty).toLocaleString()}
+                          NT$
+                          {selectedCoupon && selectedCoupon.discount_value <= 1
+                            ? Math.floor(
+                                v.price * v.qty * discountValue
+                              ).toLocaleString()
+                            : (v.price * v.qty).toLocaleString()}
                         </span>
                       </td>
                     </tr>
                   ))}
+
                   {/* 課程資料 */}
                   {workshopItems.map((v, i) => (
                     <tr key={i}>
