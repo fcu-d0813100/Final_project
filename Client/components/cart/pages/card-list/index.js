@@ -80,6 +80,7 @@ export default function CartList() {
   if (selectedCoupon && selectedCoupon.discount_value <= 1) {
     discountValue = selectedCoupon.discount_value
   }
+
   return (
     <>
       <div className="container">
