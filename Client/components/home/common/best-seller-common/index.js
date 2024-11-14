@@ -16,32 +16,32 @@ const index = ({
   mainimage2 = "",
 
 }) => {
-  const [bgColor, setBgColor] = useState(bgc);  // 設定初始背景顏色
+  // const [bgColor, setBgColor] = useState(bgc);  // 設定初始背景顏色
 
-  useEffect(() => {
-    const handleResize = () => {
-      // 判斷視窗寬度並更新背景顏色
-      if (window.innerWidth <= 1480) {
-        setBgColor('transparent');
-      } else {
-        setBgColor(bgc);  // 恢復背景顏色
-      }
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     // 判斷視窗寬度並更新背景顏色
+  //     if (window.innerWidth <= 1480) {
+  //       setBgColor('transparent');
+  //     } else {
+  //       setBgColor(bgc);  // 恢復背景顏色
+  //     }
+  //   };
 
-    handleResize();  // 初始化時檢查一次視窗大小
+  //   handleResize();  // 初始化時檢查一次視窗大小
 
-    // 監聽視窗大小變化
-    window.addEventListener('resize', handleResize);
+  //   // 監聽視窗大小變化
+  //   window.addEventListener('resize', handleResize);
 
-    // 元件卸載時移除事件監聽器
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [bgc]);  // 當 bgc 改變時重新執行 useEffect
+  //   // 元件卸載時移除事件監聽器
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, [bgc]);  // 當 bgc 改變時重新執行 useEffect
   return (
     <>
       <div>
-        <div className={`${styles.bestSeller}`} style={{ backgroundColor: bgColor  }}>
+        <div className={`${styles.bestSeller}`} style={{ backgroundColor: bgc  }}>
           <Image
             src={`/discount/${bgimg}`} // 圖片路徑
             alt="Discount image" // 圖片描述
