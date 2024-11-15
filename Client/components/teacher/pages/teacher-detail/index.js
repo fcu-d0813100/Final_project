@@ -14,7 +14,7 @@ import React, { useState, useEffect } from 'react'
 export default function TeacherDetail(props) {
   const router = useRouter()
   const [teacher, setTeacher] = useState({})
-  const [workshop, setWorkshop] = useState([]) 
+  const [workshop, setWorkshop] = useState([])
 
   const fetchData = async (tid) => {
     try {
@@ -36,8 +36,6 @@ export default function TeacherDetail(props) {
       const workshopsData = await workshopsResponse.json()
       setWorkshop(workshopsData) // 設置工作坊數據
       console.log(workshopsData)
-
-
     } catch (err) {
       console.log(err)
     }
@@ -50,7 +48,6 @@ export default function TeacherDetail(props) {
     }
   }, [router.isReady])
 
-
   const nationMap = {
     臺灣: 'Taiwan',
     美國: 'America',
@@ -62,21 +59,21 @@ export default function TeacherDetail(props) {
     西班牙: 'Spain',
   }
 
-  const enNation = nationMap[teacher.nation] || ''; // 預設為空字串
+  const enNation = nationMap[teacher.nation] || '' // 預設為空字串
 
-    const getStatus = (registrationStart, registrationEnd) => {
-      const currentDate = new Date()
-      const startDate = new Date(registrationStart)
-      const endDate = new Date(registrationEnd)
+  const getStatus = (registrationStart, registrationEnd) => {
+    const currentDate = new Date()
+    const startDate = new Date(registrationStart)
+    const endDate = new Date(registrationEnd)
 
-      if (currentDate < startDate) {
-        return '報名中'
-      } else if (currentDate > endDate) {
-        return '已截止'
-      } else {
-        return '報名中' // 這裡可根據需要進行調整
-      }
+    if (currentDate < startDate) {
+      return '報名中'
+    } else if (currentDate > endDate) {
+      return '已截止'
+    } else {
+      return '報名中' // 這裡可根據需要進行調整
     }
+  }
 
   return (
     <>
@@ -175,7 +172,7 @@ export default function TeacherDetail(props) {
                 <WorkshopCardLg
                   key={item.workshop_id}
                   wid={item.workshop_id}
-                  imgCover={`/workshop/workshop_img/${item.type_id}-${item.workshop_id}-c.jpg`}
+                  imgCover={`http://localhost:3005/workshop/${item.workshop_img_cover}`}
                   name={item.workshop_name}
                   teacher={item.name}
                   beginDate={beginDate}
@@ -185,7 +182,6 @@ export default function TeacherDetail(props) {
                 />
               )
             })}
-            
           </div>
         </div>
       </div>
