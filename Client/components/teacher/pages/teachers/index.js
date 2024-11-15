@@ -32,10 +32,9 @@ export default function Teachers(props) {
     }
   }
 
-    const onSearch = () => {
-      fetchData() // 搜尋時觸發獲取新資料
-    }
-
+  const onSearch = () => {
+    fetchData() // 搜尋時觸發獲取新資料
+  }
 
   // 每四個一組分成子陣列
   const groupedTeachers = []

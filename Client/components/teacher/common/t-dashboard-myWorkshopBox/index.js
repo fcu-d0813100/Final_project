@@ -24,6 +24,7 @@ export default function MyWorkshopBox({
   filterStatus,
   id,
   setWorkshop,
+
 }) {
   //----------吐司訊息
   const { upload1Toast } = ToastSuccess({
@@ -275,7 +276,7 @@ export default function MyWorkshopBox({
             </div>
 
             <div className={styles.priceAndStatus}>
-              <h4 className="h4 m-0 me-3">{price}</h4>
+              <h4 className="h4 m-0 me-3">NT$ {price}</h4>
               <p className={`ps ${statusClass}`}>{statusText}</p>
             </div>
 
@@ -299,7 +300,7 @@ export default function MyWorkshopBox({
                     <PiExport className="ph" />
                   </button>
                   <Link
-                    href=""
+                    href={`/teacher/workshopEdit/${id}`}
                     className={`${styles.editBtn} h6 mx-2 text-decoration-none`}
                   >
                     編輯 <PiArrowRight className={`${styles.arrow} ph ms-2`} />
@@ -349,7 +350,7 @@ export default function MyWorkshopBox({
                     />
                   </button>
                   <Link
-                    href=""
+                    href={`/teacher/workshopEdit/${id}`}
                     className={`${styles.editBtn} h6 mx-2 text-decoration-none`}
                   >
                     編輯 <PiArrowRight className={`${styles.arrow} ph ms-2`} />
