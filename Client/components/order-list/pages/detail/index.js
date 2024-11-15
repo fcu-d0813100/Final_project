@@ -116,9 +116,12 @@ const OrderDetail = () => {
                                         brand={item.name}
                                         productName={item.product_name}
                                         color={item.color}
+                                        color_name={item.color_name}
                                         quantity={item.quantity}
                                         originalPrice={item.originalprice}
                                         discountedPrice={new Intl.NumberFormat().format(item.price)}
+                                        productId={item.product_id} 
+                                        colorId={item.color_id}      
                                     />
                                 )}
                                 {/* 顯示工作坊資料 */}
@@ -220,7 +223,7 @@ const OrderDetail = () => {
                     </div>
                 </div>
             </div>
-
+            
         </OrderSection>
     );
 };

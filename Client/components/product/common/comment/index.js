@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import Stars from "react-stars";
@@ -48,6 +48,21 @@ const CommentForm = () => {
     // Save review logic here
   };
 
+  // const [productData, setProductData] = useState(null);
+
+  // useEffect(() => {
+  //   const storedProductData = localStorage.getItem('productData');
+  //   if (storedProductData) {
+  //     setProductData(JSON.parse(storedProductData));
+  //   }
+  // }, []);
+
+  // if (!productData) {
+  //   return <div>無法獲取商品資料。</div>; // 顯示錯誤或加載提示
+  // }
+
+  // const { productId, colorId, mainimage, brand, product_name, color_name, color } = productData;
+
   return (
     <Container className={`${styles['container']} ${styles['custom-link']} p-4`} style={{ maxWidth: '1440px' }}>
       <Row className={`${styles['commentrow']} align-items-center mb-4`}>
@@ -55,14 +70,14 @@ const CommentForm = () => {
           <Image
             width={160}
             height={160}
-            src="/product/LANCOME_LS01_M_196.webp"
+            src={mainimage}
             alt="Product"
           />
         </Col>
         <Col xs={10} className={styles['order-detail']}>
-          <h5 className='p'>LANCOME <br/></h5>
-          <div className={`${styles['productname']} h6`}>玲瓏巧思五色眼影盤</div>
-          <p className={`${styles['color']} ps`}><span className={styles['color-swatch']} ></span><span className={styles['color-text']}>顏色：來杯摩卡-#01</span></p>
+          <h5 className='p'>{brand} <br /></h5>
+          <div className={`${styles['productname']} h6`}>{product_name}</div>
+          <p className={`${styles['color']} ps`}><span className={styles['color-swatch']}  style={{ backgroundColor: color }}></span><span className={styles['color-text']}>顏色：{color_name}</span></p>
         </Col>
       </Row>
 
@@ -90,11 +105,11 @@ const CommentForm = () => {
                 alt={`Review image ${index + 1}`}
               />
               <button
-          onClick={() => handleRemoveImage(index)}
-          className={styles['remove-button']}
-        >
-          &times;
-        </button>
+                onClick={() => handleRemoveImage(index)}
+                className={styles['remove-button']}
+              >
+                &times;
+              </button>
             </div>
           ))}
           <div className={styles['add-image']} onClick={handleAddImage}>

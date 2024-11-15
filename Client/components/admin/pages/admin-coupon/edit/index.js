@@ -142,7 +142,7 @@ export default function Index() {
                                 type="text"
                                 name="name"
                                 value={coupon.name}
-                                onChange={(e) => setCouponCode(e.target.value)}
+                                onChange={(e) => setCoupon(e.target.value)}
                             />
                         </div>
 

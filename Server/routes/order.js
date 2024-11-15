@@ -100,6 +100,7 @@ router.get('/detail/:orderId', async function (req, res, next) {
     '"name":"', IFNULL(b.name, ''), '",',
     '"product_name":"', IFNULL(p.product_name, ''), '",',
     '"color":"', IFNULL(c.color, 'null'), '",',
+    '"color_id":"', IFNULL(c.id, 'null'), '",',
     '"color_name":"', IFNULL(c.color_name, 'null'), '",',
     '"stock":"', IFNULL(c.stock, 'null'), '",',
     '"quantity":', oi.quantity, ',',
