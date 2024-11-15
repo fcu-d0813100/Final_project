@@ -5,7 +5,7 @@ import { PiPlus, PiX, PiArrowRight } from 'react-icons/pi'
 import styles from '@/components/teacher/common/t-dashboard-add-worshopTime/add-workshopTime.module.scss'
 import React, { useState, useEffect } from 'react'
 
-export default function AddWorkshopTime({ onAddTime }) {
+export default function AddWorkshopTime({ onAddTime, workshopIdVal }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [selectedTime, setSelectedTime] = useState({
@@ -96,6 +96,11 @@ export default function AddWorkshopTime({ onAddTime }) {
               <PiX />
             </button>
             <h5 className="h5 mb-4">新增課程時間</h5>
+            <input
+              name="workshop_id"
+              value={workshopIdVal}
+              className="d-none"
+            />
             <InputStyle
               addclass="mb-3"
               forText="date"

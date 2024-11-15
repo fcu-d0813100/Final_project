@@ -53,6 +53,30 @@ export default function Page1({
     '18:30',
   ]
 
+  const handleSubmitNewWorkshopTime = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/workshop/edit/newWorkshopTime',
+        {
+          credentials: 'include',
+          method: 'POST',
+          body: JSON.stringify(selectedTime),
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('新增資料失敗')
+      }
+
+      const result = await response.json()
+      console.log('新增成功', result)
+    } catch (error) {
+      console.error('新增失敗', error)
+    }
+  }
+
   useEffect(() => {
     // 初始化 timeSchedule 的值，從 workshop 中解析出各項陣列
     const initialTimeSchedule = (
@@ -113,6 +137,7 @@ export default function Page1({
       })
     }
   }
+
   const handleSaveChanges = (id) => {
     setTimeSchedule((prevSchedule) =>
       prevSchedule.map((time) =>
@@ -453,12 +478,15 @@ export default function Page1({
                 )}
               </div>
             ))}
-            <AddWorkshopTime onAddTime={handleAddTime} />
+            <AddWorkshopTime
+              onAddTime={handleAddTime}
+              workshopIdVal={workshop.id}
+            />
           </div>
         </div>
         <div className="ms-auto d-flex justify-content-end mt-2">
           <button
-            className="btn-secondary h6 me-4"
+            className="btn-danger h6 me-4"
             type="submit"
             onClick={handleSubmit}
           >

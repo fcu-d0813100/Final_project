@@ -599,7 +599,7 @@ router.put(
       }
     }
 
-    // 檢查 `req.files` 是否存在，如果沒有則設置為空物件
+    // 檢查 `req.files` 是否存在
     const updateFiles = req.files || {}
     const img_cover = updateFiles['img_cover']
       ? updateFiles['img_cover'][0].filename
@@ -642,11 +642,6 @@ router.put(
       const [result] = await db.query(sqlUpdateWorkshop)
       console.log('Insert Result:', result)
 
-      // 取得新插入的 workshop_id
-      // const newWorkshopId = result
-      // console.log('New Workshop ID:', newWorkshopId)
-
-      ///-----------------------
       // 解析 timeSchedule 資料
       const parsedTimeSchedule = updateWorkshop.timeSchedule.map((item) => {
         // 確保每個項目都是一個有效的物件
@@ -657,23 +652,43 @@ router.put(
           return null
         }
       })
-      ///-----------------------
-
-      // 插入每筆 timeSchedule 資料
+      console.log('Parsed Time Schedule:', parsedTimeSchedule)
+      // 更新每筆 timeSchedule 資料
       for (const time of parsedTimeSchedule) {
-        const sqlUpdateWorkshopTime = SQL.format(
-          'UPDATE `workshop_time` SET `date` = ?, `start_time` = ?, `end_time` = ?, `min_students` = ?, `max_students` = ? WHERE `workshop_time`.`id` = ? ',
-          [
-            time.date,
-            time.start_time,
-            time.end_time,
-            time.min_students,
-            time.max_students,
-            time.id,
-          ]
-        )
-        // 插入 workshop_time 資料，假設 req.body 中包含時間資料
-        await db.query(sqlUpdateWorkshopTime)
+        if (typeof time.id === 'string') {
+          const sqlUpdateWorkshopTime = SQL.format(
+            'UPDATE `workshop_time` SET `date` = ?, `start_time` = ?, `end_time` = ?, `min_students` = ?, `max_students` = ? WHERE `workshop_time`.`id` = ? ',
+            [
+              time.date,
+              time.start_time,
+              time.end_time,
+              time.min_students,
+              time.max_students,
+              time.id,
+            ]
+          )
+          // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+          await db.query(sqlUpdateWorkshopTime)
+        } else {
+          const sqlInsertWorkshopTime = SQL.format(
+            `
+      INSERT INTO workshop_time(
+      workshop_id, date, start_time, end_time, min_students, max_students, registered
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+     `,
+            [
+              updateWorkshop.id,
+              time.date,
+              time.start_time,
+              time.end_time,
+              time.min_students,
+              time.max_students,
+              0,
+            ]
+          )
+          // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+          const [result] = await db.query(sqlInsertWorkshopTime)
+        }
       }
 
       // console.log('req.files' + req.files)
@@ -687,6 +702,36 @@ router.put(
   }
 )
 
-// 更新，並立即發布
+// 更新（刪除課程時間）
+router.post('/edit/newWorkshopTime', async function (req, res, next) {
+  const newWorkshopTime = req.body
+  console.log(newWorkshopTime) // 打印出來檢查
+
+  try {
+    const sqlInsertWorkshopTime = SQL.format(
+      `
+      INSERT INTO workshop_time(
+      workshop_id, date, start_time, end_time, min_students, max_students, registered
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+     `,
+      [
+        newWorkshopTime.workshop_id,
+        newWorkshopTime.date,
+        newWorkshopTime.start_time,
+        newWorkshopTime.end_time,
+        newWorkshopTime.min_students,
+        newWorkshopTime.max_students,
+        0,
+      ]
+    )
+    // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+    const [result] = await db.query(sqlInsertWorkshopTime)
+
+    res.json(result)
+  } catch (e) {
+    console.error(e)
+    return res.status(500).json({ message: 'Server error', error: e.message })
+  }
+})
 
 export default router

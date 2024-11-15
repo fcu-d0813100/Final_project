@@ -59,7 +59,7 @@ export default function Page2({
         <hr className="opacity-75" />
         <div className="d-flex mt-5 pt-3">
           <button
-            className="btn-primary h6"
+            className="btn-primary h6 ms-auto"
             onClick={(e) => {
               e.preventDefault()
               onPreviousPage() // 確保點擊時觸發
@@ -68,23 +68,13 @@ export default function Page2({
             回前頁
           </button>
 
-          <div className="d-flex ms-auto">
+          <div className="d-flex ms-4">
             <button
-              className="btn-secondary h6"
+              className="btn-danger h6"
               type="submit"
               onClick={handleSave}
             >
               儲存
-            </button>
-            <button
-              className="btn-danger h6 ms-4"
-              type="submit"
-              onClick={(e) => {
-                e.preventDefault()
-                handleSave
-              }}
-            >
-              立即發布
             </button>
           </div>
         </div>
