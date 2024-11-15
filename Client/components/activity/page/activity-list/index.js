@@ -7,12 +7,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Brands from '@/components/home/common/brands'
 import LoginModal from '@/components/shared/modal-confirm'
 import { useAuth } from '@/hooks/use-auth'
+import Dropdown from '@/components/activity/common/DropdownList'
 import {
   PiMagnifyingGlass,
   PiHeartStraight,
   PiHeartStraightFill,
 } from 'react-icons/pi'
-import Dropdown from '@/components/shared/dropdownList/sample'
 import ListCarousel from '@/components/activity/common/ListCarousel/actCarousel'
 
 export default function Activity() {
@@ -21,18 +21,25 @@ export default function Activity() {
   const [originalActivities, setOriginalActivities] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [showLoginModal, setShowLoginModal] = useState(false) // 控制 LoginModal 的显示状态
+  const [showLoginModal, setShowLoginModal] = useState(false) // 控制 LoginModal 的顯示狀態
   const router = useRouter()
   const { auth } = useAuth()
-  const userId = auth.userData.id // 当前登录的 user_id
-
+  const userId = auth.userData.id // 當前登入的 user_id
+  // 日期格式化函數
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') // 確保月份是兩位數
+    const day = String(date.getDate()).padStart(2, '0') // 確保日期是兩位數
+    return `${year}/${month}/${day}`
+  }
   useEffect(() => {
-    console.log('User ID:', userId) // 打印 userId
+    console.log('使用者 ID:', userId) // 印出 userId
   }, [userId])
-
+  //控制收藏
   const toggleHeart = async (id, isFavorite) => {
     if (userId === 0) {
-      setShowLoginModal(true) // 如果未登录，显示 LoginModal
+      setShowLoginModal(true) // 如果未登入，顯示 LoginModal
       return
     }
 
@@ -50,39 +57,70 @@ export default function Activity() {
       })
 
       if (!response.ok) {
-        throw new Error('无法更新收藏状态')
+        throw new Error('無法更新收藏狀態')
       }
 
       const result = await response.json()
       console.log(result.message)
 
-      // 更新活动状态
+      // 更新活動狀態
       setActive((prevActive) =>
         prevActive.map((item) =>
           item.id === id ? { ...item, is_favorite: !isFavorite } : item
         )
       )
     } catch (error) {
-      console.error('收藏更新失败:', error)
+      console.error('收藏更新失敗:', error)
     }
   }
-
+  //控制下拉是選單
+  const fetchActivitiesByStatus = async (status) => {
+    try {
+      const url = `http://localhost:3005/api/activity/status/${userId}?status=${status}`
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error('網路回應失敗：' + response.status)
+      }
+      const data = await response.json()
+      setActive(data)
+    } catch (err) {
+      console.error('資料獲取失敗:', err)
+    }
+  }
+  //控制月份塞選
   const fetchActivitiesByMonth = async (month) => {
     try {
       const url = month
-        ? `http://localhost:3005/api/activity/month/${month}`
+        ? `http://localhost:3005/api/activity/month/${month}/${userId}`
         : `http://localhost:3005/api/activity/${userId}`
 
       const response = await fetch(url)
       if (!response.ok) {
-        throw new Error('网络响应失败：' + response.status)
+        throw new Error('網路回應失敗：' + response.status)
       }
       const data = await response.json()
       setActive(data)
       setOriginalActivities(data)
       setSelectedMonth(month)
     } catch (err) {
-      console.error('数据库查询失败:', err)
+      console.error('資料庫查詢失敗:', err)
+    }
+  }
+  //控制活動搜尋
+  const fetchActivitiesBySearch = async (query) => {
+    try {
+      const url = `http://localhost:3005/api/activity/search/${userId}?search=${encodeURIComponent(
+        query
+      )}`
+
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error('網路回應失敗：' + response.status)
+      }
+      const data = await response.json()
+      setActive(data) // 將搜尋結果設定為活動列表
+    } catch (err) {
+      console.error('搜尋資料獲取失敗:', err)
     }
   }
 
@@ -95,7 +133,7 @@ export default function Activity() {
       <div className={Styles['act-img-container']}>
         <ListCarousel />
       </div>
-
+      {/* 月份按鈕 */}
       <div className={`${Styles['act-sec1']} container d-none d-lg-block`}>
         <div className={`${Styles['act-month-button']} d-none d-lg-block`}>
           <ul className="d-flex justify-content-around">
@@ -107,7 +145,7 @@ export default function Activity() {
                   fetchActivitiesByMonth(null)
                 }}
               >
-                ALL
+                全部
               </a>
             </li>
             {[...Array(12)].map((_, i) => (
@@ -126,22 +164,22 @@ export default function Activity() {
           </ul>
         </div>
       </div>
-
+      {/* 搜尋bar跟狀態塞選*/}
       <div
-        className={`${Styles['act-search']} container d-flex flex-wrap justify-content-between`}
+        className={`${Styles['act-search']} container d-flex flex-wrap justify-content-between mt-3`}
       >
         <form
           className={`${Styles['search']} d-flex me-auto my-2 my-lg-0 align-items-center`}
           role="search"
           onSubmit={(e) => {
             e.preventDefault()
-            fetchActivitiesByMonth(null)
+            fetchActivitiesBySearch(searchQuery) // 使用搜尋字串進行查詢
           }}
         >
           <input
             className="form-control me-2 rounded-pill border-dark"
             type="search"
-            placeholder="活动 |"
+            placeholder="活動 |"
             aria-label="Search"
             style={{ height: '30px' }}
             value={searchQuery}
@@ -155,29 +193,96 @@ export default function Activity() {
             <PiMagnifyingGlass style={{ width: '20px', height: '20px' }} />
           </button>
         </form>
+
+        {/* 992px以上顯示在右邊 */}
         <div className="ms-auto pc-drop text-center d-lg-block d-none">
-          <Dropdown />
+          <div className="d-flex">
+            <Dropdown
+              name="狀態"
+              items={[
+                { option: '報名中', value: 1 },
+                { option: '已截止', value: 0 },
+              ]}
+              onSelect={(status) => fetchActivitiesByStatus(status)}
+            />
+            <div className="mobile-drop d-block d-lg-none">
+              <Dropdown
+                name="月份"
+                items={[
+                  { option: 'ALL', value: null },
+                  { option: '1月', value: 1 },
+                  { option: '2月', value: 2 },
+                  { option: '3月', value: 3 },
+                  { option: '4月', value: 4 },
+                  { option: '5月', value: 5 },
+                  { option: '6月', value: 6 },
+                  { option: '7月', value: 7 },
+                  { option: '8月', value: 8 },
+                  { option: '9月', value: 9 },
+                  { option: '10月', value: 10 },
+                  { option: '11月', value: 11 },
+                  { option: '12月', value: 12 },
+                ]}
+                onSelect={(month) => fetchActivitiesByMonth(month)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 992px以下顯示並置中 */}
+        <div className="w-100 text-center mobile-drop d-block d-lg-none mt-3 w-50">
+          <div className="d-flex">
+            <Dropdown
+              name="狀態"
+              items={[
+                { option: '報名中', value: 1 },
+                { option: '已截止', value: 0 },
+              ]}
+              onSelect={(status) => fetchActivitiesByStatus(status)}
+            />
+            <div className="mobile-drop d-block d-lg-none">
+              <Dropdown
+                name="月份"
+                items={[
+                  { option: 'ALL', value: null },
+                  { option: '1月', value: 1 },
+                  { option: '2月', value: 2 },
+                  { option: '3月', value: 3 },
+                  { option: '4月', value: 4 },
+                  { option: '5月', value: 5 },
+                  { option: '6月', value: 6 },
+                  { option: '7月', value: 7 },
+                  { option: '8月', value: 8 },
+                  { option: '9月', value: 9 },
+                  { option: '10月', value: 10 },
+                  { option: '11月', value: 11 },
+                  { option: '12月', value: 12 },
+                ]}
+                onSelect={(month) => fetchActivitiesByMonth(month)}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
       <div className={Styles['act-main']}>
         <div className={`${Styles['month-title']} container`}>
-          {selectedMonth ? `${selectedMonth} 月的活动` : '所有活动'}
+          {selectedMonth ? `${selectedMonth} 月的活動` : '所有活動'}
         </div>
 
         {active.length === 0 ? (
           <div className={`${Styles['searchNotFound']} text-center`}>
-            <h5>未找到任何活动</h5>
-            <p>请尝试搜索其他关键字或筛选条件。</p>
+            <h5>未找到任何活動</h5>
+            <p>請嘗試搜尋其他關鍵字或篩選條件。</p>
           </div>
         ) : (
           <div className={`${Styles['act-card-sec']} container`}>
             {active.map((item, index) => {
               const now = new Date()
               const startAt = new Date(item.start_at)
-              const status = startAt > now ? '报名中' : '已截止'
+              const status = startAt > now ? '報名中' : '已截止'
               const statusClass =
-                status === '报名中' ? Styles['statusOn'] : Styles['statusOff']
+                status === '報名中' ? Styles['statusOn'] : Styles['statusOff']
 
               return (
                 <div
@@ -207,18 +312,18 @@ export default function Activity() {
                         <div className={`${Styles['card-text']} d-flex`}>
                           <div className="currentR">
                             <p className={Styles['num']}>{item.currentREG}</p>
-                            <p>目前人数</p>
+                            <p>目前人數</p>
                           </div>
                           <div className="maxR">
                             <p className={Styles['num']}>{item.maxREG}</p>
-                            <p>报名人数</p>
+                            <p>報名人數</p>
                           </div>
                           <div className="view">
                             <p className={Styles['num']}>{item.views}</p>
-                            <p>浏览次数</p>
+                            <p>瀏覽次數</p>
                           </div>
                         </div>
-                        <p className={Styles['card-det']}>详细信息</p>
+                        <p className={Styles['card-det']}>詳細資訊</p>
                         <Image
                           src={`http://localhost:3005/upload/activity/${item.img1}`}
                           width={1200}
@@ -230,12 +335,13 @@ export default function Activity() {
 
                     <div className={Styles['card-content']}>
                       <div className={Styles['card-date']}>
-                        {item.start_at}~{item.end_at}
+                        {formatDate(item.start_at)} - {formatDate(item.end_at)}
                       </div>
                       <div className={Styles['card-info']}>
-                        <p className={Styles['title']}>主办单位 | host</p>
                         <p>{item.brand}</p>
-                        <p className={Styles['title']}>活动地点 | location</p>
+                        <p className={` ${Styles['t1']}`}>主辦單位 | host</p>
+
+                        <p className={Styles['title']}>活動地點 | location</p>
                         <p>{item.address}</p>
                       </div>
                       <div className={Styles['card-footer']}>
@@ -279,7 +385,7 @@ export default function Activity() {
         )}
       </div>
 
-      {/* 显示 LoginModal，当用户未登录时按下爱心按钮弹出 */}
+      {/* 顯示 LoginModal，當用戶未登入時按下愛心按鈕彈出 */}
       {showLoginModal && (
         <LoginModal
           title="尚未登入會員"
@@ -289,7 +395,7 @@ export default function Activity() {
             router.push('/user/login/user')
           }}
           show={showLoginModal}
-          onHide={() => setShowLoginModal(false)}
+          handleClose={() => setShowLoginModal(false)}
         />
       )}
 

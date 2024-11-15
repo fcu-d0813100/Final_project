@@ -171,6 +171,10 @@
   width: 40px;
   margin-right: 10px;
   color: rgb(41, 41, 41);
+  cursor: pointer;
+  &:hover {
+      opacity: 0.8;
+    }
 }
 
 .icon-google {
@@ -184,7 +188,6 @@
   cursor: pointer;
 
   &:hover {
-  // 透明度調整
     opacity: 0.8;
   }
 }

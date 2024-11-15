@@ -14,6 +14,7 @@
   position: relative;
   margin: 50px auto !important;
   padding: 0;
+  z-index: 0;
   .row {
     .product-title1 {
       display: flex;
@@ -55,6 +56,9 @@
       text-align: center;
       justify-content: center;
       .product-card-w {
+        &:hover{
+          cursor: pointer;
+        }
         @media (max-width: 390px) {
           width: 170px !important;
         }
@@ -158,6 +162,9 @@
         }
 
         .product-cardtitle-w {
+          padding-top: 10px;
+          max-width: 80%; 
+          margin: 0 auto; 
           @media (max-width: 390px) {
             font-size: 14px;
             .product-cardtitle-mobile {

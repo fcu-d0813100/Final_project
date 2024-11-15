@@ -11,7 +11,8 @@ const __dirname = path.dirname(__filename)
 // upload image
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/upload')
+    //where to save flie
+    cb(null, 'public/post')
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
@@ -20,7 +21,8 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-router.use('/upload', express.static(path.join(__dirname, 'public/upload')))
+// When visiting /post, show files from the public/post folder.
+router.use('/post', express.static(path.join(__dirname, 'public/post')))
 
 // create post - post
 router.post('/create', upload.array('files'), async function (req, res, next) {
@@ -456,31 +458,6 @@ router.get('/', async function (req, res, next) {
 })
 
 // render post-detail 指定id
-const nestComments = (comments) => {
-  const map = {}
-  const roots = []
-
-  comments.forEach((comment) => {
-    map[comment.comment_id] = { ...comment, children: [] }
-
-    if (comment.parent_id === null) {
-      roots.push(map[comment.comment_id])
-    } else if (map[comment.parent_id]) {
-      map[comment.parent_id].children.push(map[comment.comment_id])
-    } else {
-      console.log(`Parent comment with ID ${comment.parent_id} not found.`)
-    }
-  })
-
-  return roots
-}
-/* 
-RECURSIVE :第1次查詢的結果賦值給 CommentHierarchy 
-第1次基礎查詢:查詢根評論->沒有parent_id的comment.id 
-第2次遞迴查詢:查詢子評論->查找根評論是否有子評論 
-重複遞迴查詢:以最新的CommentHierarchy 更新ch.comment_id，找出新加入的子評論 
-ch:表示CommentHierarchy父評論  pc:表示post_comment子評論
-*/
 router.get('/post_wall/:postId', async function (req, res, next) {
   const sqlSelect = `
   SELECT
@@ -533,38 +510,6 @@ router.get('/post_wall/:postId', async function (req, res, next) {
 `
 
   const [result] = await db.query(sqlSelect)
-  // const flatComments = result.map((row) => ({
-  //   comment_id: row.comment_id,
-  //   parent_id: row.parent_id,
-  //   comment_content: row.comment_content,
-  //   created_at: row.comment_created_at,
-  //   comment_author_nickname: row.comment_author_nickname,
-  //   comment_author_img: row.comment_author_img,
-  //   comment_like_count: row.comment_like_count,
-  //   comment_reply_count: row.comment_reply_count,
-  //   depth: row.depth,
-  // }))
-  // // 刪除未被嵌套的評論
-  // const nextPost = result.map(
-  //   ({
-  //     comment_id,
-  //     comment_content,
-  //     parent_id,
-  //     comment_created_at,
-  //     comment_author_nickname,
-  //     comment_author_img,
-  //     comment_like_count,
-  //     comment_reply_count,
-  //     ...others
-  //   }) => others
-  // )
-
-  // // console.log(nextPostData)
-  // const nestedComments = nestComments(flatComments)
-  // const post = {
-  //   ...nextPost[0],
-  //   comments: nestedComments,
-  // }
   const flatComments = result.map((row) => ({
     comment_id: row.comment_id,
     parent_id: row.parent_id,
@@ -720,10 +665,6 @@ router.get('/tags', async function (req, res, next) {
   res.json(result)
 })
 
-export default router
-
-// update comment
-
 // delete comment
 router.delete('/comment_delete', async function (req, res, next) {
   const { commentId, userId } = req.body
@@ -731,3 +672,5 @@ router.delete('/comment_delete', async function (req, res, next) {
   await db.query(sqlDelete, [commentId, userId])
   res.json({ status: 'success', message: '刪除評論成功' })
 })
+
+export default router

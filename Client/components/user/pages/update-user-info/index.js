@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import UserSection from '@/components/user/common/user-section'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/router'
+import DeleteModal from '@/components/shared/modal-delete'
+import { toast, Toaster } from 'react-hot-toast'
+import PreviewUploadImage from '@/components/user/common/preview-upload-image'
 
 export default function UpdateInfo() {
-  // 從勾子的context得到註冊函式
-  const { update, getUser } = useAuth()
+  const [selectedFile, setSelectedFile] = useState(null)
+  const { auth, update, getUser, deleteUser } = useAuth()
+
   const router = useRouter()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     name: '',
-    // account: '',
-    // password: '',
-    // confirmPassword: '',
     nickname: '',
     gender: '',
     birthday: '',
@@ -32,16 +32,11 @@ export default function UpdateInfo() {
   const [errors, setErrors] = useState({
     name: '',
     email: '',
-    // account: '',
-    // password: '',
-    // confirmPassword: '',
   })
 
   // 多欄位共用事件函式
   const handleFieldChange = (e) => {
-    // ES6特性: 計算得來的物件屬性名稱(computed property name)
     let nextUser = { ...user, [e.target.name]: e.target.value }
-
     setUser(nextUser)
   }
 
@@ -61,10 +56,8 @@ export default function UpdateInfo() {
     if (!user.email) {
       newErrors.email = 'Email為必填'
     }
-
     // 如果newErrors中的物件值中其中有一個非空白字串，代表有錯誤發生
     const hasErrors = Object.values(newErrors).some((v) => v)
-
     // 表單檢查--END---
     return { newErrors, hasErrors }
   }
@@ -72,35 +65,92 @@ export default function UpdateInfo() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const { newErrors, hasErrors } = checkError(user)
-    console.log('錯誤檢查:', newErrors, hasErrors) // 檢查錯誤狀態
+    // console.log('錯誤檢查:', newErrors, hasErrors)
     setErrors(newErrors)
     if (hasErrors) {
       return
     }
+
     try {
-      console.log('發送用戶資料:', user) // 確認發送的資料
-      await update(user)
-      console.log('更新成功')
-      router.push('/user') // 跳轉到 /user 頁面
+      // 如果有選擇檔案，執行更新頭像的動作
+      if (selectedFile) {
+        const resData = await update(user, selectedFile)
+        // console.log('Response data:', resData)
+        if (resData.status === 'success') {
+          toast.success('會員頭像修改成功', {
+            style: {
+              border: '1.2px solid #90957a',
+              padding: '12px 40px',
+              color: '#626553',
+            },
+            iconTheme: {
+              primary: '#626553',
+              secondary: '#fff',
+            },
+          })
+          setTimeout(() => {
+            router.push('/user')
+          }, 2000)
+        } else {
+          // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+          toast.error('更新失敗，請稍後再試', {
+            style: {
+              border: '1.2px solid #90957a',
+              padding: '12px 40px',
+              color: '#963827',
+            },
+            iconTheme: {
+              primary: '#963827',
+              secondary: '#fff',
+            },
+          })
+        }
+      }
+
+      // 執行用戶資料的更新
+      const resData = await update(user)
+      // console.log('用戶資料更新結果:', resData)
+      if (resData.status === 'success') {
+        toast.success('您已更新個人資料', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+      } else {
+        // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+        toast.error('更新失敗，請稍後再試', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
     } catch (error) {
-      console.error('更新失敗:', error)
+      // console.error('更新失敗:', error)
+      toast.error('更新失敗，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
-
-  // 初始化資料的狀態
-  // const [initialUser] = useState({
-  //   name: '',
-  //   account: '',
-  //   nickname: '',
-  //   gender: '',
-  //   birthday: '',
-  //   email: '',
-  //   img: '',
-  //   phone: '',
-  //   address: '',
-  //   create_at: '',
-  //   updated_at: 'Now()',
-  // })
 
   // 初始化會員資料
   const initUserData = async () => {
@@ -114,8 +164,49 @@ export default function UpdateInfo() {
     initUserData()
   }, [])
 
-  // 生日、地址無法更新
+  const [showModal, setShowModal] = useState(false)
+  const handleDeleteUser = async () => {
+    try {
+      // console.log(`開始刪除用戶，ID: ${user.id}`)
+      // console.log('用戶刪除成功')
+      toast.success('您已成功申請停權', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#626553',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
+      })
+      setShowModal(false) // 確保模態對話框被關閉
+      await deleteUser(user.id)
+      router.push('/user/information/update')
+    } catch (error) {
+      // console.error('刪除過程中發生錯誤:', error)
+      toast.error('刪除過程中發生錯誤，請稍後再試', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
 
+  const openModal = () => {
+    // e.preventDefault()
+    // 阻止表單提交
+    setShowModal(true)
+  }
+  const closeModal = () => {
+    setShowModal(false)
+  }
   return (
     <>
       <UserSection titleCN="更新資訊" titleENG="Information">
@@ -206,17 +297,34 @@ export default function UpdateInfo() {
                   />
                 </div>
               </div>
+
               <div className="col-3 d-flex align-items-center">
                 <div className="ratio ratio-1x1 w-75">
-                  <Image
+                  <PreviewUploadImage
+                    userId={user.id} // 傳遞用戶ID作為變數
+                    avatarBaseUrl="http://localhost:3005/avatar" // 正確的基礎URL
+                    defaultImg="avatar01.jpg" // 默認圖片名
+                    setSelectedFile={setSelectedFile}
+                    selectedFile={selectedFile}
+                  />
+
+                  {/* <Image
                     width={255}
                     height={255}
                     className={styles.avatar}
                     src={`/user/img/${user.img}`}
                     alt=""
-                  />
+                    priority
+                  /> */}
                 </div>
               </div>
+              {/* <button
+                type="button"
+                className="btn btn-outline"
+                onClick={handleFileChange}
+              >
+                更換頭像
+              </button> */}
             </div>
           </div>
           {/* 收件資訊 */}
@@ -281,9 +389,23 @@ export default function UpdateInfo() {
             <div
               className={`col-3 d-flex justify-content-end align-items-center`}
             >
-              <a href="" className={`p ${styles['delete-account']}`}>
-                停用會員帳戶
-              </a>
+              <button
+                type="button"
+                onClick={openModal}
+                className={` ${styles['delete-account']}`}
+              >
+                {' '}
+                停用會員帳戶{' '}
+              </button>{' '}
+              <DeleteModal
+                title="您確定要停用帳戶嗎 ?"
+                content="停用帳戶後，您將無法登入及享有會員權益，如需恢復帳戶，請聯繫客服以重新啟用。"
+                btnConfirm="停用帳戶"
+                btnCancel="取消"
+                ConfirmFn={handleDeleteUser}
+                show={showModal}
+                handleClose={closeModal}
+              />
             </div>
           </div>
 

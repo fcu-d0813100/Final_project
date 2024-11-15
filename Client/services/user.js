@@ -18,6 +18,17 @@ export const googleLogin = async (providerData = {}) => {
 /**
  * LINE Login登入用，要求line登入的網址
  */
+// export const lineLoginRequest = async () => {
+//   // 向後端(express/node)伺服器要求line登入的網址，因密鑰的關係需要由後端產生
+//   axiosInstance.get('/line-login/login').then((res) => {
+//     console.log(res.data.url)
+//     // 重定向到line 登入頁
+//     if (res.data.url) {
+//       window.location.href = res.data.url
+//     }
+//   })
+// }
+
 export const lineLoginRequest = async () => {
   // 向後端(express/node)伺服器要求line登入的網址，因密鑰的關係需要由後端產生
   axiosInstance.get('/line-login/login').then((res) => {
@@ -59,12 +70,32 @@ export const logout = async () => {
 /**
  * 載入會員id的資料用，需要登入後才能使用。此API路由會檢查JWT中的id是否符合本會員，不符合會失敗。
  */
-export const getUserById = async (id = 0) => {
-  {
+// export const getUserById = async (id = 0) => {
+//   {
+//     console.log(`請求獲取用戶ID: ${id}`)
+//   }
+//   return await axiosInstance.get(`/user/${id}`)
+// }
+export const getUserById = async (id = 0, retryCount = 1) => {
+  try {
     console.log(`請求獲取用戶ID: ${id}`)
+    const response = await axiosInstance.get(`/user`, {
+      withCredentials: true,
+    })
+    return response.data
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      console.error(`用戶ID ${id} 不存在。`)
+    } else if (retryCount > 0) {
+      console.warn(`獲取用戶時發生錯誤，重試中...剩餘次數: ${retryCount}`)
+      return await getUserById(id, retryCount - 1)
+    } else {
+      console.error('獲取用戶時發生錯誤：', error)
+    }
+    throw error
   }
-  return await axiosInstance.get(`/user/${id}`)
 }
+
 /**
  * 忘記密碼/OTP 要求一次性密碼
  */
@@ -97,7 +128,7 @@ export const updateProfile = async (id = 0, user = {}) => {
  * 修改會員頭像用，需要用FormData
  */
 export const updateProfileAvatar = async (formData) => {
-  return await axiosInstance.post(`/user/upload-avatar`, formData)
+  return await axiosInstance.post(`/user`, formData)
 }
 /**
  * 修改會員密碼專用, password = { originPassword, newPassword }

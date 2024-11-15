@@ -1,17 +1,17 @@
 import React, { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/router'
+import { RiCheckboxCircleFill } from 'react-icons/ri'
 import { GoArrowLeft } from 'react-icons/go'
+import Link from 'next/link'
 import Masonry from 'react-masonry-css'
-import { usePost } from '@/hooks/post/use-post'
 import PostCard from '@/components/post/common/post-card'
 import WallCard from '@/components/post/common/wall-card'
-import ModalConfirm from '@/components/shared/modal-confirm'
 import useAlert from '@/hooks/alert/use-alert'
-import { RiCheckboxCircleFill } from 'react-icons/ri'
-
-import styles from './index.module.scss'
-import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
+import { usePost } from '@/hooks/post/use-post'
+import { useModal } from '@/hooks/use-modal'
+import styles from './index.module.scss'
+
 export default function PostDetail(props) {
   const router = useRouter()
   const { postId } = router.query
@@ -21,8 +21,9 @@ export default function PostDetail(props) {
   const [wallCard, setWallCard] = useState([])
   const [comments, setComments] = useState(post?.comments || [])
   const [cancelHandle, setCancelHandle] = useState(() => () => {})
-  const [showModal, setShowModal] = useState(false)
   const showAlert = useAlert()
+  const { ensureLoggedIn } = useModal()
+
   //render
   useEffect(() => {
     if (post && post.tags) {
@@ -64,13 +65,11 @@ export default function PostDetail(props) {
     1200: 3,
     768: 2,
   }
-  //
+  // comment send -- ensure login
   const sendHandle = async (replyTargetId, replyId, inputValue) => {
-    // verify form
-    if (userId === 0) {
-      setShowModal(true)
-      return
-    }
+    // ensure login
+    if (!ensureLoggedIn()) return
+    // ensure content
     if (!inputValue) return
 
     // collect form
@@ -130,9 +129,7 @@ export default function PostDetail(props) {
             columnClassName={styles['my-masonry-grid_column']}
           >
             {wallCard.map((post) => {
-              const imgSrc = post.post_img.startsWith('post')
-                ? `http://localhost:3005/upload/${post.post_img}`
-                : `/post/${post.post_img}`
+              const imgSrc = `http://localhost:3005/post/${post.post_img}`
               return (
                 <WallCard
                   key={post.id}
@@ -140,26 +137,14 @@ export default function PostDetail(props) {
                   imageSrc={imgSrc}
                   title={post.title}
                   username={post.nickname}
-                  avatarSrc={`/user/img/${post.user_img}`}
-                  likeCount={post.like_count}
+                  // avatarSrc={`/user/img/${post.user_img}`}
+                  // likeCount={post.like_count}
                 />
               )
             })}
           </Masonry>
         </div>
       </div>
-      {showModal && (
-        <ModalConfirm
-          title="尚未登入會員"
-          content={`是否前往登入?`}
-          btnConfirm="前往登入"
-          ConfirmFn={() => {
-            router.push('/user/login')
-          }}
-          show={showModal}
-          handleClose={() => setShowModal(false)}
-        />
-      )}
     </>
   )
 }

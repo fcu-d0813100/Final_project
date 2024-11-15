@@ -1,4 +1,5 @@
 import express from 'express'
+import transporter from '#configs/mail.js'
 const router = express.Router()
 import db from '#configs/db.js'
 
@@ -40,6 +41,7 @@ router.post('/checkout', async function (req, res, next) {
       recipientPhone,
       sevenRecipientName,
       sevenRecipientPhone,
+      sevenRecipientEmail,
       storename,
       storeaddress,
       productCart,
@@ -67,10 +69,25 @@ router.post('/checkout', async function (req, res, next) {
     const shippingId = deliveryMethod
     const paymentId = paymentMethod
 
+    //處理名字跟信箱
+    // 判斷使用者選擇的配送方式
+    let recipientNameToUse, recipientEmailToUse
+
+    if (deliveryMethod == '1') {
+      recipientNameToUse = recipientName
+      recipientEmailToUse = recipientEmail
+    } else if (deliveryMethod == '2') {
+      recipientNameToUse = sevenRecipientName
+      recipientEmailToUse = sevenRecipientEmail
+    } else {
+      recipientNameToUse = recipientName
+      recipientEmailToUse = recipientEmail
+    }
+
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
-    (user_id, payment_id, shipping_id, order_number, total_amount, shipping_address, coupon_id, status)
-    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${shippingAddress}', ${coupon.coupon_list_id}, '${status}')`
+    (user_id, payment_id, shipping_id, order_number, total_amount, recipient_name, email, shipping_address, coupon_id, status)
+    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${recipientNameToUse}', '${recipientEmailToUse}', '${shippingAddress}', ${coupon ? coupon.coupon_list_id : 'NULL'}, '${status}')`
 
     const [result] = await db.query(sqlInsert, [
       userId, // user_id
@@ -78,9 +95,11 @@ router.post('/checkout', async function (req, res, next) {
       shippingId, // shipping_id
       orderNumber, // order_number
       totalPrice, // total_amount
+      recipientNameToUse,
+      recipientEmailToUse,
       shippingAddress, // shipping_address
       status,
-      coupon.coupon_list_id,
+      coupon ? coupon.coupon_list_id : null,
     ])
 
     //result反回order_list的自增ID
@@ -143,12 +162,132 @@ router.post('/checkout', async function (req, res, next) {
       const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity, comment, rating, review_date, review_likes) VALUES (${orderId}, NULL, NULL, ${Workshop.id},${Workshop.qty}, NULL, NULL, NULL, NULL)`
       await db.query(sqlInsertDetail, [orderId, Workshop.id, Workshop.qty])
     }
-
-    // res.send('回傳的資料如下：' + JSON.stringify(req.body))
-    // res.status(201).json({ message: 'Order created successfully', orderId })
   } catch (error) {
     console.error('Error saving order:', error)
     res.status(500).json({ message: 'Error saving order', error })
+  }
+})
+
+//----------------寄信利用訂單編號路由
+router.get('/send', async function (req, res, next) {
+  const orderNumber = req.query.orderNumber
+
+  try {
+    const sqlSelect = `
+    SELECT *
+    FROM order_list
+    WHERE order_number = '${orderNumber}'
+  `
+    const [orderDetails] = await db.query(sqlSelect)
+
+    const recipientName = orderDetails[0].recipient_name
+    const recipientEmail = orderDetails[0].email
+
+    const mailOptions = {
+      from: `"Beautique" <${process.env.SMTP_TO_EMAIL}>`,
+      to: recipientEmail || 'ss33660ss33660@gmail.com',
+      subject: `您的訂單${orderNumber}已完成`,
+      html: `
+ <body
+    style="
+      background-color: #f9f9f9;
+      padding: 0;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    "
+  >
+    <div
+      style="
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        color: #333;
+      "
+    >
+      <header
+        style="
+          text-align: center;
+          border-bottom: 2px solid #90957a;
+          padding-bottom: 10px;
+        "
+      >
+      
+      <img src="https://i.ibb.co/6ynt8GF/Beautique.png" alt="Beautique" style="max-width: 150px;">
+
+        <p style="font-size: 14px; color: #777">
+          Where Beauty Meets Uniqueness
+        </p>
+      </header>
+
+      <section style="padding:20px 30px; line-height: 1.6">
+        <h2 style="color: #333; font-size: 20px">
+          親愛的${recipientName || '顧客'}，您好!
+        </h2>
+        <p style="font-size: 16px; color: #555">
+          感謝您的訂購，我們很高興通知您，訂單編號
+          <strong style="color: #963827">${orderNumber}</strong>
+          已經完成。我們將盡快安排出貨，讓您能夠早日收到商品。
+        </p>
+        <p style="font-size: 16px; color: #555">
+          如有訂購課程，<strong style="color: #963827"
+            >請留意開課日期</strong
+          >，我們的老師將在開課前一日與您聯繫，請保持電話暢通。
+        </p>
+        <p style="font-size: 16px; color: #555">
+          再次感謝您的選購，祝您使用愉快！
+        </p>
+      </section>
+
+      <div style="text-align: center; margin: 20px 0">
+        <a
+          href="http://localhost:3000"
+          style="
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #90957a;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+          "
+        >
+          前往 Beautique
+        </a>
+      </div>
+
+      <footer
+        style="
+          margin-top: 30px;
+          padding-top: 10px;
+          border-top: 1px solid #e0e0e0;
+          text-align: center;
+          font-size: 12px;
+          color: #888;
+        "
+      >
+        <p>這是一封自動產生的郵件，請勿回覆。</p>
+        <p style="margin: 0">© 2024 Beautique. All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+    `,
+    }
+
+    // 發送郵件並處理回調
+    transporter.sendMail(mailOptions, (err, response) => {
+      if (err) {
+        return res.status(400).json({ status: 'error', message: err.message })
+      }
+
+      // 如果郵件發送成功，回應資料
+      res.json({ status: 'success', data: orderDetails })
+    })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ status: 'error', message: 'Server error' })
   }
 })
 

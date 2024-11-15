@@ -6,6 +6,10 @@ import 'slick-carousel/slick/slick-theme.css'
 import cardStyles from './CardCarousel.module.scss'
 import Image from 'next/image'
 import { PiHeartStraight, PiHeartStraightFill } from 'react-icons/pi'
+import { useFavorite } from '@/hooks/use-favorite'
+import { useCartProduct } from '@/hooks/use-cartP' 
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 const PrevArrow = ({ onClick }) => (
   <div
@@ -42,19 +46,9 @@ const NextArrow = ({ onClick }) => (
 )
 
 const CardCarousel2 = ({ products }) => {
-  const [favorites, setFavorites] = useState({})
-
-  const handleFavoriteClick = (id) => {
-    setFavorites((prev) => ({
-      ...prev,
-      [id]: {
-        liked: !prev[id]?.liked,
-        count: prev[id]?.liked
-          ? prev[id].count - 1
-          : (prev[id]?.count || 0) + 1,
-      },
-    }))
-  }
+  const { favoriteProducts, handleFavoriteClick } = useFavorite()
+  const { onAddProductMany } = useCartProduct()
+  const router = useRouter()
 
   const settings = {
     infinite: true,
@@ -76,77 +70,91 @@ const CardCarousel2 = ({ products }) => {
     ],
   }
 
+  const handleAddToCart = (product) => {
+    onAddProductMany(product)
+    toast.success('已加入購物車', {
+      style: { border: '1.2px solid #626553', padding: '12px 40px', color: '#626553' },
+      iconTheme: { primary: '#626553', secondary: '#fff' },
+    })
+  }
+
+  const handleCardClick = (color_id) => {
+    router.push(`/product/product-list/${color_id}`);
+  };
+
   return (
-    <div
-      className={`${styles['homepage-products-container2']} ${cardStyles.container}`}
-    >
+    <div className={`${styles['homepage-products-container2']} ${cardStyles.container}`}>
       <div className={styles['row']}>
         <div className={styles['product-title1']}>
           <span className={`${styles['new-arrivalc']} h3`}>最佳人氣</span>
           <span className={`${styles['new-arrival']} h2-L`}>Most Popular</span>
         </div>
-        <Slider
-          {...settings}
-          className={`${styles['product-card-container2']} ${cardStyles['d-flex']}`}
-        >
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className={`${styles['product-card-w']} ${cardStyles['product-card-w']} text-center`}
-            >
-              <div className={styles['info']}>
-                <div className={`${styles['product-new-w']} h5-L`}>
-                  NO.{product.id}
-                </div>
-              </div>
+        {products.length > 0 && (
+          <Slider
+            {...settings}
+            className={`${styles['product-card-container2']} ${cardStyles['d-flex']}`}
+          >
+            {products.map((product, index) => (
               <div
-                className={` ${styles['add']} d-flex`}
-                onClick={() => handleFavoriteClick(product.id)}
+                key={product.color_id}
+                onClick={() => handleCardClick(product.color_id)}
+                className={`${styles['product-card-w']} ${cardStyles['product-card-w']} text-center`}
               >
-                {favorites[product.id]?.liked ? (
-                  <PiHeartStraightFill size={22} fill="#963827" />
-                ) : (
-                  <PiHeartStraight size={22} />
-                )}
-                <span className="p" style={{ color: '#963827' }}>
-                  {favorites[product.id]?.count || 0}
-                </span>
-              </div>
-              <Image
-                width={200}
-                height={200}
-                src={product.imageUrl}
-                className={styles['product-cardimg-w']}
-                alt={product.name}
-              />
-              <div className={styles['product-cardbody-w']}>
-                <h5 className={`${styles['product-cardtitle-w']} p`}>
-                  {product.brand}
-                </h5>
-                <h5 className={`${styles['product-cardtitle-w']} p`}>
-                  {product.name}
-                </h5>
-                <span className={`${styles['product-price-w']} h5`}>
-                  <del style={{ color: '#90957a' }} className="h6-del">
-                    NT${product.originalPrice}
-                  </del>{' '}
-                  NT${product.salePrice}
-                </span>
-                <div
-                  className={`${styles['product-colorsquares-w']} product-colorsquares-w`}
-                >
-                  <div
-                    className={`${styles['product-colorbox-w']} product-colorbox-w`}
-                    style={{ backgroundColor: product.color }}
-                  ></div>
+                <div className={styles['info']}>
+                  <div className={`${styles['product-new-w']} h5-L`}>
+                  NO.{index + 1}
+                  </div>
                 </div>
-                <button className={`${styles['add-to-cart']} p btn-primary`}>
-                  加入購物車
-                </button>
+                <div
+                  className={`${styles['add']} d-flex`}
+                  onClick={() => handleFavoriteClick(product.color_id)}
+                >
+                  {favoriteProducts[product.color_id] ? (
+                    <PiHeartStraightFill size={22} fill="#963827" />
+                  ) : (
+                    <PiHeartStraight size={22} />
+                  )}
+                  <span className="p" style={{ color: '#963827' }}>
+                    {product.likes_count || 0}
+                  </span>
+                </div>
+                <Image
+                  width={200}
+                  height={200}
+                  src={`/product/mainimage/${product.mainimage}`}
+                  className={styles['product-cardimg-w']}
+                  alt={product.product_name}
+                />
+                <div className={styles['product-cardbody-w']}>
+                  <h5 className={`${styles['product-cardtitle-w']} p`}>
+                    {product.brand}
+                  </h5>
+                  <h5 className={`${styles['product-cardtitle-w']} p`}>
+                    {product.product_name}
+                  </h5>
+                  <span className={`${styles['product-price-w']} h5`}>
+                    <del style={{ color: '#90957a' }} className="h6-del">
+                      NT${product.originalprice}
+                    </del>{' '}
+                    NT${product.price}
+                  </span>
+                  <div className={`${styles['product-colorsquares-w']}`}>
+                    <div
+                      className={`${styles['product-colorbox-w']}`}
+                      style={{ backgroundColor: product.color }}
+                    ></div>
+                  </div>
+                  <button
+                    className={`${styles['add-to-cart']} p btn-primary`}
+                    onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
+                  >
+                    加入購物車
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        )}
       </div>
     </div>
   )

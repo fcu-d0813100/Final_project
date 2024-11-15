@@ -23,7 +23,7 @@ export default function Dropdown({
           className={`${styles.dropdownTitle} p d-flex align-items-center justify-content-between pb-2`}
           data-bs-toggle="dropdown"
         >
-          <p className='m-0'>{name}</p>
+          <p className="m-0">{name}</p>
           <PiCaretDown />
         </a>
 

@@ -127,7 +127,8 @@ export default function ReplyInfo({
         >
           <Image
             className={styles['user-image']}
-            src={`/user/img/${commentAuthorAvatar}`}
+            // src={`/user/img/${commentAuthorAvatar}`}
+            src={`http://localhost:3005/avatar/${commentAuthorAvatar}`}
             alt="User Image"
             width={40}
             height={40}

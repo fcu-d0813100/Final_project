@@ -54,18 +54,18 @@
   bottom: 3%;
   right: 49%;
   z-index: 1;
-  button {
-    width: 8px;
-    height: 10px;
-    border-radius: 50%;
-    margin: 0 5px;
-    border: none;
-    opacity: 0.5;
-  }
-  .active-dot {
-    background-color: #fff;
-    opacity: 1;
-  }
+}
+.pagination-dots button {
+  width: 8px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 5px;
+  border: none;
+  opacity: 0.5;
+}
+.pagination-dots .active-dot {
+  background-color: #fff;
+  opacity: 1;
 }
 
 .swiper-pagination {
@@ -86,43 +86,86 @@
 .swiper-pagination-bullet-active {
   background: #fff;
 }
+
 .car-img {
   width: 100vw;
-  position: relative; /* 使子元素相對於這個容器定位 */
-  overflow: hidden; /* 隱藏溢出的部分 */
+  position: relative;
+  overflow: hidden;
 }
 
 .overlay {
-  position: absolute; /* 絕對定位，覆蓋在圖片上 */
-  top: 0; /* 顶部對齊 */
-  left: 0; /* 左側對齊 */
-  right: 0; /* 右側對齊 */
-  bottom: 680px; /* 底部對齊 */
+  position: absolute;
+  top: -20%;
+  left: 0;
+  right: 0;
+  bottom: 50%;
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 1) 0%,
     rgba(0, 0, 0, 0) 100%
-  ); /* 漸變效果 */
-  display: flex; /* 使用 Flexbox 使文字居中 */
+  );
+  display: flex;
   flex-direction: column;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  opacity: 0; /* 初始不顯示 */
-  transition: opacity 0.3s ease; /* 添加過渡效果 */
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .car-img:hover .overlay {
-  opacity: 1; /* 懸停時顯示遮罩 */
+  opacity: 0.7;
 }
 
 .overlay-text {
-  color: white; /* 文字顏色 */
-  font-size: 24px; /* 文字大小 */
-  text-align: center; /* 文字居中 */
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 10px;
 }
+
 .separator {
-  width: 80%; /* 分隔線的寬度 */
-  height: 2px; /* 分隔線的高度 */
-  background-color: white; /* 分隔線的顏色 */
-  margin: 10px 0; /* 分隔線的上下邊距 */
+  width: 80%;
+  height: 2px;
+  background-color: white;
+  margin: 10px 0;
+}
+
+/* 小螢幕樣式 */
+@media screen and (max-width: 391px) {
+  .pagination-dots {
+    right: 40%;
+    bottom: 3%;
+    text-align: center;
+    z-index: 1;
+  }
+  .pagination-dots button {
+    width: 8px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    border: none;
+    opacity: 0.5;
+  }
+  .pagination-dots .active-dot {
+    background-color: #fff;
+    opacity: 1;
+  }
+
+  .overlay {
+    top: 0;
+    bottom: 70%;
+    justify-content: flex-end;
+    padding-bottom: 0px;
+    opacity: 0.7;
+  }
+
+  .overlay-text {
+    font-size: 16px;
+    margin-bottom: 0px;
+  }
+
+  .separator {
+    width: 70%;
+    margin-bottom: 5px;
+  }
 }

@@ -12,8 +12,12 @@ import { useCartWorkshop } from '@/hooks/use-cartW'
 export default function OrderComfirm() {
   const router = useRouter()
 
-  const { pTotalPrice = 0, pOriginalTotalPrice = 0 } = useCartProduct()
-  const { wTotalPrice = 0 } = useCartWorkshop()
+  const {
+    pTotalPrice = 0,
+    pOriginalTotalPrice = 0,
+    onClearProduct,
+  } = useCartProduct()
+  const { wTotalPrice = 0, onClearWorkshop } = useCartWorkshop()
   //全站打95折的價格
   const discountedWTotalPrice = Math.floor(wTotalPrice * 0.95)
   const discountDifference =
@@ -105,10 +109,32 @@ export default function OrderComfirm() {
           'http://localhost:3005/api/cart/checkout',
           orderData
         )
+        onClearProduct()
+        onClearWorkshop()
       } catch (error) {
         console.error('金流請求失敗', error)
       }
     }
+  }
+
+  //-----------寄信測試
+  // 發送請求來觸發後端寄送郵件
+  function sendEmail() {
+    fetch('http://localhost:3005/api/cart/send', {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          alert('Email 已成功發送！')
+        } else {
+          alert('Email 發送失敗：' + data.message)
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        alert('發生錯誤，無法發送郵件')
+      })
   }
 
   return (

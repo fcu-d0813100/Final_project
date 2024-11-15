@@ -1,0 +1,230 @@
+@import '@/styles/_variant.scss';
+
+.bestSeller {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; // 隱藏溢出部分
+  display: flex;
+  align-items: center;
+  position: relative;
+  img {
+    max-width: 100%; // 使圖片最大寬度為容器的寬度
+    height: auto; // 高度自動調整
+  }
+}
+
+.readBtn {
+  display: none;
+}
+
+.cartGroup {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.right {
+  position: absolute;
+  right: 0px;
+  top: 10%;
+  width: 950px;
+  padding: 2%;
+
+
+  .textGroup {
+    color: #fff;
+
+    .line {
+      border: 1px solid #fff;
+    }
+  }
+}
+
+.cart {
+  margin-top: 10%;
+  width: 385px;
+  height: 533px;
+  border: 1px solid #fff;
+  padding: 35px;
+  color: #fff;
+  justify-content: space-between;
+  display: flex;
+
+  .preadBtn {
+    width: 316px;
+    height: 52px;
+  }
+}
+
+
+@media (max-width: 1700px) {
+  .bestSeller {
+    background-color: transparent;
+  }
+  .cart2 {
+    display: none;
+  }
+}
+
+@media (max-width: 1480px) {
+
+  .right {
+    padding-right: 40px;
+
+    .cartGroup {
+      justify-content: end;
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+  .bestSeller {
+    height: 100%;
+
+    .right {
+      top: 5%;
+      padding-inline: 30px;
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .bestSeller {
+    .right {
+      top: 3%;
+
+      .textGroup {
+        .title {
+          font-size: 45px;
+        }
+
+        .subTitle {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .cart {
+    width: 325px;
+    height: 448px;
+
+    .brand {
+      font-size: 22px;
+    }
+
+    .productName {
+      font-size: 18px;
+    }
+
+    .preadBtn {
+      width: 253px;
+      height: 47px;
+    }
+  }
+}
+
+@media (max-width:800px) {
+  .cart {
+    width: 275px;
+    height: 380px;
+
+    .brand {
+      font-size: 20px;
+    }
+
+    .productName {
+      font-size: 16px;
+    }
+
+    .preadBtn {
+      width: 228px;
+      height: 42px;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .bestSeller {
+    .right {
+      top: 1%;
+    }
+  }
+
+  .cart {
+    width: 255px;
+    height: 352px;
+    padding: 25px;
+
+    .preadBtn {
+      width: 198px;
+      height: 40px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .cart {
+    width: 205px;
+    height: 283px;
+    padding: 15px;
+
+    .brand {
+      font-size: 16px;
+    }
+
+    .productName {
+      font-size: 12px;
+    }
+
+    .preadBtn {
+      font-size: 12px;
+      width: 173px;
+      height: 30px;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .bestSeller {
+    .right {
+      padding-inline: 15px;
+
+      .textGroup {
+        .title {
+          font-size: 40px;
+        }
+
+        .subTitle {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .readBtn {
+    display: block;
+    width: 100%;
+    border-radius: 0px;
+  }
+
+  .cart {
+    width: 162px;
+    height: 241px;
+    padding: 12px;
+    margin-top: 0px;
+    border: transparent;
+    background-color: rgba(255, 255, 255, 0.18);
+    justify-content: space-around;
+    .brand {
+      display: none;
+    }
+    .productName {
+      font-size: 14px;
+    }
+    .preadBtn {
+      display: none;
+    }
+  }
+}

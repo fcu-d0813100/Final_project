@@ -5,7 +5,7 @@ import style from './buy-rule.module.scss'
 
 export default function BuyRule(props) {
   // 預設為未勾選
-  const [isChecked, setIsChecked] = useState(false)
+  const [isChecked, setIsChecked] = useState(true)
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked) // 切換勾選狀態
