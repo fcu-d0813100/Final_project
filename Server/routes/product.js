@@ -91,7 +91,105 @@ router.post('/create-review/:productId/:colorId', upload, async function (req, r
 });
 
 
+// // 商品列表包含商品篩選
+// router.get('/product-list', async function (req, res) {
+//   const main_category_id = parseInt(req.query.main_category_id, 10) || null;
+//   const sub_category_id = parseInt(req.query.main_category_id, 10) || null;
+//   const minPrice = parseFloat(req.query.minPrice) || 0;
+//   const maxPrice = parseFloat(req.query.maxPrice) || 9999999;
+//   const brand = req.query.brand || null;
+//   const isNewArrivals = req.query.isNewArrivals === 'true';
+//   const isDiscounted = req.query.isDiscounted === 'true';
+//   const isPopular = req.query.isPopular === 'true';
 
+//   console.log('Received query params:', {
+//     main_category_id,
+//     sub_category_id,
+//     minPrice,
+//     maxPrice,
+//     brand,
+//     isNewArrivals,
+//     isDiscounted,
+//     isPopular
+//   });
+
+//   // 基本 SQL 查詢語句
+//   let sqlSelect = `
+//     SELECT DISTINCT
+//       p.id AS product_id,
+//       p.product_name,
+//       p.originalprice,
+//       ${isDiscounted ? '(p.price * 0.85)' : 'p.price'} AS price,
+//       b.name AS brand,
+//       mc.name AS main_category,
+//       sc.name AS sub_category,
+//       c.id AS color_id,
+//       c.color_name,
+//       c.color,
+//       c.mainimage,
+//       c.stock,
+//       COUNT(pl.color_id) AS likes_count
+//     FROM 
+//       product_list p
+//     JOIN 
+//       brand b ON p.brand_id = b.id
+//     JOIN 
+//       main_category mc ON p.main_category_id = mc.id
+//     JOIN 
+//       sub_category sc ON p.sub_category_id = sc.id
+//     JOIN 
+//       color c ON p.id = c.product_id
+//     LEFT JOIN 
+//       product_like pl ON c.id = pl.color_id
+//   `;
+
+//   // 動態添加篩選條件
+//   if (isNewArrivals) {
+//     sqlSelect += ` JOIN product_new pn ON c.id = pn.color_id`;
+//   }
+
+//   // 構建 WHERE 條件
+//   const conditions = [`p.price >= ${minPrice} AND p.price <= ${maxPrice}`];
+  
+//   if (main_category_id) {
+//     conditions.push(`p.main_category_id = ${main_category_id}`);
+//   }
+//   if (sub_category_id) {
+//     conditions.push(`p.sub_category_id = ${sub_category_id}`);
+//   }
+//   if (brand) {
+//     conditions.push(`b.name = '${brand}'`);
+//   }
+//   if (isDiscounted) {
+//     conditions.push(`b.name = 'NARS'`);
+//   }
+
+//   // 將 WHERE 條件連接到查詢語句
+//   if (conditions.length > 0) {
+//     sqlSelect += ` WHERE ${conditions.join(' AND ')}`;
+//   }
+
+//   // 根據是否熱門排序來設置 GROUP BY 和 ORDER BY
+//   if (isPopular) {
+//     sqlSelect += ` GROUP BY c.id ORDER BY likes_count DESC`;
+//   } else {
+//     sqlSelect += ` GROUP BY c.id`;
+//   }
+
+//   try {
+//     const [result] = await db.query(sqlSelect);
+//     console.log('Query Result:', result);
+//     res.json(result);
+//   } catch (error) {
+//     console.error('Database Query Error:', error);
+//     res.status(500).json({ error: '資料查詢錯誤' });
+//   }
+// });
+
+
+
+
+// 商品列表包含商品篩選
 router.get('/product-list', async function (req, res) {
   const main_category_id = parseInt(req.query.main_category_id, 10) || null;
   const sub_category_id = parseInt(req.query.sub_category_id, 10) || null;
@@ -100,6 +198,8 @@ router.get('/product-list', async function (req, res) {
   const brand = req.query.brand || null;
   const isNewArrivals = req.query.isNewArrivals === 'true';
   const isDiscounted = req.query.isDiscounted === 'true';
+  const isPopular = req.query.isPopular === 'true';
+
 
   console.log('Received query params:', {
     main_category_id,
@@ -108,7 +208,8 @@ router.get('/product-list', async function (req, res) {
     maxPrice,
     brand,
     isNewArrivals,
-    isDiscounted
+    isDiscounted,
+    isPopular
   });
 
   // 基本 SQL 查詢語句
@@ -125,7 +226,8 @@ router.get('/product-list', async function (req, res) {
       c.color_name,
       c.color,
       c.mainimage,
-      c.stock
+      c.stock,
+      COUNT(pl.color_id) AS likes_count
     FROM 
       product_list p
     JOIN 
@@ -136,29 +238,42 @@ router.get('/product-list', async function (req, res) {
       sub_category sc ON p.sub_category_id = sc.id
     JOIN 
       color c ON p.id = c.product_id
+    LEFT JOIN 
+      product_like pl ON c.id = pl.color_id
   `;
 
-  // 動態添加篩選條件
+  // 動態添加篩選條件第2版
   if (isNewArrivals) {
     sqlSelect += ` JOIN product_new pn ON c.id = pn.color_id`;
   }
 
-  sqlSelect += ` WHERE p.price >= ${minPrice} AND p.price <= ${maxPrice}`;
-
+  // 構建 WHERE 條件
+  const conditions = [`p.price >= ${minPrice} AND p.price <= ${maxPrice}`];
+  
   if (main_category_id) {
-    sqlSelect += ` AND p.main_category_id = ${main_category_id}`;
+    conditions.push(`p.main_category_id = ${main_category_id}`);
   }
   if (sub_category_id) {
-    sqlSelect += ` AND p.sub_category_id = ${sub_category_id}`;
+    conditions.push(`p.sub_category_id = ${sub_category_id}`);
   }
   if (brand) {
-    sqlSelect += ` AND b.name = '${brand}'`;
+    conditions.push(`b.name = '${brand}'`);
   }
   if (isDiscounted) {
-    sqlSelect += ` AND b.name = 'NARS'`;
+    conditions.push(`b.name = 'NARS'`);
   }
+  // 將 WHERE 條件連接到查詢語句
+  if (conditions.length > 0) {
+    sqlSelect += ` WHERE ${conditions.join(' AND ')}`;
+  }
+  // 動態添加篩選條件第2版
 
-  sqlSelect += ` GROUP BY c.id;`;
+
+  // 添加 GROUP BY 和 ORDER BY 用于人氣排序
+  sqlSelect += ` GROUP BY c.id`;
+  if (isPopular) {
+    sqlSelect += ` ORDER BY likes_count DESC`;
+  }
 
   try {
     const [result] = await db.query(sqlSelect);
@@ -801,6 +916,24 @@ router.get('/favorite/search/:user_id', async (req, res) => {
   }
 });
 
+// 動態添加篩選條件
+  // if (isNewArrivals) {
+  //   sqlSelect += ` JOIN product_new pn ON c.id = pn.color_id`;
+  // }
 
+  // sqlSelect += ` WHERE p.price >= ${minPrice} AND p.price <= ${maxPrice}`;
+
+  // if (main_category_id) {
+  //   sqlSelect += ` AND p.main_category_id = ${main_category_id}`;
+  // }
+  // if (sub_category_id) {
+  //   sqlSelect += ` AND p.sub_category_id = ${sub_category_id}`;
+  // }
+  // if (brand) {
+  //   sqlSelect += ` AND b.name = '${brand}'`;
+  // }
+  // if (isDiscounted) {
+  //   sqlSelect += ` AND b.name = 'NARS'`;
+  // }
 
 export default router

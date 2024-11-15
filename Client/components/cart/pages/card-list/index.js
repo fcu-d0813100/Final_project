@@ -236,7 +236,7 @@ export default function CartList() {
                       <div className={` col-6 ${style['course-detail']}`}>
                         <div className={style['course-img']}>
                           <Image
-                            src={`/workshop/workshop_img/${workshop.typeId}-${workshop.id}-c.jpg`}
+                            src={`http://localhost:3005/workshop/${workshop.cover}`}
                             alt="cosmetic"
                             width={300}
                             height={300}

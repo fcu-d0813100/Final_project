@@ -49,6 +49,9 @@
       text-align: center;
       justify-content: center;
       .product-card-w {
+        &:hover{
+          cursor: pointer;
+        }
         @media (max-width: 576px) {
           // width: 250px !important;
         }
@@ -158,6 +161,9 @@
         }
 
         .product-cardtitle-w {
+          padding-top: 10px;
+          max-width: 80%; 
+          margin: 0 auto; 
           @media (max-width: 390px) {
             font-size: 14px;
             .product-cardtitle-mobile {

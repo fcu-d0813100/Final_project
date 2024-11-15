@@ -25,6 +25,10 @@ export default function Upload(props) {
     img_sm01: '',
     img_sm02: '',
   })
+  useEffect(() => {
+    // 當頁面一加載，滾動到指定位置
+    window.scrollTo(0, 580)
+  }, [])
   //----------------------------------------------
   const handleSubmitisUpload0 = async (e) => {
     e.preventDefault()
