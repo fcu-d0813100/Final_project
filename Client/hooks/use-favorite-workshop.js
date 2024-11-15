@@ -11,9 +11,14 @@ export function useFavoriteWorkshop() {
 
   useEffect(() => {
     if (auth.isAuth) {
-      fetchFavoritesWorkshop() // 登入後加載收藏列表
+      fetchFavoritesWorkshop()
     }
   }, [auth.isAuth])
+
+  useEffect(() => {
+    // 當 favoriteWorkshop 狀態變更時，重新抓取收藏列表
+    fetchFavoritesWorkshop()
+  }, [favoriteWorkshop])
 
   const fetchFavoritesWorkshop = async () => {
     try {
@@ -33,69 +38,10 @@ export function useFavoriteWorkshop() {
     }
   }
 
-  // // 處理收藏按鈕點擊事件
-  // const handleFavoriteWorkshopClick = async (workshop) => {
-  //   const { workshop_id } = workshop
-  //   console.log('Workshop details:', workshop) // 打印 product 的內容
-
-  //   if (!auth.isAuth) {
-  //     // 如果未登入，跳轉到登入頁面
-  //     toast.error('請先登入以使用收藏功能', {
-  //       style: {
-  //         border: '1.2px solid #90957a',
-  //         padding: '12px 40px',
-  //         color: '#963827',
-  //       },
-  //       iconTheme: { primary: '#963827', secondary: '#fff' },
-  //     })
-  //     router.push('/user/login/user') // 跳轉到登入頁面
-  //     return
-  //   }
-
-  //   if (!workshop || !workshop_id) {
-  //     console.error('Error: workshop or workshop_id is missing')
-  //     return
-  //   }
-
-  //   try {
-  //     if (favoriteWorkshop[workshop_id]) {
-  //       await removeFavoriteWorkshop(workshop_id, auth.userData.id) // 移除收藏
-  //       setFavoriteWorkshop((prevFavorites) => ({
-  //         ...prevFavorites,
-  //         [workshop_id]: false,
-  //       }))
-  //       setfavoritesWorkshopList(
-  //         favoritesWorkshopList.filter(
-  //           (item) => item.workshop_id !== workshop_id
-  //         )
-  //       )
-  //     } else {
-  //       await addFavoriteWorkshop(workshop, auth.userData.id) // 添加到收藏
-  //       setFavoriteWorkshop((prevFavorites) => ({
-  //         ...prevFavorites,
-  //         [workshop_id]: true,
-  //       }))
-  //       setfavoritesWorkshopList([...favoritesWorkshopList, workshop])
-  //       // 成功收藏後顯示提示信息
-  //       toast.success('您已收藏此商品', {
-  //         style: {
-  //           border: '1.2px solid #626553',
-  //           padding: '12px 40px',
-  //           color: '#626553',
-  //         },
-  //         iconTheme: { primary: '#626553', secondary: '#fff' },
-  //       })
-  //       // 成功收藏後，跳轉到收藏頁面
-  //       router.push('/user/favorite')
-  //     }
-  //   } catch (error) {
-  //     console.error('Error adding/removing favorite:', error)
-  //   }
-  // }
-
   const handleFavoriteWorkshopClick = async (workshop) => {
     const { workshop_id } = workshop // 直接從 workshop 中提取 workshop_id
     console.log('Workshop details:', workshop)
+
     if (!auth.isAuth) {
       // 如果未登入，跳轉到登入頁面
       toast.error('請先登入以使用收藏功能', {
@@ -116,7 +62,6 @@ export function useFavoriteWorkshop() {
     }
 
     try {
-      // 當前已收藏，執行刪除收藏操作
       if (favoriteWorkshop[workshop_id]) {
         // 移除收藏
         await removeFavoriteWorkshop(workshop_id, auth.userData.id)
@@ -127,10 +72,11 @@ export function useFavoriteWorkshop() {
           return updatedFavorites
         })
 
-        setfavoritesWorkshopList(
-          (prevList) =>
-            prevList.filter((item) => item.workshop_id !== workshop_id) // 根據 workshop_id 移除該項
+        // 更新收藏列表並即時反映在介面上
+        setfavoritesWorkshopList((prevList) =>
+          prevList.filter((item) => item.workshop_id !== workshop_id)
         )
+
         console.log('Removing favorite for workshop_id:', workshop_id)
 
         toast.success('已移除收藏', {
@@ -142,7 +88,7 @@ export function useFavoriteWorkshop() {
           iconTheme: { primary: '#626553', secondary: '#fff' },
         })
       } else {
-        // 未收藏，執行新增收藏操作
+        // 新增收藏
         await addFavoriteWorkshop(workshop, auth.userData.id)
 
         setFavoriteWorkshop((prevFavorites) => ({
@@ -150,6 +96,7 @@ export function useFavoriteWorkshop() {
           [workshop_id]: true, // 新增收藏時設為 true
         }))
 
+        // 立即更新收藏列表並反映在介面上
         setfavoritesWorkshopList((prevList) => [...prevList, workshop])
 
         toast.success('您已收藏此課程', {

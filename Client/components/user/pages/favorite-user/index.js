@@ -37,6 +37,22 @@ export default function Index() {
   const handleWorkshopClick = (workshop) => {
     router.push(`/workshop/detail/${workshop}`)
   }
+
+  // 報名狀態
+  const getStatus = (registrationStart, registrationEnd) => {
+    const currentDate = new Date()
+    const startDate = new Date(registrationStart)
+    const endDate = new Date(registrationEnd)
+
+    if (currentDate < startDate) {
+      return '報名中'
+    } else if (currentDate > endDate) {
+      return '已截止'
+    } else {
+      return '報名中' // 這裡可根據需要進行調整
+    }
+  }
+
   return (
     <>
       <UserSection titleCN="我的收藏" titleENG="favorite">
@@ -184,20 +200,56 @@ export default function Index() {
                   className={`${styles['row']} ${styles['product-card-container']}`}
                   id="product-card-container"
                 >
-                  {favoritesWorkshopList.map((workshop) => (
-                    <WorkshopCardSm
-                      key={workshop.workshop_id}
-                      wid={workshop.workshop_id}
-                      imgCover={`http://localhost:3005/workshop/${workshop.img_cover}`}
-                      name={workshop.name}
-                      teacher={workshop.teacher_name}
-                      beginDate={workshop.beginDate}
-                      endDate={workshop.endDate}
-                      price={workshop.price}
-                      status={workshop.status}
-                      onClick={() => handleWorkshopClick(workshop)} // 點擊卡片跳轉到商品詳細頁
-                    />
-                  ))}
+                  {favoritesWorkshopList.map((workshop) => {
+                    // 將 dates 字串轉換成陣列
+                    const datesArray = workshop.dates
+                      ? workshop.dates.split(',')
+                      : []
+
+                    // 取得第一個和最後一個日期，並格式化為 YYYY/MM/DD
+                    const formatDate = (dateString) => {
+                      const [year, month, day] = dateString.split('-')
+                      return `${year}/${month}/${day}`
+                    }
+
+                    // 取得第一個和最後一個日期
+                    const beginDate =
+                      datesArray.length > 0 ? formatDate(datesArray[0]) : ''
+                    const endDate =
+                      datesArray.length > 0
+                        ? formatDate(datesArray[datesArray.length - 1])
+                        : ''
+
+                    // 獲取報名狀態
+                    const status = getStatus(
+                      workshop.registration_start,
+                      workshop.registration_end
+                    )
+
+                    // 檢查課程時間結束日期是否已過
+                    const isEndDatePassed =
+                      new Date(endDate.replace(/\//g, '-')) < new Date() // 檢查 endDate 是否已過
+
+                    // 如果課程時間的 endDate 已過，則不顯示該工作坊
+                    if (isEndDatePassed) {
+                      return null // 不顯示該工作坊
+                    }
+
+                    return (
+                      <WorkshopCardSm
+                        key={workshop.workshop_id}
+                        wid={workshop.workshop_id}
+                        imgCover={`http://localhost:3005/workshop/${workshop.img_cover}`}
+                        name={workshop.name}
+                        teacher={workshop.teacher_name}
+                        beginDate={beginDate}
+                        endDate={endDate}
+                        price={workshop.price}
+                        status={status}
+                        onClick={() => handleWorkshopClick(workshop)} // 點擊卡片跳轉到商品詳細頁
+                      />
+                    )
+                  })}
                 </div>
               ) : (
                 // 沒有收藏課程時顯示的內容

@@ -63,10 +63,12 @@ export default function WorkshopCardSm({
             </div>
             <div className={styles.wDetail}>
               <p className="p mb-2">{teacher}老師</p>
-              <h6 className="p mb-3">
+              <h6 className={`p mb-3 `}>
                 開課時間
                 <br />
-                {beginDate}-{endDate}
+                {beginDate}
+                <span> - </span>
+                {endDate}
               </h6>
               <h4 className="h4 mb-3">NT${price}</h4>
               <div className={styles.wStatus}>
