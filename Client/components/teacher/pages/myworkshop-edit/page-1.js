@@ -130,12 +130,30 @@ export default function Page1({
   // 更新課程類別
   const handleTypeChange = (e) => {
     const { value } = e.target
+    // 根據選擇的 value 找到對應的 option 文字
+    const selectedOption =
+      items.find((item) => item.value === parseInt(value, 10))?.option || '類別'
+    console.log('Selected option:', selectedOption)
+
     setWorkshop((prevData) => ({
       ...prevData,
-      workshop_type_id: value, // 更新 workshop_type_id
+      type_id: parseInt(value, 10),
+      type_name: selectedOption, // 儲存顯示的文字
     }))
   }
 
+  const items = [
+    { name: 'type_id', option: '基礎化妝', value: 1 },
+    { name: 'type_id', option: '新娘化妝', value: 2 },
+    { name: 'type_id', option: '時尚與攝影化妝', value: 3 },
+    { name: 'type_id', option: '韓系美妝', value: 4 },
+    { name: 'type_id', option: '特效化妝', value: 5 },
+    { name: 'type_id', option: '美妝產品知識', value: 6 },
+  ]
+  // 更新 `workshop` 後打印
+  useEffect(() => {
+    console.log('Updated workshop:', workshop)
+  }, [workshop])
   return (
     <>
       <div className={styles.main}>
@@ -182,21 +200,14 @@ export default function Page1({
               </div>
               <div className="container d-flex gap-4 mb-3">
                 <SelectInput
-                  initName={workshop.workshop_type_id} // 動態設定顯示的名稱
+                  initName={workshop.type_name || '類別'} // 顯示選擇的文字
                   addClass="col-5"
                   forText="type_id"
                   titleCh="課程類別"
                   titleEn=" | type"
-                  items={[
-                    { name: 'type_id', option: '基礎化妝', value: 1 },
-                    { name: 'type_id', option: '新娘化妝', value: 2 },
-                    { name: 'type_id', option: '時尚與攝影化妝', value: 3 },
-                    { name: 'type_id', option: '韓系美妝', value: 4 },
-                    { name: 'type_id', option: '特效化妝', value: 5 },
-                    { name: 'type_id', option: '美妝產品知識', value: 6 },
-                  ]}
+                  items={items}
                   name="type_id"
-                  value={workshop.workshop_type_id}
+                  value={workshop.type_id}
                   onChange={handleTypeChange}
                 />
 

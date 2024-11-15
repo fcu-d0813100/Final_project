@@ -32,6 +32,7 @@ export default function SelectInput({
     setSelectedOption(option)
     setIsOpen(false) // 選取後關閉下拉選單
     if (onChange) {
+      console.log('Option clicked:', option, 'Value:', value)
       onChange({ target: { name: forText, value: value } }) // 呼叫 onChange，傳遞選項
     }
   }

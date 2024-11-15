@@ -571,14 +571,13 @@ router.put(
     const updateWorkshop = req.body
     // console.log(updateWorkshop)
 
-    // 查詢要刪除的 workshop 的所有圖片欄位
+    // 更新 workshop 的所有圖片檔案（不要的刪掉）
     const [workshopData] = await db.query(
       SQL.format(
         'SELECT img_cover, img_lg, img_sm01, img_sm02 FROM workshop WHERE id = ? AND teachers_id = ?',
         [updateWorkshop.id, id]
       )
     )
-
     if (workshopData.length > 0) {
       const imgFields = ['img_cover', 'img_lg', 'img_sm01', 'img_sm02']
       const folderPath = path.join(__dirname, '..', 'public', 'workshop') // 加上 .. 來退回上一層資料夾
