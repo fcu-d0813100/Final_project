@@ -11,7 +11,22 @@ export default function WorkshopEdit(props) {
   const router = useRouter() // 使用 Next.js 的 useRouter hook 來進行頁面跳轉
   const [isPage2, setIsPage2] = useState(false) // 控制是否顯示第二頁
   const [timeSchedule, setTimeSchedule] = useState([])
-
+  const [workshop, setWorkshop] = useState({
+    name: '',
+    price: '',
+    address: '',
+    registration_start: '',
+    registration_end: '',
+    workshop_type_id: '',
+    description: '',
+    outline: '',
+    notes: '',
+    img_cover: '',
+    img_lg: '',
+    img_sm01: '',
+    img_sm02: '',
+  })
+  //----------------------------------------------
   const fetchData = async (wid) => {
     try {
       const response = await fetch(`http://localhost:3005/api/workshop/${wid}`)
@@ -33,26 +48,11 @@ export default function WorkshopEdit(props) {
     }
   }, [router.isReady])
 
-  const [workshop, setWorkshop] = useState({
-    name: '',
-    price: '',
-    address: '',
-    registration_start: '',
-    registration_end: '',
-    workshop_type_id: '',
-    description: '',
-    outline: '',
-    notes: '',
-    img_cover: '',
-    img_lg: '',
-    img_sm01: '',
-    img_sm02: '',
-  })
-
   useEffect(() => {
     // 當頁面一加載，滾動到指定位置
     window.scrollTo(0, 580)
   }, [])
+
   //----------------------------------------------
   const handleSubmitUpdateSave = async (e) => {
     e.preventDefault()
@@ -87,6 +87,7 @@ export default function WorkshopEdit(props) {
     } catch (error) {
       console.error('上傳失敗', error)
     }
+    router.push('/teacher/myworkshop')
   }
 
   // 切換到下一頁並滾動到頂部
@@ -115,6 +116,7 @@ export default function WorkshopEdit(props) {
               setWorkshop={setWorkshop}
               timeSchedule={timeSchedule}
               setTimeSchedule={setTimeSchedule}
+              handleSave={handleSubmitUpdateSave}
             /> // 傳入切換頁面函數
           ) : (
             <Page2

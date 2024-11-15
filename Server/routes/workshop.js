@@ -653,6 +653,35 @@ router.put(
         }
       })
       console.log('Parsed Time Schedule:', parsedTimeSchedule)
+
+      //--------------- 比對舊資料和新資料，找出需要刪除的時間
+      const timeIdsToDelete = []
+      // 取出已更新的時間 ID
+      const updatedTimeIds = parsedTimeSchedule.map((time) => time.id)
+      // 查詢資料庫中已有的時間紀錄
+      const [existingTimeData] = await db.query(
+        SQL.format('SELECT id FROM workshop_time WHERE workshop_id = ?', [
+          updateWorkshop.id,
+        ])
+      )
+      // 找出已經存在但在更新後時間表中被移除的項目
+      for (const time of existingTimeData) {
+        if (!updatedTimeIds.includes(time.id.toString())) {
+          timeIdsToDelete.push(time.id)
+        }
+      }
+      // 若有需要刪除的時間資料，執行刪除
+      if (timeIdsToDelete.length > 0) {
+        for (const timeId of timeIdsToDelete) {
+          const sqltimesDelete = SQL.format(
+            'DELETE FROM workshop_time WHERE `id` = ? AND `workshop_id` = ?',
+            [timeId, updateWorkshop.id]
+          )
+          await db.query(sqltimesDelete)
+          console.log(`已刪除課程時間`)
+        }
+      } //--------------------------------------
+
       // 更新每筆 timeSchedule 資料
       for (const time of parsedTimeSchedule) {
         if (typeof time.id === 'string') {
@@ -669,7 +698,7 @@ router.put(
           )
           // 插入 workshop_time 資料，假設 req.body 中包含時間資料
           await db.query(sqlUpdateWorkshopTime)
-        } else {
+        } else if (typeof time.id === 'number') {
           const sqlInsertWorkshopTime = SQL.format(
             `
       INSERT INTO workshop_time(
@@ -687,7 +716,7 @@ router.put(
             ]
           )
           // 插入 workshop_time 資料，假設 req.body 中包含時間資料
-          const [result] = await db.query(sqlInsertWorkshopTime)
+          await db.query(sqlInsertWorkshopTime)
         }
       }
 
@@ -701,37 +730,5 @@ router.put(
     }
   }
 )
-
-// 更新（刪除課程時間）
-router.post('/edit/newWorkshopTime', async function (req, res, next) {
-  const newWorkshopTime = req.body
-  console.log(newWorkshopTime) // 打印出來檢查
-
-  try {
-    const sqlInsertWorkshopTime = SQL.format(
-      `
-      INSERT INTO workshop_time(
-      workshop_id, date, start_time, end_time, min_students, max_students, registered
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-     `,
-      [
-        newWorkshopTime.workshop_id,
-        newWorkshopTime.date,
-        newWorkshopTime.start_time,
-        newWorkshopTime.end_time,
-        newWorkshopTime.min_students,
-        newWorkshopTime.max_students,
-        0,
-      ]
-    )
-    // 插入 workshop_time 資料，假設 req.body 中包含時間資料
-    const [result] = await db.query(sqlInsertWorkshopTime)
-
-    res.json(result)
-  } catch (e) {
-    console.error(e)
-    return res.status(500).json({ message: 'Server error', error: e.message })
-  }
-})
 
 export default router

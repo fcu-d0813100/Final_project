@@ -18,7 +18,7 @@ export default function Page1({
   timeSchedule,
   setTimeSchedule,
   workshop,
-  handleSubmit,
+  handleSave,
 }) {
   const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
   const [selectedTime, setSelectedTime] = useState({
@@ -29,7 +29,6 @@ export default function Page1({
     min_students: '',
     max_students: '',
   })
-
   const timeOptions = [
     '09:00',
     '09:30',
@@ -52,30 +51,6 @@ export default function Page1({
     '18:00',
     '18:30',
   ]
-
-  const handleSubmitNewWorkshopTime = async (e) => {
-    e.preventDefault()
-
-    try {
-      const response = await fetch(
-        'http://localhost:3005/api/workshop/edit/newWorkshopTime',
-        {
-          credentials: 'include',
-          method: 'POST',
-          body: JSON.stringify(selectedTime),
-        }
-      )
-
-      if (!response.ok) {
-        throw new Error('新增資料失敗')
-      }
-
-      const result = await response.json()
-      console.log('新增成功', result)
-    } catch (error) {
-      console.error('新增失敗', error)
-    }
-  }
 
   useEffect(() => {
     // 初始化 timeSchedule 的值，從 workshop 中解析出各項陣列
@@ -117,11 +92,11 @@ export default function Page1({
   }
 
   // 新增移除時間的函數
-  // const handleRemoveTime = (id) => {
-  //   setTimeSchedule((prevSchedule) =>
-  //     prevSchedule.filter((time) => time.id !== id)
-  //   )
-  // }
+  const handleRemoveTime = (id) => {
+    setTimeSchedule((prevSchedule) =>
+      prevSchedule.filter((time) => time.id !== id)
+    )
+  }
 
   const toggleModal = (id, time = {}) => {
     if (modalOpenId === id) {
@@ -462,7 +437,7 @@ export default function Page1({
                       <div className="d-flex justify-content-end pt-4 h6">
                         <button
                           className="btn-danger me-3 w-100"
-                          //onClick={() => handleRemoveTime(time.id)}
+                          onClick={() => handleRemoveTime(time.id)}
                         >
                           移除
                         </button>
@@ -484,11 +459,20 @@ export default function Page1({
             />
           </div>
         </div>
-        <div className="ms-auto d-flex justify-content-end mt-2">
+
+        <div className="d-flex justify-content-end mt-2">
           <button
-            className="btn-danger h6 me-4"
+            href={`/teacher/myworkshop`}
+            className="btn-secondary h6 me-4"
             type="submit"
-            onClick={handleSubmit}
+            onClick={handleSave}
+          >
+            取消
+          </button>
+          <button
+            className="btn-danger h6 me-4 ms-auto "
+            type="submit"
+            onClick={handleSave}
           >
             儲存
           </button>

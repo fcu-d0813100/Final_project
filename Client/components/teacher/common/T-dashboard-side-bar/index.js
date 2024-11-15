@@ -30,6 +30,7 @@ const navLinks = [
 export default function Sidebar() {
   const router = useRouter()
   const { logout } = useAuth()
+  const [workshop, setWorkshop] = useState(null)
 
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
@@ -39,19 +40,47 @@ export default function Sidebar() {
   )
 
   useEffect(() => {
+    fetchData()
+  }, []) // 將 filterStatus 作為依賴項
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/workshop/myWorkshop',
+        {
+          credentials: 'include', //一定要加，才會帶cookie
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      if (!response.ok) {
+        throw new Error('網路回應不成功：' + response.status)
+      }
+      const data = await response.json()
+      setWorkshop(...data) // 確保獲取到的資料即時更新
+      //console.log(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
     setLinkState((prev) => {
       const newLinkState = { ...prev }
       navLinks.forEach((link) => {
-        // 檢查 router.pathname 是否為 /teacher/myworkshop 或 /teacher/workshopEdit
         const isActive =
           router.pathname === link.href ||
           (link.href === '/teacher/myworkshop' &&
-            router.pathname === '/teacher/workshopEdit')
+            (router.pathname.startsWith('/teacher/workshopEdit') ||
+              (workshop &&
+                router.pathname === `/teacher/workshopEdit/${workshop.id}`)))
         newLinkState[link.key].active = isActive
       })
       return newLinkState
     })
-  }, [router.pathname])
+  }, [router.pathname, workshop])
 
   const handleMouseEnter = (key) => {
     setLinkState((prev) => ({
