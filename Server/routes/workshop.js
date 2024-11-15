@@ -675,8 +675,9 @@ router.put(
         // 插入 workshop_time 資料，假設 req.body 中包含時間資料
         await db.query(sqlUpdateWorkshopTime)
       }
-      console.log('req.files' + req.files)
-      console.log('req.body' + req.body)
+
+      // console.log('req.files' + req.files)
+      // console.log('req.body' + req.body)
 
       res.json(result)
     } catch (e) {

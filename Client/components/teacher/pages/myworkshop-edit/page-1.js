@@ -22,7 +22,7 @@ export default function Page1({
 }) {
   const [modalOpenId, setModalOpenId] = useState(null) // 紀錄哪個 Modal 是開啟的
   const [selectedTime, setSelectedTime] = useState({
-    id: null,
+    id: '',
     date: '',
     start_time: '',
     end_time: '',
@@ -93,11 +93,11 @@ export default function Page1({
   }
 
   // 新增移除時間的函數
-  const handleRemoveTime = (id) => {
-    setTimeSchedule((prevSchedule) =>
-      prevSchedule.filter((time) => time.id !== id)
-    )
-  }
+  // const handleRemoveTime = (id) => {
+  //   setTimeSchedule((prevSchedule) =>
+  //     prevSchedule.filter((time) => time.id !== id)
+  //   )
+  // }
 
   const toggleModal = (id, time = {}) => {
     if (modalOpenId === id) {
@@ -115,7 +115,9 @@ export default function Page1({
   }
   const handleSaveChanges = (id) => {
     setTimeSchedule((prevSchedule) =>
-      prevSchedule.map((time) => (time.id === id ? { ...selectedTime } : time))
+      prevSchedule.map((time) =>
+        time.id === id ? { ...time, ...selectedTime } : time
+      )
     )
     toggleModal(id)
   }
@@ -150,10 +152,11 @@ export default function Page1({
     { name: 'type_id', option: '特效化妝', value: 5 },
     { name: 'type_id', option: '美妝產品知識', value: 6 },
   ]
-  // 更新 `workshop` 後打印
+  // 更新 `workshop` 後印出 檢查
   useEffect(() => {
     console.log('Updated workshop:', workshop)
   }, [workshop])
+
   return (
     <>
       <div className={styles.main}>
@@ -299,6 +302,7 @@ export default function Page1({
               <div key={index}>
                 <TimeSelect
                   key={time.id}
+                  id={time.id}
                   date={time.date.replace(/-/g, '/')}
                   beginTime={time.start_time}
                   endTime={time.end_time}
@@ -433,7 +437,7 @@ export default function Page1({
                       <div className="d-flex justify-content-end pt-4 h6">
                         <button
                           className="btn-danger me-3 w-100"
-                          onClick={() => handleRemoveTime(time.id)}
+                          //onClick={() => handleRemoveTime(time.id)}
                         >
                           移除
                         </button>
