@@ -8,6 +8,7 @@ ProductCartContext.displayName = 'ProductCartContext'
 export function ProductCartProvider({ children }) {
   const [productItems, setProductItems] = useState([])
   const [firstRender, setFirstRender] = useState(false)
+  const [coupons, setCoupons] = useState([]) // 優惠券狀態
   const [selectedCoupon, setSelectedCoupon] = useState(null) // 優惠券狀態
 
   // 優惠券選擇的更新函數
@@ -103,16 +104,29 @@ export function ProductCartProvider({ children }) {
     setProductItems(nextProductItems)
   }
 
-  // 處理刪除
+  // 處理刪除(加優惠券適用的更新)
   const onRemoveProduct = (productId, color) => {
     const updatedProductItems = productItems.filter(
       (v) => v.product_id !== productId || v.color !== color
     )
     setProductItems(updatedProductItems)
 
-    // 檢查如果 productItems 為空，則刷新頁面
     if (updatedProductItems.length === 0) {
-      window.location.reload() // 刷新頁面
+      localStorage.removeItem('selectedCoupon')
+      localStorage.removeItem('selectedCouponObj')
+      window.location.reload()
+      return
+    }
+
+    //檢查符合品牌的優惠券
+    if (
+      selectedCoupon &&
+      selectedCoupon.brand_name !== 'All' && // 保留All的優惠券
+      !updatedProductItems.some(
+        (item) => item.brand === selectedCoupon.brand_name
+      )
+    ) {
+      removeCoupon() // 移除優惠券
     }
   }
 
@@ -144,9 +158,58 @@ export function ProductCartProvider({ children }) {
   }, [productItems])
 
   //變更優惠券時，設定到localStorage
+  // useEffect(() => {
+  //   localStorage.setItem('selectedCoupon', selectedCoupon)
+  // }, [selectedCoupon])
+
+  // 初始化，從 localStorage 加載優惠券
   useEffect(() => {
-    localStorage.setItem('selectedCoupon', selectedCoupon)
-  }, [selectedCoupon])
+    const storedCoupon = localStorage.getItem('selectedCoupon')
+    const storedCouponObj = localStorage.getItem('selectedCouponObj')
+
+    if (storedCoupon && storedCouponObj) {
+      setSelectedCoupon(JSON.parse(storedCouponObj))
+    }
+  }, [])
+
+  const loadCoupons = async (userId, productItems) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/getCoupon?userId=${userId}`
+      )
+      const data = await response.json()
+      if (data?.data) {
+        const now = new Date()
+        const productBrands = productItems
+          .map((product) => product.brand)
+          .concat('All')
+        const validCoupons = data.data.filter((coupon) => {
+          const startDate = new Date(coupon.start_date)
+          const endDate = new Date(coupon.end_date)
+          return (
+            startDate <= now &&
+            endDate >= now &&
+            productBrands.includes(coupon.brand_name)
+          )
+        })
+        setCoupons(validCoupons)
+        // console.log(validCoupons)
+      }
+    } catch (error) {
+      console.error('Failed to load coupons:', error)
+    }
+  }
+  const selectCoupon = (coupon) => {
+    setSelectedCoupon(coupon)
+    localStorage.setItem('selectedCoupon', coupon.coupon_list_id)
+    localStorage.setItem('selectedCouponObj', JSON.stringify(coupon))
+  }
+
+  const removeCoupon = () => {
+    setSelectedCoupon(null)
+    localStorage.removeItem('selectedCoupon')
+    localStorage.removeItem('selectedCouponObj')
+  }
 
   //-----reload
 
@@ -167,6 +230,12 @@ export function ProductCartProvider({ children }) {
         onSelectCoupon, // 更新優惠券
         onClearProduct, // 清空商品購物車
         pCartItems,
+        coupons,
+        selectedCoupon,
+        loadCoupons,
+        selectCoupon,
+        removeCoupon,
+        // checkCouponValidity,
       }}
     >
       {children}

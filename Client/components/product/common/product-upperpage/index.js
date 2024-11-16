@@ -56,30 +56,6 @@ const ProductPage = ({ productPage }) => {
   }
   }, [cid, uniqueProducts]);
 
-  // // 更新庫存的 API 調用
-  // const updateStockInBackend = async (color_id) => {
-  //   try {
-  //     const response = await fetch(`/api/product-list/update-stock/${color_id}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         quantity, // 傳送選擇的數量
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to update stock');
-  //     }
-
-  //     toast.success('庫存更新成功');
-  //   } catch (error) {
-  //     console.error('Error updating stock:', error);
-  //     toast.error('更新庫存失敗');
-  //   }
-  // };
-
   // 數量
   const handleIncrement = () => setQuantity(quantity + 1);
   const handleDecrement = () => setQuantity(quantity > 1 ? quantity - 1 : 0);
@@ -94,7 +70,7 @@ const ProductPage = ({ productPage }) => {
   const handleMouseEnter = () => setIsZoomed(true);
   const handleMouseLeave = () => setIsZoomed(false);
 
-  const toggleFavorite = () => setIsFavorite(!isFavorite);
+  // const toggleFavorite = () => setIsFavorite(!isFavorite);
 
   // 使用 useMemo 來計算唯一縮圖，避免每次渲染時重複計算
   const uniqueThumbnails = useMemo(() => {

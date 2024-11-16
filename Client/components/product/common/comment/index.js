@@ -3,21 +3,29 @@ import styles from './index.module.scss';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import Stars from "react-stars";
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-const CommentForm = () => {
+const CommentForm = ({ productId, colorId, productName, brand, color, imageSrc }) => {
+
+  console.log("傳入的參數：");
+  console.log("productId:", productId);
+  console.log("colorId:", colorId);
+  console.log("productName:", productName);
+  console.log("brand:", brand);
+  console.log("color:", color);
+  console.log("imageSrc:", imageSrc);
+
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [images, setImages] = useState([
-    '/product/commentimg1.png',
-    '/product/commentimg2.png'
-  ]);
+  const [images, setImages] = useState([]);
+  const router = useRouter();
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
 
   const handleCommentChange = (e) => {
-    setComment(e.target.innerText);
+    setComment(e.currentTarget.innerText);
   };
 
   const handleAddImage = () => {
@@ -37,15 +45,36 @@ const CommentForm = () => {
   const handleCancel = () => {
     setComment('');
     setRating(0);
-    setImages([
-      '/product/commentimg1.png',
-      '/product/commentimg2.png'
-    ]);
+    setImages([]);
   };
 
-  const handleSave = () => {
-    console.log('Save clicked');
-    // Save review logic here
+  // 保存評論到後端
+  const handleSave = async () => {
+    const reviewData = {
+      productId,
+      colorId,
+      rating,
+      comment,
+    };
+
+    try {
+      const response = await fetch(`/api/reviews/create-review/${productId}/${colorId}`, {
+        method: 'POST',
+        body: JSON.stringify({ reviewData, mediaFiles: images }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        console.log('評論提交成功');
+        router.push(`/product/detail/${productId}`);
+      } else {
+        console.log('評論提交失敗');
+      }
+    } catch (error) {
+      console.error('提交評論時出錯:', error);
+    }
   };
 
   // const [productData, setProductData] = useState(null);
@@ -70,6 +99,7 @@ const CommentForm = () => {
           <Image
             width={160}
             height={160}
+<<<<<<< HEAD
             src={mainimage}
             alt="Product"
           />
@@ -78,6 +108,19 @@ const CommentForm = () => {
           <h5 className='p'>{brand} <br /></h5>
           <div className={`${styles['productname']} h6`}>{product_name}</div>
           <p className={`${styles['color']} ps`}><span className={styles['color-swatch']}  style={{ backgroundColor: color }}></span><span className={styles['color-text']}>顏色：{color_name}</span></p>
+=======
+            src={imageSrc}
+            alt={`${brand} ${productName}`}
+          />
+        </Col>
+        <Col xs={10} className={styles['order-detail']}>
+          <h5 className='p'>{brand}</h5>
+          <div className={`${styles['productname']} h6`}>{productName}</div>
+          <p className={`${styles['color']} ps`}>
+            <span className={styles['color-swatch']} style={{ backgroundColor: color }}></span>
+            <span className={styles['color-text']}>顏色：{color}</span>
+          </p>
+>>>>>>> dev
         </Col>
       </Row>
 
@@ -104,10 +147,14 @@ const CommentForm = () => {
                 src={src}
                 alt={`Review image ${index + 1}`}
               />
+<<<<<<< HEAD
               <button
                 onClick={() => handleRemoveImage(index)}
                 className={styles['remove-button']}
               >
+=======
+              <button onClick={() => handleRemoveImage(index)} className={styles['remove-button']}>
+>>>>>>> dev
                 &times;
               </button>
             </div>
@@ -129,24 +176,26 @@ const CommentForm = () => {
 
       <Row className="mb-4">
         <Col xs={12}>
-          <Form.Group controlId="comment">
-            <Form.Label className="h5">評論</Form.Label>
-            <div
-              contentEditable
-              className={`${styles['editable-comment']}`}
-              placeholder="分享您的購物體驗或是幫助其他人更好了解此商品的優缺點"
-              onInput={handleCommentChange}
-              style={{
-                border: '1px solid #ddd',
-                padding: '8px',
-                minHeight: '120px',
-                borderRadius: '4px',
-                overflowY: 'auto',
-              }}
-            >
-              {comment}
-            </div>
-          </Form.Group>
+        <Form.Group controlId="comment">
+    <Form.Label className="h5">評論</Form.Label>
+    <textarea
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        placeholder="分享您的購物體驗或是幫助其他人更好了解此商品的優缺點"
+        className={`${styles['editable-comment']}`}
+        style={{
+            border: '1px solid #ddd',  // 邊框顏色
+            padding: '8px',            // 內邊距
+            minHeight: '120px',         // 最小高度
+            borderRadius: '4px',       // 圓角
+            overflowY: 'auto',         // 自動出現垂直滾動條
+            resize: 'none',            // 禁止用戶調整大小
+            outline: 'none',           // 去除點擊時的藍色邊框
+            fontSize: '16px',          // 字體大小
+        }}
+    />
+</Form.Group>
+
         </Col>
       </Row>
 

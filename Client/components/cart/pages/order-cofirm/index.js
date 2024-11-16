@@ -117,6 +117,26 @@ export default function OrderComfirm() {
     }
   }
 
+  //-----------寄信測試
+  // 發送請求來觸發後端寄送郵件
+  function sendEmail() {
+    fetch('http://localhost:3005/api/cart/send', {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          alert('Email 已成功發送！')
+        } else {
+          alert('Email 發送失敗：' + data.message)
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        alert('發生錯誤，無法發送郵件')
+      })
+  }
+
   return (
     <div className="container">
       <div className={style.step}>

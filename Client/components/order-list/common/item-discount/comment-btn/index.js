@@ -39,15 +39,19 @@ export default function ItemDiscount({
                     </div>
                 </div>
             </div>
-            <div className={`${styles.count} text-center`}>x{quantity}</div>
+            <div className={`${styles.count} text-center`}>x{quantity}</div>    
             <div className={`${styles['sub-total']} text-end h6`}>
                 <del className={`p ${styles.del}`}>NT$ {originalPrice}
                 </del> NT$ {discountedPrice}
+<<<<<<< HEAD
                 
+=======
+>>>>>>> dev
                 <Link
                     href={{
                         pathname: '/user/order/detail/comment',
                         query: {
+<<<<<<< HEAD
                             orderId: orderId,
                             productName: productName,
                             color: color,
@@ -60,6 +64,15 @@ export default function ItemDiscount({
                         }
                     }}
                 >
+=======
+                            productName: productName,  // 根據需要傳遞的參數
+                            color: color,
+                            brand: brand,
+                            imageSrc: imageSrc,
+                        }
+                    }}
+                    >
+>>>>>>> dev
                     <button className={`${styles.btn} p mt-2`}>評論</button>
                 </Link>
             </div>

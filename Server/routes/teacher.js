@@ -59,6 +59,7 @@ router.get('/:tid', async function (req, res) {
   workshop.id AS workshop_id,
   workshop_type.type AS workshop_type_type,
   workshop.name AS workshop_name,
+  workshop.img_cover AS workshop_img_cover,
   workshop.price As workshop_price,
   workshop.registration_start AS workshop_registration_start,
   workshop.registration_end AS workshop_registration_end,

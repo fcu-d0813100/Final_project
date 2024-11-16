@@ -3,6 +3,7 @@ import styles from '@/components/teacher/common/t-dashboard-time-select/time-sel
 import React, { useState, useEffect } from 'react'
 
 export default function TimeSelect({
+  id = '',
   date = '',
   beginTime = '',
   endTime = '',
@@ -12,6 +13,9 @@ export default function TimeSelect({
 }) {
   return (
     <>
+      <p name="id" className="d-none">
+        {id}
+      </p>
       <div className="col">
         <button
           type="button"

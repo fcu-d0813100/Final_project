@@ -1,40 +1,81 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Styles from '@/components/activity/page/activity-det/index.module.scss'
+import { useAuth } from '@/hooks/use-auth'
+import LoginModal from '@/components/shared/modal-confirm'
+import { useRouter } from 'next/router'
 
-export default function FormToggle({ uid }) {
+export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
-  const toggleForm = () => setIsExpanded(!isExpanded)
+  const taiwanPhoneRegex = /^(09\d{8}|0[2-8]-?\d{7,8})$/
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    date: '',
+    people: '',
+    remark: '',
+  })
+  const { auth } = useAuth()
+  const router = useRouter()
+  const userId = auth.userData.id
+
+  const toggleForm = () => {
+    if (userId === 0) {
+      setShowLoginModal(true) // 如果 userId 是 0，顯示登入模態框
+    } else {
+      setIsExpanded(!isExpanded) // 否則展開表單
+    }
+  }
 
   const resetForm = () => {
-    document.getElementById('name').value = ''
-    document.getElementById('phone').value = ''
-    document.getElementById('date').value = ''
-    document.getElementById('people').selectedIndex = 0
-    document.getElementById('remark').value = ''
+    setFormData({
+      name: '',
+      phone: '',
+      date: '',
+      people: '',
+      remark: '',
+    })
+  }
+
+  const handleChange = (e) => {
+    const { id, value } = e.target
+    setFormData((prevData) => ({ ...prevData, [id]: value }))
   }
 
   const handleSubmit = async () => {
-    const name = document.getElementById('name').value
-    const phone = document.getElementById('phone').value
-    const date = document.getElementById('date').value
-    const people = document.getElementById('people').value
-    const remark = document.getElementById('remark').value
+    const { name, phone, date, people, remark } = formData
 
     if (!name || !phone || !date || people === '請選擇人數') {
       alert('請填寫所有必填字段')
       return
     }
 
+    // 電話號碼正規驗證
+    if (!taiwanPhoneRegex.test(phone)) {
+      alert('請輸入有效的台灣電話號碼')
+      console.log('電話號碼驗證失敗:', phone) // 調試用，檢查電話號碼
+      return
+    }
+
     try {
       const response = await fetch(
-        `http://localhost:3005/api/activity/activity-reg/${uid}`,
+        `http://localhost:3005/api/activity/activity-reg/${userId}`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, phone, date, people, remark }),
+          body: JSON.stringify({
+            userId,
+            ENG_name,
+            CHN_name,
+            name,
+            phone,
+            date,
+            people,
+            remark,
+          }),
         }
       )
 
@@ -66,53 +107,130 @@ export default function FormToggle({ uid }) {
         {isExpanded && (
           <>
             <p className={Styles['form-title']}>活動報名</p>
-            <div className={Styles['form-row']}>
-              <div className={Styles['form-group']}>
-                <label htmlFor="name">姓名 | name</label>
-                <input type="text" id="name" placeholder="請輸入姓名" />
+            <div className="row justify-content-center">
+              <div className="col-md-5 leftform mb-5">
+                <div className="formGroup mb-3">
+                  <div className="d-flex">
+                    {' '}
+                    <label htmlFor="name">姓名 </label>
+                    <span>| name</span>
+                    <span className={`d-inline ${Styles['text-red']} ps-1`}>
+                      *
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    id="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="請輸入姓名"
+                  />
+                </div>
+                <div className="formGroup mb-3">
+                  <div className="d-flex">
+                    <label htmlFor="phone">電話</label>
+                    <span>| phone</span>
+                    <span className={`d-inline ${Styles['text-red']} ps-1`}>
+                      *
+                    </span>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="請輸入電話"
+                  />
+                </div>
+                <div className="formRow d-flex justify-content-between">
+                  <div className="formGroup col-md-7 ">
+                    <div className="d-flex">
+                      {' '}
+                      <label htmlFor="date">報名日期</label>
+                      <span>| date</span>
+                      <span className={`d-inline ${Styles['text-red']} ps-1`}>
+                        *
+                      </span>
+                    </div>
+
+                    <input
+                      type="date"
+                      id="date"
+                      value={formData.date}
+                      onChange={handleChange}
+                      min={start_at} // 限制最小日期為活動開始日期
+                      max={end_at} // 限制最大日期為活動結束日期
+                    />
+                  </div>
+                  <div className="formGroup col-md-4">
+                    <div className="d-flex">
+                      <label htmlFor="people">參加人數</label>
+                      <span>| amount</span>
+                      <span className={`d-inline ${Styles['text-red']} ps-1`}>
+                        *
+                      </span>
+                    </div>
+
+                    <select
+                      id="people"
+                      value={formData.people}
+                      onChange={handleChange}
+                    >
+                      <option value="">請選擇人數</option>
+                      <option value="1">1人</option>
+                      <option value="2">2人</option>
+                      <option value="3">3人</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div className={Styles['form-group']}>
-                <label htmlFor="phone">電話 | phone</label>
-                <input type="text" id="phone" placeholder="請輸入電話" />
+              <div className="col-md-5 rightform ms-5 ">
+                {' '}
+                <div className="formGroup mb-3">
+                  <label htmlFor="remark">備註</label>
+                  <span>| remark</span>
+                  <textarea
+                    id="remark"
+                    value={formData.remark}
+                    onChange={handleChange}
+                    placeholder="例如：我有食物過敏..."
+                  ></textarea>
+                </div>
+                <div className={`${Styles['form-actions']} mb-3`}>
+                  <button
+                    className={Styles['reset-button']}
+                    onClick={resetForm}
+                  >
+                    重置
+                  </button>
+                  <button
+                    className={Styles['submit-button']}
+                    type="button"
+                    onClick={handleSubmit}
+                  >
+                    送出
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className={Styles['form-row']}>
-              <div className={Styles['form-group']}>
-                <label htmlFor="date">報名日期 | date</label>
-                <input type="date" id="date" />
-              </div>
-              <div className={Styles['form-group']}>
-                <label htmlFor="people">參加人數</label>
-                <select id="people">
-                  <option>請選擇人數</option>
-                  <option value="1">1人</option>
-                  <option value="2">2人</option>
-                  <option value="3">3人</option>
-                </select>
-              </div>
-            </div>
-            <div className={Styles['form-group']}>
-              <label htmlFor="remark">備註 | remark</label>
-              <textarea
-                id="remark"
-                placeholder="例如：我有食物過敏..."
-              ></textarea>
-            </div>
-            <div className={Styles['form-actions']}>
-              <button className={Styles['reset-button']} onClick={resetForm}>
-                重置
-              </button>
-              <button
-                className={Styles['submit-button']}
-                type="button"
-                onClick={handleSubmit}
-              >
-                送出
-              </button>
             </div>
           </>
         )}
       </div>
+
+      {/* 顯示 LoginModal 當 userId 為 0 且點擊我要報名時彈出 */}
+      {showLoginModal && (
+        <LoginModal
+          title="尚未登入會員"
+          content="是否前往登入?"
+          btnConfirm="前往登入"
+          ConfirmFn={() => {
+            router.push('/user/login/user')
+          }}
+          show={showLoginModal}
+          handleClose={() => setShowLoginModal(false)}
+        />
+      )}
     </div>
   )
 }
