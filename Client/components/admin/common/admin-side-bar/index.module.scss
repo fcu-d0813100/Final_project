@@ -3,9 +3,10 @@
 
 .nav {
     width: 300px;
-    height: 95vh;
+    height: 100vh;
     background-color: $green-800;
     flex-direction: column;
+    justify-self: stretch;
     
     // position: relative;
 

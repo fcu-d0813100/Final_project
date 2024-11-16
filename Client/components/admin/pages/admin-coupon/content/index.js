@@ -4,6 +4,7 @@ import AdminSection from '@/components/admin/common/admin-section';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast'; // 引入 toast
 
 export default function Index() {
     const router = useRouter();
@@ -157,12 +158,21 @@ export default function Index() {
                 })
                 .catch((error) => {
                     console.error('發送請求時發生錯誤:', error);
-                    alert('發生錯誤，請稍後再試！');
+                    toast.error(`發生錯誤，請稍後再試` ,{style:{
+                        border: '1.2px solid #963827',
+                        padding: '12px 40px',
+                        color: '#963827',
+                      },iconTheme:{
+                        primary:'#963827',
+                        secondary:'#fff'
+                      }
+                    });
+                    // alert('發生錯誤，請稍後再試！');
 
                     // 檢查是否有返回的錯誤信息
                     if (error.response) {
                         console.error('錯誤詳細信息:', error.response.data);
-                        alert('錯誤詳細信息: ' + (error.response.data.message || '未知錯誤'));
+                        // alert('錯誤詳細信息: ' + (error.response.data.message || '未知錯誤'));
                     } else {
                         console.error('錯誤消息:', error.message);
                     }
@@ -194,6 +204,7 @@ export default function Index() {
                                     <option value='3'>LANCOME</option>
                                     <option value='4'>NARS</option>
                                     <option value='5'>YSL</option>
+                                    <option value='6'>全站</option>
                                 </select>
                                 {errors.brand_id && <div className={styles.error}>{errors.brand_id}</div>}
                             </div>
