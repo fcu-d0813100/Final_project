@@ -23,8 +23,10 @@ export default function UserInfo() {
 
   // 構建頭像URL
   const avatarUrl = userData.img
-    ? `http://localhost:3005/avatar/${userData.img}`
-    : 'http://localhost:3005/avatar/avatar01.jpg'
+    ? `http://localhost:3005/avatar/${userData.img}` // 使用本地檔案頭像
+    : userData.photo_url
+    ? userData.photo_url // 使用 photo_url（如 Google/LINE 登入的圖片）
+    : 'http://localhost:3005/avatar/avatar01.jpg' // 預設頭像
 
   if (!auth.isAuth) return <></>
 
@@ -32,20 +34,20 @@ export default function UserInfo() {
     <>
       <UserSection titleCN="個人資訊" titleENG="Information">
         <div
-          className={`${styles.basicInformation} row d-flex justify-content-between`}
+          className={`${styles.basicInformation} container row d-flex justify-content-between`}
         >
-          <div className={`col-9 ${styles.textArea}`}>
+          <div className={`col-12 col-xxl-9 ms-0 ms-xxl-3 ${styles.textArea}`}>
             <div>
-              <h4>nickname</h4>
-              <div className={`${styles.infoTable} p`}>
-                <div>
-                  <table>
+              <h4 className="h4">{userData.name}</h4>
+              <div className={`${styles.infoTable} p mt-4 row`}>
+                <div className="col-xxl-6 col-12">
+                  <table className={styles.tableWidth}>
                     <tbody>
                       <tr>
                         <th>
-                          姓名<span> | name</span>
+                          暱稱<span> | nickname</span>
                         </th>
-                        <td>{userData.name}</td>
+                        <td>{userData.nickname}</td>
                       </tr>
                       <tr>
                         <th>
@@ -63,8 +65,8 @@ export default function UserInfo() {
                   </table>
                 </div>
 
-                <div>
-                  <table className="ms-4">
+                <div className="col-xxl-6 col-12">
+                  <table className="ms-0 ms-xxl-4">
                     <tbody>
                       <tr>
                         <th>
@@ -100,7 +102,7 @@ export default function UserInfo() {
             </div>
           </div>
 
-          <div className={`${styles.userImg} col-3 `}>
+          <div className={`${styles.userImg} col-xxl-3 `}>
             <Image
               width={255}
               height={255}

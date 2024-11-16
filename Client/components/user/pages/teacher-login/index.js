@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
 // import { PiEyeClosed } from 'react-icons/pi'
 import { useAuth } from '@/hooks/use-auth'
-
+import { useRouter } from 'next/router'
 export default function TeacherLogin(props) {
+  const router = useRouter()
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const role = 'teacher'
@@ -29,7 +30,17 @@ export default function TeacherLogin(props) {
               <div
                 className={`d-flex flex-column align-items-center justify-content-center ${styles['card-img']}`}
               >
-                <h2 className={styles['logo']}>Beautique</h2>
+                <button
+                  type="button"
+                  className={styles['logo']}
+                  onClick={() => {
+                    setTimeout(() => {
+                      router.push('/')
+                    }, 1500)
+                  }}
+                >
+                  Beautique
+                </button>
                 <h3 className={styles['slogan']}>WELCOME！Makeup Artist </h3>
                 <h6 className={`h6 ${styles['text']}`}>
                   我們的專業，成就您的美麗。

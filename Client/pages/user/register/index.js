@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import UserSignup from '@/components/user/pages/user-signup'
 
-export default function Index(props) {
+function UserLoginPage(props) {
   return (
     <>
       <UserSignup />
     </>
   )
 }
+UserLoginPage.getLayout = function getLayout(page) {
+  return page
+}
+export default UserLoginPage

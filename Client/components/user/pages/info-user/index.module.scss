@@ -1,20 +1,20 @@
 @import '@/styles/_variant.scss';
 
 .basicInformation {
-  display: flex;
+  // display: flex;
   // justify-content: space-between;
   padding-inline: 10px;
   padding-block: 30px;
 
   .textArea {
     // min-width: 900px;
+    // width:100%;
     height: 255px;
     background: #f8f8f8;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    // margin-right: 60px;
     margin-bottom: 60px;
 
     h4 {
@@ -30,30 +30,35 @@
       color: $green-500;
       font-size: 14px;
     }
-
+    // table { 
+    //   width: 100%;
+    //   // table-layout: fixed;
+    // } // 固定表格佈局
     th {
       padding: 5px 30px;
       border-left: 3px solid $green-200;
+      white-space: nowrap; // 防止換行
     }
 
     td {
       padding-right: 30px;
+      white-space: nowrap; // 防止換行
     }
+    
   }
 
-  .userImg {
-    width: 255px;
-    height: 255px;
-
-    .img {
-      width: 255px;
-      height: 255px;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-  }
+  
 }
-
+.userImg {
+  width: 255px;
+  height: 255px;
+}
+.img {
+  width: 255px;
+  height: 255px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 .timeArea {
   // margin-top: 10px;
   display: flex;
@@ -99,4 +104,23 @@
   background-color: $gray-100 ;
   height: 70px;
   border-radius: 0 0 5px 5px;
+}
+@media screen and (max-width: 1650px) {
+  .userImg {
+    width: 200px;
+    height: 200px;
+
+    .img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+}
+@media screen and (min-width: 1400px) {
+  .basicInformation {
+    padding-inline: 0px;
+  }
+
 }
