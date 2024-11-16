@@ -203,6 +203,18 @@
   }
 }
 
+.starfilter{
+  border: 1px solid #ccc !important;
+  color: #9ea28b !important;
+  background-color: #fff !important;
+  transition: all 0.3s ease !important;
+  &:hover {
+    color: #fff !important;
+    background-color: #9ea28b !important; // Hover時的背景顏色
+    border-color: #9ea28b !important;    // Hover時的邊框顏色
+  }
+}
+
 .btn-cancel{
   height: 2.5rem;
   width: auto;

@@ -106,14 +106,17 @@
     width: 40px; /* 设置按钮固定宽度 */
   }
 }
-@media (max-width: 390px) {
-  .act-card-sec {
-    display: none;
+/* 預設隱藏 */
+
+/* 在 391px 到 1920px 顯示 */
+@media (min-width: 391px) and (max-width: 1920px) {
+  .act-MoBcard-sec {
+    display: none !important;
   }
 }
-@media (min-width: 391px) {
-  .act-MoBcard-sec {
-    display: none;
+@media (min-width: 0px) and (max-width: 390px) {
+  .act-card-sec {
+    display: none !important;
   }
 }
 

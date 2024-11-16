@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 export default function Page2({ onPreviousPage }) {
-  //const role = 'admin'
+  const role = 'teacher'
   const { auth, login, logout } = useAuth()
   //const { userData } = auth // 撈取 teacherData 資料
   console.log(auth)
