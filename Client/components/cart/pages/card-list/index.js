@@ -7,23 +7,21 @@ import { useCartWorkshop } from '@/hooks/use-cartW'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
+import ToastSuccess from '@/components/shared/toast-success/index'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function CartList() {
   //----------吐司訊息
-  //新增商品
-  const addPnotify = () =>
-    toast.success('新增1件商品', {
-      style: {
-        border: '1.2px solid #90957a',
-        padding: '12px 40px',
-        color: '#626553',
-      },
-      iconTheme: {
-        primary: '#626553',
-        secondary: '#fff',
-      },
-    })
+  const { add } = ToastSuccess({
+    message: '新增商品',
+    functionName: 'add',
+  })
+
+  const { del } = ToastSuccess({
+    message: '刪除商品',
+    functionName: 'del',
+  })
+
   //刪除商品
   const delPnotify = () =>
     toast.success('刪除1件商品', {
@@ -151,7 +149,7 @@ export default function CartList() {
                           className={style['btn-sm']}
                           onClick={() => {
                             const nextPqty = product.qty - 1
-                            if (nextPqty >= 1) delPnotify()
+                            if (nextPqty >= 1) del()
                             if (nextPqty <= 0) {
                               if (confirm('你確定要移除此商品嗎？')) {
                                 onRemoveProduct(
@@ -174,7 +172,7 @@ export default function CartList() {
                           className={style['btn-sm']}
                           onClick={() => {
                             onIncreaseProduct(product.product_id, product.color)
-                            addPnotify()
+                            add()
                           }}
                         >
                           <Plus size={20} />
@@ -274,7 +272,7 @@ export default function CartList() {
                           className={style['btn-sm']}
                           onClick={() => {
                             const nextWqty = workshop.qty - 1
-                            if (nextWqty >= 1) delPnotify()
+                            if (nextWqty >= 1) del()
                             if (nextWqty <= 0) {
                               if (confirm('你確定要移除此商品嗎？')) {
                                 onRemoveWorkshop(workshop.id)
@@ -291,7 +289,7 @@ export default function CartList() {
                           className={style['btn-sm']}
                           onClick={() => {
                             onIncreaseWorkshop(workshop.id)
-                            addPnotify()
+                            add()
                           }}
                         >
                           <Plus size={20} />
