@@ -132,6 +132,7 @@ export default function Index() {
                                 <option value="3">LANCOME</option>
                                 <option value="4">NARS</option>
                                 <option value="5">YSL</option>
+                                <option value="6">全站</option>
                             </select>
                         </div>
 
@@ -142,7 +143,7 @@ export default function Index() {
                                 type="text"
                                 name="name"
                                 value={coupon.name}
-                                onChange={(e) => setCoupon(e.target.value)}
+                                onChange={(e) => setCouponCode(e.target.value)}
                             />
                         </div>
 

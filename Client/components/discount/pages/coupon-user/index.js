@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import CouponUse from '@/components/discount/common/coupon-use';
+import CouponUseAll from '@/components/discount/common/coupon-use-all';
 import CouponWait from '@/components/discount/common/coupon-wait';
+import CouponWaitAll from '@/components/discount/common/coupon-wait-all';
 import styles from './index.module.scss';
 import UserCouponSection from '@/components/discount/common/user-coupon-section';
 import { useAuth } from '@/hooks/use-auth';
 import toast, { Toaster } from 'react-hot-toast';
 import FilterModal from '@/components/discount/common/mymodal'; // 引入 FilterModal
 import { IoFunnel } from "react-icons/io5";
-import ModalConfirm from '@/components/shared/modal-confirm'
 
 const UserCoupon = () => {
     const { auth } = useAuth();
@@ -22,7 +23,6 @@ const UserCoupon = () => {
     const [filteredCoupons, setFilteredCoupons] = useState([]);  // 儲存篩選後的優惠券
     const userId = auth.isAuth ? auth.userData.id : null;  // 用戶ID
     const [totalPages, setTotalPages] = useState(1);  // 總頁數
-    const [showModal, setShowModal] = useState(false)
 
     // 品牌圖片對應
     const brandImageMap = {
@@ -36,8 +36,7 @@ const UserCoupon = () => {
     // 獲取用戶優惠券
     const fetchCoupons = async () => {
         if (!userId) {
-            setShowModal(true)
-            // toast.error('未找到使用者資訊，請先登入'); // 顯示通知
+            toast.error('未找到使用者資訊，請先登入'); // 顯示通知
             setLoading(false);
             return;
         }
@@ -52,7 +51,7 @@ const UserCoupon = () => {
             const totalPages = Math.ceil(totalCoupons / couponsPerPage);  // 總頁數
             setTotalPages(totalPages);
         } catch (error) {
-            // console.error('獲取優惠券時發生錯誤:', error);
+            console.error('獲取優惠券時發生錯誤:', error);
             toast.error('獲取優惠券時發生錯誤');
         } finally {
             setLoading(false);
@@ -88,7 +87,7 @@ const UserCoupon = () => {
         }
     }, [userId, currentPage]);
 
-    // 處理優惠券邏輯
+    // 处理优惠券领取逻辑
     const handleClaimCoupon = async () => {
         if (!couponCode) {
             // setError('請輸入優惠券代碼');
@@ -174,109 +173,126 @@ const UserCoupon = () => {
 
 
     return (
-        <>
-            <UserCouponSection titleCN="優惠券" titleENG="Coupon">
-                <aside className={styles.right}>
-                    <div className={`${styles.search} mt-2`}>
-                        <div className={`${styles.add} p me-4`}>新增優惠券</div>
-                        <input
-                            className="p-1 me-4"
-                            type="text"
-                            placeholder="請輸入優惠券代碼"
-                            value={couponCode}
-                            onChange={(e) => setCouponCode(e.target.value)}
-                        />
-                        <button className={`btn-primary ${styles.btnReceive}`} onClick={handleClaimCoupon}>領取</button>
-                        {/* 設置篩選按鈕 */}
-                        <button onClick={() => setModalShow(true)} className={`btn ${styles.funnel}`}><IoFunnel size={25} color='#90957a' /></button>
-                    </div>
-
-                    {/* 篩選條件彈窗 */}
-                    <FilterModal
-                        show={modalShow}
-                        onHide={() => setModalShow(false)}
-                        selectedTypes={selectedTypes}
-                        setSelectedTypes={setSelectedTypes}
-                        selectedBrands={selectedBrands}
-                        setSelectedBrands={setSelectedBrands}
-                        applyFilters={applyFilters}
-                        resetFilters={resetFilters}
+        <UserCouponSection titleCN="優惠券" titleENG="Coupon">
+            <aside className={styles.right}>
+                <div className={`${styles.search} mt-2 d-flex justify-content-center align-items-center`}>
+                    <div className="p me-4">新增優惠券</div>
+                    <input
+                        className="p-1 me-4"
+                        type="text"
+                        placeholder="請輸入優惠券代碼"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
                     />
+                    <button className={`btn-primary ${styles.btnReceive}`} onClick={handleClaimCoupon}>領取</button>
+                    {/* 設置篩選按鈕 */}
+                    <button onClick={() => setModalShow(true)} className={`btn ${styles.funnel}`}><IoFunnel size={25} color='#90957a' /></button>
+                </div>
 
-                    {/* 載入狀態 */}
-                    {/* {loading && <p>加載中...</p>} */}
-
-                    {/* 顯示優惠券 */}
-                    <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                        {filteredCoupons.map((coupon, index) => {
-                            const isCouponActive = new Date(coupon.start_date) <= new Date();
-                            return isCouponActive ? (
-                                <CouponUse
-                                    key={index}
-                                    img={brandImageMap[coupon.brand_id]}
-                                    name={coupon.name}
-                                    discount_value={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
-                                    minimum_amount={coupon.minimum_amount}
-                                    end_date={coupon.end_date}
-                                />
-                            ) : (
-                                <CouponWait
-                                    key={index}
-                                    img={brandImageMap[coupon.brand_id]}
-                                    name={coupon.name}
-                                    discount_value={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
-                                    minimum_amount={coupon.minimum_amount}
-                                    start_date={Math.floor((new Date(coupon.start_date) - new Date()) / (1000 * 60 * 60 * 24))}
-                                />
-                            );
-                        })}
-                    </div>
-
-                    {/* 分頁控制 */}
-                    <div className={styles.pagination}>
-                        <button
-                            className={`${styles.pageBtn} ${currentPage === 1 ? styles.disabled : ''}`}
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}  // 上一頁
-                            disabled={currentPage === 1}
-                        >
-                            &lt;
-                        </button>
-                        {totalPages > 0 && Array.from({ length: totalPages }, (_, index) => (
-                            <button
-                                key={index + 1}
-                                className={`${styles.pageBtn} ${currentPage === index + 1 ? styles.active : ''}`}
-                                onClick={() => setCurrentPage(index + 1)}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                        <button
-                            className={`${styles.pageBtn} ${currentPage === totalPages ? styles.disabled : ''}`}
-                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}  // 下一頁
-                            disabled={currentPage === totalPages}
-                        >
-                            &gt;
-                        </button>
-                    </div>
-                </aside>
-                <Toaster />
-            </UserCouponSection>
-            {showModal && (
-                <ModalConfirm
-                    title="尚未登入會員"
-                    content={`是否前往登入?`}
-                    btnConfirm="前往登入"
-                    ConfirmFn={() => {
-                        router.push('/user/login')
-                    }}
-                    show={showModal}
-                    handleClose={() => setShowModal(false)}
+                {/* 篩選條件彈窗 */}
+                <FilterModal
+                    show={modalShow}
+                    onHide={() => setModalShow(false)}
+                    selectedTypes={selectedTypes}
+                    setSelectedTypes={setSelectedTypes}
+                    selectedBrands={selectedBrands}
+                    setSelectedBrands={setSelectedBrands}
+                    applyFilters={applyFilters}
+                    resetFilters={resetFilters}
                 />
-            )}
-        </>
-     
+
+                {/* 載入狀態 */}
+                {/* {loading && <p>加載中...</p>} */}
+
+                {/* 顯示優惠券 */}
+                <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
+                    {filteredCoupons.map((coupon, index) => {
+                        const isCouponActive = new Date(coupon.start_date) <= new Date();
+
+                        // 判斷 brand_id 是否為 6
+                        if (coupon.brand_id === 6) {
+                            if (isCouponActive) {
+                                // brand_id 是 6 且優惠券有效，顯示 CouponUseAll
+                                return (
+                                    <CouponUseAll
+                                        key={index}
+                                        name={coupon.name}
+                                        discount_value={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
+                                        minimum_amount={coupon.minimum_amount}
+                                        end_date={coupon.end_date}
+                                    />
+                                );
+                            } else {
+                                // brand_id 是 6 且優惠券尚未啟用，顯示 CouponWaitAll
+                                return (
+                                    <CouponWaitAll
+                                        key={index}
+                                        name={coupon.name}
+                                        discount_value={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
+                                        minimum_amount={coupon.minimum_amount}
+                                        start_date={Math.floor((new Date(coupon.start_date) - new Date()) / (1000 * 60 * 60 * 24))} // 計算距離開始時間的天數
+                                    />
+                                );
+                            }
+                        } else {
+                            // 當 brand_id 不是 6 時，檢查優惠券是否有效
+                            if (isCouponActive) {
+                                return (
+                                    <CouponUse
+                                        key={index}
+                                        img={brandImageMap[coupon.brand_id]}
+                                        name={coupon.name}
+                                        discount_value={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
+                                        minimum_amount={coupon.minimum_amount}
+                                        end_date={coupon.end_date}
+                                    />
+                                );
+                            } else {
+                                return (
+                                    <CouponWait
+                                        key={index}
+                                        img={brandImageMap[coupon.brand_id]}
+                                        name={coupon.name}
+                                        discount_value={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${(1 - coupon.discount_value).toFixed(2) * 100}% OFF`}
+                                        minimum_amount={coupon.minimum_amount}
+                                        start_date={Math.floor((new Date(coupon.start_date) - new Date()) / (1000 * 60 * 60 * 24))} // 計算距離開始時間的天數
+                                    />
+                                );
+                            }
+                        }
+                    })}
+                </div>
+
+                {/* 分頁控制 */}
+                <div className={styles.pagination}>
+                    <button
+                        className={`${styles.pageBtn} ${currentPage === 1 ? styles.disabled : ''}`}
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}  // 上一頁
+                        disabled={currentPage === 1}
+                    >
+                        &lt;
+                    </button>
+                    {totalPages > 0 && Array.from({ length: totalPages }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            className={`${styles.pageBtn} ${currentPage === index + 1 ? styles.active : ''}`}
+                            onClick={() => setCurrentPage(index + 1)}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                    <button
+                        className={`${styles.pageBtn} ${currentPage === totalPages ? styles.disabled : ''}`}
+                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}  // 下一頁
+                        disabled={currentPage === totalPages}
+                    >
+                        &gt;
+                    </button>
+                </div>
+            </aside>
+            <Toaster />
+        </UserCouponSection>
     );
 };
-
 
 export default UserCoupon;

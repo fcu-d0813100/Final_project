@@ -116,7 +116,7 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                     <div className={`${styles.btn} btn-primary align-content-center me-3`} onClick={handleBuyAgain}>
                         再買一次
                     </div>
-                    <div className={`${styles.btn}  btn-primary align-content-center`}>評論</div>
+                    {/* <div className={`${styles.btn}  btn-primary align-content-center`}>評論</div> */}
                 </div>
             </div>
         </div>

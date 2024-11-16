@@ -71,6 +71,12 @@ export default function Discount() {
             ))}
           </Slider>
         </div>
+        <div className={`d-flex  justify-content-end ${styles.point}`}>
+          <Link href={'/discount/game'}>
+            <div className={`${styles.game}`}>
+            </div>
+          </Link>
+        </div>
       </div>
     </>
   );

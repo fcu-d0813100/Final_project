@@ -1,9 +1,6 @@
 @import '@/styles/_variant.scss';
 
 .right {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
     .btn {
         background-color: transparent;
         border: transparent;
@@ -14,9 +11,7 @@
     background-color: $gray-100;
     border-radius: 3px;
     height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
     .btn {
         padding: 6px 12px;
         border-radius: 3px;
@@ -31,11 +26,6 @@
             border: #000 solid 1px;
             transition: ease 0.5s;
             color: #000;
-        }
-    }
-    @media (max-width: 600px) {
-        .add{
-            display: none;
         }
     }
 }
@@ -79,11 +69,7 @@
 .pagination {
     display: flex;
     justify-content: center;
-    align-content: end;
     margin-block: 45px;
-    @media (max-width: 600px) {
-        margin-block: 25px;
-    }
   }
   
   .pageBtn {
@@ -94,11 +80,11 @@
     border: 2px solid transparent;
   
     &:hover {
-      border-bottom: 2px solid $green-700;
+      border-bottom: 2px solid $green-500;
       cursor: pointer; // Ensure pointer on hover
     }
     &.active {
-      color: $green-700; // Active page number color
+      color: $green-500; // Active page number color
       border-bottom: 2px solid $green-500;
     }
   }

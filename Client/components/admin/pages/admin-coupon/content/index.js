@@ -194,6 +194,7 @@ export default function Index() {
                                     <option value='3'>LANCOME</option>
                                     <option value='4'>NARS</option>
                                     <option value='5'>YSL</option>
+                                    <option value='6'>全站</option>
                                 </select>
                                 {errors.brand_id && <div className={styles.error}>{errors.brand_id}</div>}
                             </div>
