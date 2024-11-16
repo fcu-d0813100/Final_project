@@ -16,6 +16,7 @@ export const initUserData = {
   line_uid: '',
   name: '',
   email: '',
+  identity: '',
 }
 
 // 1. 建立與導出它
@@ -106,6 +107,7 @@ export function AuthProvider({ children }) {
       account: '',
       google_uid: '',
       line_uid: '',
+      identity: '',
     },
   })
 
@@ -316,6 +318,7 @@ export function AuthProvider({ children }) {
 
         // 根據角色跳轉到相應頁面
         setTimeout(() => {
+          console.log(role)
           switch (role) {
             case 'admin':
               router.push('/admin/activity')
@@ -326,7 +329,7 @@ export function AuthProvider({ children }) {
             case 'user':
               router.push('/user')
               break
-            default: // 處理身份不明的情況
+            default:
               router.push('/login')
               break
           }

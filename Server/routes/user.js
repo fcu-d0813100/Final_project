@@ -149,7 +149,7 @@ router.post(`/login/:role`, async (req, res) => {
 
   const dbUser = rows[0]
   // 2. 檢查該會員的身份是否符合登入要求
-  // console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
+  console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
 
   if (dbUser.identity !== role) {
     if (role === 'teacher') {
@@ -173,8 +173,8 @@ router.post(`/login/:role`, async (req, res) => {
     id: dbUser.id,
     account: dbUser.account,
     identity: dbUser.identity,
-    // google_uid: user.google_uid,
-    // line_uid: user.line_uid,
+    google_uid: dbUser.google_uid,
+    line_uid: dbUser.line_uid,
   }
 
   // 讓會員保持登陸3天
