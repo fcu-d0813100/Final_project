@@ -22,12 +22,12 @@ const WheelOfFortune = () => {
 
   // 優惠券項目
   const coupons = [
-    { discount_value: 0.9, code: '123546', coupon_id: 52 },
-    { discount_value: 0.8, code: '789123', coupon_id: 53 },
-    { discount_value: 100, code: '159357', coupon_id: 54 },
-    { discount_value: 0.95, code: '7415963', coupon_id: 55 },
-    { discount_value: 50, code: '7895123', coupon_id: 56 },
-    { discount_value: 0.85, code: '3215987', coupon_id: 57 },
+    { discount_value: 0.9, code: 'R1s2T3u4', coupon_id: 43 },
+    { discount_value: 0.8, code: 'QA3yJ9j5', coupon_id: 42 },
+    { discount_value: 100, code: 'CBAScMqr', coupon_id: 41 },
+    { discount_value: 0.95, code: 'xJrbBMhW', coupon_id: 40 },
+    { discount_value: 50, code: 'N7o8P9q0', coupon_id: 39 },
+    { discount_value: 0.85, code: 'G7h8I9j0', coupon_id: 38 },
   ];
 
   // 檢查用戶是否已登入，並顯示歷史紀錄
