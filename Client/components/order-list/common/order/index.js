@@ -18,7 +18,7 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
         // 初始化兩個空陣列來分別存放商品與工作坊
         const productCartItems = [];
         const WorkshopCartItems = [];
-    
+
         // 遍歷所有商品（來自 order 頁面）
         items.forEach(item => {
             if (item.product_id) {
@@ -38,33 +38,33 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
             } else if (item.wid) {
                 // 工作坊商品，加入 workshopCartItems 陣列
                 WorkshopCartItems.push({
-                    id:item.wid,
+                    id: item.wid,
                     typeId: item.type_id,
                     imageSrc: `${item.img_cover}`, // 工作坊圖片路徑
                     name: item.type, // 工作坊類型名稱
                     date: item.ws_date,
-                    beginTime:item.start_time,
-                    endTime:item.end_time,
+                    beginTime: item.start_time,
+                    endTime: item.end_time,
                     qty: item.quantity,
                     price: item.workshop_price,
                 });
             }
         });
-    
+
         // 將普通商品資料存到 localStorage
         if (productCartItems.length > 0) {
             localStorage.setItem('productCart', JSON.stringify(productCartItems));
         }
-    
+
         // 將工作坊商品資料存到 localStorage
         if (WorkshopCartItems.length > 0) {
             localStorage.setItem('Workshopcart', JSON.stringify(WorkshopCartItems));
         }
-    
-        
+
+
         router.push('/cart');
     };
-    
+
     return (
         <div className={`${styles.order} d-flex flex-column border rounded-top my-2`}>
             <Link className={`text-decoration-none ${styles.link}`} href="/user/order/detail" passHref onClick={handleClick}>
@@ -81,6 +81,7 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                         <div key={item.id || index}>
                             {item.product_id && (
                                 <Item
+                                    orderId={orderId}
                                     imageSrc={`/product/mainimage/${item.mainimage}`}
                                     brand={item.name}
                                     productName={item.product_name}

@@ -77,21 +77,6 @@ const CommentForm = ({ productId, colorId, productName, brand, color, imageSrc }
     }
   };
 
-  // const [productData, setProductData] = useState(null);
-
-  // useEffect(() => {
-  //   const storedProductData = localStorage.getItem('productData');
-  //   if (storedProductData) {
-  //     setProductData(JSON.parse(storedProductData));
-  //   }
-  // }, []);
-
-  // if (!productData) {
-  //   return <div>無法獲取商品資料。</div>; // 顯示錯誤或加載提示
-  // }
-
-  // const { productId, colorId, mainimage, brand, product_name, color_name, color } = productData;
-
   return (
     <Container className={`${styles['container']} ${styles['custom-link']} p-4`} style={{ maxWidth: '1440px' }}>
       <Row className={`${styles['commentrow']} align-items-center mb-4`}>
@@ -99,16 +84,6 @@ const CommentForm = ({ productId, colorId, productName, brand, color, imageSrc }
           <Image
             width={160}
             height={160}
-<<<<<<< HEAD
-            src={mainimage}
-            alt="Product"
-          />
-        </Col>
-        <Col xs={10} className={styles['order-detail']}>
-          <h5 className='p'>{brand} <br /></h5>
-          <div className={`${styles['productname']} h6`}>{product_name}</div>
-          <p className={`${styles['color']} ps`}><span className={styles['color-swatch']}  style={{ backgroundColor: color }}></span><span className={styles['color-text']}>顏色：{color_name}</span></p>
-=======
             src={imageSrc}
             alt={`${brand} ${productName}`}
           />
@@ -120,7 +95,6 @@ const CommentForm = ({ productId, colorId, productName, brand, color, imageSrc }
             <span className={styles['color-swatch']} style={{ backgroundColor: color }}></span>
             <span className={styles['color-text']}>顏色：{color}</span>
           </p>
->>>>>>> dev
         </Col>
       </Row>
 
@@ -147,14 +121,7 @@ const CommentForm = ({ productId, colorId, productName, brand, color, imageSrc }
                 src={src}
                 alt={`Review image ${index + 1}`}
               />
-<<<<<<< HEAD
-              <button
-                onClick={() => handleRemoveImage(index)}
-                className={styles['remove-button']}
-              >
-=======
               <button onClick={() => handleRemoveImage(index)} className={styles['remove-button']}>
->>>>>>> dev
                 &times;
               </button>
             </div>

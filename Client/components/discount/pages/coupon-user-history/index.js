@@ -23,6 +23,7 @@ export default function Index() {
     const [loading, setLoading] = useState(true);
     const [invalidCoupons, setInvalidCoupons] = useState([]); // 已過期優惠券
     const [usedCoupons, setUsedCoupons] = useState([]); // 已使用優惠券
+    const [showModal, setShowModal] = useState(false); // Define showModal state
 
     // 分頁狀態
     const [currentPageInvalid, setCurrentPageInvalid] = useState(1); // 已過期頁碼
@@ -36,7 +37,7 @@ export default function Index() {
     const fetchCoupons = async () => {
         if (!userId) {
             // setError('未找到使用者資訊，請先登入');
-            checkIfCouponClaimed();
+            setShowModal(true)
             setLoading(false);
             return;
         }
@@ -252,20 +253,19 @@ export default function Index() {
                         </Tab.Content>
                     </Tab.Container>
                 )}
+                {showModal && (
+                    <ModalConfirm
+                        title="尚未登入會員"
+                        content={`是否前往登入?`}
+                        btnConfirm="前往登入"
+                        ConfirmFn={() => {
+                            router.push('/user/login/user')
+                        }}
+                        show={showModal}
+                        handleClose={() => setShowModal(false)}
+                    />
+                )}
             </UserCouponSection>
-
-            {showModal && (
-                <ModalConfirm
-                    title="尚未登入會員"
-                    content={`是否前往登入?`}
-                    btnConfirm="前往登入"
-                    ConfirmFn={() => {
-                        router.push('/user/login/user')
-                    }}
-                    show={showModal}
-                    handleClose={() => setShowModal(false)}
-                />
-            )}
         </>
     );
 }
