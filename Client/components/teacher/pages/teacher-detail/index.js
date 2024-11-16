@@ -172,7 +172,7 @@ export default function TeacherDetail(props) {
                 <WorkshopCardLg
                   key={item.workshop_id}
                   wid={item.workshop_id}
-                  imgCover={`/workshop/workshop_img/${item.type_id}-${item.workshop_id}-c.jpg`}
+                  imgCover={`http://localhost:3005/workshop/${item.workshop_img_cover}`}
                   name={item.workshop_name}
                   teacher={item.name}
                   beginDate={beginDate}

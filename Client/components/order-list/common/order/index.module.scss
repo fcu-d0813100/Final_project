@@ -29,8 +29,10 @@
 
     .btn {
         align-content: center;
+        text-align: center;
 
         @media (max-width: 900px) {
+            font-size: 16px;
             width: 92px;
             height: 38px;
         }

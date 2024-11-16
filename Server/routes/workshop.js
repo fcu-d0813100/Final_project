@@ -153,7 +153,8 @@ router.get('/:wid', async function (req, res, next) {
   GROUP_CONCAT(workshop_time.end_time ORDER BY workshop_time.date ASC) AS end_times,
   GROUP_CONCAT(workshop_time.id ORDER BY workshop_time.date ASC) AS time_id,
   GROUP_CONCAT(workshop_time.registered ORDER BY workshop_time.date ASC) AS workshop_time_registered,
-  GROUP_CONCAT(workshop_time.max_students ORDER BY workshop_time.date ASC) AS max_students
+  GROUP_CONCAT(workshop_time.max_students ORDER BY workshop_time.date ASC) AS max_students,
+  GROUP_CONCAT(workshop_time.min_students ORDER BY workshop_time.date ASC) AS min_students
   
  FROM
     workshop
@@ -555,6 +556,180 @@ router.delete('/myWorkshop/delete', authenticate, async function (req, res) {
 })
 
 //------------------------------------------------------------------------------------------
+// 更新
+router.put(
+  '/edit/save',
+  upload.fields([
+    { name: 'img_cover', maxCount: 1 },
+    { name: 'img_lg', maxCount: 1 },
+    { name: 'img_sm01', maxCount: 1 },
+    { name: 'img_sm02', maxCount: 1 },
+  ]),
+  authenticate,
+  async function (req, res, next) {
+    const id = req.user.id
+    const updateWorkshop = req.body
+    // console.log(updateWorkshop)
+
+    // 更新 workshop 的所有圖片檔案（不要的刪掉）
+    const [workshopData] = await db.query(
+      SQL.format(
+        'SELECT img_cover, img_lg, img_sm01, img_sm02 FROM workshop WHERE id = ? AND teachers_id = ?',
+        [updateWorkshop.id, id]
+      )
+    )
+    if (workshopData.length > 0) {
+      const imgFields = ['img_cover', 'img_lg', 'img_sm01', 'img_sm02']
+      const folderPath = path.join(__dirname, '..', 'public', 'workshop') // 加上 .. 來退回上一層資料夾
+
+      for (const field of imgFields) {
+        const imgFile = workshopData[0][field]
+        // 僅刪除有更新的圖片
+        if (imgFile && req.files && req.files[field]) {
+          const imgPath = path.join(folderPath, imgFile)
+          console.log('要刪除的圖片路徑:', imgPath)
+          try {
+            // 嘗試刪除符合的檔案
+            await fs.rm(imgPath, { force: true }) // `force: true` 忽略不存在的檔案
+            console.log(`圖片已刪除: ${imgFile}`)
+          } catch (err) {
+            console.log(`圖片不存在或無法刪除: ${imgFile}`)
+          }
+        }
+      }
+    }
+
+    // 檢查 `req.files` 是否存在
+    const updateFiles = req.files || {}
+    const img_cover = updateFiles['img_cover']
+      ? updateFiles['img_cover'][0].filename
+      : updateWorkshop.img_cover // 如果沒有新圖片，使用舊圖片名稱
+
+    const img_lg = updateFiles['img_lg']
+      ? updateFiles['img_lg'][0].filename
+      : updateWorkshop.img_lg
+
+    const img_sm01 = updateFiles['img_sm01']
+      ? updateFiles['img_sm01'][0].filename
+      : updateWorkshop.img_sm01
+
+    const img_sm02 = updateFiles['img_sm02']
+      ? updateFiles['img_sm02'][0].filename
+      : updateWorkshop.img_sm02
+
+    try {
+      const sqlUpdateWorkshop = SQL.format(
+        'UPDATE `workshop` SET `type_id` = ?, `name` = ?, `description` = ?, `outline` = ?, `notes` = ?, `price` = ?, `address` = ?, `img_cover` = ?, `img_lg` = ?, `img_sm01` = ?, `img_sm02` = ?, `registration_start` = ?, `registration_end` = ? WHERE `workshop`.`id` = ? AND `teachers_id`=?;',
+        [
+          updateWorkshop.type_id,
+          updateWorkshop.name,
+          updateWorkshop.description,
+          updateWorkshop.outline,
+          updateWorkshop.notes,
+          updateWorkshop.price,
+          updateWorkshop.address,
+          img_cover,
+          img_lg,
+          img_sm01,
+          img_sm02,
+          updateWorkshop.registration_start,
+          updateWorkshop.registration_end,
+          updateWorkshop.id,
+          id,
+        ]
+      )
+
+      const [result] = await db.query(sqlUpdateWorkshop)
+      console.log('Insert Result:', result)
+
+      // 解析 timeSchedule 資料
+      const parsedTimeSchedule = updateWorkshop.timeSchedule.map((item) => {
+        // 確保每個項目都是一個有效的物件
+        try {
+          return JSON.parse(item)
+        } catch (e) {
+          console.error('Error parsing timeSchedule item:', item)
+          return null
+        }
+      })
+      console.log('Parsed Time Schedule:', parsedTimeSchedule)
+
+      //--------------- 比對舊資料和新資料，找出需要刪除的時間
+      const timeIdsToDelete = []
+      // 取出已更新的時間 ID
+      const updatedTimeIds = parsedTimeSchedule.map((time) => time.id)
+      // 查詢資料庫中已有的時間紀錄
+      const [existingTimeData] = await db.query(
+        SQL.format('SELECT id FROM workshop_time WHERE workshop_id = ?', [
+          updateWorkshop.id,
+        ])
+      )
+      // 找出已經存在但在更新後時間表中被移除的項目
+      for (const time of existingTimeData) {
+        if (!updatedTimeIds.includes(time.id.toString())) {
+          timeIdsToDelete.push(time.id)
+        }
+      }
+      // 若有需要刪除的時間資料，執行刪除
+      if (timeIdsToDelete.length > 0) {
+        for (const timeId of timeIdsToDelete) {
+          const sqltimesDelete = SQL.format(
+            'DELETE FROM workshop_time WHERE `id` = ? AND `workshop_id` = ?',
+            [timeId, updateWorkshop.id]
+          )
+          await db.query(sqltimesDelete)
+          console.log(`已刪除課程時間`)
+        }
+      } //--------------------------------------
+
+      // 更新每筆 timeSchedule 資料
+      for (const time of parsedTimeSchedule) {
+        if (typeof time.id === 'string') {
+          const sqlUpdateWorkshopTime = SQL.format(
+            'UPDATE `workshop_time` SET `date` = ?, `start_time` = ?, `end_time` = ?, `min_students` = ?, `max_students` = ? WHERE `workshop_time`.`id` = ? ',
+            [
+              time.date,
+              time.start_time,
+              time.end_time,
+              time.min_students,
+              time.max_students,
+              time.id,
+            ]
+          )
+          // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+          await db.query(sqlUpdateWorkshopTime)
+        } else if (typeof time.id === 'number') {
+          const sqlInsertWorkshopTime = SQL.format(
+            `
+      INSERT INTO workshop_time(
+      workshop_id, date, start_time, end_time, min_students, max_students, registered
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+     `,
+            [
+              updateWorkshop.id,
+              time.date,
+              time.start_time,
+              time.end_time,
+              time.min_students,
+              time.max_students,
+              0,
+            ]
+          )
+          // 插入 workshop_time 資料，假設 req.body 中包含時間資料
+          await db.query(sqlInsertWorkshopTime)
+        }
+      }
+
+      // console.log('req.files' + req.files)
+      // console.log('req.body' + req.body)
+
+      res.json(result)
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ message: 'Server error', error: e.message })
+    }
+  }
+)
 // 加入收藏
 router.post('/favorite/:workshop_id/:user_id', async (req, res) => {
   const { workshop_id, user_id } = req.params
@@ -659,5 +834,7 @@ router.get('/favorite/search/:user_id', async (req, res) => {
     res.status(500).json({ message: '查詢過程中發生錯誤，請稍後再試' })
   }
 })
+
+
 
 export default router

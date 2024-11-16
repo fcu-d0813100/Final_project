@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Tab, Nav } from 'react-bootstrap';
 import UserCouponSection from '@/components/discount/common/user-coupon-history-section';
 import CouponEnd from '@/components/discount/common/coupon-end';
+import CouponEndAll from '@/components/discount/common/coupon-end-all'
 import { useAuth } from '@/hooks/use-auth';
 import styles from './index.module.scss';
+import ModalConfirm from '@/components/shared/modal-confirm'
 
 // 品牌圖片映射
 const brandImageMap = {
@@ -21,7 +23,8 @@ export default function Index() {
     const [loading, setLoading] = useState(true);
     const [invalidCoupons, setInvalidCoupons] = useState([]); // 已過期優惠券
     const [usedCoupons, setUsedCoupons] = useState([]); // 已使用優惠券
-    
+    const [showModal, setShowModal] = useState(false); // Define showModal state
+
     // 分頁狀態
     const [currentPageInvalid, setCurrentPageInvalid] = useState(1); // 已過期頁碼
     const [currentPageUsed, setCurrentPageUsed] = useState(1); // 已使用頁碼
@@ -33,7 +36,8 @@ export default function Index() {
     // 取得優惠券資料
     const fetchCoupons = async () => {
         if (!userId) {
-            setError('未找到使用者資訊，請先登入');
+            // setError('未找到使用者資訊，請先登入');
+            setShowModal(true)
             setLoading(false);
             return;
         }
@@ -131,17 +135,32 @@ export default function Index() {
                                     {currentInvalidCoupons.length === 0 ? (
                                         <p>沒有過期的優惠券</p>
                                     ) : (
-                                        currentInvalidCoupons.map(coupon => (
-                                            <CouponEnd
-                                                key={coupon.id}
-                                                status="已無效"
-                                                img={brandImageMap[coupon.brand_id]}
-                                                name={coupon.name}
-                                                discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`}
-                                                condition={coupon.minimum_amount}
-                                                expiration={coupon.end_date}
-                                            />
-                                        ))
+                                        currentInvalidCoupons.map(coupon => {
+                                            if (coupon.brand_id === 6) {
+                                                // 如果 coupon.brand 是 6，顯示 CouponEndAll
+                                                return <CouponEndAll
+                                                    key={coupon.id}
+                                                    id={coupon.id}
+                                                    name={coupon.name}
+                                                    discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                                                    condition={coupon.minimum_amount}
+                                                    expiration={coupon.end_date}
+                                                />;
+                                            } else {
+                                                // 否則顯示普通的 CouponEnd
+                                                return (
+                                                    <CouponEnd
+                                                        key={coupon.id}
+                                                        status="已無效"
+                                                        img={brandImageMap[coupon.brand_id]}
+                                                        name={coupon.name}
+                                                        discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                                                        condition={coupon.minimum_amount}
+                                                        expiration={coupon.end_date}
+                                                    />
+                                                );
+                                            }
+                                        })
                                     )}
                                 </div>
 
@@ -177,17 +196,32 @@ export default function Index() {
                                     {currentUsedCoupons.length === 0 ? (
                                         <p>沒有已使用的優惠券</p>
                                     ) : (
-                                        currentUsedCoupons.map(coupon => (
-                                            <CouponEnd
-                                                key={coupon.id}
-                                                status="已使用"
-                                                img={brandImageMap[coupon.brand_id]}
-                                                name={coupon.name}
-                                                discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`}
-                                                condition={coupon.minimum_amount}
-                                                expiration={coupon.end_date}
-                                            />
-                                        ))
+                                        currentUsedCoupons.map(coupon => {
+                                            if (coupon.brand === 6) {
+                                                // 如果 coupon.brand 是 6，顯示 CouponEndAll
+                                                return <CouponEndAll
+                                                    key={coupon.id}
+                                                    id={coupon.id}
+                                                    name={coupon.name}
+                                                    discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                                                    condition={coupon.minimum_amount}
+                                                    expiration={coupon.end_date}
+                                                />;
+                                            } else {
+                                                // 否則顯示普通的 CouponEnd
+                                                return (
+                                                    <CouponEnd
+                                                        key={coupon.id}
+                                                        status="已使用"
+                                                        img={brandImageMap[coupon.brand_id]}
+                                                        name={coupon.name}
+                                                        discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                                                        condition={coupon.minimum_amount}
+                                                        expiration={coupon.end_date}
+                                                    />
+                                                );
+                                            }
+                                        })
                                     )}
                                 </div>
 
@@ -218,6 +252,18 @@ export default function Index() {
                             </Tab.Pane>
                         </Tab.Content>
                     </Tab.Container>
+                )}
+                {showModal && (
+                    <ModalConfirm
+                        title="尚未登入會員"
+                        content={`是否前往登入?`}
+                        btnConfirm="前往登入"
+                        ConfirmFn={() => {
+                            router.push('/user/login/user')
+                        }}
+                        show={showModal}
+                        handleClose={() => setShowModal(false)}
+                    />
                 )}
             </UserCouponSection>
         </>

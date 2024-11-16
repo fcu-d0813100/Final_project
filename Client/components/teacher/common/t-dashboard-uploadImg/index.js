@@ -3,12 +3,20 @@ import styles from '@/components/teacher/common/t-dashboard-uploadImg/uploadImg.
 import { PiPlus } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
-export default function UploadImg({ width, height, bigText, smText, name, onFileChange }) {
+export default function UploadImg({
+  width,
+  height,
+  bigText,
+  smText,
+  name,
+  onFileChange,
+  value,
+  initialImage, // 新增屬性來接收圖片URL
+}) {
   const [preview, setPreview] = useState(null)
   const [uniqueId, setUniqueId] = useState('')
 
-  // 動態生成 ID 碼
-  // 確保在客戶端渲染時才生成唯一的 ID，避免 SSR 錯誤
+  // 動態生成 ID 碼，確保在客戶端渲染時才生成唯一的 ID，避免 SSR 錯誤
   useEffect(() => {
     setUniqueId(`fileInput-${Math.random().toString(36)}`)
   }, [])
@@ -30,52 +38,59 @@ export default function UploadImg({ width, height, bigText, smText, name, onFile
     document.getElementById(uniqueId).click()
   }
 
-  return (
-    <>
-      <div
-        className={styles.uploadCover}
-        style={{ width: `${width}`, height: `${height}` }}
-      >
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-          id={uniqueId} // 使用動態 ID
-          name={name}
+  const renderPreviewContent = () => {
+    if (preview || initialImage) {
+      return (
+        <img
+          src={preview || initialImage}
+          alt=""
+          className={styles.previewImage}
         />
-        <label
-          htmlFor={uniqueId} // 確保 label 對應動態 ID
-          className="text-center"
-          style={{ width: `${width}`, height: `${height}` }}
-        >
-          {preview ? (
-            <img src={preview} alt="預覽" className={styles.previewImage} />
-          ) : (
-            <div className={styles.picUploadText}>
-              <div>
-                <PiPlus className={styles.plus} />
-                <p className={`h4 mt-3`}>
-                  {bigText}
-                  <br /> <span className="p">({smText})</span>
-                </p>
-              </div>
-            </div>
-          )}
-        </label>
+      )
+    }
 
-        {preview && (
-          <>
-            <button
-              type="button"
-              className={`${styles.reSelectImg} btn-outline h6`}
-              onClick={handleReSelect}
-            >
-              重新選取
-            </button>
-          </>
-        )}
+    return (
+      <div className={styles.picUploadText}>
+        <div>
+          <PiPlus className={styles.plus} />
+          <p className="h4 mt-3">
+            {bigText}
+            <br />
+            <span className="p">({smText})</span>
+          </p>
+        </div>
       </div>
-    </>
+    )
+  }
+
+  return (
+    <div className={styles.uploadCover} style={{ width, height }}>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+        id={uniqueId} // 使用動態 ID
+        name={name}
+        value={value}
+      />
+      <label
+        htmlFor={uniqueId} // 確保 label 對應動態 ID
+        className="text-center"
+        style={{ width, height }}
+      >
+        {renderPreviewContent()}
+      </label>
+
+      {(preview || initialImage) && (
+        <button
+          type="button"
+          className={`${styles.reSelectImg} btn-outline h6`}
+          onClick={handleReSelect}
+        >
+          重新選取
+        </button>
+      )}
+    </div>
   )
 }

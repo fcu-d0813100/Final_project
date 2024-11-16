@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import Stars from "react-stars";

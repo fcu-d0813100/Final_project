@@ -14,7 +14,15 @@ export default function SelectInput({
   onChange,
 }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(value || initName) // 支援預設值或初始顯示文字
+  const [selectedOption, setSelectedOption] = useState(initName)
+
+  // 當 value 改變時，更新選項顯示名稱，但只在 value 有實際選擇值時更新
+  useEffect(() => {
+    if (value) {
+      const matchedItem = items.find((item) => item.value === value)
+      setSelectedOption(matchedItem ? matchedItem.option : initName)
+    }
+  }, [value, items, initName])
 
   // 切換下拉選單的顯示狀態
   const toggleDropdown = () => setIsOpen(!isOpen)
@@ -24,6 +32,7 @@ export default function SelectInput({
     setSelectedOption(option)
     setIsOpen(false) // 選取後關閉下拉選單
     if (onChange) {
+      console.log('Option clicked:', option, 'Value:', value)
       onChange({ target: { name: forText, value: value } }) // 呼叫 onChange，傳遞選項
     }
   }
@@ -35,12 +44,14 @@ export default function SelectInput({
         <span> {titleEn}</span>
       </label>
 
-      <a
+      <button
+        type="button"
         className="d-flex align-items-center justify-content-between"
         onClick={toggleDropdown}
       >
-        {selectedOption} <PiCaretDown />
-      </a>
+        {selectedOption || initName} {/* 當沒有選擇時顯示 initName */}{' '}
+        <PiCaretDown />
+      </button>
 
       {isOpen && (
         <ul className={styles.dropdownMenu}>

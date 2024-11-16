@@ -77,6 +77,7 @@ export default function WorkshopDetail() {
         typeId: tworkshop.type_id,
         classId: selectedTime.key,
         price: tworkshop.price,
+        cover: tworkshop.img_cover,
       })
 
       addToCartToast()

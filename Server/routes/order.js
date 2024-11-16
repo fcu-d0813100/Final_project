@@ -28,8 +28,9 @@ router.get('/:userId', async function (req, res, next) {
     '"img_cover":"', IFNULL(w.img_cover, ''), '",',
     '"type":"', IFNULL(wt.type, ''), '",',
     '"teachers_name":"', IFNULL(t.name, ''), '",',
-    '"registration_start":"', IFNULL(w.registration_start, ''), '",',
-    '"registration_end":"', IFNULL(w.registration_end, ''), '",',
+    '"ws_date":"', IFNULL(workshop_time.date, ''), '",',
+    '"start_time":"', IFNULL(workshop_time.start_time, ''), '",',
+    '"end_time":"', IFNULL(workshop_time.end_time, ''), '",',
     '"workshop_price":', IFNULL(w.price, '0'),
     '}'
         )
@@ -43,7 +44,9 @@ LEFT JOIN
 LEFT JOIN 
     color c ON oi.color_id = c.id
 LEFT JOIN 
-    workshop w ON oi.workshop_id = w.id
+    workshop_time ON oi.workshop_id = workshop_time.id
+LEFT JOIN 
+    workshop w ON workshop_time.workshop_id = w.id
 JOIN 
     user u ON o.user_id = u.id
 LEFT JOIN 
@@ -75,10 +78,10 @@ GROUP BY
 })
 
 router.get('/detail/:orderId', async function (req, res, next) {
-  const orderId = req.params.orderId
-  console.log('Order ID:', orderId)
-  try {
-    const sqlSelect = `SELECT 
+    const orderId = req.params.orderId;
+    console.log('Order ID:', orderId);
+    try {
+        const sqlSelect = `SELECT 
     o.id AS order_id,
     o.order_number,
     o.total_amount,
@@ -99,6 +102,7 @@ router.get('/detail/:orderId', async function (req, res, next) {
     '"name":"', IFNULL(b.name, ''), '",',
     '"product_name":"', IFNULL(p.product_name, ''), '",',
     '"color":"', IFNULL(c.color, 'null'), '",',
+    '"color_id":"', IFNULL(c.id, 'null'), '",',
     '"color_name":"', IFNULL(c.color_name, 'null'), '",',
     '"stock":"', IFNULL(c.stock, 'null'), '",',
     '"quantity":', oi.quantity, ',',
@@ -108,8 +112,9 @@ router.get('/detail/:orderId', async function (req, res, next) {
     '"img_cover":"', IFNULL(w.img_cover, ''), '",',
     '"type":"', IFNULL(wt.type, ''), '",',
     '"teachers_name":"', IFNULL(t.name, ''), '",',
-    '"registration_start":"', IFNULL(w.registration_start, ''), '",',
-    '"registration_end":"', IFNULL(w.registration_end, ''), '",',
+    '"ws_date":"', IFNULL(workshop_time.date, ''), '",',
+    '"start_time":"', IFNULL(workshop_time.start_time, ''), '",',
+    '"end_time":"', IFNULL(workshop_time.end_time, ''), '",',
     '"workshop_price":', IFNULL(w.price, '0'),
     '}'
         )
@@ -123,7 +128,9 @@ LEFT JOIN
 LEFT JOIN 
     color c ON oi.color_id = c.id
 LEFT JOIN 
-    workshop w ON oi.workshop_id = w.id
+    workshop_time ON oi.workshop_id = workshop_time.id
+LEFT JOIN 
+    workshop w ON workshop_time.workshop_id = w.id
 JOIN 
     user u ON o.user_id = u.id
 JOIN
