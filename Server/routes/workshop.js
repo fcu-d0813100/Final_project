@@ -27,7 +27,7 @@ const upload = multer({ storage: storage })
 router.use('/workshop', express.static(path.join(__dirname, 'public/workshop')))
 
 router.get('/', async function (req, res, next) {
-  const { search = '', order, min = '', max = '' } = req.query
+  const { search = '', order, min = '', max = '', type_id } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -37,7 +37,6 @@ router.get('/', async function (req, res, next) {
     teachers.id AS teacher_id,
     teachers.name AS teacher_name,
     GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
-    workshop_time.date,
     workshop.registration_start,
     workshop.registration_end,
     workshop.isUpload,
@@ -57,9 +56,37 @@ router.get('/', async function (req, res, next) {
      AND workshop.isUpload = 1
 `
 
-  // 若 min 和 max 存在，則加入日期範圍篩選條件
-  if (min && max) {
-    sqlSelect += ` AND workshop_time.date BETWEEN ? AND ?`
+  // 查詢預設的日期範圍
+  let dateRange = { min, max }
+  if (!min || !max) {
+    const dateQuery = `
+        SELECT 
+          MIN(workshop_time.date) AS minDate,
+          MAX(workshop_time.date) AS maxDate
+        FROM 
+          workshop
+        JOIN
+          workshop_time ON workshop_time.workshop_id = workshop.id
+        WHERE
+          workshop.valid = 1 AND workshop.isUpload = 1
+      `
+    const [dateResult] = await db.query(dateQuery)
+    if (!min) dateRange.min = dateResult.minDate
+    if (!max) dateRange.max = dateResult.maxDate
+  }
+
+  // 動態加入篩選條件
+  if (dateRange.min && dateRange.max) {
+    sqlSelect += ` AND workshop_time.date BETWEEN '${min}' AND '${max}'`
+  } else if (dateRange.min) {
+    sqlSelect += ` AND workshop_time.date >= '${min}'`
+  } else if (dateRange.max) {
+    sqlSelect += ` AND workshop_time.date <= '${max}'`
+  }
+
+  // 若有選擇 type_id，則加上 type_id 篩選條件
+  if (type_id) {
+    sqlSelect += ` AND workshop.type_id = ${type_id}`
   }
 
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
@@ -75,8 +102,10 @@ router.get('/', async function (req, res, next) {
 
   // 設置查詢參數
   const queryParams = [`%${search}%`, `%${search}%`, `%${search}%`]
-  if (min && max) {
-    queryParams.push(min, max) // 添加 min 和 max 到查詢參數
+
+  // 如果有 type_id 參數，將其加入 queryParams
+  if (type_id) {
+    queryParams.push(type_id)
   }
 
   const result = await db
@@ -85,6 +114,7 @@ router.get('/', async function (req, res, next) {
   res.json(result)
   //console.log(result)
 })
+
 router.get('/myWorkshop', authenticate, async function (req, res, next) {
   const id = req.user.id
   const { search = '', order } = req.query
