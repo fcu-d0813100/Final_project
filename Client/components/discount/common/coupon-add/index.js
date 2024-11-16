@@ -3,6 +3,7 @@ import styles from './index.module.scss';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/router';
 import ModalConfirm from '@/components/shared/modal-confirm'
+import toast, { Toaster } from 'react-hot-toast';
 
 const Coupon = ({
     img,
@@ -74,7 +75,18 @@ const Coupon = ({
             const data = await response.json();
             if (data.success) {
                 setIsClaimed(true);
-                alert(data.message || '優惠券領取成功！');
+                // alert(data.message || '優惠券領取成功！');
+                toast.success('優惠券領取成功！', {
+                    style: {
+                        border: '1.2px solid #90957a',
+                        padding: '12px 40px',
+                        color: '#626553',
+                    },
+                    iconTheme: {
+                        primary: '#626553',
+                        secondary: '#fff',
+                    },
+                });
             } else {
                 setError(data.error || '領取優惠券失敗，請稍後再試。');
             }
@@ -123,5 +135,6 @@ const Coupon = ({
         </div>
     );
 };
+<Toaster />
 
 export default Coupon;

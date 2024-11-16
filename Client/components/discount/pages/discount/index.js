@@ -32,44 +32,46 @@ export default function Discount() {
   return (
     <>
       <Carousels />
-      <div className={`container-sm ${styles.discountPage}`}>
-        <div className={styles.nav}>
-          <Link href="/" className="text-decoration-none">
-            首頁
-          </Link> / 優惠活動
-        </div>
-        <section className={styles["discount-group"]}>
-          <Link className={styles.discount} href="/discount/nars">
-            <img className={styles.img} src='/discount/nars-discount.svg' alt="NARS 優惠" />
-          </Link>
-          <Link className={styles.discount} href="/discount/nars2">
-            <img className={styles.img} src='/discount/nars-discount2.svg' alt="NARS 優惠" />
-          </Link>
-          <Link className={styles.discount} href="/discount/ysl">
-            <img className={styles.img} src='/discount/ysl-discount.svg' alt="YSL 優惠" />
-          </Link>
-          <Link className={styles.discount} href="/discount/bb">
-            <img className={styles.img} src='/discount/bb-discount.svg' alt="BB 優惠" />
-          </Link>
-        </section>
+      <div className={styles.main}>
+        <div className={`container-sm ${styles.discountPage}`}>
+          <div className={styles.nav}>
+            <Link href="/" className="text-decoration-none">
+              首頁
+            </Link> / 優惠活動
+          </div>
+          <section className={styles["discount-group"]}>
+            <Link className={styles.discount} href="/discount/nars">
+              <img className={styles.img} src='/discount/nars-discount.svg' alt="NARS 優惠" />
+            </Link>
+            <Link className={styles.discount} href="/discount/nars2">
+              <img className={styles.img} src='/discount/nars-discount2.svg' alt="NARS 優惠" />
+            </Link>
+            <Link className={styles.discount} href="/discount/ysl">
+              <img className={styles.img} src='/discount/ysl-discount.svg' alt="YSL 優惠" />
+            </Link>
+            <Link className={styles.discount} href="/discount/bb">
+              <img className={styles.img} src='/discount/bb-discount.svg' alt="BB 優惠" />
+            </Link>
+          </section>
 
-        <div className={`${styles.carouselContainer}`}>
-          <Slider {...settings}>
-            {images.map((image, idx) => (
-              <div key={idx} className={styles.carouselItem}>
-                <Link href={image.link}>
-                  <Image
-                    src={image.src}
-                    width={390}
-                    height={442}
-                    style={{ width: '100%', height: 'auto' }}
-                    alt={image.alt}
-                    className="d-block"
-                  />
-                </Link>
-              </div>
-            ))}
-          </Slider>
+          <div className={`${styles.carouselContainer}`}>
+            <Slider {...settings}>
+              {images.map((image, idx) => (
+                <div key={idx} className={styles.carouselItem}>
+                  <Link href={image.link}>
+                    <Image
+                      src={image.src}
+                      width={390}
+                      height={442}
+                      style={{ width: '100%', height: 'auto' }}
+                      alt={image.alt}
+                      className="d-block"
+                    />
+                  </Link>
+                </div>
+              ))}
+            </Slider>
+          </div>
         </div>
         <div className={`d-flex  justify-content-end ${styles.point}`}>
           <Link href={'/discount/game'}>

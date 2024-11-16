@@ -15,24 +15,6 @@ export default function ItemDiscount({
     originalPrice,
     discountedPrice = 0
 }) {
-    // const handleEditClick = (event, productId, colorId, mainimage, name, productName, color_name, color) => {
-    //     // 阻止 Link 的預設行為，這樣可以先執行 handleEditClick，再進行頁面跳轉
-    //     event.preventDefault();
-
-    //     // 儲存資料到 localStorage
-    //     const productData = {
-    //         productId: productId,
-    //         colorId: colorId,
-    //         mainimage: mainimage,
-    //         brand: name,
-    //         product_name: productName,
-    //         color_name: color_name,
-    //         color: color
-    //     };
-    //     localStorage.setItem('productData', JSON.stringify(productData));
-    //     window.location.href = `/user/order/detail/comment`;
-    // };
-
 
     return (
         <div className={`${styles.item} d-flex justify-content-between align-items-center mb-2`}>
@@ -61,9 +43,25 @@ export default function ItemDiscount({
             <div className={`${styles['sub-total']} text-end h6`}>
                 <del className={`p ${styles.del}`}>NT$ {originalPrice}
                 </del> NT$ {discountedPrice}
-
-
-                <button className={`${styles.btn} p mt-2`} onClick={(event) => handleEditClick(event, productId, colorId, imageSrc, brand, productName, color_name, color)}>評論</button>
+                
+                <Link
+                    href={{
+                        pathname: '/user/order/detail/comment',
+                        query: {
+                            orderId: orderId,
+                            productName: productName,
+                            color: color,
+                            brand: brand,
+                            imageSrc: imageSrc,
+                            productId: productId,
+                            colorId: colorId,
+                            color_name: color_name,
+                            quantity: quantity
+                        }
+                    }}
+                >
+                    <button className={`${styles.btn} p mt-2`}>評論</button>
+                </Link>
             </div>
         </div>
     );
