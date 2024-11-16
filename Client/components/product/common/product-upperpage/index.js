@@ -164,7 +164,12 @@ const selectedProductImages = useMemo(() => {
     }
   };
   
-  
+  // 每次當 ProductPage 組件加載時，它會檢查 URL 中的哈希值，如果哈希值是 #reviews，它就會滾動到評論區域
+  useEffect(() => {
+    if (window.location.hash === '#reviews') {
+      document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
 
   return (
     <div className={styles['product-page']}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss'; // 確保引入正確的樣式
 import Link from 'next/link';
@@ -8,10 +8,23 @@ export default function ItemDiscount({
     brand = "",
     productName = "",
     color = "",
+    color_name = "",
     quantity = 0,
     originalPrice,
-    discountedPrice = 0
+    discountedPrice = 0,
+    productId,
+    colorId,
 }) {
+    const [orderId, setOrderId] = useState(null);
+
+    useEffect(() => {
+        // 從 localStorage 獲取 orderId
+        const storedOrderId = localStorage.getItem('orderId');
+        if (storedOrderId) {
+            setOrderId(storedOrderId);
+        }
+    }, []);
+
     return (
         <div className={`${styles.item} d-flex justify-content-between align-items-center mb-2`}>
             <div className={`${styles['item-left']} d-flex justify-content-between align-items-center`}>
@@ -43,10 +56,15 @@ export default function ItemDiscount({
                     href={{
                         pathname: '/user/order/detail/comment',
                         query: {
-                            productName: productName,  // 根據需要傳遞的參數
+                            orderId: orderId,
+                            productName: productName,  
                             color: color,
                             brand: brand,
                             imageSrc: imageSrc,
+                            productId: productId,
+                            colorId: colorId,
+                            color_name: color_name,
+                            quantity: quantity
                         }
                     }}
                     >

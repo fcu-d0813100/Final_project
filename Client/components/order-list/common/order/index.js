@@ -80,6 +80,7 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                         <div key={item.id || index}>
                             {item.product_id && (
                                 <Item
+                                    orderId={orderId}
                                     imageSrc={`/product/mainimage/${item.mainimage}`}
                                     brand={item.name}
                                     productName={item.product_name}
