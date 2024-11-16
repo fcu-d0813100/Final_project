@@ -103,7 +103,9 @@ export default function ActivityDet() {
           <p className={`${Styles['h1']} ${Styles['CHN_name']}`}>
             {activityData.CHN_name}
           </p>
-          <p className={Styles['p']}>{activityData.ENG_name}</p>
+          <p className={`${Styles['p']} ${Styles['ENG_name']}`}>
+            {activityData.ENG_name}
+          </p>
           <p className={Styles['textContent']}>{activityData.description}</p>
         </div>
         <div className={Styles['sec2']}>

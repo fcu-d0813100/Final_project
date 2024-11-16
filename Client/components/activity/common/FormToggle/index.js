@@ -3,6 +3,7 @@ import Styles from '@/components/activity/page/activity-det/index.module.scss'
 import { useAuth } from '@/hooks/use-auth'
 import LoginModal from '@/components/shared/modal-confirm'
 import { useRouter } from 'next/router'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -20,6 +21,9 @@ export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
   const router = useRouter()
   const userId = auth.userData.id
 
+  useEffect(() => {
+    console.log('使用者 ID:', userId) // 印出 userId
+  }, [userId])
   const toggleForm = () => {
     if (userId === 0) {
       setShowLoginModal(true) // 如果 userId 是 0，顯示登入模態框
@@ -47,18 +51,73 @@ export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
     const { name, phone, date, people, remark } = formData
 
     if (!name || !phone || !date || people === '請選擇人數') {
-      alert('請填寫所有必填字段')
+      // alert('請填寫所有必填字段')
+      toast.error(' 必填欄位不能為空', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
       return
     }
 
     // 電話號碼正規驗證
     if (!taiwanPhoneRegex.test(phone)) {
-      alert('請輸入有效的台灣電話號碼')
-      console.log('電話號碼驗證失敗:', phone) // 調試用，檢查電話號碼
+      // alert('請輸入有效的台灣電話號碼')
+      toast.error(' 請輸入有效的電話號碼', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+      // console.log('電話號碼驗證失敗:', phone)
       return
     }
 
     try {
+      const { id } = router.query
+      // 從後端取得活動的 currentREG 和 maxREG
+      const activityResponse = await fetch(
+        `http://localhost:3005/api/activity/id?id=${id}`
+      )
+      if (!activityResponse.ok) {
+        throw new Error('無法獲取活動資訊')
+      }
+      const activityData = await activityResponse.json()
+
+      const currentREG = Number(activityData.currentREG)
+      const maxREG = Number(activityData.maxREG)
+      const applicantAmount = Number(people)
+
+      // 檢查報名是否超過限制
+      if (currentREG + applicantAmount > maxREG) {
+        // alert('報名失敗：報名人數已達上限')
+        toast.error(' 報名失敗：報名人數已達上限', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+
+        return
+      }
+
+      // 發送報名請求
       const response = await fetch(
         `http://localhost:3005/api/activity/activity-reg/${userId}`,
         {
@@ -80,16 +139,49 @@ export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
       )
 
       if (response.ok) {
-        alert('報名成功！')
+        // alert('報名成功！')
+        toast.success('報名成功！', {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#626553',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
         resetForm()
         setIsExpanded(false)
       } else {
         const errorData = await response.json()
-        alert(`報名失敗：${errorData.message || '請稍後再試'}`)
+        // alert(`報名失敗：${errorData.message || '請稍後再試'}`)
+        toast.error(`報名失敗：${errorData.message || '請稍後再試'}`, {
+          style: {
+            border: '1.2px solid #90957a',
+            padding: '12px 40px',
+            color: '#963827',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
       }
     } catch (error) {
       console.error('報名失敗：', error)
-      alert('報名失敗，請稍後再試')
+      // alert('報名失敗，請稍後再試')
+      toast.error(`報名失敗`, {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
@@ -107,7 +199,7 @@ export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
         {isExpanded && (
           <>
             <p className={Styles['form-title']}>活動報名</p>
-            <div className="row justify-content-center">
+            <div className="row justify-content-center gap-4">
               <div className="col-md-5 leftform mb-5">
                 <div className="formGroup mb-3">
                   <div className="d-flex">
@@ -185,7 +277,7 @@ export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
                   </div>
                 </div>
               </div>
-              <div className="col-md-5 rightform ms-5 ">
+              <div className="col-md-5 rightform  ">
                 {' '}
                 <div className="formGroup mb-3">
                   <label htmlFor="remark">備註</label>
