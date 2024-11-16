@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
 import ToastSuccess from '@/components/shared/toast-success/index'
 import { useAuth } from '@/hooks/use-auth'
+import Confrim from '@/components/shared/modal-delete/index'
 
 export default function CartList() {
   //----------吐司訊息
@@ -22,19 +23,28 @@ export default function CartList() {
     functionName: 'del',
   })
 
-  //刪除商品
-  const delPnotify = () =>
-    toast.success('刪除1件商品', {
-      style: {
-        border: '1.2px solid #963827',
-        padding: '12px 40px',
-        color: '#963827',
-      },
-      iconTheme: {
-        primary: '#963827',
-        secondary: '#fff',
-      },
-    })
+  //---------刪除商品的彈窗訊息
+  const [showModal, setShowModal] = useState(false)
+
+  //商品的部分
+  const [productToDelete, setProductToDelete] = useState(null)
+  const handleDeleteConfirmP = () => {
+    if (productToDelete) {
+      onRemoveProduct(productToDelete.product_id, productToDelete.color)
+    }
+    setProductToDelete(null) // 清空選中的商品
+    setShowModal(false) // 關閉彈窗
+  }
+
+  //課程的部分
+  const [workshopToDelete, setWorkshopToDelete] = useState(null)
+  const handleDeleteConfirmW = () => {
+    if (workshopToDelete) {
+      onRemoveWorkshop(workshopToDelete.id)
+    }
+    setWorkshopToDelete(null) // 清空選中的課程
+    setShowModal(false) // 關閉彈窗
+  }
 
   //-----------按鈕路由
   const router = useRouter()
@@ -81,6 +91,19 @@ export default function CartList() {
 
   return (
     <>
+      {/* 彈窗訊息 */}
+      {showModal && (
+        <Confrim
+          title="移除商品"
+          content="您即將移除此商品，操作無法復原。確定要執行此操作嗎？"
+          btnConfirm="確定刪除"
+          btnCancel="取消"
+          ConfirmFn={handleDeleteConfirmP}
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )}
+
       <div className="container">
         <div className="row">
           {/* 步驟 */}
@@ -151,12 +174,9 @@ export default function CartList() {
                             const nextPqty = product.qty - 1
                             if (nextPqty >= 1) del()
                             if (nextPqty <= 0) {
-                              if (confirm('你確定要移除此商品嗎？')) {
-                                onRemoveProduct(
-                                  product.product_id,
-                                  product.color
-                                )
-                              }
+                              // -----彈窗移除商品
+                              setProductToDelete(product)
+                              setShowModal(true)
                             } else {
                               onDecreaseProduct(
                                 product.product_id,
@@ -197,11 +217,13 @@ export default function CartList() {
                         </div>
                       </div>
 
+                      {/* 垃圾桶按鈕 */}
                       <div className={style.trash}>
                         <button
                           type="button"
                           onClick={() => {
-                            onRemoveProduct(product.product_id, product.color)
+                            setProductToDelete(product) // 設置要刪除的商品
+                            setShowModal(true) // 打開彈窗
                           }}
                         >
                           <Trash size={20} className="d-md-none" />
@@ -274,9 +296,8 @@ export default function CartList() {
                             const nextWqty = workshop.qty - 1
                             if (nextWqty >= 1) del()
                             if (nextWqty <= 0) {
-                              if (confirm('你確定要移除此商品嗎？')) {
-                                onRemoveWorkshop(workshop.id)
-                              }
+                              setWorkshopToDelete(workshop)
+                              setShowModal(true)
                             } else {
                               onDecreaseWorkshop(workshop.id)
                             }
@@ -310,7 +331,10 @@ export default function CartList() {
                         <button
                           type="button"
                           className={style.trash}
-                          onClick={() => onRemoveWorkshop(workshop.id)}
+                          onClick={() => {
+                            setWorkshopToDelete(workshop) // 設置要刪除的課程
+                            setShowModal(true) // 顯示彈窗
+                          }}
                         >
                           <Trash size={20} className="d-md-none" />
                           <Trash size={28} className="d-none d-md-block" />
