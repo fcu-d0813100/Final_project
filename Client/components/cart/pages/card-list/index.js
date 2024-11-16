@@ -91,8 +91,15 @@ export default function CartList() {
               src="/cart/step1.svg"
               alt="Step1"
               width={1400}
-              height={300}
-              className="img-fluid d-none d-lg-block"
+              height={500}
+              className="img-fluid d-none d-md-block"
+            />
+            <Image
+              src="/cart/RWDstep.1.svg"
+              alt="Step1"
+              width={200}
+              height={400}
+              className="img-fluid d-md-none -block"
             />
           </div>
 
@@ -129,7 +136,9 @@ export default function CartList() {
                               </div>
                             )}
                           <div className="ps">{product.brand}</div>
-                          <div className="h6 mb-3">{product.product_name}</div>
+                          <div className={`h6 mb-1 ${style['product-name']}`}>
+                            {product.product_name}
+                          </div>
                           <div className={style['sub_text']}>
                             顏色：{product.color_name}
                           </div>
@@ -197,7 +206,8 @@ export default function CartList() {
                             onRemoveProduct(product.product_id, product.color)
                           }}
                         >
-                          <Trash size={28} />
+                          <Trash size={20} className="d-md-none" />
+                          <Trash size={28} className="d-none d-md-block" />
                         </button>
                       </div>
                     </div>
@@ -247,7 +257,9 @@ export default function CartList() {
                           <div className={`ps mb-1 ${style['sub_text']}`}>
                             {workshop.teacher}
                           </div>
-                          <div className="h6 mb-3">{workshop.name}</div>
+                          <div className={`h6 mb-1 ${style['product-name']}`}>
+                            {workshop.name}
+                          </div>
                           <div className="ps">
                             {workshop.date}
                             <span className={`ms-2  ${style['sub_text']}`}>
@@ -302,7 +314,8 @@ export default function CartList() {
                           className={style.trash}
                           onClick={() => onRemoveWorkshop(workshop.id)}
                         >
-                          <Trash size={28} />
+                          <Trash size={20} className="d-md-none" />
+                          <Trash size={28} className="d-none d-md-block" />
                         </button>
                       </div>
                     </div>
@@ -323,7 +336,7 @@ export default function CartList() {
               <div className={style.sticky}>
                 <CheckoutBox />
                 <div
-                  className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
+                  className={` justify-content-between d-xl-flex ${style['checkout_btn']}`}
                 >
                   <button
                     className="btn-primary"
