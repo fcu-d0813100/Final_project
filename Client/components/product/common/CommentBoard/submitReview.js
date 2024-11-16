@@ -32,6 +32,8 @@ export const submitReview = async (productId, colorId, reviewData, mediaFiles) =
     formData.append('color_id', colorId);
     formData.append('rating', Number(reviewData.rating) || 0);
     formData.append('comment', reviewData.comment || '');
+    formData.append('order_id', reviewData.order_id); // 確保包含 order_id
+    formData.append('user_id', reviewData.user_id); // 確保包含 user_id
      // 检查 FormData 内容
      console.log("FormData inside submitReview before adding media files:");
      for (let [key, value] of formData.entries()) {

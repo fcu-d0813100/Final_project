@@ -28,15 +28,18 @@ import CommentForm from '@/components/product/common/comment';
 
 export default function Explore(props) {
     const router = useRouter();
-    const { productId, colorId, productName, brand, color, imageSrc } = router.query;
+    const { orderId, quantity, productId, colorId, color_name, productName, brand, color, imageSrc } = router.query;
 
     console.log("Router Query Params:", router.query);
 
     return (
         <UserSection titleCN="商品評論" titleENG="Comment">
             <CommentForm 
+                orderId={orderId}
+                quantity={quantity}
                 productId={productId} 
-                colorId={colorId} 
+                colorId={colorId}
+                color_name={color_name}
                 productName={productName} 
                 brand={brand} 
                 color={color} 
