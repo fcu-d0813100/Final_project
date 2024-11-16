@@ -63,10 +63,19 @@ export default function Index(props) {
       setEndedCoupons(ended);
       setUpcomingCoupons(upcoming); // 設置即將開始的優惠券
 
-      toast.success("優惠券已成功加載！");
+      // toast.success("優惠券已成功加載！");
 
     } catch (error) {
-      toast.error(`獲取優惠券失敗：${error.message}`); // 顯示錯誤提示
+      toast.error(`獲取優惠券失敗：${error.message}`
+        ,{style:{
+          border: '1.2px solid #963827',
+          padding: '12px 40px',
+          color: '#963827',
+        },iconTheme:{
+          primary:'#963827',
+          secondary:'#fff'
+        }
+      }); // 顯示錯誤提示
     } finally {
       setLoading(false);
     }

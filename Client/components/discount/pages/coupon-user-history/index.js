@@ -5,6 +5,7 @@ import CouponEnd from '@/components/discount/common/coupon-end';
 import CouponEndAll from '@/components/discount/common/coupon-end-all'
 import { useAuth } from '@/hooks/use-auth';
 import styles from './index.module.scss';
+import ModalConfirm from '@/components/shared/modal-confirm'
 
 // 品牌圖片映射
 const brandImageMap = {
@@ -34,7 +35,8 @@ export default function Index() {
     // 取得優惠券資料
     const fetchCoupons = async () => {
         if (!userId) {
-            setError('未找到使用者資訊，請先登入');
+            // setError('未找到使用者資訊，請先登入');
+            checkIfCouponClaimed();
             setLoading(false);
             return;
         }
@@ -251,6 +253,19 @@ export default function Index() {
                     </Tab.Container>
                 )}
             </UserCouponSection>
+
+            {showModal && (
+                <ModalConfirm
+                    title="尚未登入會員"
+                    content={`是否前往登入?`}
+                    btnConfirm="前往登入"
+                    ConfirmFn={() => {
+                        router.push('/user/login/user')
+                    }}
+                    show={showModal}
+                    handleClose={() => setShowModal(false)}
+                />
+            )}
         </>
     );
 }

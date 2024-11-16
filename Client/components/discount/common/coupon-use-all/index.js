@@ -30,7 +30,7 @@ const Coupon = ({
 
                 {/* 这里直接绑定 onClick 处理 edit 操作 */}
                 <Link
-                    href="/cart"  // 不暴露 id
+                    href="/product/product-list"  // 不暴露 id
                     className={`btn ${styles['btn-outline-light']} d-flex justify-content-center align-items-center btn-primary p text-decoration-none`}
                     onClick={handleCouponUse} 
                 >

@@ -3,6 +3,8 @@ import styles from './index.module.scss';
 import Modal from './modal'; // 引入 Modal 組件
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/router';
+import ModalConfirm from '@/components/shared/modal-confirm'
+import toast, { Toaster } from 'react-hot-toast';
 
 const WheelOfFortune = () => {
   const [spinning, setSpinning] = useState(false); // 控制轉盤是否在旋轉
@@ -77,16 +79,27 @@ const WheelOfFortune = () => {
 
     // 檢查用戶是否已登入
     if (!auth.isAuth) {
-      alert('請先登入會員');
+     // 如果用戶未登入，顯示登入提示 Modal
+     setShowModal(true);
       return; // 停止執行，避免未登入的用戶進行旋轉
     }
 
+ 
     // 檢查用戶今天是否已經玩過遊戲
     const today = new Date().toISOString().slice(0, 10); // 取得今天的日期（YYYY-MM-DD）
     const lastPlayedDate = localStorage.getItem('lastPlayedDate'); // 讀取 localStorage 中的最後遊玩日期
 
     if (lastPlayedDate === today) {
-      alert('今天您已經玩過了，每天只能玩一次。');
+      toast.error('每天只能玩一次喔!', {
+        style: {
+          border: '1.2px solid #963827',
+          padding: '12px 40px',
+          color: '#963827',
+        }, iconTheme: {
+          primary: '#963827',
+          secondary: '#fff'
+        }
+      });
       router.push('/discount'); // 跳轉到首頁
       return; // 如果今天已經玩過，則停止執行
     }
@@ -218,7 +231,7 @@ const WheelOfFortune = () => {
           <ul>
             {playHistory.map((entry, index) => (
               <li className="h6 py-1" key={index}>
-                {entry.date}: {entry.coupon.code} - 
+                {entry.date}: {entry.coupon.code} -
                 {entry.coupon.discount_value > 1
                   ? `折 ${entry.coupon.discount_value}元`
                   : `${((1 - entry.coupon.discount_value) * 100).toFixed(0)}% OFF`}
@@ -227,8 +240,24 @@ const WheelOfFortune = () => {
           </ul>
         </div>
       )}
+
+      {
+        !auth.isAuth && showModal && (
+          <ModalConfirm
+            title="尚未登入會員"
+            content={`是否前往登入?`}
+            btnConfirm="前往登入"
+            ConfirmFn={() => {
+              router.push('/user/login/user')
+            }}
+            show={showModal}
+            handleClose={() => setShowModal(false)}
+          />
+        )
+      }
     </div>
   );
 };
+<Toaster />
 
 export default WheelOfFortune;

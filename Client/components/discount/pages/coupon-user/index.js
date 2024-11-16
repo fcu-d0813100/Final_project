@@ -36,7 +36,15 @@ const UserCoupon = () => {
     // 獲取用戶優惠券
     const fetchCoupons = async () => {
         if (!userId) {
-            toast.error('未找到使用者資訊，請先登入'); // 顯示通知
+            toast.error('未找到使用者資訊，請先登入',{style:{
+                border: '1.2px solid #963827',
+                padding: '12px 40px',
+                color: '#963827',
+              },iconTheme:{
+                primary:'#963827',
+                secondary:'#fff'
+              }
+            }); // 顯示通知
             setLoading(false);
             return;
         }
@@ -52,7 +60,15 @@ const UserCoupon = () => {
             setTotalPages(totalPages);
         } catch (error) {
             console.error('獲取優惠券時發生錯誤:', error);
-            toast.error('獲取優惠券時發生錯誤');
+            toast.error('獲取優惠券時發生錯誤',{style:{
+                border: '1.2px solid #963827',
+                padding: '12px 40px',
+                color: '#963827',
+              },iconTheme:{
+                primary:'#963827',
+                secondary:'#fff'
+              }
+            });
         } finally {
             setLoading(false);
         }
@@ -91,7 +107,15 @@ const UserCoupon = () => {
     const handleClaimCoupon = async () => {
         if (!couponCode) {
             // setError('請輸入優惠券代碼');
-            toast.error('請輸入優惠券代碼'); // 顯示錯誤通知
+            toast.error('請輸入優惠券代碼',{style:{
+                border: '1.2px solid #963827',
+                padding: '12px 40px',
+                color: '#963827',
+              },iconTheme:{
+                primary:'#963827',
+                secondary:'#fff'
+              }
+            }); // 顯示錯誤通知
             return;
         }
         setLoading(true);
@@ -114,7 +138,15 @@ const UserCoupon = () => {
             if (!matchedCoupon) {
                 // 如果未找到匹配的優惠券
                 // setError('優惠券代碼錯誤，請重新輸入');
-                toast.error('優惠券代碼錯誤，請重新輸入'); // 顯示錯誤通知
+                toast.error('優惠券代碼錯誤，請重新輸入',{style:{
+                    border: '1.2px solid #963827',
+                    padding: '12px 40px',
+                    color: '#963827',
+                  },iconTheme:{
+                    primary:'#963827',
+                    secondary:'#fff'
+                  }
+                }); // 顯示錯誤通知
                 return;
             }
 
@@ -135,7 +167,15 @@ const UserCoupon = () => {
             if (relationData.length > 0) {
                 // 如果已經有該記錄，說明用戶已領取過此優惠券
                 // setError('您已領取過此優惠券');
-                toast.error('您已領取過此優惠券'); // 顯示錯誤通知
+                toast.error('您已領取過此優惠券',{style:{
+                    border: '1.2px solid #963827',
+                    padding: '12px 40px',
+                    color: '#963827',
+                  },iconTheme:{
+                    primary:'#963827',
+                    secondary:'#fff'
+                  }
+                }); // 顯示錯誤通知
                 return;
             }
 
@@ -155,17 +195,43 @@ const UserCoupon = () => {
 
             if (claimData.success) {
                 // setMessage('優惠券領取成功！');
-                toast.success('優惠券領取成功！'); // 顯示成功通知
+                toast.success('優惠券領取成功！' , {
+                    style: {
+                      border: '1.2px solid #90957a',
+                      padding: '12px 40px',
+                      color: '#626553',
+                    },
+                    iconTheme: {
+                      primary: '#626553',
+                      secondary: '#fff',
+                    },
+                  }); // 顯示成功通知
                 // 可選：重新獲取優惠券數據
                 fetchCoupons();
             } else {
                 // setError(claimData.error || '領取優惠券失敗');
-                toast.error(claimData.error || '領取優惠券失敗'); // 顯示錯誤通知
+                toast.error(claimData.error || '領取優惠券失敗' ,{style:{
+                    border: '1.2px solid #963827',
+                    padding: '12px 40px',
+                    color: '#963827',
+                  },iconTheme:{
+                    primary:'#963827',
+                    secondary:'#fff'
+                  }
+                }); // 顯示錯誤通知
             }
         } catch (error) {
             console.error('發生錯誤:', error);
             // setError('查詢優惠券時發生錯誤');
-            toast.error('查詢優惠券時發生錯誤'); // 顯示錯誤通知
+            toast.error('查詢優惠券時發生錯誤' ,{style:{
+                border: '1.2px solid #963827',
+                padding: '12px 40px',
+                color: '#963827',
+              },iconTheme:{
+                primary:'#963827',
+                secondary:'#fff'
+              }
+            }); // 顯示錯誤通知
         } finally {
             setLoading(false);
         }
@@ -176,7 +242,7 @@ const UserCoupon = () => {
         <UserCouponSection titleCN="優惠券" titleENG="Coupon">
             <aside className={styles.right}>
                 <div className={`${styles.search} mt-2 d-flex justify-content-center align-items-center`}>
-                    <div className="p me-4">新增優惠券</div>
+                    <div className={`p me-4 ${styles.add}`}>新增優惠券</div>
                     <input
                         className="p-1 me-4"
                         type="text"
