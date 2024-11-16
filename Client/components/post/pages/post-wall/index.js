@@ -22,22 +22,25 @@ export default function PostWall(props) {
   // const { type, setType } = usePost()
   // const postId = wallCard?.id
   const tabChangeHandle = (tab) => {
-    setSort(tab)
-    setType(tab)
+    // setSort(tab)
+    // setType(tab)
     router.push({
       pathname: '/post',
       query: { sort: tab },
     })
   }
-
   useEffect(() => {
-    if (router.query.sort) {
-      setSort(router.query.sort)
+    if (router.isReady) {
+      const querySort = router.query.sort || 'total_count'
+      setSort(querySort)
     }
-  }, [router.query])
+  }, [router.isReady, router.query.sort])
+
   // render
   useEffect(() => {
-    fetchPosts()
+    if (sort) {
+      fetchPosts()
+    }
   }, [sort, search])
 
   // GET DATA : wall card
@@ -88,7 +91,7 @@ export default function PostWall(props) {
             <div className={styles['post-search']}>
               <InputIME
                 type="text"
-                placeholder="任意關鍵字｜"
+                placeholder="任意關鍵字"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 // onKeyDown={keyDownHandle}

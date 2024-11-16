@@ -26,8 +26,13 @@ export default function PostDetail(props) {
 
   //render
   useEffect(() => {
-    if (post && post.tags) {
-      fetchPosts(post.tags)
+    if (post) {
+      if (post.comments) {
+        setComments(post.comments)
+      }
+      if (post.tags) {
+        fetchPosts(post.tags)
+      }
     }
   }, [post])
 
@@ -47,11 +52,6 @@ export default function PostDetail(props) {
     const data = await response.json()
     setWallCard(data)
   }
-  useEffect(() => {
-    if (post && post.comments) {
-      setComments(post.comments)
-    }
-  }, [post])
 
   // 如果 post 尚未加載，顯示加載指示
   if (!post) {
@@ -101,9 +101,10 @@ export default function PostDetail(props) {
     <>
       <div className={styles['post-container']}>
         <div className={styles['post-read']}>
-          <Link href={{ pathname: '/post', query: { sort: type } }}>
+          <button onClick={() => router.back()}>
+            {/* <button href={{ pathname: '/post', query: { sort: type } }}> */}
             <GoArrowLeft size={30} />
-          </Link>
+          </button>
           <PostCard
             postAuthor={post.post_author_nickname}
             title={post.title}
