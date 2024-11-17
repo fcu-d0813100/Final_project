@@ -9,6 +9,7 @@ import OrderBox from '../../common/orderbox'
 import Seven from '../../../../pages/cart/ship'
 import { useCartProduct } from '@/hooks/use-cartP'
 import { useCartWorkshop } from '@/hooks/use-cartW'
+import ModalConfirm from '@/components/shared/modal-confirm/index'
 import { useAuth } from '@/hooks/use-auth'
 import {
   countries,
@@ -64,6 +65,10 @@ export default function Checkout({
     }
   }, [postcode])
   //
+
+  //------------談窗阻擋
+  const [showModal, setShowModal] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
 
   //-----------------------------------其他資料
   const router = useRouter()
@@ -187,6 +192,9 @@ export default function Checkout({
     const Workshopcart = JSON.parse(localStorage.getItem('Workshopcart'))
 
     if (deliveryMethod === '7-11') {
+      const phoneRegex = /^09\d{8}$/
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
       if (
         !sevenRecipientName ||
         !sevenRecipientPhone ||
@@ -194,20 +202,54 @@ export default function Checkout({
         !storename ||
         !storeaddress
       ) {
-        alert('請填寫所有7-11寄送資訊')
+        setModalMessage('請完整填寫7-11寄送資訊')
+        setShowModal(true)
+        return
+      }
+
+      // 第二階段檢查：電話格式
+      if (!phoneRegex.test(sevenRecipientPhone)) {
+        setModalMessage('請輸入有效的手機號碼')
+        setShowModal(true)
+        return
+      }
+
+      // 第三階段檢查：Email格式
+      if (!emailRegex.test(sevenRecipientEmail)) {
+        setModalMessage('請輸入有效的電子信箱')
+        setShowModal(true)
         return
       }
     } else {
+      const phoneRegex = /^09\d{8}$/
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
       if (
         !recipientName ||
         !recipientPhone ||
         !recipientEmail ||
         !recipientCity
       ) {
-        alert('請填寫所有宅配寄送資訊')
+        setModalMessage('請完整填寫宅配寄送資訊')
+        setShowModal(true)
+        return
+      }
+
+      // 第二階段檢查：電話格式
+      if (!phoneRegex.test(recipientPhone)) {
+        setModalMessage('請輸入有效的手機號碼')
+        setShowModal(true)
+        return
+      }
+
+      // 第三階段檢查：Email格式
+      if (!emailRegex.test(recipientEmail)) {
+        setModalMessage('請輸入有效的電子信箱')
+        setShowModal(true)
         return
       }
     }
+
     let orderData = {}
     if (deliveryMethod === '7-11') {
       orderData = {
@@ -241,14 +283,21 @@ export default function Checkout({
     }
 
     localStorage.setItem('orderData', JSON.stringify(orderData))
-
-    alert('訂單成立')
     router.push('/cart/order-check')
   }
 
   //------------渲染頁面
   return (
     <>
+      {showModal && (
+        <ModalConfirm
+          title="填寫資料有誤"
+          content={modalMessage} // 顯示對應的錯誤提示
+          btnConfirm="確認"
+          show={showModal}
+          handleClose={() => setShowModal(false)} // 關閉彈窗
+        />
+      )}
       <div className="container">
         <div className={style.step}>
           <Image
@@ -301,6 +350,7 @@ export default function Checkout({
                         <Form.Group className="mb-3" controlId="recipient-name">
                           <Form.Label>收件人</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="填寫姓名"
                             name="recipient_name"
@@ -313,6 +363,7 @@ export default function Checkout({
                         >
                           <Form.Label>電話</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="例 : 0912345678"
                             name="recipient_phone"
@@ -325,6 +376,7 @@ export default function Checkout({
                         >
                           <Form.Label>信箱</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="email"
                             placeholder="填寫信箱"
                             name="recipient_email"
@@ -336,6 +388,7 @@ export default function Checkout({
                             <Form.Group controlId="recipient-city">
                               <Form.Label>縣市</Form.Label>
                               <Form.Select
+                                className={style['form-input']}
                                 name="recipient_city"
                                 ref={recipientCityRef}
                                 value={countryIndex}
@@ -361,6 +414,7 @@ export default function Checkout({
                             <Form.Group controlId="recipient-district">
                               <Form.Label>區</Form.Label>
                               <Form.Select
+                                className={style['form-input']}
                                 name="recipient_district"
                                 ref={recipientDistrictRef}
                                 value={townshipIndex}
@@ -388,6 +442,7 @@ export default function Checkout({
                         >
                           <Form.Label>居住地址</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="填寫地址"
                             name="recipient_address"
@@ -404,6 +459,7 @@ export default function Checkout({
                         >
                           <Form.Label className="mt-3">收件人</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="填寫姓名"
                             name="seven_recipient_name"
@@ -416,6 +472,7 @@ export default function Checkout({
                         >
                           <Form.Label>電話</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="例 : 0912345678"
                             name="seven_recipient_phone"
@@ -428,6 +485,7 @@ export default function Checkout({
                         >
                           <Form.Label>信箱</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="email"
                             placeholder="填寫信箱"
                             name="seven_recipient_email"

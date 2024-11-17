@@ -8,6 +8,7 @@ import Brands from '@/components/home/common/brands'
 import LoginModal from '@/components/shared/modal-confirm'
 import { useAuth } from '@/hooks/use-auth'
 import Dropdown from '@/components/activity/common/DropdownList'
+import ActMobileCard from '@/components/activity/common/ListMobileCard'
 import {
   PiMagnifyingGlass,
   PiHeartStraight,
@@ -25,6 +26,7 @@ export default function Activity() {
   const router = useRouter()
   const { auth } = useAuth()
   const userId = auth.userData.id // 當前登入的 user_id
+
   // 日期格式化函數
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -53,7 +55,7 @@ export default function Activity() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ activityId: id, userId: userId }),
+        body: JSON.stringify({ activityId: id, userId }),
       })
 
       if (!response.ok) {
@@ -63,7 +65,7 @@ export default function Activity() {
       const result = await response.json()
       console.log(result.message)
 
-      // 更新活動狀態
+      // 更新整個 active 狀態
       setActive((prevActive) =>
         prevActive.map((item) =>
           item.id === id ? { ...item, is_favorite: !isFavorite } : item
@@ -73,6 +75,7 @@ export default function Activity() {
       console.error('收藏更新失敗:', error)
     }
   }
+
   //控制下拉是選單
   const fetchActivitiesByStatus = async (status) => {
     try {
@@ -276,112 +279,144 @@ export default function Activity() {
             <p>請嘗試搜尋其他關鍵字或篩選條件。</p>
           </div>
         ) : (
-          <div className={`${Styles['act-card-sec']} container`}>
-            {active.map((item, index) => {
-              const now = new Date()
-              const startAt = new Date(item.start_at)
-              const status = startAt > now ? '報名中' : '已截止'
-              const statusClass =
-                status === '報名中' ? Styles['statusOn'] : Styles['statusOff']
+          <>
+            {/* 手機版卡片 (小於 390px 顯示) */}
+            <div
+              className={`${Styles['act-MoBcard-sec']} container d-flex flex-column align-items-center`}
+            >
+              {active.map((item) => (
+                <div key={item.id} className={`${Styles['mobCard']} mb-3`}>
+                  <ActMobileCard
+                    id={item.id}
+                    imgCover={`http://localhost:3005/upload/activity/${item.img1}`}
+                    CHNname={item.CHN_name}
+                    ENGname={item.ENG_name}
+                    beginDate={item.start_at}
+                    endDate={item.end_at}
+                    status={
+                      new Date(item.start_at) > new Date() ? '報名中' : '已截止'
+                    }
+                    isFavorite={item.is_favorite} // 使用 active 狀態
+                    onToggleFavorite={toggleHeart} // 傳遞方法
+                  />
+                </div>
+              ))}
+            </div>
 
-              return (
-                <div
-                  key={item.id}
-                  className={`${
-                    index % 2 === 0 ? Styles['cardLeft'] : Styles['cardRight']
-                  } d-flex`}
-                >
-                  {index % 2 !== 0 && (
-                    <>
-                      <div className={Styles['leftTextCHN']}>
-                        {item.CHN_name}
-                      </div>
-                      <div className={Styles['leftTextENG']}>
-                        {item.ENG_name}
-                      </div>
-                    </>
-                  )}
+            {/* 桌面版卡片 (大於等於 390px 顯示) */}
+            <div className={`${Styles['act-card-sec']} container`}>
+              {active.map((item, index) => {
+                const now = new Date()
+                const startAt = new Date(item.start_at)
+                const status = startAt > now ? '報名中' : '已截止'
+                const statusClass =
+                  status === '報名中' ? Styles['statusOn'] : Styles['statusOff']
 
+                return (
                   <div
+                    key={item.id}
                     className={`${
-                      index % 2 === 0 ? Styles['cardL'] : Styles['cardR']
-                    }`}
+                      index % 2 === 0 ? Styles['cardLeft'] : Styles['cardRight']
+                    } d-flex mb-4`}
                   >
-                    <Link href={`/activity/activity-det?id=${item.id}`}>
-                      <div className={Styles['card-img']}>
-                        <div className={`${Styles['card-text']} d-flex`}>
-                          <div className="currentR">
-                            <p className={Styles['num']}>{item.currentREG}</p>
-                            <p>目前人數</p>
-                          </div>
-                          <div className="maxR">
-                            <p className={Styles['num']}>{item.maxREG}</p>
-                            <p>報名人數</p>
-                          </div>
-                          <div className="view">
-                            <p className={Styles['num']}>{item.views}</p>
-                            <p>瀏覽次數</p>
-                          </div>
+                    {/* 左側文字內容 */}
+                    {index % 2 !== 0 && (
+                      <>
+                        <div className={Styles['leftTextCHN']}>
+                          {item.CHN_name}
                         </div>
-                        <p className={Styles['card-det']}>詳細資訊</p>
-                        <Image
-                          src={`http://localhost:3005/upload/activity/${item.img1}`}
-                          width={1200}
-                          height={800}
-                          alt={item.CHN_name}
-                        />
-                      </div>
-                    </Link>
+                        <div className={Styles['leftTextENG']}>
+                          {item.ENG_name}
+                        </div>
+                      </>
+                    )}
 
-                    <div className={Styles['card-content']}>
-                      <div className={Styles['card-date']}>
-                        {formatDate(item.start_at)} - {formatDate(item.end_at)}
-                      </div>
-                      <div className={Styles['card-info']}>
-                        <p>{item.brand}</p>
-                        <p className={` ${Styles['t1']}`}>主辦單位 | host</p>
+                    <div
+                      className={`${
+                        index % 2 === 0 ? Styles['cardL'] : Styles['cardR']
+                      }`}
+                    >
+                      <Link href={`/activity/activity-det?id=${item.id}`}>
+                        <div className={Styles['card-img']}>
+                          <div className={`${Styles['card-text']} d-flex`}>
+                            <div className="currentR">
+                              <p className={Styles['num']}>{item.currentREG}</p>
+                              <p>目前人數</p>
+                            </div>
+                            <div className="maxR">
+                              <p className={Styles['num']}>{item.maxREG}</p>
+                              <p>報名人數</p>
+                            </div>
+                            <div className="view">
+                              <p className={Styles['num']}>{item.views}</p>
+                              <p>瀏覽次數</p>
+                            </div>
+                          </div>
+                          <p className={Styles['card-det']}>詳細資訊</p>
+                          <Image
+                            src={`http://localhost:3005/upload/activity/${item.img1}`}
+                            width={1200}
+                            height={800}
+                            alt={item.CHN_name}
+                          />
+                        </div>
+                      </Link>
 
-                        <p className={Styles['title']}>活動地點 | location</p>
-                        <p>{item.address}</p>
-                      </div>
-                      <div className={Styles['card-footer']}>
-                        <div className={statusClass}>{status}</div>
-                        <div
-                          className={Styles['heart-icon']}
-                          onClick={() => toggleHeart(item.id, item.is_favorite)}
-                          role="button"
-                          tabIndex="0"
-                        >
-                          {item.is_favorite ? (
-                            <PiHeartStraightFill
-                              size={22}
-                              className={Styles['ph-heart']}
-                            />
-                          ) : (
-                            <PiHeartStraight
-                              size={22}
-                              className={Styles['ph-heart']}
-                            />
-                          )}
+                      <div className={Styles['card-content']}>
+                        <div className={Styles['card-date']}>
+                          {/* {item.start_at} - {item.end_at} */}
+                          {formatDate(item.start_at)} -{' '}
+                          {formatDate(item.end_at)}
+                        </div>
+                        <div className={Styles['card-info']}>
+                          <p>{item.brand}</p>
+                          <p className={`${Styles['t1']}`}>主辦單位 | host</p>
+
+                          <p className={Styles['title']}>活動地點 | location</p>
+                          <p>{item.address}</p>
+                        </div>
+                        <div className={Styles['card-footer']}>
+                          <div className={statusClass}>{status}</div>
+                          <div
+                            className={Styles['heart-icon']}
+                            onClick={() =>
+                              toggleHeart(item.id, item.is_favorite)
+                            }
+                            role="button"
+                            tabIndex="0"
+                          >
+                            {item.is_favorite ? (
+                              <PiHeartStraightFill
+                                size={22}
+                                className={Styles['ph-heart']}
+                              />
+                            ) : (
+                              <PiHeartStraight
+                                size={22}
+                                className={Styles['ph-heart']}
+                              />
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {index % 2 === 0 && (
-                    <>
-                      <div className={Styles['rightTextCHN']}>
-                        {item.CHN_name}
-                      </div>
-                      <div className={Styles['rightTextENG']}>
-                        {item.ENG_name}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )
-            })}
-          </div>
+                    {/* 右側文字內容 */}
+                    {index % 2 === 0 && (
+                      <>
+                        <div className={Styles['rightTextCHN']}>
+                          {item.CHN_name}
+                        </div>
+                        <div className={Styles['rightTextENG']}>
+                          {item.ENG_name}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </>
         )}
       </div>
 

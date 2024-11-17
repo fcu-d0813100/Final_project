@@ -156,6 +156,7 @@ $statusOn-color: #90957a;
     }
   }
 }
+
 @media (max-width: 391px) {
   .act-img-container {
     width: 100%;
@@ -167,6 +168,41 @@ $statusOn-color: #90957a;
       object-fit: cover;
     }
   }
+  .sec1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 75%;
+    margin-top: 128px;
+    margin-bottom: 128px;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    .CHN_name {
+      font-size: 32px;
+    }
+    .ENG_name {
+      font-size: 16px;
+    }
+    .textContent {
+      width: 60%;
+      object-fit: cover;
+      margin-top: 30px;
+      text-align: center;
+      font-size: 14px;
+    }
+  }
+  .sec2 {
+    display: flex; /* 將父容器設置為 flex 排版 */
+    width: 100%; /* 確保容器寬度為100% */
+  }
+
+  .sec2 img {
+    width: 50%; /* 每張圖片的寬度設定為 50% */
+    height: 200px;
+    object-fit: cover; /* 視需要設定圖片填充方式 */
+  }
+
   .info-content {
     height: 200px;
     display: flex;
@@ -207,6 +243,71 @@ $statusOn-color: #90957a;
       font-weight: bold;
     }
   }
+  .signup-button {
+    background-color: #8e947a;
+    color: white;
+    border: none;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px !important;
+  }
+  .form-container {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: 1s ease, opacity 1s ease;
+    width: 90% !important;
+    max-width: 1440px;
+    background-color: white;
+    margin-bottom: 20px !important;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    &.expanded {
+      padding: 20px !important;
+      margin-top: 40px;
+      max-height: 1000px; // 足夠大的高度以顯示表單
+      opacity: 1;
+    }
+    textarea {
+      width: 100% !important;
+      height: 110px !important;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      box-sizing: border-box;
+      margin-top: -50px !important;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 20px;
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        width: 200px;
+        cursor: pointer;
+
+        &.reset-button {
+          background-color: #ccc;
+          color: #333;
+        }
+
+        &.submit-button {
+          background-color: #8e947a;
+          color: white;
+        }
+      }
+    }
+  }
 }
 
 .sec1 {
@@ -242,14 +343,6 @@ $statusOn-color: #90957a;
   width: 75%;
   padding: 20px 0;
   margin-top: 100px;
-
-  .googleMap {
-    img {
-      width: 100%;
-      height: auto;
-      border-radius: 5px;
-    }
-  }
 
   .info {
     .info-title {
@@ -376,7 +469,7 @@ $statusOn-color: #90957a;
       }
 
       .rightform {
-        /* 可添加右側樣式 */
+        margin-left: 120px; /* 防止左邊貼邊 */
       }
 
       .formGroup {
@@ -428,7 +521,6 @@ $statusOn-color: #90957a;
         height: 210px;
         padding: 8px;
         font-size: 14px;
-
         border: 1px solid #ccc;
         border-radius: 4px;
         resize: vertical;
@@ -468,7 +560,7 @@ $statusOn-color: #90957a;
     text-align: center;
     padding: 20px;
     background-color: #f5f5f5;
-
+    margin-top: 50px;
     .section-title {
       font-size: 24px;
       text-align: start;

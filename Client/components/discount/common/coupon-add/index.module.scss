@@ -13,20 +13,21 @@
         height: 98px;
         margin-inline: 10px;
         border-radius: 50%;
-        // background-image: url("/discount/coupon/brands/nars.svg");
         background-size: cover;
     }
 
     .text {
+        text-align: start;
         color: #fff;
         width: 250px;
 
         .name {
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .discount {
-            line-height: 100%;
+            font-size: 48px;
+            line-height: 110%;
         }
 
         .max {
@@ -112,7 +113,7 @@
             width: 130px;
 
             .name {
-                font-size: 11px;
+                font-size: 10px;
             }
 
             .discount {

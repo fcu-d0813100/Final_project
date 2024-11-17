@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import styles from './discount-box.module.scss'
 import { useAuth } from '@/hooks/use-auth'
 import { useCartProduct } from '@/hooks/use-cartP'
+import ModalConfirm from '@/components/shared/modal-confirm/index'
 
 export default function DiscountBox({ onCouponSelect }) {
   const { auth } = useAuth()
@@ -53,14 +54,37 @@ export default function DiscountBox({ onCouponSelect }) {
     router.push('/') // 導航到優惠券頁面
   }
 
+  //------------談窗阻擋
+  const [showModal, setShowModal] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
+
+  // ------如果沒有商品無法使用優惠券
+  const handleClick = () => {
+    if (productItems.length === 0) {
+      setModalMessage('本站僅有彩妝品能夠使用優惠券')
+      setShowModal(true)
+      return
+    }
+    setShow(true)
+  }
+
   return (
     <>
+      {showModal && (
+        <ModalConfirm
+          title="關於優惠券"
+          content={modalMessage}
+          btnConfirm="確認"
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )}
       <div
-        onClick={() => setShow(true)}
+        onClick={handleClick} // 使用 handleClick 函式來處理點擊事件
         className={styles['checkout_discount']}
       >
         <span>優惠券</span>
-        <span className="ps">
+        <span>
           {selectedCoupon
             ? `${selectedCoupon.brand_name} ${selectedCoupon.name}`
             : '輸入享有折扣 >'}

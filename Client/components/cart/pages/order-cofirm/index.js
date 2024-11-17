@@ -87,33 +87,31 @@ export default function OrderComfirm() {
 
   //判斷付款方式(2.綠界)
   const goECPay = async () => {
-    if (window.confirm('確認要導向至ECPay進行付款?')) {
-      // -----------另外抓取orderNumber存到localStorage
-      localStorage.setItem('orderNumber', orderData.orderNumber)
-      //處理值的問題
-      orderData.paymentMethod = 2
-      if (deliveryMethod === 'home') {
-        orderData.deliveryMethod = 1
-      } else if (deliveryMethod === '7-11') {
-        orderData.deliveryMethod = 2
-      }
-      const totalPrice = orderData.totalPrice
-      const orderNumber = `Beautique訂單編號 : ${orderData.orderNumber}`
-      console.log(orderData)
-      console.log('請求綠界支付...')
-      //導向綠界支付
-      try {
-        window.location.href = `http://localhost:3005/api/ecpay-test-only?amount=${totalPrice}&orderId=${orderNumber}`
-        //訂單資料推到後端街口處理
-        const response = await axios.post(
-          'http://localhost:3005/api/cart/checkout',
-          orderData
-        )
-        onClearProduct()
-        onClearWorkshop()
-      } catch (error) {
-        console.error('金流請求失敗', error)
-      }
+    // -----------另外抓取orderNumber存到localStorage
+    localStorage.setItem('orderNumber', orderData.orderNumber)
+    //處理值的問題
+    orderData.paymentMethod = 2
+    if (deliveryMethod === 'home') {
+      orderData.deliveryMethod = 1
+    } else if (deliveryMethod === '7-11') {
+      orderData.deliveryMethod = 2
+    }
+    const totalPrice = orderData.totalPrice
+    const orderNumber = `Beautique訂單編號 : ${orderData.orderNumber}`
+    console.log(orderData)
+    console.log('請求綠界支付...')
+    //導向綠界支付
+    try {
+      window.location.href = `http://localhost:3005/api/ecpay-test-only?amount=${totalPrice}&orderId=${orderNumber}`
+      //訂單資料推到後端街口處理
+      const response = await axios.post(
+        'http://localhost:3005/api/cart/checkout',
+        orderData
+      )
+      onClearProduct()
+      onClearWorkshop()
+    } catch (error) {
+      console.error('金流請求失敗', error)
     }
   }
 
