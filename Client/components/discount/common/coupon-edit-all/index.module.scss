@@ -16,30 +16,31 @@
         text-align: start;
 
         .name {
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .discount {
-            font-size: 48px;
+            padding-top: 5px;
+            font-size: 52px;
             line-height: 120%;
         }
 
         .max {
-        font-size: 16px;
+            font-size: 16px;
             color: $gray-200;
             line-height: 2rem;
         }
     }
 
     .btn-outline-light {
-        background-color:#fff;
+        background-color: #fff;
         color: $red-500;
         border-radius: 1px;
         border: 1px solid $red-500;
         padding: 0px;
         width: 100px;
         height: 30px;
-       
+
 
         &:hover {
             background-color: rgba(196, 191, 191, 0.8);
@@ -68,7 +69,7 @@
             width: 180px;
 
             .name {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .discount {
