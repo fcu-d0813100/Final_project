@@ -9,86 +9,116 @@ const mailHtml = (otpToken) => `
 <html>
   <head>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&display=swap');
-
       body {
-        font-family: 'Libre Bodoni', serif;
-        font-weight: 400;
-        font-style: normal;
-        font-size: 16px;
-        line-height: 1.5;
+        background-color: #f9f9f9;
+        padding: 0;
+        margin: 0;
+        font-family: Arial, sans-serif;
       }
-      .padding-setting {
-        padding-inline: 10px;
+      .container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        color: #333;
       }
-      .title {
-        font-weight: 700;
-        font-size: 20px;
+      header {
+        text-align: center;
+        border-bottom: 2px solid #90957a;
+        padding-bottom: 10px;
+      }
+      header img {
+        max-width: 150px;
+      }
+      header p {
+        font-size: 14px;
+        color: #777;
       }
       .content {
-        padding: 5px;
-        margin-block: 10px;
-        border: 1px solid gray;
+        padding: 20px 30px;
+        line-height: 1.6;
       }
-      .token-content {
-        display: flex;
-        justify-content: center;
-        background-color: #4b4d3f;
-        color: white;
-        padding-block: 20px;
-        width: 400px;
-        height: 100px;
-
-      }
-      .tip {
-        text-align: center;
+      .content h2 {
+        color: #333;
         font-size: 20px;
-        font-weight: 800;
       }
-      .token {
+      .content p {
+        font-size: 16px;
+        color: #555;
+      }
+      .content .tip {
         text-align: center;
-        font-size: 40px;
-        font-weight: 800;
+        font-size: 18px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #555;
       }
-      .column {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-inline: 10px;
+      .content .token {
+        text-align: center;
+        font-size: 36px;
+        font-weight: bold;
+        color: #626553;
+        background-color: #ededed;
+        padding: 20px 40px;
+        display: block;
+        width: fit-content;
+        border-radius: 5px;
+        margin: 10px auto;
       }
-      .center {
-        display: flex;
-        justify-content: center;
+      .cta-button {
+        text-align: center;
+        margin: 20px 0;
       }
-      .logo {
-        font-style: italic;
-        color: #90957A;
-        font-weight: 500;
-        font-size: 50px;
+        .minutes{
+        color:#963827
+        }
+      .cta-button a {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #90957a;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 4px;
+      }
+      footer {
+        margin-top: 30px;
+        padding-top: 10px;
+        border-top: 1px solid #e0e0e0;
+        text-align: center;
+        font-size: 12px;
+        color: #888;
+      }
+      footer p {
+        margin: 0;
       }
     </style>
   </head>
   <body>
-    <div class="padding-setting">
-      <p class="title">親愛的 Beautique 會員您好：</p>
+    <div class="container">
+      <header>
+        <img src="https://i.ibb.co/6ynt8GF/Beautique.png" alt="Beautique">
+        <p>Where Beauty Meets Uniqueness</p>
+      </header>
+      <section class="content">
+      <h2>親愛的會員，您好：</h2>
+      <p>您已申請重設密碼，請輸入以下6位驗證碼以完成操作：</p>
+      <div class="token">${otpToken}</div>
+      <p>請在重設密碼頁面的《電子郵件驗證碼》欄位中輸入此驗證碼。請注意，驗證碼在寄送後<span class="minutes">30分鐘內</span>有效。</p>
+      <p>為了您的帳號安全，請勿將此驗證碼透露給他人，並確認您的帳號密碼未被他人使用。</p>
+      <p>如有任何疑問，請隨時聯繫 Beautique 客服人員，我們將竭誠為您服務。</p>
 
-      <div class="content">
-        通知重設密碼所需要的驗證碼，<br />
-        將以下6位驗證碼輸入於：<br />
-        重設密碼頁面的《電子郵件驗證碼》欄位中。<br />
-        <br />
-        請注意驗證碼將於寄送後 30 分鐘後過期，<br />
-        如有任何問題請洽 Beautique 客服人員，謝謝。
+      </section>
+      <div class="cta-button">
+        <a href="http://localhost:3000">前往 Beautique</a>
       </div>
-
-      <div class="token-content">
-        <div class="column">
-          <div class="tip">請輸入以下的6位數字：</div>
-          <div class="token">${otpToken}</div>
-        </div>
-      </div>
-      <p>Beautique 敬上</p>
-      <p class="logo">Beautique</p>
+      <footer>
+        <p>這是一封自動產生的郵件，請勿回覆。</p>
+        <p>© 2024 Beautique. All rights reserved.</p>
+      </footer>
     </div>
   </body>
 </html>
@@ -109,7 +139,7 @@ router.post('/otp', async (req, res, next) => {
   const mailOptions = {
     from: `"Beautique官方"<${process.env.SMTP_TO_EMAIL}>`,
     to: email,
-    subject: '重設密碼要求的電子郵件驗證碼',
+    subject: `${otp.token}是您的重設密碼驗證碼`,
     html: mailHtml(otp.token),
   }
 

@@ -2,19 +2,19 @@
 
 .basicInformation {
   display: flex;
-  // justify-content: space-between;
+  justify-content: space-between;
   padding-inline: 10px;
   padding-block: 30px;
 
   .textArea {
     // min-width: 900px;
+    // width:100%;
     height: 255px;
     background: #f8f8f8;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    // margin-right: 60px;
     margin-bottom: 60px;
 
     h4 {
@@ -29,36 +29,43 @@
     span {
       color: $green-500;
       font-size: 14px;
+      white-space: nowrap;      
     }
 
     th {
       padding: 5px 30px;
       border-left: 3px solid $green-200;
+      white-space: nowrap; 
     }
 
     td {
       padding-right: 30px;
+      white-space: nowrap; 
     }
+    
   }
-
-  .userImg {
-    width: 255px;
-    height: 255px;
-
-    .img {
-      width: 255px;
-      height: 255px;
-      object-fit: cover;
-      border-radius: 50%;
-    }
+  .timeStyle th{
+    white-space: nowrap; 
   }
+  .timeStyle td{
+    white-space: nowrap; 
+  }
+  
 }
-
+.userImg {
+  width: 255px;
+  height: 255px;
+}
+.img {
+  width: 255px;
+  height: 255px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 .timeArea {
-  // margin-top: 10px;
   display: flex;
   margin-bottom: 50px;
-
+  justify-content: space-around;
   span {
     color: $green-500;
     font-size: 14px;
@@ -74,29 +81,243 @@
   }
 
 }
-
-// 積分
-.underline {
-  border-bottom: 1px solid $green-500;
+.color{
+  color: $green-600;
+  font-weight: bold;
+}
+.editBtn{
+  justify-content: end;
 }
 
-.level-area {
-  border-radius: 5px 5px 0 0;
+// // 積分
+// .underline {
+//   border-bottom: 1px solid $green-500;
+// }
+
+// .level-area {
+//   border-radius: 5px 5px 0 0;
+// }
+
+// .points-description {
+//   border-radius: 5px 5px 0 0;
+// }
+
+// .table-title {
+//   background-color: $green-800 ;
+//   color: white;
+//   height: 45px;
+
+// }
+
+// .table-text {
+//   background-color: $gray-100 ;
+//   height: 70px;
+//   border-radius: 0 0 5px 5px;
+// }
+
+.timeStyle{
+  display: flex;
+  justify-content: space-around;
+  
+}
+@media screen and (max-width: 1650px) {
+  .userImg {
+    width: 200px;
+    height: 200px;
+
+    .img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+  .timeStyle{
+    display: inline-block;
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 1400px) {
+  .basicInformation {
+    justify-content: center;
+    padding-inline: 0px;
+    padding-block: 30px;
+    margin: 0 20px;
+     .textArea{
+       height: 400px;
+       width: 600px;
+      padding-left: 40px;
+      margin-right:10px;
+      }
+  }
+  .infoTable th{
+    width: 200px;
+  }
+  .timeArea{
+    // display: block;
+    justify-content: start;
+    justify-content: space-between;
+
+  }
+  // .editBtn{
+  //   display: inline-block;
+  //   justify-content: center;
+  // }
+ 
 }
 
-.points-description {
-  border-radius: 5px 5px 0 0;
+@media screen and (max-width: 1160px) {
+  .basicInformation {
+    // display: block;
+     .textArea{
+       height:400px;
+       width: 500px;
+      padding-left: 40px;
+      margin-right:10px;
+      }
+  }
+  .levelImg{
+    width: 200px;
+    height: auto;
+  }
+
 }
 
-.table-title {
-  background-color: $green-800 ;
-  color: white;
-  height: 45px;
+@media screen and (max-width: 768px) {
+  .basicInformation {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+  .userImg {
+    order: 1;
+    margin-bottom: -60px;
+    z-index: 1;
+  }
+  
+  .textArea  {
+    order: 2;
+    width: 100%; 
+    margin-bottom: 20px;
 
+  }
+  
+  .timeArea {
+    display: flex;
+    order: 3;
+    width: 100%; 
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-content: center;
+    
+  }
+  .editBtn{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  order:1
+  }
+  .btn{
+    width: 350px;
+  }
+  .levelArea {
+    order: 4;
+    width: 100%; 
+
+  }
+  .levelFlex{
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 20px;
+  }
+  .levelImg{
+    width: 250px;
+    height: auto;
+  }
+  .timeStyle{
+    margin-top: 0;
+    padding-top: 0;
+    width: 100%;
+  }
+  .timeStyle{
+    order:2
+  }
+  .underline{
+    display: none;
+  }
 }
 
-.table-text {
-  background-color: $gray-100 ;
-  height: 70px;
-  border-radius: 0 0 5px 5px;
+}
+@media screen and (max-width: 560px) {
+  .basicInformation{
+    margin: 0;
+    padding: 0;
+  }
+  .infoTable th{
+    // display: block;
+    width: 100px;
+  }
+  .infoTable tr{
+    // display: block;
+    width: 100px;
+  }
+  .infoTable table{
+    width:100%
+  }
+
+  .color{
+  width: 100%;
+  padding-top: 50px;
+  padding-left: 10px;
+  }
+  .basicInformation .textArea{
+    width: 100%;
+    padding: 10px 0 0 0;
+  }
+  .profile{
+    width: 100%;
+  }
+    .timeStyle{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  .timeStyle th{
+    padding-left: 0px;
+    padding-right: 0px;
+    white-space: nowrap;
+    border-left: none;
+    
+  }
+  .timeStyle td{
+    padding-left: 10px;
+    white-space: nowrap; 
+
+  }
+
+  .timeArea{
+    width: 100%;
+    padding: 0;
+
+  }
+
+  .basicInformation .infoTable th{
+    padding: 5px 10px ;
+  }
+  .infoTable .tableWidth td {
+    padding-left: 10px;
+  }
+
+  .infoTable .tdWidth td{
+    padding-left: 22px;
+  }
+  .basicInformation .userImg{
+    margin-top: 20px;
+  }
+
+
+
+
+
+
+
 }

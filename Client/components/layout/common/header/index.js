@@ -67,40 +67,13 @@ function TopBar({ cartitems }) {
       case 'teacher':
         return '/teacher/information' // 老師頁面
       default:
-        return '/user' // 普通用戶頁面
+        return '/user' // 用戶頁面
     }
   }
 
   console.log(auth) // 確認 auth 狀態是否正確更新
   console.log(auth.userData.identity)
 
-  // const { auth, getUser } = useAuth()
-  // const [userData, setUserData] = useState(auth.userData)
-  // useEffect(() => {
-  //   if (!auth.userData) {
-  //     getUser().then((user) => {
-  //       setUserData(user)
-  //     })
-  //   } else {
-  //     setUserData(auth.userData)
-  //   }
-  // }, [auth, getUser])
-  // const getUserLink = () => {
-  //   if (!auth.isAuth) {
-  //     return '/user/login/user'
-  //   }
-  //   switch (auth.userData.identity) {
-  //     case 'admin':
-  //       return '/admin/activity'
-  //     case 'teacher':
-  //       return '/teacher/information'
-  //     default:
-  //       return '/user'
-  //   }
-  // }
-  // console.log(auth)
-  // console.log(userData)
-  // console.log(auth.userData.identity)
   return (
     <>
       {/* 使用 Headroom 包裹 header 元素 */}

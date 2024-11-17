@@ -40,12 +40,12 @@ const navLinks = [
     label: '我的收藏',
     key: 'favorite',
   },
-  {
-    href: '/user/workshop',
-    icon: <PiNotebook size={65} />,
-    label: '我的課程',
-    key: 'workshop',
-  },
+  // {
+  //   href: '/user/workshop',
+  //   icon: <PiNotebook size={65} />,
+  //   label: '我的課程',
+  //   key: 'workshop',
+  // },
   {
     href: '/user/post',
     icon: <PiListPlus size={65} />,

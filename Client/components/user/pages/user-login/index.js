@@ -133,7 +133,17 @@ export default function UserLogin() {
               <div
                 className={`d-flex flex-column align-items-center justify-content-center ${styles['card-img']}`}
               >
-                <h2 className={styles['logo']}>Beautique</h2>
+                <button
+                  type="button"
+                  className={styles['logo']}
+                  onClick={() => {
+                    setTimeout(() => {
+                      router.push('/')
+                    }, 1500)
+                  }}
+                >
+                  Beautique
+                </button>
                 <h3 className={styles['slogan']}>
                   Where Beauty <br /> Meets Uniqueness.
                 </h3>
