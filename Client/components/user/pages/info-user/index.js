@@ -33,11 +33,9 @@ export default function UserInfo() {
   return (
     <>
       <UserSection titleCN="個人資訊" titleENG="Information">
-        <div
-          className={`${styles.basicInformation} container row d-flex justify-content-between`}
-        >
+        <div className={`${styles.basicInformation} container row`}>
           <div className={`col-12 col-xxl-9 ms-0 ms-xxl-3 ${styles.textArea}`}>
-            <div>
+            <div className={styles.profile}>
               <div className={`h4 fw-bold ${styles.color}`}>
                 {userData.name}{' '}
                 <div className={`${styles.color} p d-inline ps-3`}>
@@ -77,7 +75,7 @@ export default function UserInfo() {
                 </div>
 
                 <div className="col-xxl-6 col-12">
-                  <table className="ms-0 ms-xxl-4">
+                  <table className={`ms-0 ms-xxl-4 ${styles.tdWidth}`}>
                     <tbody>
                       <tr>
                         <th>
@@ -122,10 +120,10 @@ export default function UserInfo() {
             />
           </div>
           {/* 創建時間 */}
-          <div
-            className={`${styles.timeArea} "row d-flex justify-content-around align-items-center "`}
-          >
-            <div className="col-5">
+          <div className={`${styles.timeArea} row align-items-center`}>
+            <div
+              className={`col-12 col-md-5 col-xxl-10 col-xl-8 col-lg-6 ${styles.timeStyle}`}
+            >
               <table className="ms-4">
                 <tbody>
                   <tr>
@@ -136,8 +134,6 @@ export default function UserInfo() {
                   </tr>
                 </tbody>
               </table>
-            </div>
-            <div className="col-5">
               <table className="ms-4">
                 <tbody>
                   <tr>
@@ -149,99 +145,40 @@ export default function UserInfo() {
                 </tbody>
               </table>
             </div>
-            <div className="col-2 d-flex justify-content-end pe-2">
+            <div className={`${styles.editBtn} col-2 pe-2`}>
               <Link href="/user/information/update">
-                <button className="btn-primary h6">編輯</button>
+                <button className={`btn-primary h6 ${styles.btn}`}>編輯</button>
               </Link>
             </div>
           </div>
-          <hr className="underline"></hr>
-          {/* 積分 */}
-          <div className="row d-flex py-0 my-0 align-items-center">
-            {/* <div className="col-10 d-flex align-items-center justify-content-between">
-              <div className="col-6">
-                <div
-                  className={`row ${styles['level-area']} ${styles['table-title']} mt-2`}
-                >
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    會員等級
-                  </div>
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    會員現有積分
-                  </div>
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    會員總積分
-                  </div>
-                </div>
-                <div
-                  className={`row ${styles['level-area']} ${styles['table-text']}`}
-                >
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    {' '}
-                    {userData.level === 1
-                      ? '一般會員'
-                      : userData.level === 2
-                      ? '白金會員'
-                      : userData.level === 3
-                      ? '鑽石會員'
-                      : ''}
-                  </div>
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    points
-                  </div>
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    points
-                  </div>
-                </div>
-              </div>
-              <div className="col-5">
-                <div
-                  className={`row ${styles['points-description']} ${styles['table-title']} mt-2`}
-                >
-                  <div className="col-8 d-flex justify-content-center align-items-center">
-                    如何獲得點數?
-                  </div>
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    折抵規則
-                  </div>
-                </div>
-                <div
-                  className={`row ${styles['points-description']} ${styles['table-text']}`}
-                >
-                  <div className="col-8 d-flex justify-content-center align-items-center">
-                    消費滿300元即可獲得1點
-                  </div>
-                  <div className="col-4 d-flex justify-content-center align-items-center">
-                    1點折1元
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            {/* <div className={`col-8 ${styles.infoTable} py-0`}>
-              <table className="">
-                <tbody>
-                  <tr>
-                    <th>
-                      會員等級<span> | level</span>
-                    </th>
-                    <td>
-                      {' '}
-                      {userData.level === 1
-                        ? '一般會員'
-                        : userData.level === 2
-                        ? '白金會員'
-                        : userData.level === 3
-                        ? '鑽石會員'
-                        : ''}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div> */}
-            <div className="col-10  justify-content-center  gap-5 d-flex align-items-center">
-              <Image src="/user/regular.svg" alt="" width={250} height={192} />
-              <Image src="/user/platinum.svg" alt="" width={250} height={192} />
-              <Image src="/user/diamond.svg" alt="" width={250} height={192} />
+          <hr className={`underline ${styles.underline}`}></hr>
+          <div
+            className={`row ${styles['levelArea']} d-flex py-0 my-0 align-items-center`}
+          >
+            <div
+              className={`${styles['levelFlex']}  col-12 col-xxl-10 justify-content-evenly d-flex align-items-center`}
+            >
+              <Image
+                src="/user/regular.svg"
+                alt="user level"
+                width={250}
+                height={192}
+                className={`${styles.levelImg}`}
+              />
+              <Image
+                src="/user/platinum.svg"
+                alt="user level"
+                width={250}
+                height={192}
+                className={`${styles.levelImg}`}
+              />
+              <Image
+                src="/user/diamond.svg"
+                alt="user level"
+                width={250}
+                height={192}
+                className={`${styles.levelImg}`}
+              />
             </div>
           </div>
         </div>

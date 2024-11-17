@@ -71,8 +71,8 @@ function TopBar({ cartitems }) {
     }
   }
 
-  // console.log(auth) // 確認 auth 狀態是否正確更新
-  // console.log(auth.userData.identity)
+  console.log(auth) // 確認 auth 狀態是否正確更新
+  console.log(auth.userData.identity)
 
   return (
     <>
