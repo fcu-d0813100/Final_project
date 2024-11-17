@@ -17,9 +17,10 @@ export default function OrderBox() {
     productItems.length > 0
       ? `/product/mainimage/${productItems[0].mainimage}`
       : null
+
   const firstWorkshopImage =
     workshopItems.length > 0
-      ? `/workshop/workshop_img/${workshopItems[0].typeId}-${workshopItems[0].id}-c.jpg`
+      ? `http://localhost:3005/workshop/${workshopItems[0].cover}`
       : null
 
   //優惠券折扣
