@@ -3,12 +3,18 @@ import styles from '@/components/teacher/common/teacher-dropdown/t-dropdown.modu
 import { PiCaretDown } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 
-export default function Dropdown({ name = '', items = [] }) {
+export default function Dropdown({ name = '', items = [], onSelect }) {
   useEffect(() => {
-    typeof document !== undefined
+    typeof document !== 'undefined'
       ? require('bootstrap/dist/js/bootstrap.bundle.min.js')
       : null
   }, [])
+
+  const handleSelect = (value) => {
+    if (onSelect) {
+      onSelect(value) // 將選中的值傳遞出去
+    }
+  }
 
   return (
     <>
@@ -24,9 +30,15 @@ export default function Dropdown({ name = '', items = [] }) {
 
         <div className={`dropdown-menu ${styles.dropdownMenu}`}>
           {items.map((item, index) => (
-            <a key={index} href={item.link} className="dropdown-item my-1">
+            <button
+              type="button"
+              key={index}
+              href={item.link}
+              className="dropdown-item my-1"
+              onClick={() => handleSelect(item.value)}
+            >
               {item.option}
-            </a>
+            </button>
           ))}
         </div>
       </div>

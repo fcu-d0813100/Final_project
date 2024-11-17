@@ -173,7 +173,6 @@ export default function MyWorkshop(props) {
                   registration_end={item.registration_end}
                   filterStatus={filterStatus}
                   setWorkshop={setWorkshop}
-                  
                 />
               )
             })

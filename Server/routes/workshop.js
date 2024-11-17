@@ -27,7 +27,14 @@ const upload = multer({ storage: storage })
 router.use('/workshop', express.static(path.join(__dirname, 'public/workshop')))
 
 router.get('/', async function (req, res, next) {
-  const { search = '', order, min = '', max = '', type_id, status } = req.query
+  const {
+    search = '',
+    order,
+    min = '',
+    max = '',
+    type_id = '',
+    status = '',
+  } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
