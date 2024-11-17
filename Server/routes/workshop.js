@@ -101,6 +101,8 @@ router.get('/', async function (req, res, next) {
     sqlSelect += ` AND NOW() BETWEEN workshop.registration_start AND workshop.registration_end`
   } else if (status === 'closed') {
     sqlSelect += ` AND NOW() > workshop.registration_end`
+  } else if (status === 'prepare') {
+    sqlSelect += ` AND NOW() < workshop.registration_start`
   }
 
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
@@ -131,7 +133,7 @@ router.get('/', async function (req, res, next) {
 
 router.get('/myWorkshop', authenticate, async function (req, res, next) {
   const id = req.user.id
-  const { search = '', order } = req.query
+  const { search = '', order = '', type_id = '', status = '' } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -156,10 +158,24 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
  LEFT JOIN
     workshop_type ON workshop.type_id = workshop_type.id
  WHERE
-     (workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%')
+     (workshop.name LIKE '%${search}%' OR workshop_time.date LIKE '%${search}%' OR workshop.price LIKE '%${search}%')
 
      AND teachers.id = ${id}
 `
+
+  // 若有選擇 type_id，則加上 type_id 篩選條件
+  if (type_id) {
+    sqlSelect += ` AND workshop.type_id = ${type_id}`
+  }
+
+  // 若有選擇 status，則加上 status 篩選條件
+  if (status === 'open') {
+    sqlSelect += ` AND NOW() BETWEEN workshop.registration_start AND workshop.registration_end`
+  } else if (status === 'closed') {
+    sqlSelect += ` AND NOW() > workshop.registration_end`
+  } else if (status === 'prepare') {
+    sqlSelect += ` AND NOW() < workshop.registration_start`
+  }
 
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
 

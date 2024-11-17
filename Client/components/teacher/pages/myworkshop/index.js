@@ -1,4 +1,5 @@
 'use client'
+import InputIME from '@/components/shared/input-ime/index.js'
 import MyWorkshopBox from '@/components/teacher/common/t-dashboard-myWorkshopBox'
 import { useAuth } from '@/hooks/use-auth'
 import Image from 'next/image'
@@ -16,6 +17,13 @@ export default function MyWorkshop(props) {
   const { userData } = auth // 撈取 teacherData 資料
   const [workshop, setWorkshop] = useState(null)
   const [filterStatus, setFilterStatus] = useState('unpublished')
+  const [search, setSearch] = useState('')
+
+  const [order, setOrder] = useState('3')
+  const [status, setStatus] = useState('')
+
+  const [selectedOrder, setSelectedOrder] = useState('排序')
+  const [selectedStatus, setSelectedStatus] = useState('狀態')
 
   useEffect(() => {
     // 當頁面一加載，滾動到指定位置
@@ -24,12 +32,12 @@ export default function MyWorkshop(props) {
 
   useEffect(() => {
     fetchData()
-  }, [filterStatus]) // 將 filterStatus 作為依賴項
+  }, [filterStatus, search, order, status]) // 將 filterStatus 作為依賴項
 
   const fetchData = async () => {
     try {
       const response = await fetch(
-        'http://localhost:3005/api/workshop/myWorkshop',
+        `http://localhost:3005/api/workshop/myWorkshop/?search=${search}&order=${order}&status=${status}`,
         {
           credentials: 'include', //一定要加，才會帶cookie
           method: 'GET',
@@ -48,6 +56,44 @@ export default function MyWorkshop(props) {
       console.log(err)
     }
   }
+
+  const onSearch = () => {
+    fetchData() // 搜尋時觸發獲取新資料
+  }
+
+  const onSelectStatus = (value) => {
+    setStatus(value) // 設置狀態
+    setSelectedStatus(
+      value === '' ? '狀態' : getOptionName(value, statusOptions)
+    )
+    fetchData() // 更新資料
+  }
+
+  const onSelectOrder = (value) => {
+    setOrder(value) // 設置排序
+    setSelectedOrder(value === '' ? '排序' : getOptionName(value, orderOptions))
+    fetchData() // 更新資料
+  }
+
+  // 新增一個輔助函數來根據 value 取得 option 名稱
+  const getOptionName = (value, options) => {
+    const option = options.find((item) => item.value === value)
+    return option ? option.option : ''
+  }
+
+  const statusOptions = [
+    { option: '狀態', value: '' },
+    { option: '準備中', value: 'prepare' },
+    { option: '報名中', value: 'open' },
+    { option: '已截止', value: 'closed' },
+  ]
+
+  const orderOptions = [
+    { option: '排序', value: '3' },
+    { option: '價錢 高 -- 低', value: '2' },
+    { option: '價錢 低 -- 高', value: '1' },
+    { option: '最新上架', value: '3' },
+  ]
 
   // 根據 filterStatus 來篩選資料
   const filteredWorkshop = workshop
@@ -73,14 +119,23 @@ export default function MyWorkshop(props) {
             <div className={styles.selectbar}>
               <div className={styles.searchArea}>
                 <div className="d-flex align-items-center">
-                  <input
+                  <InputIME
                     type="text"
                     className={styles.searchInput}
                     placeholder="搜尋"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        // 當用戶按下 Enter 鍵時觸發搜尋
+                        onSearch()
+                      }
+                    }}
                   />
                   <a
                     className="d-flex align-items-center text-decoration-none ms-3 text-dark ph"
                     href="#"
+                    onClick={onSearch}
                   >
                     <PiMagnifyingGlass />
                   </a>
@@ -88,32 +143,15 @@ export default function MyWorkshop(props) {
 
                 <div className="d-flex ">
                   <Dropdown
-                    name="狀態"
-                    items={[
-                      { option: '報名中', link: '' },
-                      { option: '已截止', link: '' },
-                    ]}
+                    name={selectedStatus}
+                    items={statusOptions}
+                    onSelect={onSelectStatus}
                   />
 
                   <Dropdown
-                    name="類型"
-                    items={[
-                      { option: '基礎化妝', link: '' },
-                      { option: '新娘化妝', link: '' },
-                      { option: '時尚與攝影化妝', link: '' },
-                      { option: '韓系美妝', link: '' },
-                      { option: '特效化妝', link: '' },
-                      { option: '美妝產品知識', link: '' },
-                    ]}
-                  />
-
-                  <Dropdown
-                    name="排序"
-                    items={[
-                      { option: '價錢 高 -- 低', link: '' },
-                      { option: '價錢 低 -- 高', link: '' },
-                      { option: '最新上架', link: '' },
-                    ]}
+                    name={selectedOrder}
+                    items={orderOptions}
+                    onSelect={onSelectOrder}
                   />
                 </div>
               </div>

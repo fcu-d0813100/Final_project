@@ -13,10 +13,10 @@ router.get('/information', authenticate, async function (req, res) {
       user.account AS user_account
 
    FROM
-   teachers
+    teachers
    JOIN
     workshop_type ON workshop_type.id = teachers.type_id 
- LEFT JOIN
+   LEFT JOIN
     user ON user.id = teachers.id
    WHERE
    teachers.id = ${id}
@@ -99,7 +99,7 @@ router.get('/:tid', async function (req, res) {
  LEFT JOIN
     workshop_time ON workshop_time.workshop_id = workshop.id
  WHERE
-    teachers.id=${req.params.tid}
+    teachers.id=${req.params.tid} AND workshop.isUpload=1 AND workshop.valid=1
   GROUP BY
     workshop.id, teachers.id, workshop.isUpload, workshop.valid, workshop_type.id `
 

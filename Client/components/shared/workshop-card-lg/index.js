@@ -50,7 +50,11 @@ export default function WorkshopCardLg({
               <div className={styles.wStatus}>
                 <p
                   className={`ps ${
-                    status === '已截止' ? styles.over : styles.nowOpen
+                    status === '已截止'
+                      ? styles.over
+                      : status === '報名中'
+                      ? styles.opening
+                      : styles.prepare
                   }`}
                 >
                   {status}

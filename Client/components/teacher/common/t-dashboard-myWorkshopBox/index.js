@@ -24,7 +24,6 @@ export default function MyWorkshopBox({
   filterStatus,
   id,
   setWorkshop,
-
 }) {
   //----------吐司訊息
   const { upload1Toast } = ToastSuccess({
@@ -237,16 +236,20 @@ export default function MyWorkshopBox({
   if (isUpload === 0) {
     statusText = '未發布'
     statusClass = styles.unUpload
-  } else if (now < regEnd) {
+  } else if (now >= regStart && now <= regEnd) {
     statusText = '報名中'
     statusClass = styles.registering
-  } else if (now >= regEnd && now <= endDateObj) {
+  } else if (now < regStart) {
+    statusText = '準備中'
+    statusClass = styles.prepare
+  } else if (now > regEnd && now <= endDateObj) {
     statusText = '已截止'
     statusClass = styles.end
   } else if (now > endDateObj) {
     statusText = '已過期'
     statusClass = styles.expired
   }
+
   return (
     <>
       <form>
