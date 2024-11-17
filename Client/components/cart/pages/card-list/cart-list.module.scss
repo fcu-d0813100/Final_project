@@ -20,6 +20,10 @@
     color: white;
   }
 }
+.btntext {
+  padding-inline: 16px;
+  font-size: 20px;
+}
 
 // 步驟圖片
 .step {
@@ -142,6 +146,12 @@
         color: $red-500;
       }
     }
+    .rwdphone {
+      width: 400px;
+      // background-color: pink;
+      display: flex;
+      justify-content: space-around;
+    }
   }
 }
 // 商品及課程的box結束
@@ -158,6 +168,9 @@
     .list {
       width: 100%;
       padding: 0;
+    }
+    .brand {
+      font-size: 14px;
     }
     .checkout {
       width: 100%;
@@ -217,6 +230,12 @@
       }
     }
   }
+  .checkout_btn {
+    // background-color: pink;
+    text-align: end;
+    margin-top: 30px;
+    margin-bottom: 100px;
+  }
 }
 
 //RWD
@@ -253,9 +272,13 @@
       .cosmetic-topic,
       .course-topic {
         border-radius: 5px 5px 0 0;
-        padding: 15px 20px;
+        padding: 12px 20px;
+        font-size: 16px;
         color: #fff;
         background-color: $green-700;
+      }
+      .brand {
+        font-size: 12px;
       }
       .cosmetic-box,
       .course-box {
@@ -328,16 +351,17 @@
         background-color: $gray-100;
         border: 1px solid $gray-200;
         border-radius: 0 0 5px 5px;
-        padding: 15px 40px;
+        padding: 10px 20px;
         text-align: end;
         margin-bottom: 30px;
+        font-size: 14px;
         span:nth-child(1) {
           color: $gray-200;
           text-decoration: line-through;
-          margin-inline: 8px;
+          margin-inline: 4px;
         }
         span:nth-child(2) {
-          font-size: 20px;
+          font-size: 16px;
           color: $red-500;
         }
       }
@@ -346,22 +370,223 @@
         background-color: $gray-100;
         border: 1px solid $gray-200;
         border-radius: 0 0 5px 5px;
-        padding: 15px 40px;
+        padding: 10px 20px;
+        text-align: end;
+        margin-bottom: 30px;
+        font-size: 14px;
+        .title {
+          font-size: 14px;
+        }
+        .origin-price {
+          color: $gray-200;
+          text-decoration: line-through;
+          margin-inline: 4px;
+        }
+        .discount-price {
+          font-size: 16px;
+          color: $red-500;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .cosmetic-box,
+  .course-box,
+  .cosmetic_amount,
+  .course_amount,
+  .cosmetic-topic,
+  .course-topic {
+    margin-inline: 15px;
+  }
+}
+
+//RWD
+@media screen and (max-width: 400px) {
+  .step {
+    margin-block: 30px;
+  }
+  //數量按鈕
+  .btn-sm {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    background: white;
+    transition: 0.3s;
+    .ph {
+      font-size: 12px;
+    }
+    &:hover {
+      background: rgb(0, 0, 0);
+      color: white;
+    }
+  }
+
+  .btntext {
+    padding-inline: 8px;
+    font-size: 14px;
+  }
+
+  //盒子
+  .outer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 100px;
+    .list {
+      width: 360px;
+      .cosmetic-topic,
+      .course-topic {
+        font-size: 14px;
+        border-radius: 5px 5px 0 0;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: $green-700;
+      }
+      .brand {
+        font-size: 8px;
+      }
+      .cosmetic-box,
+      .course-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px;
+        border-left: 1px solid $gray-200;
+        border-right: 1px solid $gray-200;
+        .cosmetic-detail,
+        .course-detail {
+          display: flex;
+          align-items: center;
+        }
+        .cosmetic-text,
+        .course-text {
+          width: 96px;
+          margin-left: 15px;
+          .product-name {
+            font-size: 10px;
+          }
+          .sub_text {
+            font-size: 8px;
+          }
+        }
+        .cosmetic-img,
+        .course-img {
+          width: 58px;
+          height: 58px;
+          overflow: hidden;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+        .price {
+          font-size: 12px;
+          text-align: right;
+          color: $red-500;
+          .origin_price {
+            color: $gray-200;
+            text-decoration: line-through;
+          }
+        }
+        .trash {
+          button {
+            border: 0;
+            background-color: transparent;
+            border-radius: 50%;
+            padding: 4px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $green-500;
+            font-size: 12px;
+          }
+          &:hover {
+            button {
+              color: #fff;
+              background-color: $red-500;
+              transition: ease 0.5s;
+            }
+          }
+        }
+      }
+
+      .course_amount {
+        background-color: $gray-100;
+        border: 1px solid $gray-200;
+        border-radius: 0 0 5px 5px;
+        padding: 10px 25px;
+        text-align: end;
+        margin-bottom: 30px;
+        font-size: 14px;
+        span:nth-child(1) {
+          color: $gray-200;
+          text-decoration: line-through;
+          margin-inline: 4px;
+          font-size: 12px;
+        }
+        span:nth-child(2) {
+          font-size: 14px;
+          color: $red-500;
+        }
+      }
+
+      .cosmetic_amount {
+        background-color: $gray-100;
+        border: 1px solid $gray-200;
+        border-radius: 0 0 5px 5px;
+        padding: 10px 25px;
         text-align: end;
         margin-bottom: 30px;
         .title {
-          font-size: 16px;
+          font-size: 14px;
         }
         .origin-price {
+          font-size: 12px;
           color: $gray-200;
           text-decoration: line-through;
           margin-inline: 8px;
         }
         .discount-price {
-          font-size: 20px;
+          font-size: 14px;
           color: $red-500;
         }
       }
+      .rwdphone {
+        width: 70px;
+        height: 70px;
+        // background-color: pink;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+
+  //小計box
+  .checkout {
+    // margin-left: 0px;
+
+    .sticky {
+      // width: 360px;
+      // text-align: center;
+      // width: 360px;
+      // background-color: pink;
+    }
+
+    .checkout_btn {
+      // background-color: pink;
+      margin-inline: 15px;
+      text-align: end;
+      margin-top: 30px;
+      margin-bottom: 100px;
     }
   }
 }

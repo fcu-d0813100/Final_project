@@ -60,7 +60,7 @@ export default function DiscountBox({ onCouponSelect }) {
         className={styles['checkout_discount']}
       >
         <span>優惠券</span>
-        <span className="ps">
+        <span>
           {selectedCoupon
             ? `${selectedCoupon.brand_name} ${selectedCoupon.name}`
             : '輸入享有折扣 >'}

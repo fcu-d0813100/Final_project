@@ -350,6 +350,7 @@ export default function Checkout({
                         <Form.Group className="mb-3" controlId="recipient-name">
                           <Form.Label>收件人</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="填寫姓名"
                             name="recipient_name"
@@ -362,6 +363,7 @@ export default function Checkout({
                         >
                           <Form.Label>電話</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="例 : 0912345678"
                             name="recipient_phone"
@@ -374,6 +376,7 @@ export default function Checkout({
                         >
                           <Form.Label>信箱</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="email"
                             placeholder="填寫信箱"
                             name="recipient_email"
@@ -385,6 +388,7 @@ export default function Checkout({
                             <Form.Group controlId="recipient-city">
                               <Form.Label>縣市</Form.Label>
                               <Form.Select
+                                className={style['form-input']}
                                 name="recipient_city"
                                 ref={recipientCityRef}
                                 value={countryIndex}
@@ -410,6 +414,7 @@ export default function Checkout({
                             <Form.Group controlId="recipient-district">
                               <Form.Label>區</Form.Label>
                               <Form.Select
+                                className={style['form-input']}
                                 name="recipient_district"
                                 ref={recipientDistrictRef}
                                 value={townshipIndex}
@@ -437,6 +442,7 @@ export default function Checkout({
                         >
                           <Form.Label>居住地址</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="填寫地址"
                             name="recipient_address"
@@ -453,6 +459,7 @@ export default function Checkout({
                         >
                           <Form.Label className="mt-3">收件人</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="填寫姓名"
                             name="seven_recipient_name"
@@ -465,6 +472,7 @@ export default function Checkout({
                         >
                           <Form.Label>電話</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="text"
                             placeholder="例 : 0912345678"
                             name="seven_recipient_phone"
@@ -477,6 +485,7 @@ export default function Checkout({
                         >
                           <Form.Label>信箱</Form.Label>
                           <Form.Control
+                            className={style['form-input']}
                             type="email"
                             placeholder="填寫信箱"
                             name="seven_recipient_email"

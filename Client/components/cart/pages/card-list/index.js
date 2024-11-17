@@ -156,7 +156,7 @@ export default function CartList() {
                                 折扣
                               </div>
                             )}
-                          <div className="ps">{product.brand}</div>
+                          <div className={style.brand}>{product.brand}</div>
                           <div className={`h6 mb-1 ${style['product-name']}`}>
                             {product.product_name}
                           </div>
@@ -165,58 +165,61 @@ export default function CartList() {
                           </div>
                         </div>
                       </div>
-
-                      {/* 數量加減按鈕 */}
-                      <div className="d-flex align-items-center justify-content-end">
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            const nextPqty = product.qty - 1
-                            if (nextPqty >= 1) del()
-                            if (nextPqty <= 0) {
-                              // -----彈窗移除商品
-                              setProductToDelete(product)
-                              setShowModal(true)
-                            } else {
-                              onDecreaseProduct(
+                      <div className={style.rwdphone}>
+                        {/* 數量加減按鈕 */}
+                        <div className="d-flex align-items-center justify-content-end">
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              const nextPqty = product.qty - 1
+                              if (nextPqty >= 1) del()
+                              if (nextPqty <= 0) {
+                                // -----彈窗移除商品
+                                setProductToDelete(product)
+                                setShowModal(true)
+                              } else {
+                                onDecreaseProduct(
+                                  product.product_id,
+                                  product.color
+                                )
+                              }
+                            }}
+                          >
+                            <Minus size={20} />
+                          </button>
+                          <span className={style.btntext}>{product.qty}</span>
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              onIncreaseProduct(
                                 product.product_id,
                                 product.color
                               )
-                            }
-                          }}
-                        >
-                          <Minus size={20} />
-                        </button>
-                        <span className="px-3 h6">{product.qty}</span>
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            onIncreaseProduct(product.product_id, product.color)
-                            add()
-                          }}
-                        >
-                          <Plus size={20} />
-                        </button>
-                        <Toaster position="top-center" reverseOrder={true} />
-                      </div>
+                              add()
+                            }}
+                          >
+                            <Plus size={20} />
+                          </button>
+                          <Toaster position="top-center" reverseOrder={true} />
+                        </div>
 
-                      {/* 商品價格 */}
-                      <div className={`h6 ${style.price}`}>
-                        NT$
-                        {(selectedCoupon && selectedCoupon.discount_value <= 1
-                          ? Math.floor(
-                              product.price * product.qty * discountValue
-                            )
-                          : product.price * product.qty
-                        ).toLocaleString()}
-                        <div className={style['origin_price']}>
+                        {/* 商品價格 */}
+                        <div className={`h6 ${style.price}`}>
                           NT$
-                          {(
-                            product.originalprice * product.qty
+                          {(selectedCoupon && selectedCoupon.discount_value <= 1
+                            ? Math.floor(
+                                product.price * product.qty * discountValue
+                              )
+                            : product.price * product.qty
                           ).toLocaleString()}
+                          <div className={style['origin_price']}>
+                            NT$
+                            {(
+                              product.originalprice * product.qty
+                            ).toLocaleString()}
+                          </div>
                         </div>
                       </div>
-
                       {/* 垃圾桶按鈕 */}
                       <div className={style.trash}>
                         <button
@@ -280,7 +283,7 @@ export default function CartList() {
                           <div className={`h6 mb-1 ${style['product-name']}`}>
                             {workshop.name}
                           </div>
-                          <div className="ps">
+                          <div className={`${style['sub_text']}`}>
                             {workshop.date}
                             <span className={`ms-2  ${style['sub_text']}`}>
                               {workshop.beginTime}-{workshop.endTime}
@@ -288,43 +291,46 @@ export default function CartList() {
                           </div>
                         </div>
                       </div>
-                      {/* 數量加減按鈕 */}
-                      <div className="d-flex align-items-center justify-content-end">
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            const nextWqty = workshop.qty - 1
-                            if (nextWqty >= 1) del()
-                            if (nextWqty <= 0) {
-                              setWorkshopToDelete(workshop)
-                              setShowModal(true)
-                            } else {
-                              onDecreaseWorkshop(workshop.id)
-                            }
-                          }}
-                        >
-                          <Minus size={20} />
-                        </button>
-                        <span className="px-3 h6">{workshop.qty}</span>
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            onIncreaseWorkshop(workshop.id)
-                            add()
-                          }}
-                        >
-                          <Plus size={20} />
-                        </button>
-                      </div>
+                      <div className={style.rwdphone}>
+                        {/* 數量加減按鈕 */}
+                        <div className="d-flex align-items-center justify-content-end">
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              const nextWqty = workshop.qty - 1
+                              if (nextWqty >= 1) del()
+                              if (nextWqty <= 0) {
+                                setWorkshopToDelete(workshop)
+                                setShowModal(true)
+                              } else {
+                                onDecreaseWorkshop(workshop.id)
+                              }
+                            }}
+                          >
+                            <Minus size={20} />
+                          </button>
+                          <span className={style.btntext}>{workshop.qty}</span>
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              onIncreaseWorkshop(workshop.id)
+                              add()
+                            }}
+                          >
+                            <Plus size={20} />
+                          </button>
+                        </div>
 
-                      {/* 課程價格 */}
-                      <div className={`h6 ${style.price}`}>
-                        NT$
-                        {Math.floor(
-                          workshop.price * workshop.qty * 0.95
-                        ).toLocaleString()}
-                        <div className={style['origin_price']}>
-                          NT$ {(workshop.price * workshop.qty).toLocaleString()}
+                        {/* 課程價格 */}
+                        <div className={`h6 ${style.price}`}>
+                          NT$
+                          {Math.floor(
+                            workshop.price * workshop.qty * 0.95
+                          ).toLocaleString()}
+                          <div className={style['origin_price']}>
+                            NT$
+                            {(workshop.price * workshop.qty).toLocaleString()}
+                          </div>
                         </div>
                       </div>
                       <div className={style.trash}>

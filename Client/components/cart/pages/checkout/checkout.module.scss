@@ -11,24 +11,14 @@
   box-shadow: none;
 }
 
-//input樣式變更
-.form-control {
-  border-color: $gray-200;
-  border-radius: 5px;
+.form-input {
+  &:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1.5px solid $green-500;
+  }
   &::placeholder {
     color: $gray-200;
-  }
-  &:focus {
-    border-color: $green-500;
-    box-shadow: 0 0 0 1px $green-500;
-  }
-}
-//select樣式變更
-.form-select {
-  border-color: $gray-200;
-  &:focus {
-    border-color: $green-500;
-    box-shadow: 0 0 0 1px $green-500;
   }
 }
 
