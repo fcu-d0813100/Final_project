@@ -1,32 +1,40 @@
 'use client'
 import axios from 'axios'
+import Dropdown from '@/components/workshop/common/dropdown'
 import styles from '@/components/workshop/common/workshops.module.scss'
 import WorkshopsBN from '@/components/workshop/common/workshop-bn'
-import WorkshopSelectbar from '@/components/workshop/common/workshop-selectbar'
 import WorkshopCardLg from '@/components/shared/workshop-card-lg'
 import React, { useState, useEffect } from 'react'
-
 
 export default function WorkshopAll(props) {
   const [workshop, setWorkshop] = useState([])
   const [search, setSearch] = useState('')
+  const [order, setOrder] = useState('3')
+  const [typeId, setTypeId] = useState('')
+  const [min, setMin] = useState('')
+  const [max, setMax] = useState('')
+  const [status, setStatus] = useState('')
+
+  const [selectedOrder, setSelectedOrder] = useState('排序')
+  const [selectedType, setSelectedType] = useState('類型')
+  const [selectedStatus, setSelectedStatus] = useState('狀態')
 
   useEffect(() => {
     fetchData()
-  }, [search]) // 當 search 更新時重新調用 fetchData
+  }, [search, order, typeId, min, max, status]) // 更新時重新調用 fetchData
 
   const fetchData = async () => {
     try {
       // 搜尋所有工作坊或依 `search` 查詢
       const response = await fetch(
-        `http://localhost:3005/api/workshop/?search=${search}`
+        `http://localhost:3005/api/workshop/?search=${search}&order=${order}&type_id=${typeId}&min=${min}&max=${max}&status=${status}`
       )
       if (!response.ok) {
         throw new Error('網路回應不成功：' + response.status)
       }
       const data = await response.json()
       setWorkshop(...data) // 設置工作坊資料
-      console.log(...data);
+      console.log(...data)
     } catch (err) {
       console.log(err)
     }
@@ -50,11 +58,107 @@ export default function WorkshopAll(props) {
     }
   }
 
+  const onSelectStatus = (value) => {
+    setStatus(value) // 設置狀態
+    setSelectedStatus(
+      value === '' ? '狀態' : getOptionName(value, statusOptions)
+    )
+    fetchData() // 更新資料
+  }
+
+  const onSelectType = (value) => {
+    setTypeId(value) // 設置類型
+    setSelectedType(value === '' ? '類型' : getOptionName(value, typeOptions))
+    fetchData() // 更新資料
+  }
+
+  const onSelectOrder = (value) => {
+    setOrder(value) // 設置排序
+    setSelectedOrder(value === '' ? '排序' : getOptionName(value, orderOptions))
+    fetchData() // 更新資料
+  }
+
+  // 新增一個輔助函數來根據 value 取得 option 名稱
+  const getOptionName = (value, options) => {
+    const option = options.find((item) => item.value === value)
+    return option ? option.option : ''
+  }
+
+  const statusOptions = [
+    { option: '狀態', value: '' },
+    { option: '報名中', value: 'open' },
+    { option: '已截止', value: 'closed' },
+  ]
+
+  const typeOptions = [
+    { option: '類型', value: '' },
+    { option: '基礎化妝', value: '1' },
+    { option: '新娘化妝', value: '2' },
+    { option: '時尚與攝影化妝', value: '3' },
+    { option: '韓系美妝', value: '4' },
+    { option: '特效化妝', value: '5' },
+    { option: '美妝產品知識', value: '6' },
+  ]
+
+  const orderOptions = [
+    { option: '排序', value: '3' },
+    { option: '價錢 高 -- 低', value: '2' },
+    { option: '價錢 低 -- 高', value: '1' },
+    { option: '最新上架', value: '3' },
+  ]
+
   return (
     <>
       <WorkshopsBN search={search} setSearch={setSearch} onSearch={onSearch} />
 
-      <WorkshopSelectbar />
+      <div className="container">
+        <div className={styles.selectBar}>
+          <div className="d-flex align-items-center">
+            <p className="m-0 me-3 h6 text-dark ">日期</p>
+            <input
+              type="date"
+              className={`${styles.searchInput} mx-2`}
+              placeholder="開始日期"
+              value={min}
+              onChange={(e) => {
+                setMin(e.target.value) // 設置開始日期
+                fetchData() // 更新篩選
+              }}
+            />
+            <p className="text-dark m-0">--</p>
+            <input
+              type="date"
+              className={`${styles.searchInput} mx-2`}
+              placeholder="結束日期"
+              value={max}
+              onChange={(e) => {
+                setMax(e.target.value) // 設置結束日期
+                fetchData() // 更新篩選
+              }}
+            />
+          </div>
+
+          <div className="d-flex">
+            <Dropdown
+              name={selectedStatus}
+              items={statusOptions}
+              onSelect={onSelectStatus}
+            />
+
+            <Dropdown
+              name={selectedType}
+              items={typeOptions}
+              onSelect={onSelectType}
+            />
+
+            <Dropdown
+              name={selectedOrder}
+              items={orderOptions}
+              onSelect={onSelectOrder}
+            />
+          </div>
+        </div>
+      </div>
 
       <div className={`${styles.section03} container`}>
         <div className={`${styles.tOwnWorkshops} row row-cols-3 my-5`}>

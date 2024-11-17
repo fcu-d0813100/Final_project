@@ -2,7 +2,7 @@
 
 .dropdownTitle {
   height: 28px;
-  width: 100px;
+  width: 100%;
   padding-inline: 10px;
   text-decoration: none;
   color: rgb(0, 0, 0);
@@ -10,6 +10,7 @@
 
   .downIcon {
     padding-top: 3px;
+    margin-left: 10px;
     font-size: 22px;
   }
 }

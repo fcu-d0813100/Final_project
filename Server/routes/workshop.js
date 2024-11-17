@@ -27,7 +27,7 @@ const upload = multer({ storage: storage })
 router.use('/workshop', express.static(path.join(__dirname, 'public/workshop')))
 
 router.get('/', async function (req, res, next) {
-  const { search = '', order, min = '', max = '', type_id } = req.query
+  const { search = '', order, min = '', max = '', type_id, status } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -89,6 +89,13 @@ router.get('/', async function (req, res, next) {
     sqlSelect += ` AND workshop.type_id = ${type_id}`
   }
 
+  // 若有選擇 status，則加上 status 篩選條件
+  if (status === 'open') {
+    sqlSelect += ` AND NOW() BETWEEN workshop.registration_start AND workshop.registration_end`
+  } else if (status === 'closed') {
+    sqlSelect += ` AND NOW() > workshop.registration_end`
+  }
+
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
 
   // 根據 order 值決定排序條件
@@ -97,16 +104,16 @@ router.get('/', async function (req, res, next) {
   } else if (order === '2') {
     sqlSelect += ` ORDER BY workshop.price DESC` // 價格降冪
   } else if (order === '3') {
-    sqlSelect += ` ORDER BY workshop_time.date ASC` // 日期升冪
+    sqlSelect += ` ORDER BY workshop_time.date DESC` // 日期升冪
   }
 
   // 設置查詢參數
   const queryParams = [`%${search}%`, `%${search}%`, `%${search}%`]
 
   // 如果有 type_id 參數，將其加入 queryParams
-  if (type_id) {
-    queryParams.push(type_id)
-  }
+  // if (type_id) {
+  //   queryParams.push(type_id)
+  // }
 
   const result = await db
     .query(sqlSelect, queryParams)
