@@ -24,28 +24,29 @@ export default function CartList() {
   })
 
   //---------刪除商品的彈窗訊息
-  const [showModal, setShowModal] = useState(false)
-
-  //商品的部分
+  // 商品部分
+  const [showProductModal, setShowProductModal] = useState(false)
   const [productToDelete, setProductToDelete] = useState(null)
+
   const handleDeleteConfirmP = () => {
     if (productToDelete) {
       onRemoveProduct(productToDelete.product_id, productToDelete.color)
     }
-    setProductToDelete(null) // 清空選中的商品
-    setShowModal(false) // 關閉彈窗
+    setProductToDelete(null)
+    setShowProductModal(false)
   }
 
-  //課程的部分
+  // 課程部分
+  const [showWorkshopModal, setShowWorkshopModal] = useState(false)
   const [workshopToDelete, setWorkshopToDelete] = useState(null)
+
   const handleDeleteConfirmW = () => {
     if (workshopToDelete) {
       onRemoveWorkshop(workshopToDelete.id)
     }
-    setWorkshopToDelete(null) // 清空選中的課程
-    setShowModal(false) // 關閉彈窗
+    setWorkshopToDelete(null)
+    setShowWorkshopModal(false)
   }
-
   //-----------按鈕路由
   const router = useRouter()
 
@@ -92,15 +93,26 @@ export default function CartList() {
   return (
     <>
       {/* 彈窗訊息 */}
-      {showModal && (
+      {showProductModal && (
         <Confrim
           title="移除商品"
           content="您即將移除此商品，操作無法復原。確定要執行此操作嗎？"
           btnConfirm="確定刪除"
           btnCancel="取消"
           ConfirmFn={handleDeleteConfirmP}
-          show={showModal}
-          handleClose={() => setShowModal(false)}
+          show={showProductModal}
+          handleClose={() => setShowProductModal(false)}
+        />
+      )}
+      {showWorkshopModal && (
+        <Confrim
+          title="移除課程"
+          content="您即將移除此課程，操作無法復原。確定要執行此操作嗎？"
+          btnConfirm="確定刪除"
+          btnCancel="取消"
+          ConfirmFn={handleDeleteConfirmW}
+          show={showWorkshopModal}
+          handleClose={() => setShowWorkshopModal(false)}
         />
       )}
 
@@ -174,9 +186,8 @@ export default function CartList() {
                               const nextPqty = product.qty - 1
                               if (nextPqty >= 1) del()
                               if (nextPqty <= 0) {
-                                // -----彈窗移除商品
                                 setProductToDelete(product)
-                                setShowModal(true)
+                                setShowProductModal(true)
                               } else {
                                 onDecreaseProduct(
                                   product.product_id,
@@ -225,8 +236,8 @@ export default function CartList() {
                         <button
                           type="button"
                           onClick={() => {
-                            setProductToDelete(product) // 設置要刪除的商品
-                            setShowModal(true) // 打開彈窗
+                            setProductToDelete(product)
+                            setShowProductModal(true)
                           }}
                         >
                           <Trash size={20} className="d-md-none" />
@@ -301,7 +312,7 @@ export default function CartList() {
                               if (nextWqty >= 1) del()
                               if (nextWqty <= 0) {
                                 setWorkshopToDelete(workshop)
-                                setShowModal(true)
+                                setShowWorkshopModal(true) // 顯示課程刪除彈窗
                               } else {
                                 onDecreaseWorkshop(workshop.id)
                               }
@@ -338,8 +349,8 @@ export default function CartList() {
                           type="button"
                           className={style.trash}
                           onClick={() => {
-                            setWorkshopToDelete(workshop) // 設置要刪除的課程
-                            setShowModal(true) // 顯示彈窗
+                            setWorkshopToDelete(workshop)
+                            setShowWorkshopModal(true)
                           }}
                         >
                           <Trash size={20} className="d-md-none" />
