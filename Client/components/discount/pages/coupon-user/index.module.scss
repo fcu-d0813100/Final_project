@@ -92,3 +92,10 @@
   .funnel{
     border: transparent;
   }
+
+
+  @media (max-width: 500px) {
+    .add{
+        display: none;
+    }
+  }

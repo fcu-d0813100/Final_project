@@ -5,6 +5,8 @@ import styles from './index.module.scss';
 import AdminSection from '@/components/admin/common/coupon/admin-section-coupon';
 import CouponEdit from '@/components/discount/common/coupon-edit';
 import CouponEnd from '@/components/discount/common/coupon-end';
+import CouponEditAll from '@/components/discount/common/coupon-edit-all'
+import CouponEndAll from '@/components/discount/common/coupon-end-all'
 import toast, { Toaster } from 'react-hot-toast'; // 引入 toast
 
 export default function Index(props) {
@@ -61,10 +63,19 @@ export default function Index(props) {
       setEndedCoupons(ended);
       setUpcomingCoupons(upcoming); // 設置即將開始的優惠券
 
-      toast.success("優惠券已成功加載！");
+      // toast.success("優惠券已成功加載！");
 
     } catch (error) {
-      toast.error(`獲取優惠券失敗：${error.message}`); // 顯示錯誤提示
+      toast.error(`獲取優惠券失敗：${error.message}`
+        ,{style:{
+          border: '1.2px solid #963827',
+          padding: '12px 40px',
+          color: '#963827',
+        },iconTheme:{
+          primary:'#963827',
+          secondary:'#fff'
+        }
+      }); // 顯示錯誤提示
     } finally {
       setLoading(false);
     }
@@ -137,17 +148,29 @@ export default function Index(props) {
           <Tab.Content>
             <Tab.Pane eventKey="/ing">
               <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                {currentOngoingCoupons.map((coupon) => (
-                  <CouponEdit
-                    key={coupon.id}
-                    id={coupon.id}
-                    img={brandImageMap[coupon.brand_id]}
-                    name={coupon.name}
-                    discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`}
-                    condition={coupon.minimum_amount}
-                    expiration={coupon.end_date}
-                  />
-                ))}
+                {currentOngoingCoupons.map((coupon) => {
+                  if (coupon.brand_id === 6) {
+                    return <CouponEditAll
+                      key={coupon.id}
+                      id={coupon.id}
+                      name={coupon.name}
+                      discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                      condition={coupon.minimum_amount}
+                      expiration={coupon.end_date}
+                    />;
+                  }
+                  return (
+                    <CouponEdit
+                      key={coupon.id}
+                      id={coupon.id}
+                      img={brandImageMap[coupon.brand_id]}
+                      name={coupon.name}
+                      discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                      condition={coupon.minimum_amount}
+                      expiration={coupon.end_date}
+                    />
+                  );
+                })}
               </div>
               <div className={styles.pagination}>
                 <button
@@ -175,17 +198,29 @@ export default function Index(props) {
             </Tab.Pane>
             <Tab.Pane eventKey="/fet">
               <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                {currentUpcomingCoupons.map((coupon) => (
-                  <CouponEdit
-                    key={coupon.id}
-                    id={coupon.id}
-                    img={brandImageMap[coupon.brand_id]}
-                    name={coupon.name}
-                    discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`}
-                    condition={coupon.minimum_amount}
-                    expiration={coupon.end_date}
-                  />
-                ))}
+                {currentUpcomingCoupons.map((coupon) => {
+                  if (coupon.brand_id === 6) {
+                    return <CouponEditAll
+                      key={coupon.id}
+                      id={coupon.id}
+                      name={coupon.name}
+                      discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                      condition={coupon.minimum_amount}
+                      expiration={coupon.end_date}
+                    />;
+                  }
+                  return (
+                    <CouponEdit
+                      key={coupon.id}
+                      id={coupon.id}
+                      img={brandImageMap[coupon.brand_id]}
+                      name={coupon.name}
+                      discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                      condition={coupon.minimum_amount}
+                      expiration={coupon.end_date}
+                    />
+                  );
+                })}
               </div>
               <div className={styles.pagination}>
                 <button
@@ -213,17 +248,30 @@ export default function Index(props) {
             </Tab.Pane>
             <Tab.Pane eventKey="/end">
               <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
-                {currentEndedCoupons.map((coupon) => (
-                  <CouponEnd
-                    key={coupon.id}
-                    id={coupon.id}
-                    img={brandImageMap[coupon.brand_id]}
-                    name={coupon.name}
-                    discount={coupon.discount_value > 1 ? `$${coupon.discount_value}` : `${coupon.discount_value * 100}% OFF`}
-                    condition={coupon.minimum_amount}
-                    expiration={coupon.end_date}
-                  />
-                ))}
+                {currentEndedCoupons.map((coupon) => {
+                  if (coupon.brand_id === 6) {
+                    return <CouponEndAll
+                      key={coupon.id}
+                      id={coupon.id}
+                      name={coupon.name}
+                      discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                      condition={coupon.minimum_amount}
+                      expiration={coupon.end_date}
+                    />;
+                  }
+
+                  return (
+                    <CouponEnd
+                      key={coupon.id}
+                      id={coupon.id}
+                      img={brandImageMap[coupon.brand_id]}
+                      name={coupon.name}
+                      discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
+                      condition={coupon.minimum_amount}
+                      expiration={coupon.end_date}
+                    />
+                  );
+                })}
               </div>
               <div className={styles.pagination}>
                 <button

@@ -1,0 +1,78 @@
+@import '@/styles/_variant.scss';
+
+.coupon-lg {
+    width: 350px;
+    height: 107px;
+    margin-bottom: 20px;
+    background-image: url("/discount/coupon/coupon-sm-red.svg");
+    background-size: cover;
+    position: relative;
+    justify-content: space-around;
+
+    .text {
+        color: #fff;
+        text-align: start;
+
+        .name {
+            font-size: 16px;
+        }
+
+        .discount {
+            font-size: 36px;
+            line-height: 100%;
+        }
+        .code{
+            font-size: 16px;
+            line-height: 100%;
+            padding-block: 3px;
+            width: 150px;
+            text-align: center;
+            background-color: $red-200;
+            color:#fff;
+        }
+    }
+}
+
+.right-ps {
+    color: $gray-200;
+    line-height: 1.5rem;
+    font-size: 10px;
+}
+
+
+
+
+@media (max-width: 576px) {
+    .coupon-lg {
+        width: 250px;
+        height: 77px;
+        background-image: url("/discount/coupon/coupon-sm-red.svg");
+
+        .text {
+            width: 120px;
+            margin-left: 10px;
+
+            .name {
+                font-size: 11px;
+            }
+
+            .discount {
+                font-size: 24px;
+            }
+
+            .code{
+                font-size: 11px;
+                width: 90px;
+            }
+
+        }
+
+        .right-ps {
+            line-height: 100%;
+            font-size: 9px;
+            margin-bottom: 5px;
+        }
+
+    }
+
+}

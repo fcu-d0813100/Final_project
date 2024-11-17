@@ -6,7 +6,8 @@ export default function Workshop({
     imageSrc = "",
     title = "",
     instructor = "",
-    dateRange = "",
+    date = "",
+    time = "",
     quantity = 0,
     price = 0
 }) {
@@ -25,7 +26,7 @@ export default function Workshop({
                     <div className={`${styles["item-name"]} ps mb-1`}>{instructor}</div>
                     <div className={`h5 mb-2 ${styles.class}`}>{title}</div>
                     <div className={`${styles.time} p`}>
-                        {dateRange}
+                        {date}<br/><span>{time}</span>
                     </div>
                 </div>
             </div>

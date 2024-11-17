@@ -17,10 +17,10 @@ const index = ({
     const handleTypeChange = (e) => {
         const value = e.target.value;
         if (value === '全部') {
-            if (selectedTypes.length === 3) { 
+            if (selectedTypes.length === 2) { 
                 setSelectedTypes([]);
             } else {
-                setSelectedTypes([1, 2, 3]);
+                setSelectedTypes([1, 2]);
             }
         } else {
             setSelectedTypes((prevSelectedTypes) =>
@@ -51,7 +51,7 @@ const index = ({
                         <input
                             type="checkbox"
                             value="全部"
-                            checked={selectedTypes.length === 3}
+                            checked={selectedTypes.length === 2}
                             onChange={handleTypeChange} // 全選/取消
                         />
                         <span className={`btn round ${styles.button}`}>全部</span>
@@ -74,7 +74,7 @@ const index = ({
                         />
                         <span className={`btn round ${styles.button}`}>折扣券</span>
                     </label>
-                    <label>
+                    {/* <label>
                         <input
                             type="checkbox"
                             value={3}
@@ -82,7 +82,7 @@ const index = ({
                             onChange={(e) => setSelectedTypes(prev => e.target.checked ? [...prev, 3] : prev.filter(type => type !== 3))}
                         />
                         <span className={`btn round ${styles.button}`}>VIP券</span>
-                    </label>
+                    </label> */}
                 </div>
 
                 {/* 品牌篩選 */}

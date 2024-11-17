@@ -730,5 +730,111 @@ router.put(
     }
   }
 )
+// 加入收藏
+router.post('/favorite/:workshop_id/:user_id', async (req, res) => {
+  const { workshop_id, user_id } = req.params
+
+  if (!workshop_id || !user_id) {
+    return res.status(400).json({ message: '缺少必要的參數' })
+  }
+
+  try {
+    const [existingFavorite] = await db.query(
+      `SELECT * FROM workshop_like WHERE workshop_id = ${workshop_id} AND user_id = ${user_id}`,
+      [workshop_id, user_id]
+    )
+
+    if (existingFavorite.length > 0) {
+      return res.status(409).json({ message: '課程已收藏' })
+    }
+
+    await db.query(
+      `INSERT INTO workshop_like (workshop_id, user_id, created_at) VALUES (${workshop_id}, ${user_id}, NOW())`,
+      [workshop_id, user_id]
+    )
+
+    res.status(201).json({ message: '課程已收藏' })
+  } catch (error) {
+    console.error('收藏課程錯誤:', error)
+    res.status(500).json({ message: '課程收藏失敗' })
+  }
+})
+
+// 取消收藏
+router.delete('/favorite/:workshop_id/:user_id', async (req, res) => {
+  const { workshop_id, user_id } = req.params
+
+  if (!workshop_id || !user_id) {
+    return res.status(400).json({ message: '缺少必要的參數' })
+  }
+
+  try {
+    const [result] = await db.query(
+      `DELETE FROM workshop_like WHERE workshop_id = ${workshop_id} AND user_id = ${user_id}`,
+      [workshop_id, user_id]
+    )
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: '收藏紀錄不存在' })
+    }
+
+    res.status(200).json({ message: '已取消收藏' })
+  } catch (error) {
+    console.error('取消收藏錯誤:', error)
+    res.status(500).json({ message: '取消收藏失敗' })
+  }
+})
+
+// 查詢收藏列表
+router.get('/favorite/search/:user_id', async (req, res) => {
+  const { user_id } = req.params
+
+  if (!user_id) {
+    return res.status(400).json({ message: '缺少必要的參數 user_id' })
+  }
+
+  try {
+    const [favorites] = await db.query(
+      `SELECT
+         workshop_like.user_id,
+         workshop_like.workshop_id,
+         workshop.id,
+         workshop.name,
+         workshop.price,
+         workshop.type_id,
+         workshop.img_cover,
+         teachers.id AS teacher_id,
+         teachers.name AS teacher_name,
+         GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
+         workshop.registration_start,
+         workshop.registration_end,
+         workshop.isUpload,
+         workshop.valid,
+         workshop_type.type AS workshop_type_type
+       FROM 
+         workshop_like
+       JOIN 
+         workshop ON workshop_like.workshop_id = workshop.id
+       JOIN 
+         teachers ON workshop.teachers_id = teachers.id
+       LEFT JOIN 
+         workshop_time ON workshop_time.workshop_id = workshop.id
+       LEFT JOIN 
+         workshop_type ON workshop.type_id = workshop_type.id
+       WHERE 
+         workshop_like.user_id = ${req.params.user_id}
+       GROUP BY 
+         workshop.id`,
+      [user_id]
+    )
+
+    res.status(200).json(favorites)
+  } catch (error) {
+    console.error('查詢過程中發生錯誤:', error)
+    res.status(500).json({ message: '查詢過程中發生錯誤，請稍後再試' })
+  }
+})
+
+
 
 export default router

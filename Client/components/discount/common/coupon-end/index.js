@@ -6,7 +6,7 @@ const Coupon = ({
     img = '/discount/coupon/brands/bobbi.svg',
     name = 'GIFT COUPON',
     discount = '20% OFF',
-    condition = '滿$2000',
+    condition = 0,
     expiration = "無使用期限" }) => {
     return (
 

@@ -108,7 +108,7 @@ export default function Index() {
       />
       <Navbar.Collapse
         id="basic-navbar-nav"
-        className={`${styles['collapse']} justify-content-center`}
+        className={`${styles['collapse']} justify-content-center align-items-start`}
       >
         <Nav>
           {navLinks.map((link) => (
