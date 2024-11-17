@@ -2,18 +2,26 @@ import express from 'express';
 const router = express.Router();
 import db from '#configs/db.js';
 
-// 获取特定用户的优惠券
+// 獲取特定用戶的優惠券
+// 獲取特定用戶的優惠券
 router.get('/:userId', async (req, res) => {
-    const userId = req.params.userId; // 獲取 URL 參數中的 userId
-    const { page = 1, limit = 10 } = req.query; // 獲取分頁參數，默認值是 page 1 和 limit 10
+    const userId = req.params.userId;  // 獲取 URL 參數中的 userId
+    const limit = parseInt(req.query.limit) || 6;  // 每頁顯示的優惠券數量，保證為整數
+    const page = parseInt(req.query.page) || 1;    // 當前頁面，保證為整數
 
-    console.log('用戶 ID:', userId); // 日誌檢查 userId
-    console.log('頁面:', page, '每頁顯示數量:', limit); // 日誌檢查分頁參數
-
-    // 計算偏移量（OFFSET）
-    const offset = (page - 1) * limit;
+    console.log('用戶 ID:', userId);  // 日誌檢查 userId
+    console.log('Limit:', limit, 'Page:', page);  // 日誌檢查每頁數量和當前頁
 
     try {
+        // 計算 OFFSET
+        const offset = (page - 1) * limit;
+
+        console.log('Offset:', offset);  // 確認 OFFSET 的計算
+
+        // 當前日期，格式為 YYYY-MM-DD
+        const currentDate = new Date().toISOString().split('T')[0]; // 取出 YYYY-MM-DD 部分
+
+        // 更新 SQL 查詢，加入分頁功能以及 end_date > currentDate 篩選條件
         const sqlSelect = `
             SELECT coupon_relation.*,
                    coupon_list.name,
@@ -25,28 +33,43 @@ router.get('/:userId', async (req, res) => {
                    coupon_list.brand_id
             FROM coupon_relation 
             JOIN coupon_list ON coupon_relation.coupon_id = coupon_list.id
-            JOIN user ON coupon_relation.user_id = user.id 
             WHERE coupon_relation.user_id = ${userId}
+              AND coupon_list.end_date > '${currentDate}'  -- 篩選 end_date 大於當前日期的優惠券
             ORDER BY coupon_relation.id DESC
-            LIMIT ${limit} OFFSET ${offset}`;  // 加入分頁的 LIMIT 和 OFFSET  DESC  ORDER BY coupon_list.start_date ASC
+            LIMIT ${limit} OFFSET ${offset}`;  // 使用 LIMIT 和 OFFSET 來分頁
 
-        console.log('執行 SQL 查詢:', sqlSelect);
-        console.log('使用者 ID:', userId, '頁面:', page, '每頁顯示數量:', limit);
+        // 獲取總數
+        const sqlCount = `
+            SELECT COUNT(*) as totalCount
+            FROM coupon_relation 
+            JOIN coupon_list ON coupon_relation.coupon_id = coupon_list.id
+            WHERE coupon_relation.user_id = ${userId}
+              AND coupon_list.end_date > '${currentDate}'`;  // 獲取符合條件的總數
 
-        // 傳遞分頁參數給資料庫查詢
-        const [result] = await db.query(sqlSelect, [limit, offset]);
+        // 執行 SQL 查詢
+        const [coupons] = await db.query(sqlSelect);
+        const [[{ totalCount }]] = await db.query(sqlCount);  // 獲取總數
 
-        if (result.length === 0) {
-            return res.status(404).json({ success: false, message: '此用戶尚未擁有任何優惠券。' });
+        console.log('Total Coupons:', totalCount);  // 確認總數計算
+
+        if (coupons.length === 0) {
+            return res.status(404).json({ success: false, message: '此用戶尚未擁有任何有效的優惠券。' });
         }
 
-        res.status(200).json({ success: true, data: result });
-        console.log('查詢結果:', result);
+        res.status(200).json({
+            success: true,
+            data: coupons,
+            totalCount: totalCount,  // 返回總數
+        });
+
     } catch (error) {
         console.error('資料庫查詢錯誤:', error);
         res.status(500).json({ message: '獲取優惠券時發生錯誤，請稍後再試。' });
     }
 });
+
+
+
 
 // 檢查用戶是否已領取特定優惠券
 router.get('/', async (req, res) => {

@@ -40,7 +40,7 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
                 WorkshopCartItems.push({
                     id: item.wid,
                     typeId: item.type_id,
-                    imageSrc: `${item.img_cover}`, // 工作坊圖片路徑
+                    cover: `${item.img_cover}`, // 工作坊圖片路徑
                     name: item.type, // 工作坊類型名稱
                     date: item.ws_date,
                     beginTime: item.start_time,
