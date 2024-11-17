@@ -162,7 +162,7 @@ export default function WorkshopAll(props) {
       </div>
 
       <div className={`${styles.section03} container`}>
-        <div className={`${styles.tOwnWorkshops} row row-cols-3 my-5`}>
+        <div className={`${styles.tOwnWorkshops} row row-cols-3 mt-4 mb-5`}>
           {workshop.length > 0 ? (
             workshop.map((item) => {
               // 將 dates 字串轉換成陣列

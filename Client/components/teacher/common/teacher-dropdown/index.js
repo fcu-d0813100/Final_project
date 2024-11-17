@@ -34,7 +34,9 @@ export default function Dropdown({ name = '', items = [], onSelect }) {
               type="button"
               key={index}
               href={item.link}
-              className="dropdown-item my-1"
+              className={`dropdown-item my-1 ${
+                index === 0 ? styles.firstOption : ''
+              }`}
               onClick={() => handleSelect(item.value)}
             >
               {item.option}
