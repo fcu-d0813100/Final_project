@@ -183,6 +183,7 @@ export function AuthProvider({ children }) {
           },
         })
       } else {
+        console.error('註冊失敗:', resData)
         toast.error('註冊失敗，請稍後再試', {
           style: {
             border: '1.2px solid #90957a',
@@ -196,7 +197,7 @@ export function AuthProvider({ children }) {
         })
       }
     } catch (error) {
-      // console.error('註冊過程中發生錯誤:', error)
+      console.error('註冊過程中發生錯誤:', error)
       toast.error('註冊過程中發生錯誤，請稍後再試', {
         style: {
           border: '1.2px solid #90957a',

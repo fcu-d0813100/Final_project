@@ -29,6 +29,7 @@
     span {
       color: $green-500;
       font-size: 14px;
+      white-space: nowrap; // 防止換行      
     }
     // table { 
     //   width: 100%;
@@ -78,6 +79,10 @@
     padding-right: 30px;
   }
 
+}
+.color{
+  color: $green-600;
+  font-weight: bold;
 }
 
 // 積分

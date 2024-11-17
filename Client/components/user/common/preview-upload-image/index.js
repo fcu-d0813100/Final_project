@@ -10,7 +10,6 @@ export default function PreviewUploadImage({
   setSelectedFile,
   selectedFile,
   avatar, // 新增 avatar 參數
-  update,
 }) {
   const [preview, setPreview] = useState('')
   const [useDefaultAvatar, setUseDefaultAvatar] = useState(false) // 控制是否使用預設頭貼

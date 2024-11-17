@@ -38,7 +38,18 @@ export default function UserInfo() {
         >
           <div className={`col-12 col-xxl-9 ms-0 ms-xxl-3 ${styles.textArea}`}>
             <div>
-              <h4 className="h4">{userData.name}</h4>
+              <div className={`h4 fw-bold ${styles.color}`}>
+                {userData.name}{' '}
+                <div className={`${styles.color} p d-inline ps-3`}>
+                  {userData.level === 1
+                    ? '一般會員'
+                    : userData.level === 2
+                    ? '白金會員'
+                    : userData.level === 3
+                    ? '鑽石會員'
+                    : ''}
+                </div>
+              </div>
               <div className={`${styles.infoTable} p mt-4 row`}>
                 <div className="col-xxl-6 col-12">
                   <table className={styles.tableWidth}>
@@ -101,7 +112,6 @@ export default function UserInfo() {
               </div>
             </div>
           </div>
-
           <div className={`${styles.userImg} col-xxl-3 `}>
             <Image
               width={255}
@@ -115,7 +125,7 @@ export default function UserInfo() {
           <div
             className={`${styles.timeArea} "row d-flex justify-content-around align-items-center "`}
           >
-            <div className="col-4">
+            <div className="col-5">
               <table className="ms-4">
                 <tbody>
                   <tr>
@@ -127,7 +137,7 @@ export default function UserInfo() {
                 </tbody>
               </table>
             </div>
-            <div className="col-4">
+            <div className="col-5">
               <table className="ms-4">
                 <tbody>
                   <tr>
@@ -139,18 +149,16 @@ export default function UserInfo() {
                 </tbody>
               </table>
             </div>
-            <div className="col-4 d-flex justify-content-end pe-2">
+            <div className="col-2 d-flex justify-content-end pe-2">
               <Link href="/user/information/update">
                 <button className="btn-primary h6">編輯</button>
               </Link>
             </div>
           </div>
-
           <hr className="underline"></hr>
-
           {/* 積分 */}
-          <div className="row d-flex py-5 align-items-center">
-            <div className="col-10 d-flex align-items-center justify-content-between">
+          <div className="row d-flex py-0 my-0 align-items-center">
+            {/* <div className="col-10 d-flex align-items-center justify-content-between">
               <div className="col-6">
                 <div
                   className={`row ${styles['level-area']} ${styles['table-title']} mt-2`}
@@ -208,8 +216,29 @@ export default function UserInfo() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col-10 pt-3 mt-3 justify-content-center  gap-5 d-flex align-items-center">
+            </div> */}
+            {/* <div className={`col-8 ${styles.infoTable} py-0`}>
+              <table className="">
+                <tbody>
+                  <tr>
+                    <th>
+                      會員等級<span> | level</span>
+                    </th>
+                    <td>
+                      {' '}
+                      {userData.level === 1
+                        ? '一般會員'
+                        : userData.level === 2
+                        ? '白金會員'
+                        : userData.level === 3
+                        ? '鑽石會員'
+                        : ''}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div> */}
+            <div className="col-10  justify-content-center  gap-5 d-flex align-items-center">
               <Image src="/user/regular.svg" alt="" width={250} height={192} />
               <Image src="/user/platinum.svg" alt="" width={250} height={192} />
               <Image src="/user/diamond.svg" alt="" width={250} height={192} />
