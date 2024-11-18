@@ -133,6 +133,7 @@ const OrderDetail = () => {
                                         date={`${item.ws_date}`}
                                         time={`${item.start_time} - ${item.end_time}`}
                                         price={new Intl.NumberFormat().format(item.workshop_price)}
+                                        dsPrice={new Intl.NumberFormat().format(item.workshop_price * 0.95)}
                                         quantity={item.quantity}
                                     />
                                 )}
@@ -157,7 +158,7 @@ const OrderDetail = () => {
                                     }
 
                                     if (item.wt_id) {
-                                        return total + (workshopPrice * quantity);
+                                        return total + (workshopPrice * quantity * 0.95);
                                     }
                                     console.log(total)
                                     return total;
@@ -207,7 +208,7 @@ const OrderDetail = () => {
 
                                                     // 計算工作坊價格
                                                     if (item.wt_id) {
-                                                        return total + (workshopPrice * quantity);  // 計算工作坊小計
+                                                        return total + (workshopPrice * quantity * 0.95);  // 計算工作坊小計
                                                     }
 
                                                     return total;
@@ -230,7 +231,7 @@ const OrderDetail = () => {
                                     }
 
                                     if (item.wt_id) {
-                                        return total + (workshopPrice * quantity);
+                                        return total + (workshopPrice * quantity * 0.95);
                                     }
                                     console.log(total)
                                     return total;

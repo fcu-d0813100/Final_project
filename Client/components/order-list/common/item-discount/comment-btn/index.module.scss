@@ -1,9 +1,5 @@
 @import '@/styles/_variant.scss';
 
-.del {
-    color: $gray-200;
-}
-
 .item {
     padding-inline: 20px;
     @media (max-width: 500px) {
