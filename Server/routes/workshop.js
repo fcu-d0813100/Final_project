@@ -895,6 +895,4 @@ router.get('/favorite/search/:user_id', async (req, res) => {
   }
 })
 
-
-
 export default router
