@@ -31,13 +31,46 @@ export default function GoogleLoginPopup() {
           userData,
         })
 
-        toast.success('已成功登入')
+        toast.success('已成功登入'),
+          {
+            style: {
+              padding: '12px 40px',
+              color: '#626553',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#626553',
+              secondary: '#fff',
+            },
+          }
       } else {
-        toast.error('登入失敗')
+        toast.error('登入失敗'),
+          {
+            style: {
+              padding: '12px 40px',
+              color: '#963827',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#963827',
+              secondary: '#fff',
+            },
+          }
       }
     } catch (error) {
       console.error('Google登入失敗:', error)
-      toast.error('登入失敗')
+      toast.error('登入失敗') <
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 
@@ -47,9 +80,31 @@ export default function GoogleLoginPopup() {
     console.log('檢查登入狀態回應:', res.data)
 
     if (res.data.status === 'success') {
-      toast.success('已登入會員')
+      toast.success('已登入會員'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        }
     } else {
-      toast.error('非會員身份')
+      toast.error('非會員身份'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 
@@ -60,14 +115,36 @@ export default function GoogleLoginPopup() {
     const res = await logout()
 
     if (res.data.status === 'success') {
-      toast.success('已成功登出')
+      toast.success('已成功登出'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        }
 
       setAuth({
         isAuth: false,
         userData: initUserData,
       })
     } else {
-      toast.error('登出失敗')
+      toast.error('登出失敗'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 
