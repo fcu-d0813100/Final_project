@@ -226,23 +226,7 @@ const OrderDetail = () => {
                             </div>
                         )}
                         <div className={`${styles.total} h6 p-1 border-top border-black`}>
-                            訂單金額<span className="h4">NT$ {new Intl.NumberFormat().format(
-                                items.reduce((total, item) => {
-                                    const price = item.price || 0;
-                                    const quantity = item.quantity || 0;
-                                    const workshopPrice = item.workshop_price || 0;
-
-                                    if (item.product_id) {
-                                        return total + (price * quantity);
-                                    }
-
-                                    if (item.wt_id) {
-                                        return total + (workshopPrice * quantity * 0.95);
-                                    }
-                                    console.log(total)
-                                    return total;
-                                }, 0)
-                            )}</span>
+                            訂單金額<span className="h4">NT$ {new Intl.NumberFormat().format(total_amount)}</span>
                         </div>
                     </div>
                 </div>
