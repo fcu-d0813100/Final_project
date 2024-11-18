@@ -51,6 +51,7 @@ router.post('/checkout', async function (req, res, next) {
     } = req.body
 
     //確認分解資料正確
+    // console.log(recipientPhone)
     // console.log(paymentMethod, deliveryMethod, orderNumber, totalDiscountPrice)
     let shippingAddress
     if (deliveryMethod == '1') {
@@ -72,13 +73,16 @@ router.post('/checkout', async function (req, res, next) {
     //處理名字跟信箱
     // 判斷使用者選擇的配送方式
     let recipientNameToUse, recipientEmailToUse
+    let phone
 
     if (deliveryMethod == '1') {
       recipientNameToUse = recipientName
       recipientEmailToUse = recipientEmail
+      phone = recipientPhone
     } else if (deliveryMethod == '2') {
       recipientNameToUse = sevenRecipientName
       recipientEmailToUse = sevenRecipientEmail
+      phone = sevenRecipientPhone
     } else {
       recipientNameToUse = recipientName
       recipientEmailToUse = recipientEmail
@@ -86,8 +90,8 @@ router.post('/checkout', async function (req, res, next) {
 
     // 創建訂單
     const sqlInsert = `INSERT INTO order_list 
-    (user_id, payment_id, shipping_id, order_number, total_amount, recipient_name, email, shipping_address, coupon_id, status)
-    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${recipientNameToUse}', '${recipientEmailToUse}', '${shippingAddress}', ${coupon ? coupon.coupon_list_id : 'NULL'}, '${status}')`
+    (user_id, payment_id, shipping_id, order_number, total_amount, recipient_name, phone, email, shipping_address, coupon_id, status)
+    VALUES (${userId}, ${paymentId}, ${shippingId}, ${orderNumber}, ${totalPrice}, '${recipientNameToUse}','${phone}', '${recipientEmailToUse}', '${shippingAddress}', ${coupon ? coupon.coupon_list_id : 'NULL'}, '${status}')`
 
     const [result] = await db.query(sqlInsert, [
       userId, // user_id
@@ -96,6 +100,7 @@ router.post('/checkout', async function (req, res, next) {
       orderNumber, // order_number
       totalPrice, // total_amount
       recipientNameToUse,
+      phone,
       recipientEmailToUse,
       shippingAddress, // shipping_address
       status,

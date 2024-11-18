@@ -216,9 +216,7 @@ export default function OrderComfirm() {
                 <div className={style.payment}>
                   <div className={`h5 ${style['payment-topic']}`}>付款方式</div>
                   <div className={style.home}>
-                    {orderData?.paymentMethod === 'cod'
-                      ? '貨到付款'
-                      : '綠界 ecPay'}
+                    {orderData?.paymentMethod === 'cod' ? '貨到付款' : '信用卡'}
                   </div>
                 </div>
               </Form>
