@@ -10,6 +10,7 @@ import useAlert from '@/hooks/alert/use-alert'
 import { useAuth } from '@/hooks/use-auth'
 import { usePost } from '@/hooks/post/use-post'
 import { useModal } from '@/hooks/use-modal'
+import useToast from '@/hooks/toast/use-toast'
 import styles from './index.module.scss'
 
 export default function PostDetail(props) {
@@ -23,7 +24,7 @@ export default function PostDetail(props) {
   const [cancelHandle, setCancelHandle] = useState(() => () => {})
   const showAlert = useAlert()
   const { ensureLoggedIn } = useModal()
-
+  const showToast = useToast()
   //render
   useEffect(() => {
     if (post) {
@@ -89,7 +90,8 @@ export default function PostDetail(props) {
       }
     )
     if (response.ok) {
-      showAlert('提交成功', <RiCheckboxCircleFill color="#90957A" />)
+      showToast('提交成功', 'success')
+      // showAlert('提交成功', <RiCheckboxCircleFill color="#90957A" />)
       forceUpdate()
       cancelHandle()
     } else {
