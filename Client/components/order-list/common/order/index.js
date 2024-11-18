@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './index.module.scss';
 import Item from '@/components/order-list/common/item-discount';
 import Workshop from '@/components/order-list/common/workshop';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { GoChevronDown, GoChevronUp } from "react-icons/go";
 
-export default function Order({ orderId, order_number, orderDate, totalAmount, status = "已完成", items = [] }) {
+export default function Order({ orderId, order_number, totalAmount, status = "已完成", items = [] }) {
     const router = useRouter(); // 初始化 router
 
     const handleClick = () => {
         // 存儲 orderId 到 localStorage
         localStorage.setItem('orderId', orderId);
+    };
+
+    const [showAllItems, setShowAllItems] = useState(false);
+
+    const toggleShowItems = () => {
+        setShowAllItems(!showAllItems);
     };
 
     const handleBuyAgain = () => {
@@ -67,47 +74,94 @@ export default function Order({ orderId, order_number, orderDate, totalAmount, s
 
     return (
         <div className={`${styles.order} d-flex flex-column border rounded-top my-2`}>
-            <Link className={`text-decoration-none ${styles.link}`} href="/user/order/detail" passHref onClick={handleClick}>
-                <div className={styles.content}>
-                    <div className="header d-flex justify-content-between border-bottom pb-1 mb-2">
-                        <div className="d-flex">
-                            <div className={`p order-number me-5`}>訂單編號：{order_number}</div>
-                            {/* <div className={`p ${styles["order-date"]}`}>訂單日期：{new Date(orderDate).toLocaleDateString()}</div> */}
-                        </div>
-                        <div className={`p ${styles["order-status"]}`}>{status}</div>
-                    </div>
 
-                    {items.length > 0 && items.map((item, index) => (
-                        <div key={item.id || index}>
-                            {item.product_id && (
-                                <Item
-                                    orderId={orderId}
-                                    imageSrc={`/product/mainimage/${item.mainimage}`}
-                                    brand={item.name}
-                                    productName={item.product_name}
-                                    color={item.color}
-                                    color_name={item.color_name}
-                                    quantity={item.quantity}
-                                    originalPrice={item.originalprice}
-                                    discountedPrice={new Intl.NumberFormat().format(item.price)}
-                                />
-                            )}
-                            {item.wid && (
-                                <Workshop
-                                    key={item.wid}
-                                    imageSrc={`http://localhost:3005/workshop/${item.img_cover}`}
-                                    title={item.type}
-                                    instructor={item.teachers_name}
-                                    date={`${item.ws_date}`}
-                                    time={`${item.start_time} - ${item.end_time}`}
-                                    price={new Intl.NumberFormat().format(item.workshop_price)}
-                                    quantity={item.quantity}
-                                />
-                            )}
-                        </div>
-                    ))}
+            <div className={styles.content}>
+                <div className="header d-flex justify-content-between border-bottom pb-1 mb-2">
+                    <div className="d-flex">
+                        <div className={`p order-number me-5`}>訂單編號：{order_number}</div>
+                        {/* <div className={`p ${styles["order-date"]}`}>訂單日期：{new Date(orderDate).toLocaleDateString()}</div> */}
+                    </div>
+                    <div className={`p ${styles["order-status"]}`}>{status}</div>
                 </div>
-            </Link>
+
+
+                {items.length > 0 && (
+                    <div>
+
+                        {/* 顯示第一個商品 */}
+                        <div>
+                            <Link className={`text-decoration-none ${styles.link}`} href="/user/order/detail" passHref onClick={handleClick}>
+                                <div key={items[0].id}>
+                                    {items[0].product_id && (
+                                        <Item
+                                            orderId={orderId}
+                                            imageSrc={`/product/mainimage/${items[0].mainimage}`}
+                                            brand={items[0].name}
+                                            productName={items[0].product_name}
+                                            color={items[0].color}
+                                            color_name={items[0].color_name}
+                                            quantity={items[0].quantity}
+                                            originalPrice={items[0].originalprice}
+                                            discountedPrice={new Intl.NumberFormat().format(items[0].price)}
+                                        />
+                                    )}
+                                    {items[0].wid && (
+                                        <Workshop
+                                            key={items[0].wid}
+                                            imageSrc={`http://localhost:3005/workshop/${items[0].img_cover}`}
+                                            title={items[0].type}
+                                            instructor={items[0].teachers_name}
+                                            date={`${items[0].ws_date}`}
+                                            time={`${items[0].start_time} - ${items[0].end_time}`}
+                                            price={new Intl.NumberFormat().format(items[0].workshop_price)}
+                                            dsPrice={new Intl.NumberFormat().format(items[0].workshop_price * 0.95)}
+                                            quantity={items[0].quantity}
+                                        />
+                                    )}
+                                </div>
+
+                                {/* 顯示更多商品 */}
+                                <div className={`${styles["item-container"]} ${showAllItems ? `${styles.open}` : ''}`}>
+                                    {showAllItems && items.slice(1).map((item, index) => (
+                                        <div key={item.id || index}>
+                                            {item.product_id && (
+                                                <Item
+                                                    orderId={orderId}
+                                                    imageSrc={`/product/mainimage/${item.mainimage}`}
+                                                    brand={item.name}
+                                                    productName={item.product_name}
+                                                    color={item.color}
+                                                    color_name={item.color_name}
+                                                    quantity={item.quantity}
+                                                    originalPrice={item.originalprice}
+                                                    discountedPrice={new Intl.NumberFormat().format(item.price)}
+                                                />
+                                            )}
+                                            {item.wid && (
+                                                <Workshop
+                                                    key={item.wid}
+                                                    imageSrc={`http://localhost:3005/workshop/${item.img_cover}`}
+                                                    title={item.type}
+                                                    instructor={item.teachers_name}
+                                                    date={`${item.ws_date}`}
+                                                    time={`${item.start_time} - ${item.end_time}`}
+                                                    price={new Intl.NumberFormat().format(item.workshop_price)}
+                                                    dsPrice={new Intl.NumberFormat().format(item.workshop_price * 0.95)}
+                                                    quantity={item.quantity}
+                                                />
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </Link>
+                        </div>
+                        <button onClick={toggleShowItems} className={`btn ${styles.showItem} `}>
+                            {showAllItems ? <>隱藏其他商品<GoChevronUp /></> : <>檢視其他商品<GoChevronDown /></>}
+                        </button>
+                    </div>
+                )}
+            </div>
+
 
             <div className={`${styles.footer} d-flex flex-column justify-content-end align-items-end border-top p-2`}>
                 <div className={`total p-2`}>

@@ -617,6 +617,7 @@ export function AuthProvider({ children }) {
         const nextAuth = {
           isAuth: true,
           userData: {
+            ...user,
             id: user.id,
             account: user.account,
           },
@@ -652,7 +653,7 @@ export function AuthProvider({ children }) {
     // 加入router.pathname是為了要在伺服器檢查後
     // 如果是隱私路由+未登入，就要執行跳轉到登入頁路由的工作
     // eslint-disable-next-line
-   }, [router.isReady, router.pathname])
+  }, [router.isReady, router.pathname])
 
   //3. 最外(上)元件階層包裹提供者元件，可以提供它的值給所有後代⼦孫元件使⽤，包含所有頁面元件，與頁面中的元件
   return (

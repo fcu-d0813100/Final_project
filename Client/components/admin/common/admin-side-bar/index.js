@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Nav, Navbar } from 'react-bootstrap';
 import { useRouter } from 'next/router';
+import { useAuth } from '@/hooks/use-auth'
 import {
   PiClockCountdown,
   PiTicket,
@@ -24,6 +25,7 @@ const navLinks = [
 
 export default function Index() {
   const router = useRouter();
+  const { logout } = useAuth()
 
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
@@ -84,7 +86,7 @@ export default function Index() {
               {link.label}
             </Nav.Link>
           ))}
-          <button className={`btn-logout h6 ${styles.out}`}>登出</button>
+          <button className={`btn-logout h6 ${styles.out}`} onClick={logout} >登出</button>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
