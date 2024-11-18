@@ -3,8 +3,10 @@ import { Tab, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss';
 import AdminSection from '@/components/admin/common/coupon/admin-section-coupon';
+import CouponGing from '@/components/discount/common/coupon-ing';
 import CouponEdit from '@/components/discount/common/coupon-edit';
 import CouponEnd from '@/components/discount/common/coupon-end';
+import CouponGingAll from '@/components/discount/common/coupon-ing-all';
 import CouponEditAll from '@/components/discount/common/coupon-edit-all'
 import CouponEndAll from '@/components/discount/common/coupon-end-all'
 import toast, { Toaster } from 'react-hot-toast'; // 引入 toast
@@ -150,7 +152,7 @@ export default function Index(props) {
               <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
                 {currentOngoingCoupons.map((coupon) => {
                   if (coupon.brand_id === 6) {
-                    return <CouponEditAll
+                    return <CouponGingAll
                       key={coupon.id}
                       id={coupon.id}
                       name={coupon.name}
@@ -160,7 +162,7 @@ export default function Index(props) {
                     />;
                   }
                   return (
-                    <CouponEdit
+                    <CouponGing
                       key={coupon.id}
                       id={coupon.id}
                       img={brandImageMap[coupon.brand_id]}
