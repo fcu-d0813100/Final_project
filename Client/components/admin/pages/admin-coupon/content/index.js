@@ -53,7 +53,15 @@ export default function Index() {
         setCoupon((prev) => ({ ...prev, code }));
         // 檢查是否滿足8為字母和數字要求
         if (!/^[A-Za-z0-9]{8}$/.test(code)) {
-            alert('自行輸入的優惠代碼無效，請重新輸入');
+            toast.error('自行輸入的優惠代碼無效，請重新輸入',{style:{
+                border: '1.2px solid #963827',
+                padding: '12px 40px',
+                color: '#963827',
+              },iconTheme:{
+                primary:'#963827',
+                secondary:'#fff'
+              }
+            });
         }
     };
 
@@ -140,7 +148,17 @@ export default function Index() {
                 .then((response) => {
                     console.log('成功返回:', response.data);  // 打印響應數據
                     if (response.data.status === 'success') {
-                        alert('優惠券創建成功！');
+                        toast.success('優惠券創建成功！', {
+                            style: {
+                              border: '1.2px solid #90957a',
+                              padding: '12px 40px',
+                              color: '#626553',
+                            },
+                            iconTheme: {
+                              primary: '#626553',
+                              secondary: '#fff',
+                            },
+                          });
                         setCoupon({
                             name: '',
                             code: '',
@@ -153,11 +171,19 @@ export default function Index() {
                         }); // 清空表單
                         router.push('/admin/coupon');  // 提交後跳轉到優惠券列表頁
                     } else {
-                        alert('創建優惠券失敗：' + response.data.message);
+                        toast.error('創建優惠券失敗：' + response.data.message,{style:{
+                            border: '1.2px solid #963827',
+                            padding: '12px 40px',
+                            color: '#963827',
+                          },iconTheme:{
+                            primary:'#963827',
+                            secondary:'#fff'
+                          }
+                        });
                     }
                 })
                 .catch((error) => {
-                    console.error('發送請求時發生錯誤:', error);
+                    // console.error('發送請求時發生錯誤:', error);
                     toast.error(`發生錯誤，請稍後再試` ,{style:{
                         border: '1.2px solid #963827',
                         padding: '12px 40px',
@@ -171,10 +197,26 @@ export default function Index() {
 
                     // 檢查是否有返回的錯誤信息
                     if (error.response) {
-                        console.error('錯誤詳細信息:', error.response.data);
+                        console.error('錯誤詳細信息:', error.response.data,{style:{
+                            border: '1.2px solid #963827',
+                            padding: '12px 40px',
+                            color: '#963827',
+                          },iconTheme:{
+                            primary:'#963827',
+                            secondary:'#fff'
+                          }
+                        });
                         // alert('錯誤詳細信息: ' + (error.response.data.message || '未知錯誤'));
                     } else {
-                        console.error('錯誤消息:', error.message);
+                        console.error('錯誤消息:', error.message,{style:{
+                            border: '1.2px solid #963827',
+                            padding: '12px 40px',
+                            color: '#963827',
+                          },iconTheme:{
+                            primary:'#963827',
+                            secondary:'#fff'
+                          }
+                        });
                     }
                 });
         }

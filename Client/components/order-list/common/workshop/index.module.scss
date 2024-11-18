@@ -17,6 +17,7 @@
         width: 300px;
     }
     @media (max-width: 500px) {
+        width: 270px;
         padding-inline: 0px;
     }
 }
@@ -93,6 +94,11 @@
 
 .sub-total {
     width: 200px;
+    color: $red-500;
+    .del {
+        color: $gray-200;
+        font-size: 12px;
+    }
     @media (max-width: 1400px) {
         width: 150px;
     }
@@ -100,5 +106,11 @@
     @media (max-width: 720px) {
         width: 80px;
         font-size: 12px;
-    }
+        display: flex;
+        flex-wrap: wrap-reverse;
+        justify-content: flex-end;
+        .del {
+            font-size: 8px;
+        }
+    } 
 }

@@ -25,6 +25,8 @@
   }
 }
 
+
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -45,5 +47,15 @@
   &.active {
     color: $green-500; // Active page number color
     border-bottom: 2px solid $green-500;
+  }
+}
+
+@media (max-width: 550px) {
+  .nav-link .link-style {
+    width: 100px;
+  }
+  .pagination {
+    font-size: 12px;
+    margin-block: 10px;
   }
 }

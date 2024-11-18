@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { RxCross2, RxPlus } from 'react-icons/rx'
 import { RiCheckboxCircleFill } from 'react-icons/ri'
@@ -81,8 +81,26 @@ export default function PostEdit(props) {
       showAlert('請至少上傳一張圖片')
       return
     }
-    setImgs((prevImgs) => prevImgs.filter((_, i) => i !== index))
+
+    setImgs((prevImgs) =>
+      prevImgs.filter((_, i) => {
+        if (i === index && typeof prevImgs[i] !== 'string') {
+          URL.revokeObjectURL(prevImgs[i]) // 清理 Object URL
+        }
+        return i !== index
+      })
+    )
   }
+
+  // image preview debounce
+  const imagePreview = useMemo(() => {
+    return imgs.map((file) =>
+      file instanceof File
+        ? URL.createObjectURL(file)
+        : `http://localhost:3005/post/${file}`
+    )
+  }, [imgs])
+
   // tag delete v
   const deleteTag = (index) => {
     setSelectedTags((prevTags) => prevTags.filter((_, i) => i !== index))
@@ -194,6 +212,7 @@ export default function PostEdit(props) {
       alert('提交錯誤，請再試一次！')
     }
   }
+
   return (
     <>
       <UserSection titleCN="我的貼文" titleENG="My Post">
@@ -231,10 +250,10 @@ export default function PostEdit(props) {
                   <div className={styles['img-container']}>
                     {/* map上傳的圖片 */}
                     {imgs.map((file, index) => {
-                      const src =
-                        file instanceof File
-                          ? URL.createObjectURL(file)
-                          : `http://localhost:3005/post/${file}`
+                      // const src =
+                      //   file instanceof File
+                      //     ? URL.createObjectURL(file)
+                      //     : `http://localhost:3005/post/${file}`
                       return (
                         //eslint-disable-next-line
                         <div className={styles['image-wrapper']}
@@ -245,7 +264,12 @@ export default function PostEdit(props) {
                           onDragOver={(e) => e.preventDefault()}
                           onDrop={(e) => dropHandle(e, index)}
                         >
-                          <Image src={src} width={98} height={98} alt="image" />
+                          <Image
+                            src={imagePreview[index]}
+                            width={98}
+                            height={98}
+                            alt="image"
+                          />
                           {/* //eslint-disable-next-line */}
                           <div
                             className={styles['delete-btn']}
