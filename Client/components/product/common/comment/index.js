@@ -71,6 +71,8 @@ const CommentForm = ({ orderId, quantity, productId, colorId, color_name, produc
       return;
     }
 
+    console.log("User ID:", auth.userData.id); // 檢查是否獲得正確的使用者 ID
+
     const formData = new FormData();
     formData.append("order_id", orderId);
     formData.append("quantity", quantity);
