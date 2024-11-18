@@ -289,16 +289,16 @@ export default function Checkout({
   //------------渲染頁面
   return (
     <>
-      {showModal && (
-        <ModalConfirm
-          title="填寫資料有誤"
-          content={modalMessage} // 顯示對應的錯誤提示
-          btnConfirm="確認"
-          show={showModal}
-          handleClose={() => setShowModal(false)} // 關閉彈窗
-        />
-      )}
       <div className="container">
+        {showModal && (
+          <ModalConfirm
+            title="填寫資料有誤"
+            content={modalMessage} // 顯示對應的錯誤提示
+            btnConfirm="確認"
+            show={showModal}
+            handleClose={() => setShowModal(false)} // 關閉彈窗
+          />
+        )}
         <div className={style.step}>
           <Image
             src="/cart/step2.svg"
