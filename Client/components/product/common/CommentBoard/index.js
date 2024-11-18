@@ -9,13 +9,17 @@ import WriteReviewModal from './WriteReviewModal';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
+import { FaRegThumbsUp, FaThumbsUp } from 'react-icons/fa';
 
-const CommentBoard = ({ productId, colorId, brand, productName, colorName, animateChart, productImage }) => {
+const CommentBoard = ({orderItemId, productId, colorId, brand, productName, colorName, animateChart, productImage }) => {
+  console.log('colorId:', colorId);
+  console.log('orderItemId:', orderItemId);
+  console.log('productId:', productId);
   console.log('colorId:', colorId);
   const { auth } = useAuth();
   const isAuthenticated = auth.isAuth; // 判斷是否已登入
   const router = useRouter();
-  const { reviews, loading, fetchReviews } = useFetchReviews(productId); // 包含 fetchReviews 方法
+  const { reviews, loading, fetchReviews, handleLike } = useFetchReviews(orderItemId, productId, colorId); // 包含 fetchReviews 方法
   const [animatedDistribution, setAnimatedDistribution] = useState({ 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 });
   const [showWriteReview, setShowWriteReview] = useState(false); // 控制撰寫評論模態視窗
   const [showStarFilterModal, setShowStarFilterModal] = useState(false); // 控制星級篩選模態視窗
@@ -102,9 +106,51 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
       router.push('/user/login/user');
       return;
     }
-    await submitReview(productId, colorId, reviewData, mediaFiles);
+    await submitReview(productId, colorId, { 
+      ...reviewData, 
+      order_id: orderItemId, // 确保发送正确的 order_item_id
+      user_id: auth.userData.id, // 添加用户 ID
+    }, mediaFiles);
     fetchReviews();
   };
+
+  // const handleLike = async (reviewId, isLiked) => {
+  //   try {
+  //     // 根據當前的點讚狀態選擇 API 路由
+  //     const route = isLiked
+  //       ? `/api/reviews/${reviewId}/unlike`
+  //       : `/api/reviews/${reviewId}/like`;
+  
+  //     // 發送請求
+  //     const response = await fetch(route, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //     });
+  
+  //     if (response.ok) {
+  //       // 更新前端的 likes 數據
+  //       const updatedReviews = reviews.map((review) => {
+  //         if (review.review_id === reviewId) {
+  //           return {
+  //             ...review,
+  //             review_likes: isLiked
+  //               ? review.review_likes - 1
+  //               : review.review_likes + 1,
+  //             isLiked: !isLiked, // 切換點讚狀態
+  //           };
+  //         }
+  //         return review;
+  //       });
+  //       setFilteredReviews(updatedReviews);
+  //     } else {
+  //       console.error('更新點讚失敗');
+  //     }
+  //   } catch (error) {
+  //     console.error('點讚時出錯:', error);
+  //   }
+  // };
+  
+  
 
   if (loading) return <div>Loading comments...</div>;
 
@@ -120,8 +166,8 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
           <Row className={styles['commentupper']}>
             <Col md={6} className={styles['ratingOverview']}>
               <div className={styles['averageRating']}>
-                <div className={styles['ratingScore']}>{averageRating}</div>
-                <Stars count={5} value={averageRating} size={25} edit={false} color2={"#9ea28b"} color1={"#ccc"} />
+                <div className={styles['ratingScore']}>{averageRating.toFixed(1)}</div>
+                <Stars count={5} value={parseFloat(averageRating)} size={25} edit={false} color2={"#9ea28b"} color1={"#ccc"} />
               </div>
               <div className={styles['ratingDistribution']}>
                 {[5, 4, 3, 2, 1].map(star => (
@@ -159,43 +205,56 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
           </Row>
 
           <div className={styles['commentList']}>
-            {filteredReviews.map((review) => (
-              <div key={review.order_item_id} className={styles['commentItem']}>
-                <div className={styles['userInfo']}>
-                  <Image width={64} height={64} src={review.user_avatar || '/default-avatar.png'} className={styles['avatar']} />
-                  <div className={styles['userDetails']}>
-                    <div className={styles['userHeader']}>
-                      <span className={`${styles['username']} h6`}>{review.username || '匿名'}</span>
-                      <div className={styles['date-likes']}>
-                        <div className={styles['timestamp']}>{review.review_date}</div>
-                        <span className={styles['helpful']}>有幫助 ({review.review_likes})</span>
+            {filteredReviews.map((review, index) => {
+              console.log(`Review ${index + 1}:`, review); // 在控制台打印出每个 review 的内容
+              return (
+                <div key={review.order_item_id} className={styles['commentItem']}>
+                  <div className={styles['userInfo']}>
+                    <Image
+                      width={64}
+                      height={64}
+                      src={review.user_avatar || '/default-avatar.png'}
+                      className={styles['avatar']}
+                    />
+                    <div className={styles['userDetails']}>
+                      <div className={styles['userHeader']}>
+                        <span className={`${styles['username']} h6`}>{review.username || '匿名'}</span>
+                        <div className={styles['date-likes']}>
+                          <div className={styles['timestamp']}>{review.review_date}</div>
+                        </div>
+                      </div>
+                      <div className="ps">
+                        規格 - {brand} {productName} - {colorName}
                       </div>
                     </div>
-                    <div className='ps'>規格 - {brand} {productName} - {colorName}</div>
                   </div>
-                </div>
-                <div className={styles['rating']}>
-                  <Stars count={5} value={review.rating} size={20} edit={false} color2={"#90957a"} color1={"#d3d3d3"} />
-                </div>
-                <p className={styles['commentBoard']}>{review.comment}</p>
-                <div className={styles['commentImages']}>
-                  {Array.isArray(review.media) && review.media.length > 0 ? (
-                    review.media.map((media, index) => (
-                      media.file_name.endsWith('.mp4') ? (
-                        <video key={media.id} width="150" controls>
-                          <source src={media.url} type="video/mp4" />
-                          Your browser does not support the video tag.
-                        </video>
-                      ) : (
-                        <img key={media.id} src={`http://localhost:3005/upload/reviews/images/${media.file_name}`} alt="Review media" width={93} height={93} />
-                      )
-                    ))
-                  ) : (
-                    <p className={styles['noMedia']}>暫無圖片或影片</p>
+                  <div className={styles['rating']}>
+                    <Stars count={5} value={review.rating} size={20} edit={false} color2={'#90957a'} color1={'#d3d3d3'} />
+                  </div>
+                  <p className={styles['commentBoard']}>{review.comment}</p>
+                  {Array.isArray(review.media) && review.media.length > 0 && (
+                    <div className={styles['commentImages']}>
+                      {review.media.map((media, index) =>
+                        media.file_name.endsWith('.mp4') ? (
+                          <video key={media.id} width="150" controls>
+                            <source src={media.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          <img
+                            key={media.id}
+                            src={`http://localhost:3005/upload/reviews/images/${media.file_name}`}
+                            alt="Review media"
+                            width={93}
+                            height={93}
+                          />
+                        )
+                      )}
+                    </div>
                   )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
       )}

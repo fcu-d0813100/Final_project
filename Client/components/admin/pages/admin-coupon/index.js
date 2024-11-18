@@ -253,6 +253,7 @@ export default function Index(props) {
                     return <CouponEndAll
                       key={coupon.id}
                       id={coupon.id}
+                      status='已結束'
                       name={coupon.name}
                       discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}
                       condition={coupon.minimum_amount}
@@ -264,6 +265,7 @@ export default function Index(props) {
                     <CouponEnd
                       key={coupon.id}
                       id={coupon.id}
+                      status='已結束'
                       img={brandImageMap[coupon.brand_id]}
                       name={coupon.name}
                       discount={coupon.discount_value > 1 ? `折 ${coupon.discount_value}元` : `${((1 - coupon.discount_value) * 100).toFixed(0)}% OFF`}

@@ -22,7 +22,7 @@ export default function UpdateInfo({
 }) {
   const [selectedFile, setSelectedFile] = useState(null)
   const { auth, update, getUser, deleteUser } = useAuth()
-
+  const router = useRouter()
   // 串地址
   //console.log(countries, townships, postcodes)
 
@@ -171,9 +171,8 @@ export default function UpdateInfo({
             },
           })
           setTimeout(() => {
-            // eslint-disable-next-line no-undef
             router.push('/user')
-          }, 2000)
+          }, 1500)
         } else {
           // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
           toast.error('更新失敗，請稍後再試', {
@@ -205,6 +204,9 @@ export default function UpdateInfo({
             secondary: '#fff',
           },
         })
+        setTimeout(() => {
+          router.push('/user')
+        }, 1500)
       } else {
         // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
         toast.error('更新失敗，請稍後再試', {
@@ -312,6 +314,12 @@ export default function UpdateInfo({
   const closeModal = () => {
     setShowModal(false)
   }
+  const handleCancel = () => {
+    setUser(user)
+    setTimeout(() => {
+      router.push('/user')
+    }, 1500)
+  }
 
   return (
     <>
@@ -321,10 +329,10 @@ export default function UpdateInfo({
           method="post"
           encType="multipart/form-data"
         >
-          <div className="d-flex mt-4 container">
-            <div className="d-flex row justify-content-between align-items-center">
-              <div className="col-9 px-0   d-flex flex-wrap">
-                <div className={`col-4 mt-5 ${styles.info} `}>
+          <div className="mt-5 container-fluid">
+            <div className="row justify-content-center align-items-center">
+              <div className="col-9 pe-3 d-flex flex-wrap">
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="name" className="form-label pb-2 fw-bold ">
                     姓名 <span className=" ps pe-4 fw-bold ">| name</span>
                   </label>
@@ -337,7 +345,7 @@ export default function UpdateInfo({
                     value={user.name}
                   />
                 </div>
-                <div className={`col-4 mt-5 ${styles.info} `}>
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="nickname" className="form-label pb-2 fw-bold">
                     暱稱 <span className="ps pe-4 fw-bold">| nickname</span>
                   </label>{' '}
@@ -349,7 +357,7 @@ export default function UpdateInfo({
                     className={`form-control ${styles['form-control2']} `}
                   />
                 </div>
-                <div className={`col-4 mt-5 ${styles.info} `}>
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="title " className="form-label pb-2 fw-bold">
                     稱謂 <span className=" ps pe-4 fw-bold">| title</span>
                   </label>{' '}
@@ -404,33 +412,21 @@ export default function UpdateInfo({
                 </div>
               </div>
 
-              <div className="col-3 d-flex align-items-center">
+              <div className="col-3 d-flex justify-content-center align-items-center">
                 <div className="ratio ratio-1x1 w-75">
                   <PreviewUploadImage
-                    userId={user.id} // 傳遞用戶ID作為變數
-                    avatarBaseUrl="http://localhost:3005/avatar" // 正確的基礎URL
-                    defaultImg="avatar01.jpg" // 默認圖片名
+                    userId={user.id}
+                    avatar={
+                      user.img ? `http://localhost:3005/avatar/${user.img}` : ''
+                    } // 傳入 avatar 照片
+                    avatarBaseUrl="http://localhost:3005/avatar"
+                    defaultImg="avatar01.jpg"
                     setSelectedFile={setSelectedFile}
                     selectedFile={selectedFile}
+                    photoUrl={user.photo_url} // 傳入 photo_url
                   />
-
-                  {/* <Image
-                    width={255}
-                    height={255}
-                    className={styles.avatar}
-                    src={`/user/img/${user.img}`}
-                    alt=""
-                    priority
-                  /> */}
                 </div>
               </div>
-              {/* <button
-                type="button"
-                className="btn btn-outline"
-                onClick={handleFileChange}
-              >
-                更換頭像
-              </button> */}
             </div>
           </div>
           {/* 收件資訊 */}
@@ -466,7 +462,7 @@ export default function UpdateInfo({
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
               <label htmlFor="area" className={`form-label pb-2 fw-bold`}>
                 區域
-                <span className={` ps fw-bold ${styles['info-address']}`}>
+                <span className={`ps fw-bold ${styles['info-address']}`}>
                   | area
                 </span>
               </label>{' '}
@@ -513,7 +509,7 @@ export default function UpdateInfo({
               </p>
             </div>
             <div
-              className={`col-3 d-flex justify-content-end align-items-center`}
+              className={`col-3 pe-3 d-flex justify-content-end align-items-center`}
             >
               <button
                 type="button"
@@ -541,7 +537,7 @@ export default function UpdateInfo({
             <button
               type="button"
               className="btn-secondary h6 me-4"
-              onClick={() => setUser(user)}
+              onClick={handleCancel}
             >
               取消
             </button>

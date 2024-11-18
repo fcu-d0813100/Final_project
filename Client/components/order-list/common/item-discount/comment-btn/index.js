@@ -4,7 +4,6 @@ import styles from './index.module.scss'; // 確保引入正確的樣式
 import Link from 'next/link';
 
 export default function ItemDiscount({
-    orderId,
     productId,
     colorId,
     imageSrc = "",
@@ -15,8 +14,6 @@ export default function ItemDiscount({
     quantity = 0,
     originalPrice,
     discountedPrice = 0,
-    productId,
-    colorId,
 }) {
     const [orderId, setOrderId] = useState(null);
 

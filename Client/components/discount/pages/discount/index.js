@@ -12,9 +12,9 @@ import Slider from 'react-slick';
 
 export default function Discount() {
   const images = [
-    { src: '/discount/phone-size/beautique.svg', alt: 'Beautique 優惠', link: '/discount/nars2' },
-    { src: '/discount/phone-size/nars.svg', alt: 'NARS 優惠', link: '/discount/nars2' },
+    { src: '/discount/phone-size/beautique.svg', alt: 'Beautique 優惠', link: '/product/product-list' },
     { src: '/discount/phone-size/nars1.svg', alt: 'NARS 優惠 1', link: '/discount/nars' },
+    { src: '/discount/phone-size/nars.svg', alt: 'NARS 優惠', link: '/discount/nars2' },
     { src: '/discount/phone-size/ysl.svg', alt: 'YSL 優惠', link: '/discount/ysl' },
     { src: '/discount/phone-size/bb.svg', alt: 'BB 優惠', link: '/discount/bb' },
   ];

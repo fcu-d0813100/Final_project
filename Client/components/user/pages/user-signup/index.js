@@ -3,10 +3,12 @@ import styles from './index.module.scss'
 import { PiEyeClosed, PiEye } from 'react-icons/pi'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
+import { useRouter } from 'next/router'
 
 export default function RegisterForm() {
   // 從勾子的context得到註冊函式
   const { register } = useAuth()
+  const router = useRouter()
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     account: '',
@@ -112,18 +114,6 @@ export default function RegisterForm() {
     const { confirmPassword, agree, ...newUser } = user
     // 呼叫register(useAuth勾子裡)
     await register(newUser)
-    // // 向伺服器作fetch
-    // const res = await fetch('http://localhost:3005/api/user', {
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   method: 'POST',
-    //   body: JSON.stringify(newUser),
-    // })
-
-    // const resData = await res.json()
-    // console.log(resData)
   }
   return (
     <>
@@ -328,7 +318,17 @@ export default function RegisterForm() {
                 <div
                   className={`d-flex flex-column align-items-center justify-content-center ${styles['card-img']}`}
                 >
-                  <h2 className={styles['logo']}>Beautique</h2>
+                  <button
+                    type="button"
+                    className={styles['logo']}
+                    onClick={() => {
+                      setTimeout(() => {
+                        router.push('/')
+                      }, 1500)
+                    }}
+                  >
+                    Beautique
+                  </button>
                   <h3 className={styles['slogan']}>
                     Where Beauty <br /> Meets Uniqueness.
                   </h3>
@@ -344,21 +344,6 @@ export default function RegisterForm() {
                         立即登入
                       </button>
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setUser({
-                          name: 'test',
-                          email: 'test@gg.com',
-                          account: 'test',
-                          password: '12345',
-                          confirmPassword: '12345',
-                          agree: true, // checkbox 同意會員註冊條款
-                        })
-                      }}
-                    >
-                      一鍵輸入
-                    </button>
                   </div>
                 </div>
               </div>

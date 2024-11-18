@@ -108,7 +108,7 @@ router.post('/checkout', async function (req, res, next) {
 
     // 利用訂單id創建商品訂單明細
     for (const product of productCart) {
-      const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity, comment, rating, review_date, review_likes) VALUES (${orderId}, ${product.product_id}, ${product.color_id}, NULL,${product.qty}, NULL, NULL, NULL, NULL)`
+      const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity) VALUES (${orderId}, ${product.product_id}, ${product.color_id}, NULL,${product.qty})`
       await db.query(sqlInsertDetail, [
         orderId,
         product.product_id,
@@ -159,7 +159,7 @@ router.post('/checkout', async function (req, res, next) {
 
     //利用訂單id創建課程訂單明細
     for (const Workshop of Workshopcart) {
-      const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity, comment, rating, review_date, review_likes) VALUES (${orderId}, NULL, NULL, ${Workshop.id},${Workshop.qty}, NULL, NULL, NULL, NULL)`
+      const sqlInsertDetail = `INSERT INTO order_item (order_id, product_id, color_id, workshop_id, quantity) VALUES (${orderId}, NULL, NULL, ${Workshop.id},${Workshop.qty})`
       await db.query(sqlInsertDetail, [orderId, Workshop.id, Workshop.qty])
     }
   } catch (error) {

@@ -16,11 +16,13 @@
         text-align: start;
 
         .name {
-            font-size: 24px;
+            font-size: 18px;
         }
 
         .discount {
-            line-height: 100%;
+            padding-top: 5px;
+            font-size: 52px;
+            line-height: 120%;
         }
 
         .max {
@@ -65,7 +67,7 @@
             width: 180px;
 
             .name {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .discount {

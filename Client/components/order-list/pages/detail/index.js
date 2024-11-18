@@ -27,7 +27,7 @@ const OrderDetail = () => {
                     throw new Error(`錯誤: ${response.statusText}`);
                 }
                 const data = await response.json();
-                const Data = data[0]
+                const Data = data[0];
                 // 檢查 items 是否存在且為有效的 JSON 字串
                 let parsedItems = [];
                 if (Data.items && typeof Data.items === 'string') {
@@ -44,7 +44,7 @@ const OrderDetail = () => {
                 };
 
                 setOrderData(processedData);
-                console.log(processedData)
+                // console.log(processedData);
             } catch (error) {
                 console.error("獲取訂單詳細資料時發生錯誤：", error);
             } finally {
@@ -56,18 +56,17 @@ const OrderDetail = () => {
     }, []); // 只在元件首次渲染時執行
 
     if (loading) {
-        return <div>加載中...</div>; // 載入狀態
+        return <div>載入中...</div>; // 載入狀態
     }
 
     if (!orderData) {
-        return <div>無法獲取訂單詳細資料</div>; // 如果無法獲取資料，顯示錯誤訊息
+        return <div>無法取得訂單詳細資料</div>; // 如果無法取得資料，顯示錯誤訊息
     }
 
     const { items, order_number, payment, shipping, shipping_address, name, phone, total_amount, discount_value, status } = orderData;
 
     return (
         <OrderSection titleCN="訂單詳情">
-
             <div className={`${styles["order-det-header"]} mt-3 justify-content-between align-items-center mb-2`}>
                 <div className={`header-left d-flex align-items-center`}>
                     <div className={`${styles.squ} me-3`}></div>
@@ -94,7 +93,7 @@ const OrderDetail = () => {
                     </div>
                     <div className={styles.line}></div>
                     <div className={styles["msg-right"]}>
-                        <div className={`${styles["right-title"]} h4 `}>收件信息</div>
+                        <div className={`${styles["right-title"]} h4 `}>收件資訊</div>
                         <div className={`${styles.detail} h6 ms-3`}>
                             <div className="name">{name}</div>
                             <div className="phone">{phone}</div>
@@ -120,8 +119,8 @@ const OrderDetail = () => {
                                         quantity={item.quantity}
                                         originalPrice={item.originalprice}
                                         discountedPrice={new Intl.NumberFormat().format(item.price)}
-                                        productId={item.product_id} 
-                                        colorId={item.color_id}      
+                                        productId={item.product_id}
+                                        colorId={item.color_id}
                                     />
                                 )}
                                 {/* 顯示工作坊資料 */}
@@ -149,57 +148,70 @@ const OrderDetail = () => {
                         <div className={`total h6 p-1`}>
                             商品小計<span>$  {new Intl.NumberFormat().format(
                                 items.reduce((total, item) => {
-                                    // 計算每個商品的小計
+                                    const originalprice = item.originalprice || 0;
+                                    const quantity = item.quantity || 0;
+                                    const workshopPrice = item.workshop_price || 0;
+
                                     if (item.product_id) {
-                                        return total + (item.originalprice * item.quantity);  // 商品小計
+                                        return total + (originalprice * quantity);
                                     }
-                                    if (item.wid) {
-                                        return total + item.workshop_price;  // 工作坊價格
+
+                                    if (item.wt_id) {
+                                        return total + (workshopPrice * quantity);
                                     }
+                                    console.log(total)
                                     return total;
-                                }, 0) // 初始總金額為 0
+                                }, 0)
                             )}</span>
                         </div>
                         <div className={`total h6 p-1`}>
                             商品折扣<span>$  {new Intl.NumberFormat().format(
                                 items.reduce((total, item) => {
-                                    // 計算每個商品的小計
-                                    if (item.product_id) {
-                                        return total + ((item.originalprice - item.price) * item.quantity);  // 商品小計
+                                    // 確認 price, originalprice, quantity 是否為有效的數字
+                                    const originalPrice = item.originalprice || 0;  // 如果原價無效，視為0
+                                    const price = item.price || 0;  // 如果價格無效，視為0
+                                    const quantity = item.quantity || 0;  // 如果數量無效，視為0
+
+                                    // 如果有 product_id，計算小計
+                                    if (item.product_id != null) {
+                                        const subtotal = (originalPrice - price) * quantity; // 計算每個商品的小計
+                                        return total + subtotal; // 累加到總金額
                                     }
                                     return total;
-                                }, 0) // 初始總金額為 0
+                                }, 0) // 初始值為 0
                             )}</span>
                         </div>
-                        {/* <div className={`total h6 p-1`}>
-                                運費<span>${shippingFee}</span>
-                            </div>
-                            <div className={`total h6 p-1`}>
-                                運費折扣<span>-${shippingDiscount}</span>
-                            </div> */}
                         {discount_value !== null && (
                             <div className="total h6 p-1">
                                 {discount_value > 1 ? (
-                                    // 当 discount_value 大于 1 时显示优惠券金额
+                                    // 當 discount_value 大於 1 時顯示優惠券金額
                                     <>
                                         優惠券<span>-${discount_value}</span>
                                     </>
                                 ) : (
-                                    // 当 discount_value 小于等于 1 时显示计算后的金额
+                                    // 當 discount_value 小於等於 1 時顯示計算後的金額
                                     <>
                                         優惠券
                                         <span>-$
                                             {new Intl.NumberFormat().format(
                                                 items.reduce((total, item) => {
-                                                    // 计算每个商品的小计
+                                                    // 防呆處理，確保 price, quantity 和 workshop_price 為有效的數字
+                                                    const price = item.price || 0;  // 如果 price 是無效的，視為 0
+                                                    const quantity = item.quantity || 0;  // 如果 quantity 是無效的，視為 0
+                                                    const workshopPrice = item.workshop_price || 0;  // 如果 workshop_price 是無效的，視為 0
+
+                                                    // 計算商品小計
                                                     if (item.product_id) {
-                                                        return total + (item.price * item.quantity);  // 商品小计
+                                                        return total + (price * quantity);  // 計算商品小計
                                                     }
-                                                    if (item.wid) {
-                                                        return total + item.workshop_price;  // 工作坊价格
+
+                                                    // 計算工作坊價格
+                                                    if (item.wt_id) {
+                                                        return total + (workshopPrice * quantity);  // 計算工作坊小計
                                                     }
+
                                                     return total;
-                                                }, 0) - total_amount // 计算总金额后减去 total_amount
+                                                }, 0) - total_amount // 計算總金額後減去 total_amount
                                             )}
                                         </span>
                                     </>
@@ -209,23 +221,27 @@ const OrderDetail = () => {
                         <div className={`${styles.total} h6 p-1 border-top border-black`}>
                             訂單金額<span className="h4">NT$ {new Intl.NumberFormat().format(
                                 items.reduce((total, item) => {
-                                    // 計算每個商品的小計
+                                    const price = item.price || 0;
+                                    const quantity = item.quantity || 0;
+                                    const workshopPrice = item.workshop_price || 0;
+
                                     if (item.product_id) {
-                                        return total + (item.price * item.quantity);  // 商品小計
+                                        return total + (price * quantity);
                                     }
-                                    if (item.wid) {
-                                        return total + item.workshop_price;  // 工作坊價格
+
+                                    if (item.wt_id) {
+                                        return total + (workshopPrice * quantity);
                                     }
+                                    console.log(total)
                                     return total;
-                                }, 0) // 初始總金額為 0
+                                }, 0)
                             )}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            
         </OrderSection>
     );
 };
 
-export default OrderDetail;
+export default OrderDetail

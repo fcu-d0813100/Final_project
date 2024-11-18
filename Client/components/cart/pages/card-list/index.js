@@ -7,37 +7,46 @@ import { useCartWorkshop } from '@/hooks/use-cartW'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
+import ToastSuccess from '@/components/shared/toast-success/index'
 import { useAuth } from '@/hooks/use-auth'
+import Confrim from '@/components/shared/modal-delete/index'
 
 export default function CartList() {
   //----------吐司訊息
-  //新增商品
-  const addPnotify = () =>
-    toast.success('新增1件商品', {
-      style: {
-        border: '1.2px solid #90957a',
-        padding: '12px 40px',
-        color: '#626553',
-      },
-      iconTheme: {
-        primary: '#626553',
-        secondary: '#fff',
-      },
-    })
-  //刪除商品
-  const delPnotify = () =>
-    toast.success('刪除1件商品', {
-      style: {
-        border: '1.2px solid #963827',
-        padding: '12px 40px',
-        color: '#963827',
-      },
-      iconTheme: {
-        primary: '#963827',
-        secondary: '#fff',
-      },
-    })
+  const { add } = ToastSuccess({
+    message: '新增商品',
+    functionName: 'add',
+  })
 
+  const { del } = ToastSuccess({
+    message: '刪除商品',
+    functionName: 'del',
+  })
+
+  //---------刪除商品的彈窗訊息
+  // 商品部分
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [productToDelete, setProductToDelete] = useState(null)
+
+  const handleDeleteConfirmP = () => {
+    if (productToDelete) {
+      onRemoveProduct(productToDelete.product_id, productToDelete.color)
+    }
+    setProductToDelete(null)
+    setShowProductModal(false)
+  }
+
+  // 課程部分
+  const [showWorkshopModal, setShowWorkshopModal] = useState(false)
+  const [workshopToDelete, setWorkshopToDelete] = useState(null)
+
+  const handleDeleteConfirmW = () => {
+    if (workshopToDelete) {
+      onRemoveWorkshop(workshopToDelete.id)
+    }
+    setWorkshopToDelete(null)
+    setShowWorkshopModal(false)
+  }
   //-----------按鈕路由
   const router = useRouter()
 
@@ -83,6 +92,30 @@ export default function CartList() {
 
   return (
     <>
+      {/* 彈窗訊息 */}
+      {showProductModal && (
+        <Confrim
+          title="移除商品"
+          content="您即將移除此商品，操作無法復原。確定要執行此操作嗎？"
+          btnConfirm="確定刪除"
+          btnCancel="取消"
+          ConfirmFn={handleDeleteConfirmP}
+          show={showProductModal}
+          handleClose={() => setShowProductModal(false)}
+        />
+      )}
+      {showWorkshopModal && (
+        <Confrim
+          title="移除課程"
+          content="您即將移除此課程，操作無法復原。確定要執行此操作嗎？"
+          btnConfirm="確定刪除"
+          btnCancel="取消"
+          ConfirmFn={handleDeleteConfirmW}
+          show={showWorkshopModal}
+          handleClose={() => setShowWorkshopModal(false)}
+        />
+      )}
+
       <div className="container">
         <div className="row">
           {/* 步驟 */}
@@ -91,8 +124,15 @@ export default function CartList() {
               src="/cart/step1.svg"
               alt="Step1"
               width={1400}
-              height={300}
-              className="img-fluid d-none d-lg-block"
+              height={500}
+              className="img-fluid d-none d-md-block"
+            />
+            <Image
+              src="/cart/RWDstep.1.svg"
+              alt="Step1"
+              width={200}
+              height={400}
+              className="img-fluid d-md-none -block"
             />
           </div>
 
@@ -128,76 +168,80 @@ export default function CartList() {
                                 折扣
                               </div>
                             )}
-                          <div className="ps">{product.brand}</div>
-                          <div className="h6 mb-3">{product.product_name}</div>
+                          <div className={style.brand}>{product.brand}</div>
+                          <div className={`h6 mb-1 ${style['product-name']}`}>
+                            {product.product_name}
+                          </div>
                           <div className={style['sub_text']}>
                             顏色：{product.color_name}
                           </div>
                         </div>
                       </div>
-
-                      {/* 數量加減按鈕 */}
-                      <div className="d-flex align-items-center justify-content-end">
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            const nextPqty = product.qty - 1
-                            if (nextPqty >= 1) delPnotify()
-                            if (nextPqty <= 0) {
-                              if (confirm('你確定要移除此商品嗎？')) {
-                                onRemoveProduct(
+                      <div className={style.rwdphone}>
+                        {/* 數量加減按鈕 */}
+                        <div className="d-flex align-items-center justify-content-end">
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              const nextPqty = product.qty - 1
+                              if (nextPqty >= 1) del()
+                              if (nextPqty <= 0) {
+                                setProductToDelete(product)
+                                setShowProductModal(true)
+                              } else {
+                                onDecreaseProduct(
                                   product.product_id,
                                   product.color
                                 )
                               }
-                            } else {
-                              onDecreaseProduct(
+                            }}
+                          >
+                            <Minus size={20} />
+                          </button>
+                          <span className={style.btntext}>{product.qty}</span>
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              onIncreaseProduct(
                                 product.product_id,
                                 product.color
                               )
-                            }
-                          }}
-                        >
-                          <Minus size={20} />
-                        </button>
-                        <span className="px-3 h6">{product.qty}</span>
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            onIncreaseProduct(product.product_id, product.color)
-                            addPnotify()
-                          }}
-                        >
-                          <Plus size={20} />
-                        </button>
-                        <Toaster position="top-center" reverseOrder={true} />
-                      </div>
+                              add()
+                            }}
+                          >
+                            <Plus size={20} />
+                          </button>
+                          <Toaster position="top-center" reverseOrder={true} />
+                        </div>
 
-                      {/* 商品價格 */}
-                      <div className={`h6 ${style.price}`}>
-                        NT$
-                        {(selectedCoupon && selectedCoupon.discount_value <= 1
-                          ? Math.floor(
-                              product.price * product.qty * discountValue
-                            )
-                          : product.price * product.qty
-                        ).toLocaleString()}
-                        <div className={style['origin_price']}>
+                        {/* 商品價格 */}
+                        <div className={`h6 ${style.price}`}>
                           NT$
-                          {(
-                            product.originalprice * product.qty
+                          {(selectedCoupon && selectedCoupon.discount_value <= 1
+                            ? Math.floor(
+                                product.price * product.qty * discountValue
+                              )
+                            : product.price * product.qty
                           ).toLocaleString()}
+                          <div className={style['origin_price']}>
+                            NT$
+                            {(
+                              product.originalprice * product.qty
+                            ).toLocaleString()}
+                          </div>
                         </div>
                       </div>
-
+                      {/* 垃圾桶按鈕 */}
                       <div className={style.trash}>
                         <button
                           type="button"
                           onClick={() => {
-                            onRemoveProduct(product.product_id, product.color)
+                            setProductToDelete(product)
+                            setShowProductModal(true)
                           }}
                         >
-                          <Trash size={28} />
+                          <Trash size={20} className="d-md-none" />
+                          <Trash size={28} className="d-none d-md-block" />
                         </button>
                       </div>
                     </div>
@@ -247,8 +291,10 @@ export default function CartList() {
                           <div className={`ps mb-1 ${style['sub_text']}`}>
                             {workshop.teacher}
                           </div>
-                          <div className="h6 mb-3">{workshop.name}</div>
-                          <div className="ps">
+                          <div className={`h6 mb-1 ${style['product-name']}`}>
+                            {workshop.name}
+                          </div>
+                          <div className={`${style['sub_text']}`}>
                             {workshop.date}
                             <span className={`ms-2  ${style['sub_text']}`}>
                               {workshop.beginTime}-{workshop.endTime}
@@ -256,53 +302,59 @@ export default function CartList() {
                           </div>
                         </div>
                       </div>
-                      {/* 數量加減按鈕 */}
-                      <div className="d-flex align-items-center justify-content-end">
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            const nextWqty = workshop.qty - 1
-                            if (nextWqty >= 1) delPnotify()
-                            if (nextWqty <= 0) {
-                              if (confirm('你確定要移除此商品嗎？')) {
-                                onRemoveWorkshop(workshop.id)
+                      <div className={style.rwdphone}>
+                        {/* 數量加減按鈕 */}
+                        <div className="d-flex align-items-center justify-content-end">
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              const nextWqty = workshop.qty - 1
+                              if (nextWqty >= 1) del()
+                              if (nextWqty <= 0) {
+                                setWorkshopToDelete(workshop)
+                                setShowWorkshopModal(true) // 顯示課程刪除彈窗
+                              } else {
+                                onDecreaseWorkshop(workshop.id)
                               }
-                            } else {
-                              onDecreaseWorkshop(workshop.id)
-                            }
-                          }}
-                        >
-                          <Minus size={20} />
-                        </button>
-                        <span className="px-3 h6">{workshop.qty}</span>
-                        <button
-                          className={style['btn-sm']}
-                          onClick={() => {
-                            onIncreaseWorkshop(workshop.id)
-                            addPnotify()
-                          }}
-                        >
-                          <Plus size={20} />
-                        </button>
-                      </div>
+                            }}
+                          >
+                            <Minus size={20} />
+                          </button>
+                          <span className={style.btntext}>{workshop.qty}</span>
+                          <button
+                            className={style['btn-sm']}
+                            onClick={() => {
+                              onIncreaseWorkshop(workshop.id)
+                              add()
+                            }}
+                          >
+                            <Plus size={20} />
+                          </button>
+                        </div>
 
-                      {/* 課程價格 */}
-                      <div className={`h6 ${style.price}`}>
-                        NT$
-                        {Math.floor(
-                          workshop.price * workshop.qty * 0.95
-                        ).toLocaleString()}
-                        <div className={style['origin_price']}>
-                          NT$ {(workshop.price * workshop.qty).toLocaleString()}
+                        {/* 課程價格 */}
+                        <div className={`h6 ${style.price}`}>
+                          NT$
+                          {Math.floor(
+                            workshop.price * workshop.qty * 0.95
+                          ).toLocaleString()}
+                          <div className={style['origin_price']}>
+                            NT$
+                            {(workshop.price * workshop.qty).toLocaleString()}
+                          </div>
                         </div>
                       </div>
                       <div className={style.trash}>
                         <button
                           type="button"
                           className={style.trash}
-                          onClick={() => onRemoveWorkshop(workshop.id)}
+                          onClick={() => {
+                            setWorkshopToDelete(workshop)
+                            setShowWorkshopModal(true)
+                          }}
                         >
-                          <Trash size={28} />
+                          <Trash size={20} className="d-md-none" />
+                          <Trash size={28} className="d-none d-md-block" />
                         </button>
                       </div>
                     </div>
@@ -323,7 +375,7 @@ export default function CartList() {
               <div className={style.sticky}>
                 <CheckoutBox />
                 <div
-                  className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
+                  className={` justify-content-between d-xl-flex ${style['checkout_btn']}`}
                 >
                   <button
                     className="btn-primary"
