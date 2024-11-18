@@ -156,7 +156,7 @@ export default function UserInfo() {
             className={`row ${styles['levelArea']} d-flex py-0 my-0 align-items-center`}
           >
             <div
-              className={`${styles['levelFlex']}  col-12 col-xxl-10 justify-content-evenly d-flex align-items-center`}
+              className={`${styles['levelFlex']}  col-12 col-xxl-10 gap-2 justify-content-evenly d-flex align-items-center`}
             >
               <Image
                 src="/user/regular.svg"
