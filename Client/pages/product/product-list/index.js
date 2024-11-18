@@ -126,6 +126,7 @@ const ProductList = () => {
     setSelectedSubCategory(null);
     setSelectedPriceRange(null);
     setSelectedBrand(null);
+
   };
 
   // 加載所有商品，並重置所有篩選條件
