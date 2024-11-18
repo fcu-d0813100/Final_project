@@ -23,7 +23,7 @@ export default function BuyRule(props) {
   return (
     <>
       <div className={style['buy-rule']}>
-        <p className="h6">Beautique官方網站購物須知 :</p>
+        <p className={style['buy-rule-topic']}>Beautique官方網站購物須知 :</p>
         <p>
           1.
           訂單確認後，我們會於1-3個工作日內進行處理並安排出貨。如有課程預訂，我們將於預訂後發送課程確認信。
