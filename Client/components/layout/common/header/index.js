@@ -14,12 +14,22 @@ import {
 } from 'react-bootstrap'
 import Headroom from 'react-headroom' // 引入 Headroom
 import styles from './index.module.scss'
+import { useModal } from '@/hooks/use-modal'
 import { useAuth } from '@/hooks/use-auth'
 // 根據 user 是否存在來決定跳轉的鏈接
 // const userLink = auth ? '/user' : '/user/login/user'
 // 初始化用戶資料
 // 獲取用戶信息
 function TopBar({ cartitems }) {
+  //-------阻擋未登入
+  const { ensureLoggedIn } = useModal()
+  const handleCartClick = () => {
+    if (!ensureLoggedIn()) {
+      return
+    }
+    window.location.href = '/cart'
+  }
+
   const [showOffcanvas, setShowOffcanvas] = useState(false)
 
   const handleClose = () => setShowOffcanvas(false)
@@ -73,6 +83,7 @@ function TopBar({ cartitems }) {
 
   console.log(auth) // 確認 auth 狀態是否正確更新
   console.log(auth.userData.identity)
+  console.log(auth.userData.id)
 
   return (
     <>
@@ -105,14 +116,14 @@ function TopBar({ cartitems }) {
                 <Link href={getUserLink()}>
                   <PiUser size={22} className="me-3" />
                 </Link>
-                <Link href="/cart">
-                  <span className={styles['cart-icon']}>
-                    <PiHandbagSimple size={22} />
-                    {cartitems > 0 && (
+                <span onClick={handleCartClick} className={styles['cart-icon']}>
+                  <PiHandbagSimple size={22} />
+                  {auth.userData.id !== undefined &&
+                    auth.userData.id !== 0 &&
+                    cartitems > 0 && (
                       <span className={styles['cart-number']}>{cartitems}</span>
                     )}
-                  </span>
-                </Link>
+                </span>
               </Col>
             </Row>
           </Container>

@@ -121,8 +121,8 @@ export default function Index() {
         }
 
         // 確認 couponId 是否正確
-        console.log("Coupon ID:", couponId);
-        console.log("Coupon valid:", coupon.valid);  // 確認 valid 欄位
+        // console.log("Coupon ID:", couponId);
+        // console.log("Coupon valid:", coupon.valid);  // 確認 valid 欄位
 
         try {
             // 發送 PUT 請求將 valid 設為 0，表示禁用優惠券

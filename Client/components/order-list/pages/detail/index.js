@@ -44,7 +44,7 @@ const OrderDetail = () => {
                 };
 
                 setOrderData(processedData);
-                console.log(processedData);
+                // console.log(processedData);
             } catch (error) {
                 console.error("獲取訂單詳細資料時發生錯誤：", error);
             } finally {
@@ -119,8 +119,8 @@ const OrderDetail = () => {
                                         quantity={item.quantity}
                                         originalPrice={item.originalprice}
                                         discountedPrice={new Intl.NumberFormat().format(item.price)}
-                                        productId={item.product_id} 
-                                        colorId={item.color_id}      
+                                        productId={item.product_id}
+                                        colorId={item.color_id}
                                     />
                                 )}
                                 {/* 顯示工作坊資料 */}
@@ -148,26 +148,37 @@ const OrderDetail = () => {
                         <div className={`total h6 p-1`}>
                             商品小計<span>$  {new Intl.NumberFormat().format(
                                 items.reduce((total, item) => {
-                                    // 計算每個商品的小計
+                                    const originalprice = item.originalprice || 0;
+                                    const quantity = item.quantity || 0;
+                                    const workshopPrice = item.workshop_price || 0;
+
                                     if (item.product_id) {
-                                        return total + (item.originalprice * item.quantity);  // 商品小計
+                                        return total + (originalprice * quantity);
                                     }
-                                    if (item.wid) {
-                                        return total + item.workshop_price;  // 工作坊價格
+
+                                    if (item.wt_id) {
+                                        return total + (workshopPrice * quantity);
                                     }
+                                    console.log(total)
                                     return total;
-                                }, 0) // 初始總金額為 0
+                                }, 0)
                             )}</span>
                         </div>
                         <div className={`total h6 p-1`}>
                             商品折扣<span>$  {new Intl.NumberFormat().format(
                                 items.reduce((total, item) => {
-                                    // 計算每個商品的小計
-                                    if (item.product_id) {
-                                        return total + ((item.originalprice - item.price) * item.quantity);  // 商品小計
+                                    // 確認 price, originalprice, quantity 是否為有效的數字
+                                    const originalPrice = item.originalprice || 0;  // 如果原價無效，視為0
+                                    const price = item.price || 0;  // 如果價格無效，視為0
+                                    const quantity = item.quantity || 0;  // 如果數量無效，視為0
+
+                                    // 如果有 product_id，計算小計
+                                    if (item.product_id != null) {
+                                        const subtotal = (originalPrice - price) * quantity; // 計算每個商品的小計
+                                        return total + subtotal; // 累加到總金額
                                     }
                                     return total;
-                                }, 0) // 初始總金額為 0
+                                }, 0) // 初始值為 0
                             )}</span>
                         </div>
                         {discount_value !== null && (
@@ -184,13 +195,21 @@ const OrderDetail = () => {
                                         <span>-$
                                             {new Intl.NumberFormat().format(
                                                 items.reduce((total, item) => {
-                                                    // 計算每個商品的小計
+                                                    // 防呆處理，確保 price, quantity 和 workshop_price 為有效的數字
+                                                    const price = item.price || 0;  // 如果 price 是無效的，視為 0
+                                                    const quantity = item.quantity || 0;  // 如果 quantity 是無效的，視為 0
+                                                    const workshopPrice = item.workshop_price || 0;  // 如果 workshop_price 是無效的，視為 0
+
+                                                    // 計算商品小計
                                                     if (item.product_id) {
-                                                        return total + (item.price * item.quantity);  // 商品小計
+                                                        return total + (price * quantity);  // 計算商品小計
                                                     }
-                                                    if (item.wid) {
-                                                        return total + item.workshop_price;  // 工作坊價格
+
+                                                    // 計算工作坊價格
+                                                    if (item.wt_id) {
+                                                        return total + (workshopPrice * quantity);  // 計算工作坊小計
                                                     }
+
                                                     return total;
                                                 }, 0) - total_amount // 計算總金額後減去 total_amount
                                             )}
@@ -202,15 +221,20 @@ const OrderDetail = () => {
                         <div className={`${styles.total} h6 p-1 border-top border-black`}>
                             訂單金額<span className="h4">NT$ {new Intl.NumberFormat().format(
                                 items.reduce((total, item) => {
-                                    // 計算每個商品的小計
+                                    const price = item.price || 0;
+                                    const quantity = item.quantity || 0;
+                                    const workshopPrice = item.workshop_price || 0;
+
                                     if (item.product_id) {
-                                        return total + (item.price * item.quantity);  // 商品小計
+                                        return total + (price * quantity);
                                     }
-                                    if (item.wid) {
-                                        return total + item.workshop_price;  // 工作坊價格
+
+                                    if (item.wt_id) {
+                                        return total + (workshopPrice * quantity);
                                     }
+                                    console.log(total)
                                     return total;
-                                }, 0) // 初始總金額為 0
+                                }, 0)
                             )}</span>
                         </div>
                     </div>

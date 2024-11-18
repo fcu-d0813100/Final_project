@@ -189,7 +189,7 @@
   }
   ul {
     li {
-      margin-bottom: 15px;
+      margin: 15px 0;
       list-style: none;
       a {
         text-decoration: none;
@@ -356,8 +356,22 @@
       padding: 2px 5px;
       transform: translate(-8.5%, 0);
     }
+    
   }
-
+  .product-discount-w{
+    font-size: 28px;
+    font-family: Libre Bodoni;
+    font-style: italic;
+    font-weight: 500;
+    color: #963827;
+    position: absolute;
+    top: 11%;
+    left: 10%;
+    span{
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
   i {
     position: absolute;
     font-size: 20px;
