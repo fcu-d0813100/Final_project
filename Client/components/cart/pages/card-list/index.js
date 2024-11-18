@@ -96,7 +96,7 @@ export default function CartList() {
       {showProductModal && (
         <Confrim
           title="移除商品"
-          content="您即將移除此商品，操作無法復原。確定要執行此操作嗎？"
+          content={`您即將移除此商品，操作無法復原。\n確定要執行此操作嗎？`}
           btnConfirm="確定刪除"
           btnCancel="取消"
           ConfirmFn={handleDeleteConfirmP}
