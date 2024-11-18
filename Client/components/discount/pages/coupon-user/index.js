@@ -271,7 +271,7 @@ const UserCoupon = () => {
                 {/* {loading && <p>加載中...</p>} */}
 
                 {/* 顯示優惠券 */}
-                <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around align-items-center pt-4`}>
+                <div className={`${styles["coupon-group"]} d-flex flex-wrap justify-content-around  lign-content-stretch`}>
                     {filteredCoupons.map((coupon, index) => {
                         const isCouponActive = new Date(coupon.start_date) <= new Date();
 
