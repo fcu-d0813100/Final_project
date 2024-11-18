@@ -13,10 +13,10 @@ router.get('/information', authenticate, async function (req, res) {
       user.account AS user_account
 
    FROM
-   teachers
+    teachers
    JOIN
     workshop_type ON workshop_type.id = teachers.type_id 
- LEFT JOIN
+   LEFT JOIN
     user ON user.id = teachers.id
    WHERE
    teachers.id = ${id}
@@ -28,8 +28,8 @@ router.get('/information', authenticate, async function (req, res) {
 })
 
 router.get('/', async function (req, res) {
-  const { search = '' } = req.query
-  const sqlSelect = `SELECT
+  const { search = '', type_id = '', nation = '', order = '' } = req.query
+  let sqlSelect = `SELECT
   teachers.*,
   user.account AS user_account,
   workshop_type.type AS workshop_type_type
@@ -43,11 +43,35 @@ router.get('/', async function (req, res) {
  WHERE
     (teachers.name LIKE '%${search}%' OR teachers.nation LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%')
     AND teachers.valid = 1  
-  GROUP BY
-     teachers.id, workshop_type.type`
+`
+
+  const sqlParams = [`%${search}%`, `%${search}%`, `%${search}%`]
+
+  // 若有選擇 type_id，則加上條件
+  if (type_id) {
+    sqlSelect += `AND teachers.type_id = ${type_id}`
+    sqlParams.push(type_id)
+  }
+
+  // 若有 nation 條件，則加入條件
+  if (nation === '1') {
+    sqlSelect += ` AND teachers.nation = '臺灣'`
+  } else if (nation === '2') {
+    sqlSelect += ` AND teachers.nation != '臺灣'`
+  }
+
+  // 加入 GROUP BY 條件
+  sqlSelect += ` GROUP BY teachers.id, workshop_type.type`
+
+  // 根據 order 值決定排序條件
+  if (order === '1') {
+    sqlSelect += ` ORDER BY teachers.years ASC` // 價格升冪
+  } else if (order === '2') {
+    sqlSelect += ` ORDER BY teachers.years DESC` // 價格降冪
+  }
 
   const [result] = await db
-    .query(sqlSelect, [(`%${search}%`, `%${search}%`, `%${search}%`)])
+    .query(sqlSelect, sqlParams)
     .catch((e) => console.log(e))
   res.json(result)
   console.log(req.params)
@@ -75,7 +99,7 @@ router.get('/:tid', async function (req, res) {
  LEFT JOIN
     workshop_time ON workshop_time.workshop_id = workshop.id
  WHERE
-    teachers.id=${req.params.tid}
+    teachers.id=${req.params.tid} AND workshop.isUpload=1 AND workshop.valid=1
   GROUP BY
     workshop.id, teachers.id, workshop.isUpload, workshop.valid, workshop_type.id `
 

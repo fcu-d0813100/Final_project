@@ -58,9 +58,15 @@
           border-radius: 17px;
           padding-inline: 20px;
         }
-        .nowOpen {
+        .opening {
           color: white;
           background-color: $green-500;
+          border-radius: 17px;
+          padding-inline: 20px;
+        }
+        .prepare{
+            color: white;
+          background-color: rgb(211, 193, 110);
           border-radius: 17px;
           padding-inline: 20px;
         }

@@ -1,17 +1,24 @@
 .user-section {
-    display: flex;
-    // position: relative;
-    width: 100%;
+  display: flex;
+  // position: relative;
+  width: 100%;
 }
 
 .any-section {
-    // max-width: 100%;
-    padding: 70px 120px;
-    box-sizing: border-box;
-    flex: 1;
-
+  // max-width: 100%;
+  padding: 70px 120px;
+  box-sizing: border-box;
+  flex: 1;
+  line-height: 0.9; /* 調整行高，讓文字更接近邊框 */
+  padding-bottom: -5px; /* 下方內縮，可使用負值 */
 }
 
+<<<<<<< HEAD
+@media (max-width: 1100px) {
+  .any-section {
+    padding: 40px 15px;
+  }
+=======
 @media (max-width: 1400px) {
     .any-section {
         padding: 40px 30px;
@@ -22,24 +29,23 @@
     .any-section {
         padding: 40px 15px;
     }
+>>>>>>> 2fd1994a5f09a4e992e3a5b5555ab32ff91c7f0e
 }
 
-
 @media (max-width: 575px) {
-    .any-section {
-        padding: 40px 20px 30px 20px;
-    }
+  .any-section {
+    padding: 40px 20px 30px 20px;
+  }
 
-    .user-section {
-        display: inline;
-        // position: relative;
-        width: 100%;
-    }
-
+  .user-section {
+    display: inline;
+    // position: relative;
+    width: 100%;
+  }
 }
 
 @media (max-width: 390px) {
-    .any-section {
-        padding: 20px 10px 30px 10px;
-    }
+  .any-section {
+    padding: 20px 10px 30px 10px;
+  }
 }
