@@ -14,26 +14,46 @@ const PaginatedList = ({ data = [], itemsPerPage, renderCard }) => {
 
   const getPaginationItems = () => {
     const paginationItems = []
-    let startPage, endPage
 
     if (totalPages <= 5) {
-      // 如果總頁數小於或等於5，顯示所有頁碼
-      startPage = 1
-      endPage = totalPages
-    } else {
-      if (currentPage <= 3) {
-        // 當前頁數在前三頁時，顯示1到5頁
-        startPage = 1
-        endPage = 5
-      } else if (currentPage + 2 >= totalPages) {
-        // 當前頁數在最後三頁時，顯示最後5頁
-        startPage = totalPages - 4
-        endPage = totalPages
-      } else {
-        // 否則，顯示當前頁及其相鄰的前兩頁和後兩頁
-        startPage = currentPage - 2
-        endPage = currentPage + 2
+      for (let i = 1; i <= totalPages; i++) {
+        paginationItems.push(
+          <Pagination.Item
+            key={i}
+            active={i === currentPage}
+            onClick={() => handlePageChange(i)}
+          >
+            {i}
+          </Pagination.Item>
+        )
       }
+      return paginationItems
+    }
+
+    paginationItems.push(
+      <Pagination.Item
+        key={1}
+        active={1 === currentPage}
+        onClick={() => handlePageChange(1)}
+      >
+        1
+      </Pagination.Item>
+    )
+
+    if (currentPage > 3) {
+      paginationItems.push(<Pagination.Ellipsis key="ellipsis-start" />)
+    }
+
+    let startPage = Math.max(2, currentPage - 1)
+    let endPage = Math.min(totalPages - 1, currentPage + 1)
+
+    if (currentPage <= 3) {
+      startPage = 2
+      endPage = 4
+    }
+    if (currentPage >= totalPages - 2) {
+      startPage = totalPages - 3
+      endPage = totalPages - 1
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -48,15 +68,33 @@ const PaginatedList = ({ data = [], itemsPerPage, renderCard }) => {
       )
     }
 
+    if (currentPage < totalPages - 2) {
+      paginationItems.push(<Pagination.Ellipsis key="ellipsis-end" />)
+    }
+
+    paginationItems.push(
+      <Pagination.Item
+        key={totalPages}
+        active={totalPages === currentPage}
+        onClick={() => handlePageChange(totalPages)}
+      >
+        {totalPages}
+      </Pagination.Item>
+    )
+
     return paginationItems
   }
 
   return (
     <div className={styles['pagination-container']}>
       <div>
-        {currentItems.map((item, index) => (
-          <React.Fragment key={index}>{renderCard(item)}</React.Fragment>
-        ))}
+        {currentItems.length > 0 ? (
+          currentItems.map((item) => (
+            <React.Fragment key={item.id}>{renderCard(item)}</React.Fragment>
+          ))
+        ) : (
+          <div>沒有可顯示的項目</div> // 當沒有項目時的提示
+        )}
       </div>
       <Pagination className={styles['custom-pagination']}>
         <Pagination.Prev
