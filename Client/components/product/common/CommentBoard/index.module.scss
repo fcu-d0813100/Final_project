@@ -215,6 +215,27 @@
   }
 }
 
+.like-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px; /* 調整圖標和文字的間距 */
+}
+
+.like-button img {
+  width: 20px;
+  height: 20px;
+}
+
+.like-text {
+  font-size: 14px;
+  color: #90957a; /* 或根據需求設置顏色 */
+}
+
 .btn-cancel{
   height: 2.5rem;
   width: auto;

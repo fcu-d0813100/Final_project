@@ -79,3 +79,12 @@
     }
   }
 }
+
+//RWD
+@media screen and (max-width: 540px) {
+  .checkout_discount {
+    margin-inline: 15px;
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+}

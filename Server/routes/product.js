@@ -38,67 +38,158 @@ router.post('/upload/reviews/images', upload, (req, res) => {
 
 router.use('/upload', express.static(path.join(__dirname, 'public/upload')))
 
-// 訂單商品評論路由 - POST
+// // 訂單商品評論路由 - POST(評論和訂單詳情寫在一起版本)------------------------------------------
+// router.post('/create-review/:productId/:colorId', upload, async function (req, res, next) {
+//   try {
+//     const { productId, colorId } = req.params;
+//     const { order_id, quantity, product_id, color_id, comment, rating, user_id } = req.body; // 保留其他評論的內容
+//      // 確保上傳的文件被正確解析
+//     const uploadedFiles = req.files.map((file) => ({
+//       fileName: file.filename,
+//       fileType: path.extname(file.filename), // 獲取文件擴展名
+//     }));
+//     console.log('Uploaded files:', req.files);
+
+//     console.log("order_id:", order_id);
+//     console.log("req.body:", req.body); // 檢查是否接收到表單數據
+//     console.log("req.files:", req.files); // 檢查是否接收到文件數據
+//     console.log("product_id:", product_id);
+//     console.log("color_id:", color_id);
+//     console.log("comment:", comment);
+//     console.log("rating:", rating);
+
+//     // 確認該 order_id 屬於 user_id
+//     const [orderCheck] = await db.query(
+//       `SELECT * FROM order_list WHERE id = ${order_id} AND user_id = ${user_id}`,
+//       [order_id, user_id]
+//     );
+
+//     if (orderCheck.length === 0) {
+//       return res.status(403).json({ message: '該訂單不屬於您，無法提交評論' });
+//     }
+
+//     console.log('Inserting into order_item...');
+//     // 插入評論到 order_item 表
+//     const sqlInsertReview = `
+//       INSERT INTO order_item (order_id, quantity, product_id, color_id, comment, rating, review_date, review_likes)
+//       VALUES (${order_id}, ${quantity}, ${productId}, ${colorId}, '${comment}', ${rating}, NOW(), 0)
+//     `;
+//     const [reviewResult] = await db.query(sqlInsertReview);
+//     console.log('Review Result:', reviewResult); // 確認 reviewResult 的結構
+//     const orderItemId = reviewResult;
+//     console.log('Generated order_item_id:', orderItemId);
+    
+//    // jreview_file 插入語句
+//    if (uploadedFiles.length > 0) {
+//     const sqlInsertMediaFiles = `
+//       INSERT INTO review_file (order_item_id, product_id, file_name, file_type)
+//        VALUES ${uploadedFiles
+//         .map(
+//           (file) =>
+//             `(${orderItemId}, ${productId}, '${file.fileName}', '${file.fileType}')`
+//         )
+//         .join(', ')}
+//     `
+//         console.log('SQL for inserting media files:', sqlInsertMediaFiles) // 調試用
+
+//         const [mediaInsertResult] = await db.query(sqlInsertMediaFiles)
+//         console.log('Media Insert Result:', mediaInsertResult) // 確認是否成功插入
+//       }
+
+//     res.json({
+//       status: 'success',
+//       message: `ID:${orderItemId} 評論和文件插入成功`,
+//     });
+//   } catch (error) {
+//     console.error('Error creating review:', error);
+//     res.status(500).json({
+//       status: 'error',
+//       message: '評論創建失敗',
+//     });
+//   }
+// });
+// // 訂單商品評論路由 - POST(評論和訂單詳情寫在一起版本)------------------------------------------
+
+
+// // 訂單商品評論路由 - POST(評論表獨立版本)-----------------------------------------------------------------
 router.post('/create-review/:productId/:colorId', upload, async function (req, res, next) {
   try {
-    const { productId, colorId } = req.params;
-    const { order_id, quantity, product_id, color_id, comment, rating, user_id } = req.body; // 保留其他評論的內容
-     // 確保上傳的文件被正確解析
+    const { productId, colorId } = req.params; // 從路由參數獲取 productId 和 colorId
+    const { order_id, comment, rating, user_id } = req.body; // 保留評論相關內容
+
+    // 打印所有接收到的數據
+    console.log('Received data:');
+    console.log('Product ID:', productId);
+    console.log('Color ID:', colorId);
+    console.log('Order ID:', order_id);
+    console.log('Comment:', comment);
+    console.log('Rating:', rating);
+    console.log('User ID:', user_id);
+
+    // 確保上傳的文件被正確解析
     const uploadedFiles = req.files.map((file) => ({
       fileName: file.filename,
       fileType: path.extname(file.filename), // 獲取文件擴展名
     }));
     console.log('Uploaded files:', req.files);
 
-    console.log("order_id:", order_id);
-    console.log("req.body:", req.body); // 檢查是否接收到表單數據
-    console.log("req.files:", req.files); // 檢查是否接收到文件數據
-    console.log("product_id:", product_id);
-    console.log("color_id:", color_id);
-    console.log("comment:", comment);
-    console.log("rating:", rating);
-
-    // 確認該 order_id 屬於 user_id
+    // 驗證該 order_id 是否屬於 user_id
     const [orderCheck] = await db.query(
-      `SELECT * FROM order_list WHERE id = ${order_id} AND user_id = ${user_id}`,
-      [order_id, user_id]
+      `SELECT * FROM order_list WHERE id = ${order_id} AND user_id =  ${user_id}`
     );
 
     if (orderCheck.length === 0) {
       return res.status(403).json({ message: '該訂單不屬於您，無法提交評論' });
     }
 
-    console.log('Inserting into order_item...');
-    // 插入評論到 order_item 表
-    const sqlInsertReview = `
-      INSERT INTO order_item (order_id, quantity, product_id, color_id, comment, rating, review_date, review_likes)
-      VALUES (${order_id}, ${quantity}, ${productId}, ${colorId}, '${comment}', ${rating}, NOW(), 0)
-    `;
-    const [reviewResult] = await db.query(sqlInsertReview);
-    console.log('Review Result:', reviewResult); // 確認 reviewResult 的結構
-    const orderItemId = reviewResult;
-    console.log('Generated order_item_id:', orderItemId);
-    
-   // jreview_file 插入語句
-   if (uploadedFiles.length > 0) {
-    const sqlInsertMediaFiles = `
-      INSERT INTO review_file (order_item_id, product_id, file_name, file_type)
-       VALUES ${uploadedFiles
-        .map(
-          (file) =>
-            `(${orderItemId}, ${productId}, '${file.fileName}', '${file.fileType}')`
-        )
-        .join(', ')}
-    `
-        console.log('SQL for inserting media files:', sqlInsertMediaFiles) // 調試用
+    // 驗證 order_item 是否存在
+    const [orderItemCheck] = await db.query(
+      `SELECT id FROM order_item WHERE order_id = ${order_id} AND product_id = ${productId} AND color_id = ${colorId}`
+    );
 
-        const [mediaInsertResult] = await db.query(sqlInsertMediaFiles)
-        console.log('Media Insert Result:', mediaInsertResult) // 確認是否成功插入
-      }
+    if (orderItemCheck.length === 0) {
+      return res.status(404).json({ message: '未找到對應的訂單商品項' });
+    }
+
+    const orderItemId = orderItemCheck[0].id;
+
+    // 檢查是否已提交過評論
+    const [existingReview] = await db.query(
+      `SELECT * FROM review WHERE order_item_id = ${orderItemId}`
+    );
+
+    if (existingReview.length > 0) {
+      return res.status(409).json({ message: '該商品已提交過評論' });
+    }
+
+    // 插入評論到 review 表
+    const sqlInsertReview = `
+      INSERT INTO review (order_item_id, comment, rating, review_date, review_likes)
+      VALUES (${order_id}, '${comment}', ${rating}, NOW(), 0)
+    `;
+    const [reviewResult] = await db.query(sqlInsertReview, [orderItemId, comment, rating]);
+    console.log('Insert Review Result:', reviewResult);
+    const reviewId = reviewResult;
+
+    // 如果有文件，插入到 review_file 表
+    if (uploadedFiles.length > 0) {
+      const sqlInsertMediaFiles = `
+        INSERT INTO review_file (review_id, product_id, file_name, file_type)
+        VALUES ${uploadedFiles
+          .map(
+            (file) => `(${reviewId}, ${productId}, '${file.fileName}', '${file.fileType}')`
+          )
+          .join(', ')}
+      `;
+      console.log('SQL for inserting media files:', sqlInsertMediaFiles); // 調試用
+
+      const [mediaInsertResult] = await db.query(sqlInsertMediaFiles);
+      console.log('Media Insert Result:', mediaInsertResult); // 確認是否成功插入
+    }
 
     res.json({
       status: 'success',
-      message: `ID:${orderItemId} 評論和文件插入成功`,
+      message: `評論和文件插入成功，Review ID: ${reviewId}`,
     });
   } catch (error) {
     console.error('Error creating review:', error);
@@ -109,103 +200,336 @@ router.post('/create-review/:productId/:colorId', upload, async function (req, r
   }
 });
 
+// 查詢評論(沒有product_id跟 color_id版本)--------------------------------------------------------
+router.get('/product-list/reviews/:order_item_id/:productId/:colorId', async (req, res) => {
+  const { order_item_id,productId, colorId} = req.params; // 獲取路由參數中的 order_item_id
+  // const { productId, colorId } = req.query;
+  console.log('Received order_item_id:', order_item_id); // 打印接收到的 order_item_id
+  console.log('Received product_id:', productId);
+  console.log('Received color_id:', colorId);
+
+  try {
+    // 查詢評論數據及其相關聯的用戶和媒體文件
+    const sqlSelect = `
+       SELECT 
+        r.id AS review_id,
+        r.comment,
+        r.rating,
+        DATE_FORMAT(r.review_date, '%Y-%m-%d %H:%i:%s') AS review_date,
+        r.review_likes,
+        u.nickname AS username,
+        u.img AS user_avatar,
+        rf.file_name,
+        rf.file_type
+      FROM 
+        review r
+      INNER JOIN 
+        order_item oi ON r.order_item_id = oi.order_id
+      INNER JOIN 
+        order_list ol ON oi.order_id = ol.id
+      INNER JOIN 
+        user u ON ol.user_id = u.id
+      LEFT JOIN 
+        review_file rf ON r.id = rf.review_id
+      WHERE 
+        r.order_item_id = ${order_item_id} 
+      ORDER BY 
+        r.review_date DESC;
+    `;
+
+    // 執行查詢
+    const [reviews] = await db.query(sqlSelect, [order_item_id]);
+
+    // 整理數據，將每個評論的媒體文件分組
+    const reviewsWithMedia = [];
+    const reviewMap = {};
+
+    reviews.forEach((review) => {
+      const {
+        review_id,
+        comment,
+        rating,
+        review_date,
+        review_likes,
+        username,
+        user_avatar,
+        file_name,
+        file_type,
+      } = review;
+
+      // 如果這個評論還沒被加入到 map 中，初始化它
+      if (!reviewMap[review_id]) {
+        reviewMap[review_id] = {
+          review_id,
+          comment,
+          rating,
+          review_date,
+          review_likes,
+          username,
+          user_avatar: user_avatar
+            ? `http://localhost:3005/avatar/${user_avatar}`
+            : '/default-avatar.png', // 如果沒有頭像，設置默認頭像
+          media: [],
+        };
+        reviewsWithMedia.push(reviewMap[review_id]);
+      }
+
+      // 如果有圖片或影片文件，將其添加到媒體列表，並生成完整的 URL
+      if (file_name) {
+        const fileExists = reviewMap[review_id].media.some(
+            (media) => media.file_name === file_name
+        );
+    
+        if (!fileExists) {
+            reviewMap[review_id].media.push({
+                file_name,
+                file_type,
+                url: `http://localhost:3005/upload/reviews/${
+                    file_type === '.mp4' ? 'videos' : 'images'
+                }/${file_name}`,
+            });
+        }
+    }
+    });
+
+    res.json(reviewsWithMedia);
+  } catch (error) {
+    console.error('Error fetching reviews and media:', error);
+    res.status(500).json({ error: '評論數據查詢錯誤' });
+  }
+});
+// 查詢評論(沒有product_id跟 color_id版本)--------------------------------------------------------
 
 
+// router.get('/product-list/reviews/:order_item_id', async (req, res) => {
+//   const { order_item_id } = req.params; // 獲取路由參數中的 order_item_id
+//   const { product_id, color_id } = req.query; // 獲取查詢參數中的 product_id 和 color_id
 
-// // 商品列表包含商品篩選
-// router.get('/product-list', async function (req, res) {
-//   const main_category_id = parseInt(req.query.main_category_id, 10) || null;
-//   const sub_category_id = parseInt(req.query.main_category_id, 10) || null;
-//   const minPrice = parseFloat(req.query.minPrice) || 0;
-//   const maxPrice = parseFloat(req.query.maxPrice) || 9999999;
-//   const brand = req.query.brand || null;
-//   const isNewArrivals = req.query.isNewArrivals === 'true';
-//   const isDiscounted = req.query.isDiscounted === 'true';
-//   const isPopular = req.query.isPopular === 'true';
-
-//   console.log('Received query params:', {
-//     main_category_id,
-//     sub_category_id,
-//     minPrice,
-//     maxPrice,
-//     brand,
-//     isNewArrivals,
-//     isDiscounted,
-//     isPopular
-//   });
-
-//   // 基本 SQL 查詢語句
-//   let sqlSelect = `
-//     SELECT DISTINCT
-//       p.id AS product_id,
-//       p.product_name,
-//       p.originalprice,
-//       ${isDiscounted ? '(p.price * 0.85)' : 'p.price'} AS price,
-//       b.name AS brand,
-//       mc.name AS main_category,
-//       sc.name AS sub_category,
-//       c.id AS color_id,
-//       c.color_name,
-//       c.color,
-//       c.mainimage,
-//       c.stock,
-//       COUNT(pl.color_id) AS likes_count
-//     FROM
-//       product_list p
-//     JOIN
-//       brand b ON p.brand_id = b.id
-//     JOIN
-//       main_category mc ON p.main_category_id = mc.id
-//     JOIN
-//       sub_category sc ON p.sub_category_id = sc.id
-//     JOIN
-//       color c ON p.id = c.product_id
-//     LEFT JOIN
-//       product_like pl ON c.id = pl.color_id
-//   `;
-
-//   // 動態添加篩選條件
-//   if (isNewArrivals) {
-//     sqlSelect += ` JOIN product_new pn ON c.id = pn.color_id`;
-//   }
-
-//   // 構建 WHERE 條件
-//   const conditions = [`p.price >= ${minPrice} AND p.price <= ${maxPrice}`];
-
-//   if (main_category_id) {
-//     conditions.push(`p.main_category_id = ${main_category_id}`);
-//   }
-//   if (sub_category_id) {
-//     conditions.push(`p.sub_category_id = ${sub_category_id}`);
-//   }
-//   if (brand) {
-//     conditions.push(`b.name = '${brand}'`);
-//   }
-//   if (isDiscounted) {
-//     conditions.push(`b.name = 'NARS'`);
-//   }
-
-//   // 將 WHERE 條件連接到查詢語句
-//   if (conditions.length > 0) {
-//     sqlSelect += ` WHERE ${conditions.join(' AND ')}`;
-//   }
-
-//   // 根據是否熱門排序來設置 GROUP BY 和 ORDER BY
-//   if (isPopular) {
-//     sqlSelect += ` GROUP BY c.id ORDER BY likes_count DESC`;
-//   } else {
-//     sqlSelect += ` GROUP BY c.id`;
-//   }
+//   console.log('Received order_item_id:', order_item_id);
+//   console.log('Received product_id:', product_id);
+//   console.log('Received color_id:', color_id);
 
 //   try {
-//     const [result] = await db.query(sqlSelect);
-//     console.log('Query Result:', result);
-//     res.json(result);
+//     // 拼接 SQL 查询语句
+//     const sqlSelect = `
+//       SELECT 
+//         r.id AS review_id,
+//         r.comment,
+//         r.rating,
+//         DATE(r.review_date) AS review_date,
+//         r.review_likes,
+//         u.nickname AS username,
+//         u.img AS user_avatar,
+//         rf.file_name,
+//         rf.file_type
+//       FROM 
+//         review r
+//       INNER JOIN 
+//         order_item oi ON r.order_item_id = oi.id
+//       INNER JOIN 
+//         order_list ol ON oi.order_id = ol.id
+//       INNER JOIN 
+//         user u ON ol.user_id = u.id
+//       LEFT JOIN 
+//         review_file rf ON r.id = rf.review_id
+//       WHERE 
+//         r.order_item_id = ${order_item_id}
+//       ORDER BY 
+//         r.review_date DESC;
+//     `;
+
+//     // 执行查询
+//     const [reviews] = await db.query(sqlSelect);
+
+//     // 整理數據，將每個評論的媒體文件分組
+//     const reviewsWithMedia = [];
+//     const reviewMap = {};
+
+//     reviews.forEach((review) => {
+//       const {
+//         review_id,
+//         comment,
+//         rating,
+//         review_date,
+//         review_likes,
+//         username,
+//         user_avatar,
+//         file_name,
+//         file_type,
+//       } = review;
+
+//       // 如果這個評論還沒被加入到 map 中，初始化它
+//       if (!reviewMap[review_id]) {
+//         reviewMap[review_id] = {
+//           review_id,
+//           comment,
+//           rating,
+//           review_date,
+//           review_likes,
+//           username,
+//           user_avatar: user_avatar
+//             ? `http://localhost:3005/avatar/${user_avatar}`
+//             : '/default-avatar.png', // 如果沒有頭像，設置默認頭像
+//           media: [],
+//         };
+//         reviewsWithMedia.push(reviewMap[review_id]);
+//       }
+
+//       // 如果有圖片或影片文件，將其添加到媒體列表，並生成完整的 URL
+//       if (file_name) {
+//         const fileExists = reviewMap[review_id].media.some(
+//           (media) => media.file_name === file_name
+//         );
+
+//         if (!fileExists) {
+//           reviewMap[review_id].media.push({
+//             file_name,
+//             file_type,
+//             url: `http://localhost:3005/upload/reviews/${
+//               file_type === '.mp4' ? 'videos' : 'images'
+//             }/${file_name}`,
+//           });
+//         }
+//       }
+//     });
+
+//     // 回傳整理後的評論數據
+//     res.json(reviewsWithMedia);
 //   } catch (error) {
-//     console.error('Database Query Error:', error);
-//     res.status(500).json({ error: '資料查詢錯誤' });
+//     console.error('Error fetching reviews and media:', error);
+//     res.status(500).json({ error: '評論數據查詢錯誤' });
 //   }
 // });
+
+
+
+// 評論按讚
+router.put('/reviews/:review_id/like', async (req, res) => {
+  const { review_id } = req.params;
+  const { user_id } = req.body;
+
+  console.log('Received user_id:', user_id); // 打印接收的 user_id
+
+  if (!user_id) {
+    return res.status(400).json({ status: 'error', message: '缺少 user_id' });
+  }
+
+  try {
+    const checkExists = await db.query(
+      `SELECT * FROM review_likes WHERE review_id = ${review_id} AND user_id = ${user_id}`
+    );
+
+    if (checkExists.length > 0) {
+      return res.status(400).json({ status: 'error', message: '已按讚' });
+    }
+
+    await db.query(
+      `INSERT INTO review_likes (review_id, user_id) VALUES (${review_id}, ${user_id})`
+    );
+
+    await db.query(
+      `UPDATE review SET review_likes = review_likes + 1 WHERE id = ${review_id}`
+    );
+
+    const updatedReview = await db.query(
+      `SELECT review_likes FROM review WHERE id = ${review_id}`
+    );
+
+    res.json({
+      status: 'success',
+      review_likes: updatedReview[0].review_likes,
+      isLiked: true,
+    });
+  } catch (error) {
+    console.error('按讚時出錯:', error);
+    res.status(500).json({ status: 'error', message: '按讚失敗' });
+  }
+});
+
+
+
+// 評論取消讚
+router.put('/reviews/:review_id/unlike', async (req, res) => {
+  const { review_id } = req.params;
+  const { user_id } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ status: 'error', message: '缺少 user_id' });
+  }
+
+  try {
+    await db.query(
+      `DELETE FROM review_likes WHERE review_id = ${review_id} AND user_id = ${user_id}`
+    );
+
+    await db.query(
+      `UPDATE review SET review_likes = GREATEST(review_likes - 1, 0) WHERE id = ${review_id}`
+    );
+
+    const updatedReview = await db.query(
+      `SELECT review_likes FROM review WHERE id = ${review_id}`
+    );
+
+    res.json({
+      status: 'success',
+      review_likes: updatedReview[0].review_likes,
+      isLiked: false,
+    });
+  } catch (error) {
+    console.error('取消按讚時出錯:', error);
+    res.status(500).json({ status: 'error', message: '取消按讚失敗' });
+  }
+});
+
+
+// 查詢評論（返回按讚狀態和按讚數）
+router.get('/reviews/:order_item_id', async (req, res) => {
+  const { order_item_id } = req.params;
+  const { user_id } = req.query; // 獲取當前用戶 ID
+
+  try {
+    const sqlSelect = `
+      SELECT 
+        r.id AS review_id,
+        r.comment,
+        r.rating,
+        DATE(r.review_date) AS review_date,
+        r.review_likes,
+        u.nickname AS username,
+        u.img AS user_avatar,
+        CASE 
+          WHEN EXISTS (
+            SELECT 1 FROM review_likes rl WHERE rl.review_id = r.id AND rl.user_id = ${user_id}
+          ) THEN TRUE ELSE FALSE 
+        END AS isLiked
+      FROM 
+        review r
+      INNER JOIN 
+        order_item oi ON r.order_item_id = oi.order_id
+      INNER JOIN 
+        order_list ol ON oi.order_id = ol.id
+      INNER JOIN 
+        user u ON ol.user_id = u.id
+      WHERE 
+        r.order_item_id = ${order_item_id}
+      ORDER BY 
+        r.review_date DESC;
+    `;
+
+    const [reviews] = await db.query(sqlSelect);
+    res.json(reviews);
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).json({ status: 'error', message: '評論數據查詢失敗' });
+  }
+});
+
+
+
+
+
+
+
 
 // 商品列表包含商品篩選
 router.get('/product-list', async function (req, res) {
@@ -849,91 +1173,91 @@ router.post('/product-list/update-stock/:color_id', async function (req, res) {
 //   }
 // });
 
-// 評論路由 有用戶資訊版本
-router.get('/product-list/reviews/:product_id', async (req, res) => {
-  const { product_id } = req.params;
+// 評論路由 有用戶資訊版本-----------------------------------------------------------------------------
+// router.get('/product-list/reviews/:product_id', async (req, res) => {
+//   const { product_id } = req.params;
 
-  try {
-    // 查詢評論數據及媒體文件，同時關聯用戶數據
-    const sqlSelect = `
-      SELECT 
-        oi.id AS order_item_id,
-        oi.comment,
-        oi.rating,
-        oi.review_date,
-        oi.review_likes,
-        u.nickname AS username,
-        u.img AS user_avatar,
-        rf.file_name,
-        rf.file_type
-      FROM 
-        order_item oi
-      JOIN 
-        order_list ol ON oi.order_id = ol.id
-      JOIN 
-        user u ON ol.user_id = u.id
-      LEFT JOIN 
-        review_file rf ON oi.id = rf.order_item_id
-      WHERE 
-        oi.product_id = ${product_id} 
-      ORDER BY 
-        oi.review_date DESC;
-    `
+//   try {
+//     // 查詢評論數據及媒體文件，同時關聯用戶數據
+//     const sqlSelect = `
+//       SELECT 
+//         oi.id AS order_item_id,
+//         oi.comment,
+//         oi.rating,
+//         oi.review_date,
+//         oi.review_likes,
+//         u.nickname AS username,
+//         u.img AS user_avatar,
+//         rf.file_name,
+//         rf.file_type
+//       FROM 
+//         order_item oi
+//       JOIN 
+//         order_list ol ON oi.order_id = ol.id
+//       JOIN 
+//         user u ON ol.user_id = u.id
+//       LEFT JOIN 
+//         review_file rf ON oi.id = rf.order_item_id
+//       WHERE 
+//         oi.product_id = ${product_id} 
+//       ORDER BY 
+//         oi.review_date DESC;
+//     `
 
-    const [reviews] = await db.query(sqlSelect, [product_id]);
+//     const [reviews] = await db.query(sqlSelect, [product_id]);
 
-    // 整理數據，將每個評論的媒體文件分組
-    const reviewsWithMedia = []
-    const reviewMap = {}
+//     // 整理數據，將每個評論的媒體文件分組
+//     const reviewsWithMedia = []
+//     const reviewMap = {}
 
-    reviews.forEach((review) => {
-      const {
-        order_item_id,
-        comment,
-        rating,
-        review_date,
-        review_likes,
-        username,
-        user_avatar,
-        file_name,
-        file_type,
-      } = review
+//     reviews.forEach((review) => {
+//       const {
+//         order_item_id,
+//         comment,
+//         rating,
+//         review_date,
+//         review_likes,
+//         username,
+//         user_avatar,
+//         file_name,
+//         file_type,
+//       } = review
 
-      // 如果這個評論還沒被加入到 map 中，初始化它
-      if (!reviewMap[order_item_id]) {
-        reviewMap[order_item_id] = {
-          order_item_id,
-          comment,
-          rating,
-          review_date,
-          review_likes,
-          username,
-          user_avatar: user_avatar
-            ? `http://localhost:3005/avatar/${user_avatar}`
-            : '/default-avatar.png', // 如果沒有頭像，設置默認頭像
-          media: [],
-        }
-        reviewsWithMedia.push(reviewMap[order_item_id])
-      }
+//       // 如果這個評論還沒被加入到 map 中，初始化它
+//       if (!reviewMap[order_item_id]) {
+//         reviewMap[order_item_id] = {
+//           order_item_id,
+//           comment,
+//           rating,
+//           review_date,
+//           review_likes,
+//           username,
+//           user_avatar: user_avatar
+//             ? `http://localhost:3005/avatar/${user_avatar}`
+//             : '/default-avatar.png', // 如果沒有頭像，設置默認頭像
+//           media: [],
+//         }
+//         reviewsWithMedia.push(reviewMap[order_item_id])
+//       }
 
-      // 如果有圖片或影片文件，將其添加到媒體列表，並生成完整的 URL
-      if (file_name) {
-        reviewMap[order_item_id].media.push({
-          file_name,
-          file_type,
-          url: `http://localhost:3005/upload/reviews/${
-            file_type === '.mp4' ? 'videos' : 'images'
-          }/${file_name}`,
-        });
-      }
-    })
+//       // 如果有圖片或影片文件，將其添加到媒體列表，並生成完整的 URL
+//       if (file_name) {
+//         reviewMap[order_item_id].media.push({
+//           file_name,
+//           file_type,
+//           url: `http://localhost:3005/upload/reviews/${
+//             file_type === '.mp4' ? 'videos' : 'images'
+//           }/${file_name}`,
+//         });
+//       }
+//     })
 
-    res.json(reviewsWithMedia);
-  } catch (error) {
-    console.error('Error fetching reviews and media:', error)
-    res.status(500).json({ error: '評論數據查詢錯誤' })
-  }
-});
+//     res.json(reviewsWithMedia);
+//   } catch (error) {
+//     console.error('Error fetching reviews and media:', error)
+//     res.status(500).json({ error: '評論數據查詢錯誤' })
+//   }
+// });
 
 
 

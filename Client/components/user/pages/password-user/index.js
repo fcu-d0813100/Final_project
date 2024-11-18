@@ -189,7 +189,7 @@ export default function Password() {
             </div>
           </div>
 
-          <div
+          {/* <div
             className={`${styles['email-area']} row d-flex justify-content-center align-items-center mt-5`}
           >
             <div
@@ -230,7 +230,7 @@ export default function Password() {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div
             className={`${styles['line-title-down']} row d-flex justify-content-end align-items-center`}

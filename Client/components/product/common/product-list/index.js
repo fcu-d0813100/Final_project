@@ -17,6 +17,14 @@ import { PiCaretDown } from 'react-icons/pi'
 import Pagination from '@/components/shared/pagination'
 import { useFavorite } from '@/hooks/use-favorite'
 
+// 動態麵包屑映射
+const BREADCRUMB_MAP = {
+  1: { name: '臉部彩妝', subCategories: { 1: '粉底液', 2: '遮瑕' } },
+  2: { name: '雙頰彩妝', subCategories: { 3: '腮紅', 4: '修容' } },
+  3: { name: '眼部彩妝', subCategories: { 5: '眼影', 6: '眼線筆', 7: '眉筆', 8: '睫毛膏' } },
+  4: { name: '唇部彩妝', subCategories: { 9: '唇膏', 10: '唇彩' } },
+}
+
 const ProductPage = ({
   products,
   onAll,
@@ -32,6 +40,21 @@ const ProductPage = ({
   const { favoriteProducts, handleFavoriteClick } = useFavorite() // 使用收藏鉤子
   const router = useRouter()
   const { onAddProductMany } = useCartProduct()
+
+
+  const { main_category, sub_category } = router.query // 獲取 URL 參數
+  // 動態生成麵包屑內容
+  const generateBreadcrumb = () => {
+    const category = main_category ? BREADCRUMB_MAP[main_category] : null
+    const subCategory = category?.subCategories[sub_category]
+    let breadcrumb = ['首頁', '彩妝商城']
+
+    if (category) breadcrumb.push(category.name)
+    if (subCategory) breadcrumb.push(subCategory)
+
+    return breadcrumb.join(' / ')
+  }
+
 
   // 狀態管理
   const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -534,16 +557,11 @@ const ProductPage = ({
             </div>
           </aside>
 
-          <section className={`${styles['product-list-w']} ms-3 col-lg-10`}>
+          <section className={`${styles['product-list-w']}  col-lg-10`}>
             <Toaster position="top-center" reverseOrder={true} />
             <div
               className={`${styles['row']} justify-content-between align-items-center mb-5`}
             >
-              <div className="col-lg-3 mb-3 mb-lg-0">
-                <div className={`${styles['product-breadcrumb-w']} p`}>
-                  首頁 / 彩妝商城 / 所有商品
-                </div>
-              </div>
 
               <div className="col-md-6 col-lg-4 mb-md-0">
                 <div
@@ -567,7 +585,7 @@ const ProductPage = ({
                   >
                     <FaSearch
                       size={18}
-                      style={{ opacity: 0.7 }}
+                      style={{ opacity: 0.7, color: '#9ea28b' }}
                       className="ms-2"
                     />
                   </button>
@@ -592,6 +610,7 @@ const ProductPage = ({
                   style={{ cursor: 'pointer' }}
                 >
                   <div className={styles['info']}>
+                    
                     <div
                       className={`${styles['product-new-w']} d-inline-block p5`}
                     >
@@ -603,6 +622,7 @@ const ProductPage = ({
                       SALE
                     </div>
                   </div>
+                  <div className={`${styles['product-discount-w']} d-block p5`}>95<span>折</span></div>
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
