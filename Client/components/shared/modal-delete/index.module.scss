@@ -29,15 +29,15 @@
     justify-content: space-between;
     padding: 26px 30px 30px;
     border: none;
-    gap: 30px;
+    //gap: 30px;
     .btn:first-child {
-      width: 160px;
+      width: 180px;
       &:hover {
         color: #fff;
       }
     }
     .btn:last-child {
-      width: 160px;
+      width: 180px;
       &:hover {
         background-color: #fff;
         color: #000;
