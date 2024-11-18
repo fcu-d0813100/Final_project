@@ -15,7 +15,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     // 調整範圍，使其包含5個頁碼（如果可能）
     if (end - start + 1 < maxVisiblePages) {
       if (start === 1) {
-        end = Math.min(totalPages, start + maxVisiblePages - 1)
+        end = Math.min(totalPages, start + maxVisiblePages)
       } else if (end === totalPages) {
         start = Math.max(1, end - maxVisiblePages + 1)
       }
@@ -39,11 +39,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         &lt;
       </button>
 
-      {/* 起始頁 */}
-      {currentPage > maxVisiblePages - 2 && (
+      {/* 起始頁和省略號 */}
+      {pageNumbers[0] > 1 && (
         <>
           <button onClick={() => onPageChange(1)}>1</button>
-          {currentPage > maxVisiblePages - 1 && <span>...</span>}
+          {pageNumbers[0] > 2 && <span>...</span>}
         </>
       )}
 
@@ -58,10 +58,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         </button>
       ))}
 
-      {/* 結束頁 */}
-      {currentPage < totalPages - (maxVisiblePages - 2) && (
+      {/* 結束頁和省略號 */}
+      {pageNumbers[pageNumbers.length - 1] < totalPages && (
         <>
-          {currentPage < totalPages - (maxVisiblePages - 1) && <span>...</span>}
+          {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
+            <span>...</span>
+          )}
           <button onClick={() => onPageChange(totalPages)}>{totalPages}</button>
         </>
       )}

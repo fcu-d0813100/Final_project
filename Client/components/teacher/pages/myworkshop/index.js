@@ -83,7 +83,7 @@ export default function MyWorkshop(props) {
 
   const statusOptions = [
     { option: '狀態', value: '' },
-    { option: '準備中', value: 'prepare' },
+    { option: '即將開課', value: 'prepare' },
     { option: '報名中', value: 'open' },
     { option: '已截止', value: 'closed' },
   ]
