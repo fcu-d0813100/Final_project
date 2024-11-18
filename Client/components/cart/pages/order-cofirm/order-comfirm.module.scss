@@ -2,6 +2,7 @@
 
 .step {
   margin-block: 100px;
+  text-align: center;
 }
 
 //checkedbox樣式變更
@@ -75,5 +76,107 @@
   padding-left: 10px;
   span {
     margin-top: 10px;
+  }
+}
+
+.checkout_btn {
+  button {
+    margin-bottom: 100px;
+  }
+}
+
+//RWD
+@media screen and (max-width: 1200px) {
+  .step {
+    margin-block: 50px;
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .outer {
+    .list {
+      .order {
+        //訂單簡易展示方框
+        .order-box {
+          padding: 16px 12px;
+          .order-info {
+            padding: 0px 12px;
+            margin-bottom: 20px;
+          }
+        }
+        .payment-topic,
+        .shipping-topic {
+          margin-top: 10px;
+          margin-bottom: 16px;
+          font-weight: 600;
+          font-size: 16px;
+          span {
+            font-size: 14px;
+            font-weight: 400;
+          }
+        }
+        .method-topic {
+          padding: 0px;
+        }
+
+        .shipping-form {
+          font-size: 14px;
+          margin: 10px 0px;
+          padding: 16px 16px;
+        }
+      }
+    }
+  }
+  .order-topic {
+    border-radius: 5px 5px 0 0;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: $green-700;
+  }
+
+  .form-input {
+    height: 35px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .outer {
+    .order-topic,
+    .order-box {
+      margin-inline: 15px;
+    }
+  }
+
+  .total_amount {
+    margin-inline: 15px;
+    padding: 16px 20px;
+    .discount {
+      margin-bottom: 5px;
+    }
+    .original-p {
+      font-size: 14px;
+    }
+
+    .total_price {
+      font-size: 20px;
+      color: $red-500;
+    }
+  }
+
+  .home {
+    padding-left: 8px;
+    span {
+      margin-top: 8px;
+    }
+  }
+  .checkout_btn {
+    margin-inline: 15px;
+    button {
+      width: 150px;
+      height: 44px;
+      font-size: 14px;
+    }
   }
 }

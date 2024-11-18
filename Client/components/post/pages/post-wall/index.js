@@ -116,7 +116,14 @@ export default function PostWall(props) {
             </button>
           </div>
         </div>
-        <div className={styles['post-wall']}>
+        {/* <div className={styles['post-wall']}> */}
+        <div
+          className={
+            wallCard.length > 5
+              ? styles['post-wall']
+              : styles['post-wall-small']
+          }
+        >
           <Link className={styles['post-add']} href={'/user/post/create'}>
             <PiNotePencilBold size={35} />
           </Link>

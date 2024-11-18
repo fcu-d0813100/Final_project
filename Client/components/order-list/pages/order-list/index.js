@@ -37,7 +37,10 @@ export default function OrderList() {
             const itemMatches = order.items.some(item => 
                 item.product_name.toLowerCase().includes(search.toLowerCase()) // 商品名稱匹配
             );
-            return orderMatches || itemMatches; // 任一條件匹配即可
+            const worckshopMatches = order.items.some(item => 
+                item.type.toLowerCase().includes(search.toLowerCase()) // 商品名稱匹配
+            );
+            return orderMatches || itemMatches || worckshopMatches; // 任一條件匹配即可
         });
 
         setFilteredOrders(filtered); // 更新過濾後的訂單

@@ -40,21 +40,21 @@ export default function OrderBox() {
                   <Image
                     src={firstProductImage}
                     alt="First Product Image"
-                    width={140} // 設定圖片寬度
-                    height={140} // 設定圖片高度
+                    width={120} // 設定圖片寬度
+                    height={120} // 設定圖片高度
                   />
                 ) : firstWorkshopImage ? (
                   <Image
                     src={firstWorkshopImage}
                     alt="First Workshop Image"
-                    width={100} // 設定圖片寬度
-                    height={100} // 設定圖片高度
+                    width={120} // 設定圖片寬度
+                    height={120} // 設定圖片高度
                   />
                 ) : (
                   <span>無圖片</span>
                 )}
               </div>
-              <div className="h5 p-2">查看訂單</div>
+              <div className={style['order-title']}>查看訂單</div>
             </div>
           </Accordion.Header>
           <Accordion.Body className={style['order-list']}>
@@ -86,13 +86,14 @@ export default function OrderBox() {
                         {v.product_name}
                       </td>
                       <td>{v.color_name}</td>
-                      <td>{v.qty}</td>
+                      <td className={style['product-qty']}> {`${v.qty}`}</td>
                       <td>
                         {/* 顯示原價 */}
                         <span className={style['old-price']}>
                           NT${(v.originalprice * v.qty).toLocaleString()}
                         </span>
                         {/* 顯示打折後價格 */}
+                        <br />
                         <span className={style['new-price']}>
                           NT$
                           {selectedCoupon && selectedCoupon.discount_value <= 1
@@ -115,6 +116,7 @@ export default function OrderBox() {
                         <span className={style['old-price']}>
                           NT${(v.price * v.qty).toLocaleString()}
                         </span>
+                        <br />
                         <span className={style['new-price']}>
                           NT$
                           {Math.floor(v.price * v.qty * 0.95).toLocaleString()}

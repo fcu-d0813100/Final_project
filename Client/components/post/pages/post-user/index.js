@@ -77,7 +77,7 @@ export default function PostUser(props) {
     1200: 3,
     700: 2,
   }
-  const itemsPerPage = 3 // 每頁顯示的項目數量
+  const itemsPerPage = 5 // 每頁顯示的項目數量
 
   const renderPublishCard = (post) => {
     const imgSrc = `http://localhost:3005/post/${post.post_img}`
