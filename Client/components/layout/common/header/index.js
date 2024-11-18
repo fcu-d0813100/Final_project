@@ -15,7 +15,7 @@ import {
 import Headroom from 'react-headroom' // 引入 Headroom
 import styles from './index.module.scss'
 import { useModal } from '@/hooks/use-modal'
-import { useAuth } from '@/hooks/use-auth'
+import { auth, useAuth } from '@/hooks/use-auth'
 // 根據 user 是否存在來決定跳轉的鏈接
 // const userLink = auth ? '/user' : '/user/login/user'
 // 初始化用戶資料
@@ -23,6 +23,7 @@ import { useAuth } from '@/hooks/use-auth'
 function TopBar({ cartitems }) {
   //-------阻擋未登入
   const { ensureLoggedIn } = useModal()
+
   const handleCartClick = () => {
     if (!ensureLoggedIn()) {
       return
@@ -35,36 +36,7 @@ function TopBar({ cartitems }) {
   const handleClose = () => setShowOffcanvas(false)
   const handleShow = () => setShowOffcanvas(true)
 
-  const [auth, setAuth] = useState({
-    isAuth: false, // 表示是否已登入
-    userData: {
-      id: 0,
-      name: '',
-      email: '',
-      account: '',
-      google_uid: '',
-      line_uid: '',
-      identity: '', // 身分：如 admin、teacher
-    },
-  })
-
-  const { getUser } = useAuth() // 假設 getUser 是一個返回用戶信息的函數
-
-  useEffect(() => {
-    // 如果未獲取用戶數據，嘗試從 getUser 獲取並更新 auth
-    if (!auth.isAuth) {
-      getUser().then((user) => {
-        if (user) {
-          setAuth({
-            isAuth: true,
-            userData: {
-              ...user, // 假設 getUser 返回的數據結構與 userData 一致
-            },
-          })
-        }
-      })
-    }
-  }, [auth.isAuth, getUser])
+  const { auth, setAuth, getUser } = useAuth() // 假設 getUser 是一個返回用戶信息的函數
 
   const getUserLink = () => {
     if (!auth.isAuth) {
@@ -118,8 +90,8 @@ function TopBar({ cartitems }) {
                 </Link>
                 <span onClick={handleCartClick} className={styles['cart-icon']}>
                   <PiHandbagSimple size={22} />
-                  {auth.userData.id !== undefined &&
-                    auth.userData.id !== 0 &&
+                  {auth.isAuth &&
+                    auth.userData.identity === 'user' &&
                     cartitems > 0 && (
                       <span className={styles['cart-number']}>{cartitems}</span>
                     )}
