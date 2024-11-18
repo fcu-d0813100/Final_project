@@ -15,10 +15,10 @@ export function useFavoriteWorkshop() {
     }
   }, [auth.isAuth])
 
-  // useEffect(() => {
-  //   // 當 favoriteWorkshop 狀態變更時，重新抓取收藏列表
-  //   fetchFavoritesWorkshop()
-  // }, [favoriteWorkshop])
+  useEffect(() => {
+    // 當 favoriteWorkshop 狀態變更時，重新抓取收藏列表
+    fetchFavoritesWorkshop()
+  }, [favoriteWorkshop])
 
   const fetchFavoritesWorkshop = async () => {
     try {
