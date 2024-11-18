@@ -154,7 +154,7 @@ router.get(
 
           // 新增會員資料
           const [insertResult] = await db.query(
-            'INSERT INTO user (name, email, line_uid, line_access_token, photo_url) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO user (name, email, line_uid, line_access_token, photo_url,level, created_at,identity) VALUES (?, ?, ?, ?, ?,1,NOW(),"user")',
             [
               user.name,
               user.email,
