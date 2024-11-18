@@ -125,7 +125,14 @@ export default function PostDetail(props) {
           {/* {console.log(typeof post.post_imgs)} */}
         </div>
         <div className={`h5 ${styles['post-explore']}`}>探索更多</div>
-        <div className={styles['post-wall']}>
+        {/* <div className={styles['post-wall']}> */}
+        <div
+          className={
+            wallCard.length > 5
+              ? styles['post-wall']
+              : styles['post-wall-small']
+          }
+        >
           <Masonry
             breakpointCols={breakpoint}
             className={styles['my-masonry-grid']}
