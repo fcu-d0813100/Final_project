@@ -52,13 +52,14 @@ export default function ItemDiscount({
             <div className={`${styles['sub-total']} text-end h6`}>
                 <del className={`p ${styles.del}`}>NT$ {originalPrice}
                 </del> NT$ {discountedPrice}
-                
+
                 <Link
+                    className={styles.link}
                     href={{
                         pathname: '/user/order/detail/comment',
                         query: {
                             orderId: orderId,
-                            productName: productName,  
+                            productName: productName,
                             color: color,
                             brand: brand,
                             imageSrc: imageSrc,
