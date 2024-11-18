@@ -172,10 +172,16 @@ const OrderDetail = () => {
                                     const originalPrice = item.originalprice || 0;  // 如果原價無效，視為0
                                     const price = item.price || 0;  // 如果價格無效，視為0
                                     const quantity = item.quantity || 0;  // 如果數量無效，視為0
+                                    const workshopPrice = item.workshop_price || 0;
 
                                     // 如果有 product_id，計算小計
                                     if (item.product_id != null) {
                                         const subtotal = (originalPrice - price) * quantity; // 計算每個商品的小計
+                                        return total + subtotal; // 累加到總金額
+                                    }
+                                    // 如果有 wt_id，計算小計
+                                    if (item.wt_id != null) {
+                                        const subtotal = (workshopPrice - (workshopPrice * 0.95)) * quantity; // 計算每個商品的小計
                                         return total + subtotal; // 累加到總金額
                                     }
                                     return total;
