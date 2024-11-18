@@ -15,11 +15,8 @@ import {
 import Headroom from 'react-headroom' // 引入 Headroom
 import styles from './index.module.scss'
 import { useModal } from '@/hooks/use-modal'
-import { auth, useAuth } from '@/hooks/use-auth'
-// 根據 user 是否存在來決定跳轉的鏈接
-// const userLink = auth ? '/user' : '/user/login/user'
-// 初始化用戶資料
-// 獲取用戶信息
+import { useAuth } from '@/hooks/use-auth'
+
 function TopBar({ cartitems }) {
   //-------阻擋未登入
   const { ensureLoggedIn } = useModal()
@@ -36,26 +33,22 @@ function TopBar({ cartitems }) {
   const handleClose = () => setShowOffcanvas(false)
   const handleShow = () => setShowOffcanvas(true)
 
-  const { auth, setAuth, getUser } = useAuth() // 假設 getUser 是一個返回用戶信息的函數
+  const { auth } = useAuth()
 
   const getUserLink = () => {
     if (!auth.isAuth) {
-      return '/user/login/user' // 如果未登入，跳轉到登入頁面
+      return '/user/login/user'
     }
 
     switch (auth.userData.identity) {
       case 'admin':
-        return '/admin/activity' // 管理員頁面
+        return '/admin/activity'
       case 'teacher':
-        return '/teacher/information' // 老師頁面
+        return '/teacher/information'
       default:
-        return '/user' // 用戶頁面
+        return '/user'
     }
   }
-
-  console.log(auth) // 確認 auth 狀態是否正確更新
-  console.log(auth.userData.identity)
-  console.log(auth.userData.id)
 
   return (
     <>
