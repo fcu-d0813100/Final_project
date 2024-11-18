@@ -9,7 +9,7 @@ import styles from '@/components/teacher/common/information.module.scss'
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
-  const role = 'admin'
+  const role = 'teacher'
   const { auth, login, logout } = useAuth()
   const { userData } = auth // 撈取 teacherData 資料
   console.log(auth)

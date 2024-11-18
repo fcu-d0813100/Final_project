@@ -1,7 +1,7 @@
 import express from 'express'
 import db from '#configs/mysql.js'
 const router = express.Router()
-
+import nodemailer from 'nodemailer'
 import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -371,6 +371,7 @@ router.get('/top3', async (req, res) => {
     res.status(500).json({ error: '無法獲取活動詳細信息' })
   }
 })
+
 router.post('/activity-reg/:userId', async (req, res) => {
   const { userId } = req.params
   const {
@@ -383,23 +384,31 @@ router.post('/activity-reg/:userId', async (req, res) => {
     remark,
   } = req.body
 
+  const connection = await db.getConnection()
+
   try {
-    // 從 activity 資料表中獲取 currentREG 欄位的值
-    const [activityRows] = await db.query(
+    await connection.beginTransaction()
+
+    // 1. 獲取 currentREG
+    const [activityRows] = await connection.query(
       'SELECT currentREG FROM activity WHERE eng_name = ? AND chn_name = ?',
       [eng_name, chn_name]
     )
 
     if (activityRows.length === 0) {
-      return res.status(404).json({ error: '未找到對應的活動' })
+      throw new Error('未找到對應的活動')
     }
 
-    // 計算新的 currentREG 值
     const currentREG = Number(activityRows[0].currentREG)
-    const updatedREG = currentREG + Number(applicant_amount)
+    const applicantAmount = Number(applicant_amount)
+    if (isNaN(currentREG) || isNaN(applicantAmount)) {
+      throw new Error('無效的數字格式')
+    }
 
-    // 插入新的報名記錄到 registration_list 資料表
-    await db.query('INSERT INTO registration_list SET ?', {
+    const updatedREG = currentREG + applicantAmount
+
+    // 2. 插入 registration_list
+    await connection.query('INSERT INTO registration_list SET ?', {
       user_id: userId,
       eng_name,
       chn_name,
@@ -410,16 +419,89 @@ router.post('/activity-reg/:userId', async (req, res) => {
       remark,
     })
 
-    // 更新 activity 資料表中的 currentREG 欄位
-    await db.query(
+    // 3. 更新 currentREG
+    await connection.query(
       'UPDATE activity SET currentREG = ? WHERE eng_name = ? AND chn_name = ?',
       [updatedREG, eng_name, chn_name]
     )
 
-    res.status(200).json({ message: '報名成功' })
+    // 4. 獲取用戶的 email
+    const [userRow] = await connection.query(
+      'SELECT email FROM user WHERE id = ?',
+      [userId]
+    )
+
+    if (userRow.length === 0) {
+      throw new Error('找不到該用戶的 Gmail 地址')
+    }
+
+    const userEmail = userRow[0].email
+
+    // 5. 發送郵件
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_TO_EMAIL, // 使用您的 Gmail 地址
+        pass: process.env.SMTP_TO_PASSWORD, // 使用應用專用密碼
+      },
+    })
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: userEmail,
+      subject: `活動報名確認 - ${chn_name}`,
+      html: `
+        <p>您好 ${applicant_name}，</p>
+        <p>您已成功報名參加活動：</p>
+        <ul>
+          <li>活動名稱：<strong>${chn_name} (${eng_name})</strong></li>
+          <li>報名日期：<strong>${applicant_date}</strong></li>
+          <li>報名人數：<strong>${applicant_amount}</strong></li>
+        </ul>
+        <p>備註：${remark || '無'}</p>
+        <p>感謝您的參加！</p>
+      `,
+    }
+
+    await transporter.sendMail(mailOptions)
+
+    await connection.commit()
+    res.status(200).json({
+      message: '報名成功，確認郵件已發送',
+      updatedREG,
+      applicant: { applicant_name, applicant_date, applicant_amount },
+    })
   } catch (error) {
-    console.error('資料庫操作錯誤:', error)
-    res.status(400).json({ error: '資料庫操作錯誤' })
+    await connection.rollback()
+    console.error('操作錯誤:', error)
+    res.status(400).json({ error: error.message || '操作失敗' })
+  } finally {
+    connection.release()
+  }
+})
+router.get('/reg/:userId', async (req, res) => {
+  const { userId } = req.params // 获取请求参数中的 userId
+  try {
+    const sqlSelect = `
+      SELECT 
+        registration_list.*,
+        activity.img1 
+      FROM 
+        registration_list
+      JOIN 
+        activity 
+      ON 
+        registration_list.eng_name = activity.eng_name
+        AND registration_list.chn_name = activity.chn_name
+      WHERE 
+        registration_list.user_id = ?
+    `
+
+    const [rows] = await db.query(sqlSelect, [userId])
+    res.status(200).json(rows) // 返回用户报名的活动列表，包含 img1
+  } catch (error) {
+    console.error('查找報名活動失敗:', error)
+    res.status(500).json({ error: '伺服器錯誤，無法查找報名活動' })
   }
 })
 

@@ -16,6 +16,7 @@ export const initUserData = {
   line_uid: '',
   name: '',
   email: '',
+  identity: '',
 }
 
 // 1. 建立與導出它
@@ -27,7 +28,43 @@ AuthContext.displayName = 'AuthContext'
 
 export function AuthProvider({ children }) {
   const router = useRouter()
+  // 課程收藏-----------------------------//
+  // 加入收藏
+  const addFavoriteWorkshop = async (workshop) => {
+    try {
+      // 使用 workshop.workshop_id 而非 workshop.id
+      const response = await fetch(
+        `http://localhost:3005/api/workshop/favorite/${workshop.workshop_id}/${auth.userData.id}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+      if (!response.ok) throw new Error('收藏失敗')
+      console.log(`Added product to favorites: ${workshop.workshop_id}`)
+    } catch (error) {
+      console.error('Error adding favorite:', error)
+    }
+  }
 
+  // 移除收藏函數
+  const removeFavoriteWorkshop = async (workshop_id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/workshop/favorite/${workshop_id}/${auth.userData.id}`,
+        {
+          method: 'DELETE',
+        }
+      )
+      if (!response.ok) throw new Error('取消收藏失敗')
+      console.log(
+        `Removed workshop from favorites with workshop_id: ${workshop_id}`
+      )
+    } catch (error) {
+      console.error('Error removing favorite:', error)
+    }
+  }
+  // 商品收藏-----------------------------//
   // 加入收藏函數
   const addFavorite = async (product) => {
     try {
@@ -70,6 +107,7 @@ export function AuthProvider({ children }) {
       account: '',
       google_uid: '',
       line_uid: '',
+      identity: '',
     },
   })
 
@@ -145,6 +183,7 @@ export function AuthProvider({ children }) {
           },
         })
       } else {
+        console.error('註冊失敗:', resData)
         toast.error('註冊失敗，請稍後再試', {
           style: {
             border: '1.2px solid #90957a',
@@ -158,7 +197,7 @@ export function AuthProvider({ children }) {
         })
       }
     } catch (error) {
-      // console.error('註冊過程中發生錯誤:', error)
+      console.error('註冊過程中發生錯誤:', error)
       toast.error('註冊過程中發生錯誤，請稍後再試', {
         style: {
           border: '1.2px solid #90957a',
@@ -173,7 +212,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // 處理Google登入
+  // Google登入
   const callbackGoogleLogin = async (providerData) => {
     console.log('Google登入資料:', providerData)
 
@@ -280,6 +319,7 @@ export function AuthProvider({ children }) {
 
         // 根據角色跳轉到相應頁面
         setTimeout(() => {
+          console.log(role)
           switch (role) {
             case 'admin':
               router.push('/admin/activity')
@@ -290,13 +330,12 @@ export function AuthProvider({ children }) {
             case 'user':
               router.push('/user')
               break
-            default: // 處理身份不明的情況
+            default:
               router.push('/login')
               break
           }
         }, 2000)
       } else {
-        // 根據不同錯誤訊息顯示相應的吐司提示
         switch (resData.message) {
           case '身份不符合':
             toast.error('您無登入權限', {
@@ -393,7 +432,7 @@ export function AuthProvider({ children }) {
       })
     }
   }
-
+  // 更新會員資料
   const update = async (user, selectedFile) => {
     const formData = new FormData()
     formData.append('name', user.name)
@@ -401,6 +440,8 @@ export function AuthProvider({ children }) {
     formData.append('nickname', user.nickname)
     formData.append('gender', user.gender)
     formData.append('phone', user.phone)
+    formData.append('city', user.city)
+    formData.append('area', user.area)
     formData.append('address', user.address)
     formData.append('birthday', user.birthday)
 
@@ -628,6 +669,8 @@ export function AuthProvider({ children }) {
         deleteUser,
         addFavorite,
         removeFavorite,
+        addFavoriteWorkshop,
+        removeFavoriteWorkshop,
       }}
     >
       {children}

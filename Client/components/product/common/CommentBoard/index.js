@@ -1,28 +1,45 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styles from './index.module.scss';
 import Stars from "react-stars";
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal } from 'react-bootstrap';
 import Image from 'next/image';
 import useFetchReviews from './fetchReviews';
 import { submitReview } from './submitReview';
-import WriteReviewModal from './WriteReviewModal'
+import WriteReviewModal from './WriteReviewModal';
+import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
+import { FaRegThumbsUp, FaThumbsUp } from 'react-icons/fa';
 
-const CommentBoard = ({ productId, colorId, brand, productName, colorName, animateChart, productImage }) => {
-  console.log('colorId:', colorId)
-  const { reviews, loading, fetchReviews } = useFetchReviews(productId); // 包含 fetchReviews 方法
-  // const { submitReview } = useFetchReviews(productId, colorId);
+const CommentBoard = ({orderItemId, productId, colorId, brand, productName, colorName, animateChart, productImage }) => {
+  console.log('colorId:', colorId);
+  console.log('orderItemId:', orderItemId);
+  console.log('productId:', productId);
+  console.log('colorId:', colorId);
+  const { auth } = useAuth();
+  const isAuthenticated = auth.isAuth; // 判斷是否已登入
+  const router = useRouter();
+  const { reviews, loading, fetchReviews, handleLike } = useFetchReviews(orderItemId, productId, colorId); // 包含 fetchReviews 方法
   const [animatedDistribution, setAnimatedDistribution] = useState({ 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 });
-  const [showWriteReview, setShowWriteReview] = useState(false); // 控制模態視窗的狀態
+  const [showWriteReview, setShowWriteReview] = useState(false); // 控制撰寫評論模態視窗
+  const [showStarFilterModal, setShowStarFilterModal] = useState(false); // 控制星級篩選模態視窗
+  const [selectedStar, setSelectedStar] = useState(null); // 儲存選中的星級數
+  const [filteredReviews, setFilteredReviews] = useState([]); // 篩選後的評論
 
   useEffect(() => {
-    console.log('Reviews from API in CommentBoard:', reviews);
+    if (reviews.length === 0) {
+      console.warn('Reviews 為空');
+    } else {
+      console.log('Reviews:', reviews);
+      setFilteredReviews(reviews); // 初始化時顯示所有評論
+    }
   }, [reviews]);
 
   const averageRating = useMemo(() => {
     const validRatings = reviews
       .map(review => Number(review.rating))
       .filter(rating => rating >= 1 && rating <= 5);
-    
+
     const totalRating = validRatings.reduce((acc, rating) => acc + rating, 0);
     return validRatings.length > 0 ? Number((totalRating / validRatings.length).toFixed(1)) : 0;
   }, [reviews]);
@@ -31,8 +48,7 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
     if (reviews.length === 0) return { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
 
     const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  
-    // 計算每個星級的數量
+
     reviews.forEach(review => {
       const rating = Math.round(Number(review.rating));
       if (rating >= 1 && rating <= 5) {
@@ -40,7 +56,6 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
       }
     });
 
-    // 將每個星級的數量轉換為百分比
     Object.keys(distribution).forEach(star => {
       distribution[star] = (distribution[star] / reviews.length) * 100;
     });
@@ -54,49 +69,105 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
       const timeout = setTimeout(() => {
         setAnimatedDistribution(ratingDistribution);
       }, 100);
-  
+
       return () => clearTimeout(timeout);
     }
   }, [animateChart, ratingDistribution]);
-  
-  // 顯示和隱藏撰寫評論模態視窗的控制函數
-  const handleShowWriteReview = () => setShowWriteReview(true);
+
+  // 星級篩選邏輯
+  const handleStarFilter = (star) => {
+    const filtered = reviews.filter(review => Math.round(Number(review.rating)) === star);
+    setFilteredReviews(filtered);
+    setSelectedStar(star);
+    setShowStarFilterModal(false);
+  };
+
+  // 圖片/影片篩選邏輯
+  const handleMediaFilter = () => {
+    const filtered = reviews.filter(review => review.media && review.media.length > 0);
+    setFilteredReviews(filtered);
+  };
+
+  const handleShowWriteReview = () => {
+    if (!isAuthenticated) {
+      toast.error('請先登入後再進行評論', {
+        style: { border: '1px solid #90957a', padding: '12px 40px', color: '#963827' },
+        iconTheme: { primary: '#963827', secondary: '#fff' },
+      });
+      router.push('/user/login/user');
+      return;
+    }
+    setShowWriteReview(true);
+  };
   const handleCloseWriteReview = () => setShowWriteReview(false);
 
-   // 保存評論並刷新列表
-   const handleSaveReview = async (reviewData, mediaFiles) => {
-    console.log('colorId:', colorId)
-    await submitReview(productId, colorId, reviewData, mediaFiles);
-    fetchReviews(); // 提交評論後刷新評論列表
+  const handleSaveReview = async (reviewData, mediaFiles) => {
+    if (!isAuthenticated) {
+      router.push('/user/login/user');
+      return;
+    }
+    await submitReview(productId, colorId, { 
+      ...reviewData, 
+      order_id: orderItemId, // 确保发送正确的 order_item_id
+      user_id: auth.userData.id, // 添加用户 ID
+    }, mediaFiles);
+    fetchReviews();
   };
+
+  // const handleLike = async (reviewId, isLiked) => {
+  //   try {
+  //     // 根據當前的點讚狀態選擇 API 路由
+  //     const route = isLiked
+  //       ? `/api/reviews/${reviewId}/unlike`
+  //       : `/api/reviews/${reviewId}/like`;
+  
+  //     // 發送請求
+  //     const response = await fetch(route, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //     });
+  
+  //     if (response.ok) {
+  //       // 更新前端的 likes 數據
+  //       const updatedReviews = reviews.map((review) => {
+  //         if (review.review_id === reviewId) {
+  //           return {
+  //             ...review,
+  //             review_likes: isLiked
+  //               ? review.review_likes - 1
+  //               : review.review_likes + 1,
+  //             isLiked: !isLiked, // 切換點讚狀態
+  //           };
+  //         }
+  //         return review;
+  //       });
+  //       setFilteredReviews(updatedReviews);
+  //     } else {
+  //       console.error('更新點讚失敗');
+  //     }
+  //   } catch (error) {
+  //     console.error('點讚時出錯:', error);
+  //   }
+  // };
+  
+  
 
   if (loading) return <div>Loading comments...</div>;
 
   return (
-    <Container className={styles['commentBoard']}>
+    <Container id="reviews" className={styles['commentBoard']}>
       {reviews.length === 0 ? (
-        // 沒有評論時顯示的提示信息和撰寫評論按鈕
         <div className={styles['no-reviews']}>
           <p className={`${styles['no-reviews-p']} h5`}>目前還沒有評論</p>
-          <p className={`${styles['no-reviews-p']} h5`}>成為首位評論者，和大家分享您的心得！</p>
-          <Button variant="dark" className={'btn-primary'} onClick={handleShowWriteReview}>
-            撰寫評論
-          </Button>
+          <p className={`${styles['no-reviews-p']} h5`}>購買後即可撰寫您的體驗分享！</p>
         </div>
       ) : (
         <>
           <Row className={styles['commentupper']}>
             <Col md={6} className={styles['ratingOverview']}>
               <div className={styles['averageRating']}>
-                <div className={styles['ratingScore']}>{averageRating}</div>
-                <Stars
-                  count={5}
-                  value={averageRating}
-                  size={25}
-                  edit={false}
-                  color2={"#9ea28b"}
-                  color1={"#ccc"}
-                />
+                <div className={styles['ratingScore']}>{averageRating.toFixed(1)}</div>
+                <Stars count={5} value={parseFloat(averageRating)} size={25} edit={false} color2={"#9ea28b"} color1={"#ccc"} />
               </div>
               <div className={styles['ratingDistribution']}>
                 {[5, 4, 3, 2, 1].map(star => (
@@ -121,87 +192,86 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
               </div>
             </Col>
             <Col md={6} className={styles['filterButtons']}>
-              <Button variant="outline-secondary" className={styles['button']}>
+              <Button variant="outline-secondary" className={styles['button']} onClick={() => setFilteredReviews(reviews)}>
                 全部 ({reviews.length})
               </Button>
-              <Button variant="outline-secondary" className={styles['button']}>
+              <Button variant="outline-secondary" className={styles['button']} onClick={handleMediaFilter}>
                 附上圖片/影片 ({reviews.filter(review => review.media.length > 0).length})
               </Button>
-              <Button variant="outline-secondary" className={styles['button']}>
+              <Button variant="outline-secondary" className={styles['button']} onClick={() => setShowStarFilterModal(true)}>
                 星等 ★
               </Button>
             </Col>
           </Row>
 
           <div className={styles['commentList']}>
-            {reviews.map((review) => (
-              <div key={review.order_item_id} className={styles['commentItem']}>
-                <div className={styles['userInfo']}>
-                  <Image
-                    width={64}
-                    height={64}
-                    src="/product/commentuserprofile.png"
-                    alt={`${review.username}'s avatar`}
-                    className={styles['avatar']}
-                  />
-                  <div className={styles['userDetails']}>
-                    <div className={styles['userHeader']}>
-                      <span className={`${styles['username']} h6`}>{review.username || '匿名'}</span>
-                      <div className={styles['date-likes']}>
-                        <div className={styles['timestamp']}>{review.review_date}</div>
-                        <span className={styles['helpful']}>有幫助 ({review.review_likes})</span>
+            {filteredReviews.map((review, index) => {
+              console.log(`Review ${index + 1}:`, review); // 在控制台打印出每个 review 的内容
+              return (
+                <div key={review.order_item_id} className={styles['commentItem']}>
+                  <div className={styles['userInfo']}>
+                    <Image
+                      width={64}
+                      height={64}
+                      src={review.user_avatar || '/default-avatar.png'}
+                      className={styles['avatar']}
+                    />
+                    <div className={styles['userDetails']}>
+                      <div className={styles['userHeader']}>
+                        <span className={`${styles['username']} h6`}>{review.username || '匿名'}</span>
+                        <div className={styles['date-likes']}>
+                          <div className={styles['timestamp']}>{review.review_date}</div>
+                        </div>
+                      </div>
+                      <div className="ps">
+                        規格 - {brand} {productName} - {colorName}
                       </div>
                     </div>
-                    <div className='ps'>規格 - {brand} {productName} - {colorName}</div>
                   </div>
-                </div>
-              
-                <div className={styles['rating']}>
-                  <Stars
-                    count={5}
-                    value={review.rating}
-                    size={20}
-                    edit={false}
-                    color2={"#90957a"}
-                    color1={"#d3d3d3"}
-                  />
-                </div>
-              
-                <p className={styles['commentBoard']}>{review.comment}</p>
-                
-                <div className={styles['commentImages']}>
-                  {review.media.map((media, index) => (
-                    media.file_type === '.mp4' ? (
-                      <video key={index} width="150" controls className={styles['commentMedia']}>
-                        <source src={media.url} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                    ) : (
-                      <img
-                        width={93}
-                        height={93}
-                        src={`/upload/reviews/images/${media.file_name}`}
-                        alt={`Comment media ${index + 1}`}
-                        key={index}
-                        className={styles['commentImage']}
-                      />
-                    )
-                  ))}
-                </div>
-
-                <div className={styles['commentFooter']}>
-                  <div className={styles['actions']}>
-                    <span className={`${styles['edit']} me-2`}>編輯</span> |
-                    <span className={styles['delete']}>刪除</span>
+                  <div className={styles['rating']}>
+                    <Stars count={5} value={review.rating} size={20} edit={false} color2={'#90957a'} color1={'#d3d3d3'} />
                   </div>
+                  <p className={styles['commentBoard']}>{review.comment}</p>
+                  {Array.isArray(review.media) && review.media.length > 0 && (
+                    <div className={styles['commentImages']}>
+                      {review.media.map((media, index) =>
+                        media.file_name.endsWith('.mp4') ? (
+                          <video key={media.id} width="150" controls>
+                            <source src={media.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          <img
+                            key={media.id}
+                            src={`http://localhost:3005/upload/reviews/images/${media.file_name}`}
+                            alt="Review media"
+                            width={93}
+                            height={93}
+                          />
+                        )
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
       )}
 
-      {/* 使用分離出的 WriteReviewModal 組件 */}
+      <Modal show={showStarFilterModal} onHide={() => setShowStarFilterModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>選擇星等</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {[5, 4, 3, 2, 1].map(star => (
+            <Button key={star} className={`${styles['starfilter']}  m-2`} variant="outline-secondary" onClick={() => handleStarFilter(star)}>
+              {star} 星
+            </Button>
+          ))}
+        </Modal.Body>
+      </Modal>
+
       <WriteReviewModal 
         show={showWriteReview} 
         onClose={handleCloseWriteReview} 
@@ -209,10 +279,10 @@ const CommentBoard = ({ productId, colorId, brand, productName, colorName, anima
         productImage={productImage}
         productName={productName} 
         colorName={colorName} 
-        submitReview ={handleSaveReview} // 傳入 submitReview 函數
-        colorId={colorId} // 傳入 colorId 用於保存評論
+        submitReview={handleSaveReview}
+        colorId={colorId} 
         productId={productId}
-        fetchReviews={fetchReviews} // 傳入 fetchReviews
+        fetchReviews={fetchReviews}
       />
     </Container>
   );

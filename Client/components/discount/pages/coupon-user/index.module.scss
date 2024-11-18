@@ -1,6 +1,7 @@
 @import '@/styles/_variant.scss';
 
 .right {
+
     .btn {
         background-color: transparent;
         border: transparent;
@@ -55,7 +56,7 @@
 }
 
 .coupon-group {
-    margin: auto;
+    margin-top: 90px;
 }
 
 .btnReceive{
@@ -91,4 +92,18 @@
 
   .funnel{
     border: transparent;
+  }
+
+
+  @media (max-width: 500px) {
+    .add{
+        display: none;
+    }
+    .coupon-group {
+        margin-top: 40px;
+    }
+    .pagination {
+        font-size: 12px;
+        margin-block: 10px;
+    }
   }

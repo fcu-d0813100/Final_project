@@ -63,6 +63,10 @@
 
 .time {
     width: 200px;
+    line-height: 110%;
+    span{
+        color: $green-500;
+    }
     @media (max-width: 1400px) {
         font-size: 12px;
         width: 150px;

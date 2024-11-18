@@ -2,6 +2,7 @@ import express from 'express'
 import db from '#configs/db.js'
 import multer from 'multer'
 import path from 'path'
+import fs, { rename, rm } from 'fs/promises'
 import { fileURLToPath } from 'url'
 
 const router = express.Router()
@@ -160,6 +161,8 @@ router.put('/update', upload.array('files'), async function (req, res, next) {
     }
     // post_image table
     // 有上傳新圖片
+    const folderPath = path.join(__dirname, '..', 'public', 'post') //delete path
+
     if (uploadedFiles.length > 0) {
       const orderedImgs = updateImgs
         ? Array.isArray(updateImgs)
@@ -183,8 +186,18 @@ router.put('/update', upload.array('files'), async function (req, res, next) {
     DELETE FROM post_image WHERE post_id = ${postId}
   `
       await db.query(sqlDeleteAllImages)
+      // await fs.rm()
       console.log(sqlDeleteAllImages)
-
+      // 刪除舊圖片文件
+      // for (const oldImg of oldimgsArr) {
+      //   const filePath = path.join(folderPath, oldImg)
+      //   try {
+      //     await fs.rm(filePath, { force: true }) // 確保刪除，即使文件不存在
+      //     console.log(`Deleted old image: ${filePath}`)
+      //   } catch (error) {
+      //     console.error(`Error deleting file ${filePath}:`, error.message)
+      //   }
+      // }
       // 插入新順序的圖片（包含舊圖片和新圖片）
       const sqlInsertImage = `
     INSERT INTO post_image (post_id, user_id, pic, uploaded_at) VALUES ${updatedImages
@@ -207,7 +220,16 @@ router.put('/update', upload.array('files'), async function (req, res, next) {
     `
         await db.query(sqlDeleteAllImages)
         console.log(sqlDeleteAllImages)
-
+        // 刪除舊圖片文件
+        // for (const oldImg of oldimgsArr) {
+        //   const filePath = path.join(folderPath, oldImg)
+        //   try {
+        //     await fs.rm(filePath, { force: true }) // 確保刪除，即使文件不存在
+        //     console.log(`Deleted old image: ${filePath}`)
+        //   } catch (error) {
+        //     console.error(`Error deleting file ${filePath}:`, error.message)
+        //   }
+        // }
         // 重新插入舊圖片
         const sqlReinsertImages = `
       INSERT INTO post_image (post_id, user_id, pic, uploaded_at) VALUES ${oldimgsArr

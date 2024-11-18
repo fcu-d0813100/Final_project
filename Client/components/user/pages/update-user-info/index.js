@@ -8,12 +8,66 @@ import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
 import PreviewUploadImage from '@/components/user/common/preview-upload-image'
+// import utils from '@/components/cart/common/tw-zipcode'
+// import dataTownships from '@/components/cart/common/tw-zipcode'
+import {
+  countries,
+  townships,
+  postcodes,
+} from '@/components/cart/common/tw-zipcode/data-townships'
 
-export default function UpdateInfo() {
+export default function UpdateInfo({
+  initPostcode = '',
+  onPostcodeChange = (country, township, postcode) => {},
+}) {
   const [selectedFile, setSelectedFile] = useState(null)
   const { auth, update, getUser, deleteUser } = useAuth()
-
   const router = useRouter()
+  // 串地址
+  //console.log(countries, townships, postcodes)
+
+  // 記錄陣列的索引值，預設值是-1，相當於"請選擇xxx"
+  const [countryIndex, setCountryIndex] = useState(-1)
+  const [townshipIndex, setTownshipIndex] = useState(-1)
+
+  // 郵遞區號使用字串(數字字串)
+  const [postcode, setPostcode] = useState('')
+
+  // 利用傳入時的initPostcode初始化用
+  useEffect(() => {
+    if (initPostcode) {
+      setPostcode(initPostcode)
+      // 使用initPostcode尋找對應的countryIndex, townshipIndex
+      for (let i = 0; i < postcodes.length; i++) {
+        for (let j = 0; j < postcodes[i].length; j++) {
+          if (postcodes[i][j] === initPostcode) {
+            setCountryIndex(i)
+            setTownshipIndex(j)
+            return // 跳出巢狀for迴圈
+          }
+        }
+      }
+    }
+  }, [initPostcode])
+
+  // 當countryIndex, townshipIndex均有值時，設定postcode值
+  useEffect(() => {
+    if (countryIndex > -1 && townshipIndex > -1) {
+      setPostcode(postcodes[countryIndex][townshipIndex])
+    }
+  }, [countryIndex, townshipIndex])
+
+  // 當使用者改變的countryIndex, townshipIndex，使用onPostcodeChange回傳至父母元件
+  useEffect(() => {
+    if (postcode && postcode !== initPostcode) {
+      onPostcodeChange(
+        countries[countryIndex],
+        townships[countryIndex][townshipIndex],
+        postcode
+      )
+    }
+  }, [postcode])
+
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     name: '',
@@ -23,6 +77,8 @@ export default function UpdateInfo() {
     email: '',
     img: '',
     phone: '',
+    city: '',
+    area: '',
     address: '',
     create_at: '',
     updated_at: 'Now()',
@@ -38,6 +94,32 @@ export default function UpdateInfo() {
   const handleFieldChange = (e) => {
     let nextUser = { ...user, [e.target.name]: e.target.value }
     setUser(nextUser)
+  }
+
+  const handleCityChange = (e) => {
+    const newCountryIndex = +e.target.value
+    setCountryIndex(newCountryIndex)
+    setTownshipIndex(-1)
+    setPostcode('')
+
+    if (newCountryIndex > -1) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        city: countries[newCountryIndex], // 更新 city
+      }))
+    }
+  }
+
+  const handleAreaChange = (e) => {
+    const newTownshipIndex = +e.target.value
+    setTownshipIndex(newTownshipIndex)
+
+    if (newTownshipIndex > -1) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        area: townships[countryIndex][newTownshipIndex], // 更新 area
+      }))
+    }
   }
 
   const checkError = (user) => {
@@ -90,7 +172,7 @@ export default function UpdateInfo() {
           })
           setTimeout(() => {
             router.push('/user')
-          }, 2000)
+          }, 1500)
         } else {
           // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
           toast.error('更新失敗，請稍後再試', {
@@ -122,6 +204,9 @@ export default function UpdateInfo() {
             secondary: '#fff',
           },
         })
+        setTimeout(() => {
+          router.push('/user')
+        }, 1500)
       } else {
         // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
         toast.error('更新失敗，請稍後再試', {
@@ -154,9 +239,31 @@ export default function UpdateInfo() {
 
   // 初始化會員資料
   const initUserData = async () => {
-    const user = await getUser()
-    // setUser({ ...user, password: '', confirmPassword: '' })
-    setUser(user)
+    const userData = await getUser()
+    setUser(userData)
+
+    // 查找對應的 countryIndex 和 townshipIndex
+    let initialCountryIndex = -1
+    let initialTownshipIndex = -1
+
+    countries.forEach((country, i) => {
+      if (country === userData.city) {
+        initialCountryIndex = i
+        townships[i].forEach((township, j) => {
+          if (township === userData.area) {
+            initialTownshipIndex = j
+          }
+        })
+      }
+    })
+
+    setCountryIndex(initialCountryIndex)
+    setTownshipIndex(initialTownshipIndex)
+
+    // 設置對應的郵遞區號（如果有）
+    if (initialCountryIndex > -1 && initialTownshipIndex > -1) {
+      setPostcode(postcodes[initialCountryIndex][initialTownshipIndex])
+    }
   }
 
   // 本頁一開始render後就會設定到user狀態中
@@ -207,6 +314,13 @@ export default function UpdateInfo() {
   const closeModal = () => {
     setShowModal(false)
   }
+  const handleCancel = () => {
+    setUser(user)
+    setTimeout(() => {
+      router.push('/user')
+    }, 1500)
+  }
+
   return (
     <>
       <UserSection titleCN="更新資訊" titleENG="Information">
@@ -215,10 +329,10 @@ export default function UpdateInfo() {
           method="post"
           encType="multipart/form-data"
         >
-          <div className="d-flex mt-4 container">
-            <div className="d-flex row justify-content-between align-items-center">
-              <div className="col-9 px-0   d-flex flex-wrap">
-                <div className={`col-4 mt-5 ${styles.info} `}>
+          <div className="mt-5 container-fluid">
+            <div className="row justify-content-center align-items-center">
+              <div className="col-9 pe-3 d-flex flex-wrap">
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="name" className="form-label pb-2 fw-bold ">
                     姓名 <span className=" ps pe-4 fw-bold ">| name</span>
                   </label>
@@ -231,7 +345,7 @@ export default function UpdateInfo() {
                     value={user.name}
                   />
                 </div>
-                <div className={`col-4 mt-5 ${styles.info} `}>
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="nickname" className="form-label pb-2 fw-bold">
                     暱稱 <span className="ps pe-4 fw-bold">| nickname</span>
                   </label>{' '}
@@ -243,7 +357,7 @@ export default function UpdateInfo() {
                     className={`form-control ${styles['form-control2']} `}
                   />
                 </div>
-                <div className={`col-4 mt-5 ${styles.info} `}>
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="title " className="form-label pb-2 fw-bold">
                     稱謂 <span className=" ps pe-4 fw-bold">| title</span>
                   </label>{' '}
@@ -298,33 +412,21 @@ export default function UpdateInfo() {
                 </div>
               </div>
 
-              <div className="col-3 d-flex align-items-center">
+              <div className="col-3 d-flex justify-content-center align-items-center">
                 <div className="ratio ratio-1x1 w-75">
                   <PreviewUploadImage
-                    userId={user.id} // 傳遞用戶ID作為變數
-                    avatarBaseUrl="http://localhost:3005/avatar" // 正確的基礎URL
-                    defaultImg="avatar01.jpg" // 默認圖片名
+                    userId={user.id}
+                    avatar={
+                      user.img ? `http://localhost:3005/avatar/${user.img}` : ''
+                    } // 傳入 avatar 照片
+                    avatarBaseUrl="http://localhost:3005/avatar"
+                    defaultImg="avatar01.jpg"
                     setSelectedFile={setSelectedFile}
                     selectedFile={selectedFile}
+                    photoUrl={user.photo_url} // 傳入 photo_url
                   />
-
-                  {/* <Image
-                    width={255}
-                    height={255}
-                    className={styles.avatar}
-                    src={`/user/img/${user.img}`}
-                    alt=""
-                    priority
-                  /> */}
                 </div>
               </div>
-              {/* <button
-                type="button"
-                className="btn btn-outline"
-                onClick={handleFileChange}
-              >
-                更換頭像
-              </button> */}
             </div>
           </div>
           {/* 收件資訊 */}
@@ -337,39 +439,59 @@ export default function UpdateInfo() {
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
           >
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                縣市{' '}
+              <label htmlFor="city" className={`form-label pb-2 fw-bold`}>
+                縣市
                 <span className={`ps fw-bold ${styles['info-address']}`}>
                   | city
                 </span>
-              </label>
-              <select className={`form-select  ${styles['form-select2']}`}>
-                <option value="">請選擇縣市</option>
-                {/* Options omitted for brevity */}
+              </label>{' '}
+              <select
+                name="city"
+                value={countryIndex}
+                onChange={handleCityChange}
+                className={`form-select ${styles['form-select2']}`}
+              >
+                <option value="-1">選擇縣市</option>
+                {countries.map((value, index) => (
+                  <option key={index} value={index}>
+                    {value}
+                  </option>
+                ))}
               </select>
             </div>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                區域{' '}
-                <span className={` ps fw-bold ${styles['info-address']}`}>
+              <label htmlFor="area" className={`form-label pb-2 fw-bold`}>
+                區域
+                <span className={`ps fw-bold ${styles['info-address']}`}>
                   | area
                 </span>
-              </label>
-              <select className={`form-select ${styles['form-select2']}`}>
-                <option value="">請選擇區域</option>
+              </label>{' '}
+              <select
+                name="area"
+                value={townshipIndex}
+                onChange={handleAreaChange}
+                className={`form-select ${styles['form-select2']}`}
+              >
+                <option value="-1">選擇區域</option>
+                {countryIndex > -1 &&
+                  townships[countryIndex].map((value, index) => (
+                    <option key={index} value={index}>
+                      {value}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                地址{' '}
+              <label htmlFor="address" className={`form-label pb-2 fw-bold`}>
+                地址
                 <span className={`ps ${styles['info-address']} fw-bold`}>
                   | address
                 </span>
-              </label>
+              </label>{' '}
               <input
                 type="text"
                 className={`form-control ${styles['form-control2']}`}
-                name="streetAddress"
+                name="address"
                 placeholder="請輸入完整地址"
                 value={user.address}
                 onChange={handleFieldChange}
@@ -387,7 +509,7 @@ export default function UpdateInfo() {
               </p>
             </div>
             <div
-              className={`col-3 d-flex justify-content-end align-items-center`}
+              className={`col-3 pe-3 d-flex justify-content-end align-items-center`}
             >
               <button
                 type="button"
@@ -415,7 +537,7 @@ export default function UpdateInfo() {
             <button
               type="button"
               className="btn-secondary h6 me-4"
-              onClick={() => setUser(user)}
+              onClick={handleCancel}
             >
               取消
             </button>

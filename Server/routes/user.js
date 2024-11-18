@@ -149,7 +149,7 @@ router.post(`/login/:role`, async (req, res) => {
 
   const dbUser = rows[0]
   // 2. 檢查該會員的身份是否符合登入要求
-  // console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
+  console.log(`Database Identity: ${dbUser.identity}, Provided Role: ${role}`)
 
   if (dbUser.identity !== role) {
     if (role === 'teacher') {
@@ -173,8 +173,8 @@ router.post(`/login/:role`, async (req, res) => {
     id: dbUser.id,
     account: dbUser.account,
     identity: dbUser.identity,
-    // google_uid: user.google_uid,
-    // line_uid: user.line_uid,
+    google_uid: dbUser.google_uid,
+    line_uid: dbUser.line_uid,
   }
 
   // 讓會員保持登陸3天
@@ -228,7 +228,7 @@ router.put(
     // 更新除了帳號密碼以外的資料
     try {
       const [result] = await db.query(
-        'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?, `address`=?, `birthday`=?, `updated_at`=? WHERE `id`=?;',
+        'UPDATE `user` SET `name`=?, `email`=?, `nickname`=?, `img`=?, `gender`=?, `phone`=?,`city`=?, `area`=?, `address`=?, `birthday`=?, `updated_at`=? WHERE `id`=?;',
         [
           updateUser.name,
           updateUser.email,
@@ -236,6 +236,8 @@ router.put(
           imgFileName,
           updateUser.gender,
           updateUser.phone,
+          updateUser.city,
+          updateUser.area,
           updateUser.address,
           updateUser.birthday,
           new Date(),
@@ -351,15 +353,6 @@ router.put('/:id/password', authenticate, async function (req, res) {
     'UPDATE user SET password = ? WHERE id = ?',
     [hashedPassword, id]
   )
-  // const [affectedRows] = await User.update(
-  //   { password: userPassword.new },
-  //   {
-  //     where: {
-  //       id,
-  //     },
-  //     individualHooks: true, // 更新時要加密密碼字串 trigger the beforeUpdate hook
-  //   }
-  // )
 
   // 沒有更新到任何資料 -> 失敗
   if (!affectedRows) {
@@ -389,6 +382,102 @@ router.delete('/:id', function (req, res) {
     // 成功
     return res.json({ status: 'success', data: null })
   })
+})
+
+// 新增訂單並更新會員等級============================
+// router.post('/order', authenticate, async (req, res) => {
+//   try {
+//     const { total_amount } = req.body
+//     const userId = req.user.id // 使用登入會員的ID
+
+//     // 插入訂單資料
+//     const insertOrderSql = `
+//       INSERT INTO order_list (user_id, total_amount)
+//       VALUES (${userId}, ${total_amount})
+//     `
+//     const [orderResult] = await db.query(insertOrderSql)
+
+//     if (orderResult.affectedRows === 1) {
+//       // 更新會員等級
+//       const updateLevelSql = `
+//         UPDATE user u
+//         JOIN order_list o ON u.id = o.user_id
+//         SET u.level = CASE
+//           WHEN o.total_amount >= 20000 THEN 3
+//           WHEN o.total_amount >= 6000 THEN 2
+//           ELSE 1
+//         END
+//         WHERE o.id = ${orderResult.insertId}
+//       `
+//       await db.query(updateLevelSql)
+
+//       return res.json({
+//         status: 'success',
+//         message: '訂單新增成功並更新會員等級',
+//         orderId: orderResult.insertId,
+//       })
+//     } else {
+//       throw new Error('訂單插入失敗')
+//     }
+//   } catch (error) {
+//     console.error('Error:', error)
+//     return res.status(500).json({
+//       status: 'error',
+//       message: error.message || '伺服器錯誤',
+//     })
+//   }
+// })
+
+// 新增訂單並更新會員等級
+router.post('/order', authenticate, async (req, res) => {
+  try {
+    const { total_amount } = req.body
+    const userId = req.user.id // 使用登入會員的ID
+
+    // 插入訂單資料
+    const insertOrderSql = `
+      INSERT INTO order_list (user_id, total_amount)
+      VALUES (${userId}, ${total_amount})
+    `
+    const [orderResult] = await db.query(insertOrderSql)
+
+    if (orderResult.affectedRows === 1) {
+      // 計算總消費金額
+      const totalSpentSql = `
+        SELECT SUM(total_amount) as total_spent
+        FROM order_list
+        WHERE user_id = ${userId}
+      `
+      const [totalResult] = await db.query(totalSpentSql)
+      const totalSpent = totalResult[0].total_spent
+
+      // 更新會員等級
+      const updateLevelSql = `
+        UPDATE user
+        SET level = CASE
+          WHEN ${totalSpent} >= 20000 THEN 3
+          WHEN ${totalSpent} >= 6000 THEN 2
+          ELSE 1
+        END
+        WHERE id = ${userId}
+      `
+      await db.query(updateLevelSql)
+
+      return res.json({
+        status: 'success',
+        message: '訂單新增成功並更新會員等級',
+        orderId: orderResult.insertId,
+      })
+    } else {
+      throw new Error('訂單插入失敗')
+    }
+  } catch (error) {
+    console.error('Error:', error)
+    return res.status(500).json({
+      status: 'error',
+      message: error.message || '伺服器錯誤',
+    })
+  }
 })
 
 export default router

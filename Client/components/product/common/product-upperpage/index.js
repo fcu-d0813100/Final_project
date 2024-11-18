@@ -23,6 +23,7 @@ const ProductPage = ({ productPage }) => {
   
   const [quantity, setQuantity] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(productPage[0]); // 預設顯示第一個色號
+  const [orderItemId, setOrderItemId] = useState(null); // 用於存儲從 localStorage 獲取的 orderItemId
   const [isFavorite, setIsFavorite] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
@@ -55,6 +56,22 @@ const ProductPage = ({ productPage }) => {
     setSelectedProduct(product || uniqueProducts[0]);
   }
   }, [cid, uniqueProducts]);
+
+  // 從 localStorage 獲取 orderItemId
+  useEffect(() => {
+    const storedOrderItemId = localStorage.getItem('orderId'); 
+    if (storedOrderItemId) {
+      setOrderItemId(storedOrderItemId);
+    } else {
+      console.warn('No orderItemId found in localStorage');
+    }
+  }, []);
+
+   // 打印 selectedProduct 和 orderItemId
+  useEffect(() => {
+    console.log('Selected Product:', selectedProduct);
+    console.log('Order Item ID:', orderItemId);
+  }, [selectedProduct, orderItemId]);
 
   // 數量
   const handleIncrement = () => setQuantity(quantity + 1);
@@ -164,7 +181,12 @@ const selectedProductImages = useMemo(() => {
     }
   };
   
-  
+  // 每次當 ProductPage 組件加載時，它會檢查 URL 中的哈希值，如果哈希值是 #reviews，它就會滾動到評論區域
+  useEffect(() => {
+    if (window.location.hash === '#reviews') {
+      document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
 
   return (
     <div className={styles['product-page']}>
@@ -390,6 +412,7 @@ const selectedProductImages = useMemo(() => {
                 <div className={styles['reviews-content']}>
                               <div className={styles['reviews-content']}>
                   <CommentBoard 
+                    orderItemId={orderItemId}
                     productId={selectedProduct.product_id} 
                     productImage={selectedProduct.mainimage}
                     colorId={selectedProduct.color_id} 
