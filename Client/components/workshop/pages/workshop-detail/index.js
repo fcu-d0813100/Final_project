@@ -1,4 +1,5 @@
 'use client'
+import Brands from '@/components/home/common/brands'
 import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import axios from 'axios'
@@ -229,6 +230,7 @@ export default function WorkshopDetail() {
         note={tworkshop.notes}
         imgS02={`http://localhost:3005/workshop/${tworkshop.img_sm02}`}
       />
+      <Brands />
     </>
   )
 }
