@@ -185,7 +185,7 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
   } else if (order === '2') {
     sqlSelect += ` ORDER BY workshop.price DESC` // 價格降冪
   } else if (order === '3') {
-    sqlSelect += ` ORDER BY workshop_time.date ASC` // 日期升冪
+    sqlSelect += ` ORDER BY workshop_time.date DESC` // 日期升冪
   }
 
   // 設置查詢參數

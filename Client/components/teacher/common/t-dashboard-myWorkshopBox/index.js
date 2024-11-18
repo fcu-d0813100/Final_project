@@ -240,7 +240,7 @@ export default function MyWorkshopBox({
     statusText = '報名中'
     statusClass = styles.registering
   } else if (now < regStart) {
-    statusText = '準備中'
+    statusText = '即將開課'
     statusClass = styles.prepare
   } else if (now > regEnd && now <= endDateObj) {
     statusText = '已截止'

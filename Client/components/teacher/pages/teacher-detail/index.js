@@ -67,7 +67,7 @@ export default function TeacherDetail(props) {
     const endDate = new Date(registrationEnd)
 
     if (currentDate < startDate) {
-      return '準備中' // 時間在 startDate 之前
+      return '即將開課' // 時間在 startDate 之前
     } else if (currentDate >= startDate && currentDate <= endDate) {
       return '報名中' // 時間在 startDate 和 endDate 之間
     } else if (currentDate > endDate) {
@@ -118,19 +118,20 @@ export default function TeacherDetail(props) {
               <Dropdown
                 name="狀態"
                 items={[
-                  { option: '狀態', link: '' },
-                  { option: '報名中', link: '' },
-                  { option: '已截止', link: '' },
+                  { option: '狀態', value: '' },
+                  { option: '即將開課', value: '' },
+                  { option: '報名中', value: '' },
+                  { option: '已截止', value: '' },
                 ]}
               />
 
               <Dropdown
                 name="排序"
                 items={[
-                  { option: '排序', link: '' },
-                  { option: '價錢 高 -- 低', link: '' },
-                  { option: '價錢 低 -- 高', link: '' },
-                  { option: '最新上架', link: '' },
+                  { option: '排序', value: '' },
+                  { option: '價錢 高 -- 低', value: '' },
+                  { option: '價錢 低 -- 高', value: '' },
+                  { option: '最新上架', value: '' },
                 ]}
               />
             </div>

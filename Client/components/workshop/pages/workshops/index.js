@@ -51,7 +51,7 @@ export default function WorkshopAll(props) {
     const endDate = new Date(registrationEnd)
 
     if (currentDate < startDate) {
-      return '準備中' // 時間在 startDate 之前
+      return '即將開課' // 時間在 startDate 之前
     } else if (currentDate >= startDate && currentDate <= endDate) {
       return '報名中' // 時間在 startDate 和 endDate 之間
     } else if (currentDate > endDate) {
@@ -87,7 +87,7 @@ export default function WorkshopAll(props) {
 
   const statusOptions = [
     { option: '狀態', value: '' },
-    { option: '準備中', value: 'prepare' },
+    { option: '即將開課', value: 'prepare' },
     { option: '報名中', value: 'open' },
     { option: '已截止', value: 'closed' },
   ]
