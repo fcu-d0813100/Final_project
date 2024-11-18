@@ -532,7 +532,7 @@ export default function Checkout({
                         type="radio"
                         id="ecPay"
                         name="payment"
-                        label="綠界"
+                        label="信用卡"
                         value="ecPay"
                         checked={paymentMethod === 'ecPay'}
                         onChange={handlePaymentChange}
