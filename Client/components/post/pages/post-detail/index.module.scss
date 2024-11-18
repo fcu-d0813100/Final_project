@@ -67,6 +67,16 @@
       gap: 10px;
       padding: 0 20px;
     }
+    .post-wall-small {
+      padding: 0 240px;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      @media (max-width: 390px) {
+        gap: 10px;
+        padding: 0 20px;
+      }
+    }
   }
 }
 
