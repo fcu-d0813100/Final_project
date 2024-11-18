@@ -157,10 +157,6 @@
     justify-content: space-between;
 
   }
-  // .editBtn{
-  //   display: inline-block;
-  //   justify-content: center;
-  // }
  
 }
 
@@ -189,13 +185,14 @@
   .userImg {
     order: 1;
     margin-bottom: -60px;
-    z-index: 1;
+    // z-index: 1;
   }
   
   .textArea  {
     order: 2;
     width: 100%; 
     margin-bottom: 20px;
+    z-index: -1;
 
   }
   
@@ -216,7 +213,7 @@
   order:1
   }
   .btn{
-    width: 350px;
+    width: 330px;
   }
   .levelArea {
     order: 4;
@@ -286,11 +283,13 @@
     padding-right: 0px;
     white-space: nowrap;
     border-left: none;
+    font-size: 14px;
     
   }
   .timeStyle td{
     padding-left: 10px;
     white-space: nowrap; 
+    font-size: 14px;
 
   }
 
@@ -313,11 +312,6 @@
   .basicInformation .userImg{
     margin-top: 20px;
   }
-
-
-
-
-
 
 
 }
