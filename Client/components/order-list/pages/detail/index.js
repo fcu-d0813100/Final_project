@@ -166,7 +166,7 @@ const OrderDetail = () => {
                             )}</span>
                         </div>
                         <div className={`total h6 p-1`}>
-                            商品折扣<span>$  {new Intl.NumberFormat().format(
+                            商品折扣<span>-$  {new Intl.NumberFormat().format(
                                 items.reduce((total, item) => {
                                     // 確認 price, originalprice, quantity 是否為有效的數字
                                     const originalPrice = item.originalprice || 0;  // 如果原價無效，視為0

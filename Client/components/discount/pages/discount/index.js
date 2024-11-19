@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './index.module.scss'; // 確保引入正確的樣式
@@ -7,8 +7,7 @@ import Carousels from '@/components/discount/common/carousels'
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
-
-
+import ProductCarousel from '@/components/discount/common/product-carousels';
 
 export default function Discount() {
   const images = [
@@ -24,8 +23,8 @@ export default function Discount() {
     speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true, // 啟用自動播放
-    autoplaySpeed: 2000,
+    autoplay: false, // 啟用自動播放
+    autoplaySpeed: 3000,
     arrows: false, // 隱藏箭頭
   };
 
@@ -80,6 +79,7 @@ export default function Discount() {
           </Link>
         </div>
       </div>
+      <ProductCarousel />
     </>
   );
 }
