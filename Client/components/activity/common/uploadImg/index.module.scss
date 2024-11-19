@@ -2,6 +2,7 @@
 
 .uploadCover {
   border: 3px dashed $green-200;
+
   border-radius: 10px;
   background-color: #f8f8f8;
   position: relative;
@@ -69,12 +70,12 @@
   position: absolute; // 絕對定位於圖片右上角
   top: 5px;
   right: 5px;
-  background: rgba(255, 255, 255, 0.7); // 半透明背景
+  background: rgba(255, 255, 255, 1); // 半透明背景
   border: none;
   border-radius: 50%;
   cursor: pointer;
   font-size: 18px;
   width: 35%;
-  color: #e74c3c; // 刪除按鈕顏色
+  color: #000000; // 刪除按鈕顏色
   padding: 5px; // 按鈕內邊距
 }
