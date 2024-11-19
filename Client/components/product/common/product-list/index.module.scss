@@ -232,6 +232,10 @@
     border: 2px solid #90957a;
     border-radius: 50px;
     padding-right: 40px;
+    :hover{
+      outline: none;
+      box-shadow: none;
+    }
   }
 
   i {
@@ -433,6 +437,10 @@
       width: 300px;
       border: 2px solid #90957a;
       border-radius: 50px;
+      :hover{
+        outline: none !important;
+        box-shadow: none !important;
+      }
     }
 
     i {

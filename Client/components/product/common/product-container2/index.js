@@ -52,11 +52,11 @@ const CardCarousel2 = ({ products }) => {
 
   const settings = {
     infinite: true,
-    speed: 500,
+    speed: 1000,
     slidesToShow: 4,
     slidesToScroll: 4,
     autoplay: true,
-    autoplaySpeed: 2200,
+    autoplaySpeed: 2500,
     pauseOnHover: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,

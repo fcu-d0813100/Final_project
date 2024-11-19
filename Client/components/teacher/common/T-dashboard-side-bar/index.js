@@ -2,26 +2,26 @@ import React, { useState, useEffect } from 'react'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
-import { PiUser, PiLockOpen, PiListMagnifyingGlass } from 'react-icons/pi'
+import { PiUser, PiNotePencil, PiNotebook } from 'react-icons/pi'
 
 import styles from './index.module.scss'
 
 const navLinks = [
   {
     href: '/teacher/information',
-    icon: <PiUser size={65} />,
+    icon: <PiUser size={68} />,
     label: '個人資訊',
     key: 'user',
   },
   {
     href: '/teacher/upload',
-    icon: <PiListMagnifyingGlass size={65} />,
+    icon: <PiNotePencil size={68} />,
     label: '課程上架',
     key: 'order',
   },
   {
     href: '/teacher/myworkshop',
-    icon: <PiLockOpen size={65} />,
+    icon: <PiNotebook size={68} />,
     label: '我的課程',
     key: 'password',
   },

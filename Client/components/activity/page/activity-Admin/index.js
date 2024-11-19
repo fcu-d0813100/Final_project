@@ -4,8 +4,9 @@ import { PiPlus } from 'react-icons/pi'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import UserCard from '../../common/userCard'
-import Sidebar from '@/components/activity/common/Sidebar'
+import Sidebar from '@/components/admin/common/admin-side-bar'
 import UserTitle from '@/components/user/common/user-title'
+import AdminTitle from '@/components/admin/common/admin-title'
 
 export default function Index() {
   const [activities, setActivities] = useState([])
@@ -55,12 +56,7 @@ export default function Index() {
 
   return (
     <>
-      <header
-        className={`${styles.header} d-flex justify-content-between align-items-center px-5`}
-      >
-        <div className="h3">Beautique</div>
-        <div className="h5">Admin</div>
-      </header>
+      <AdminTitle/>
 
       <div className={styles['user-section']}>
         <Sidebar />

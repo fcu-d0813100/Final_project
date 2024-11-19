@@ -28,6 +28,7 @@
       align-items: center;
       justify-content: center;
       margin-right: 67px;
+      
 
       h4 {
         color: $green-700;
@@ -73,6 +74,7 @@
     .moretextArea {
       background: #f8f8f8;
       border-radius: 5px;
+      white-space: pre-line;
 
       h4 {
         margin-bottom: 50px;

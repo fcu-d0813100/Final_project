@@ -164,8 +164,8 @@ router.post('/create-review/:productId/:colorId', upload, async function (req, r
 
     // 插入評論到 review 表
     const sqlInsertReview = `
-      INSERT INTO review (order_item_id, comment, rating, review_date, review_likes)
-      VALUES (${order_id}, '${comment}', ${rating}, NOW(), 0)
+      INSERT INTO review (order_item_id, color_id, comment, rating, review_date, review_likes)
+      VALUES (${order_id}, ${colorId}, '${comment}', ${rating}, NOW(), 0)
     `;
     const [reviewResult] = await db.query(sqlInsertReview, [orderItemId, comment, rating]);
     console.log('Insert Review Result:', reviewResult);
@@ -232,13 +232,13 @@ router.get('/product-list/reviews/:order_item_id/:productId/:colorId', async (re
       LEFT JOIN 
         review_file rf ON r.id = rf.review_id
       WHERE 
-        r.order_item_id = ${order_item_id} 
+        r.order_item_id = ${order_item_id} AND r.color_id = ${colorId}
       ORDER BY 
         r.review_date DESC;
     `;
 
     // 執行查詢
-    const [reviews] = await db.query(sqlSelect, [order_item_id]);
+    const [reviews] = await db.query(sqlSelect, [order_item_id], [colorId]);
 
     // 整理數據，將每個評論的媒體文件分組
     const reviewsWithMedia = [];
