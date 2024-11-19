@@ -10,6 +10,7 @@ export default function TimeSelect({
   hours = 0,
   registered = 0,
   max = 0,
+  id = '',
   onSelect,
 }) {
   // 狀態來追蹤是否被選取
@@ -18,20 +19,21 @@ export default function TimeSelect({
   // 處理點擊事件
   const handleClick = () => {
     if (!disabled) {
-      setIsActive(!isActive)
-      // 傳遞被選取的時間資料
-      if (!isActive) {
-        onSelect({
-          date,
-          beginTime,
-          endTime,
-        })
-      }
+      const nextActiveState = !isActive
+      setIsActive(nextActiveState)
+
+      const selected = nextActiveState
+        ? { id, date, beginTime, endTime } // 選中時傳遞完整資料
+        : null // 未選中時傳遞 null
+
+      console.log('選取的時間資料:', selected) // 檢查是否正確傳遞
+      onSelect(selected)
     }
   }
 
   return (
     <>
+      <div className='d-none'>{id}</div>
       <div className="col">
         <button
           className={`${

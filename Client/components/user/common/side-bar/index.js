@@ -18,25 +18,25 @@ import styles from './index.module.scss'
 const navLinks = [
   {
     href: '/user',
-    icon: <PiUser size={65} />,
+    icon: <PiUser size={68} />,
     label: '個人資訊',
     key: 'user',
   },
   {
     href: '/user/password',
-    icon: <PiLockOpen size={65} />,
+    icon: <PiLockOpen size={68} />,
     label: '變更密碼',
     key: 'password',
   },
   {
     href: '/user/order',
-    icon: <PiListMagnifyingGlass size={65} />,
+    icon: <PiListMagnifyingGlass size={68} />,
     label: '訂單查詢',
     key: 'order',
   },
   {
     href: '/user/favorite',
-    icon: <PiHeartStraight size={65} />,
+    icon: <PiHeartStraight size={68} />,
     label: '我的收藏',
     key: 'favorite',
   },
@@ -48,19 +48,19 @@ const navLinks = [
   // },
   {
     href: '/user/post',
-    icon: <PiListPlus size={65} />,
+    icon: <PiListPlus size={68} />,
     label: '我的貼文',
     key: 'post',
   },
   {
     href: '/user/activity',
-    icon: <PiClockCountdown size={65} />,
+    icon: <PiClockCountdown size={68} />,
     label: '活動紀錄',
     key: 'activity',
   },
   {
     href: '/user/coupon',
-    icon: <PiTicket size={65} />,
+    icon: <PiTicket size={68} />,
     label: '優惠券',
     key: 'coupon',
   },
