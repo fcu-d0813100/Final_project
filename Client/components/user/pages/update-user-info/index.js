@@ -104,7 +104,7 @@ export default function UpdateInfo({
     if (newCountryIndex > -1) {
       setUser((prevUser) => ({
         ...prevUser,
-        city: countries[newCountryIndex], // 更新 city
+        city: countries[newCountryIndex],
       }))
     }
   }
@@ -273,8 +273,6 @@ export default function UpdateInfo({
   const [showModal, setShowModal] = useState(false)
   const handleDeleteUser = async () => {
     try {
-      // console.log(`開始刪除用戶，ID: ${user.id}`)
-      // console.log('用戶刪除成功')
       toast.success('您已成功申請停權', {
         style: {
           padding: '12px 40px',
@@ -417,12 +415,12 @@ export default function UpdateInfo({
                     userId={user.id}
                     avatar={
                       user.img ? `http://localhost:3005/avatar/${user.img}` : ''
-                    } // 傳入 avatar 照片
+                    }
                     avatarBaseUrl="http://localhost:3005/avatar"
                     defaultImg="avatar01.jpg"
                     setSelectedFile={setSelectedFile}
                     selectedFile={selectedFile}
-                    photoUrl={user.photo_url} // 傳入 photo_url
+                    photoUrl={user.photo_url}
                   />
                 </div>
               </div>
@@ -432,7 +430,7 @@ export default function UpdateInfo({
           <div
             className={`row ${styles['address-line']} d-flex align-items-center pb-3 my-5`}
           >
-            <h3 className={`h4 ${styles['center-title']} pb-2`}>收件資訊</h3>
+            <h3 className={`h4 ${styles['center-title']} pb-2`}>收件地址</h3>
           </div>
           <div
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}

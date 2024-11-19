@@ -4,12 +4,12 @@ import styles from './index.module.scss'
 
 export default function PreviewUploadImage({
   userId,
-  photoUrl, // 新增 photo_url 參數
-  avatarBaseUrl = 'http://localhost:3005/public/avatar', // 基礎URL指向你的本地服務器
+  photoUrl,
+  avatarBaseUrl = 'http://localhost:3005/public/avatar',
   defaultImg = 'avatar01.jpg',
   setSelectedFile,
   selectedFile,
-  avatar, // 新增 avatar 參數
+  avatar,
 }) {
   const [preview, setPreview] = useState('')
   const [useDefaultAvatar, setUseDefaultAvatar] = useState(false) // 控制是否使用預設頭貼
@@ -63,7 +63,6 @@ export default function PreviewUploadImage({
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
-
     if (!file) {
       setSelectedFile(null)
       setError('未選擇任何檔案')
@@ -94,14 +93,13 @@ export default function PreviewUploadImage({
     setError('') // 清空錯誤訊息
   }
 
-  // const handleResetImage = async () => { setSelectedFile(null); setUseDefaultAvatar(true); setError(''); // 將預設頭像 URL 傳送到後端 try { await updateAvatar(userId, `${defaultImg}`); } catch (error) { setError('無法更新頭像，請重試'); } };
-
   return (
     <>
       <div className={styles['image-upload']}>
         <label htmlFor="file-input">
           <div className={styles['image-container']}>
             <Image
+              key={preview}
               width={255}
               height={255}
               className={styles.avatar}
@@ -109,13 +107,6 @@ export default function PreviewUploadImage({
               alt="User Avatar"
               priority
             />
-            {/* <button
-              type="button"
-              className={styles['reset-button']}
-              onClick={handleResetImage}
-            >
-              &times;
-            </button> */}
           </div>
         </label>
         <input

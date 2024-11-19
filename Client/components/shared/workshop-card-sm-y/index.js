@@ -7,7 +7,7 @@ import {
 } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { useFavoriteWorkshop } from '@/hooks/use-favorite-workshop'
+// import { useFavoriteWorkshop } from '@/hooks/use-favorite-workshop'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 export default function WorkshopCardSm({
@@ -19,9 +19,11 @@ export default function WorkshopCardSm({
   endDate = '',
   price = '',
   status = '',
+  favoriteWorkshop,
+  handleFavoriteWorkshopClick,
 }) {
-  const { favoriteWorkshop, handleFavoriteWorkshopClick } =
-    useFavoriteWorkshop()
+  // const { favoriteWorkshop, handleFavoriteWorkshopClick } =
+  //   useFavoriteWorkshop()
   return (
     <>
       <Link
