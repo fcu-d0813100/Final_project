@@ -325,9 +325,11 @@ export default function UpdateInfo({
           encType="multipart/form-data"
         >
           <div className="mt-5 container-fluid">
-            <div className="row justify-content-center align-items-center">
-              <div className="col-9 pe-3 d-flex flex-wrap">
-                <div className={`col-4 ${styles.info} `}>
+            <div className={`${styles['form-container']} row`}>
+              <div
+                className={`${styles['form-content']} col-sm-9 col-12 pe-md-3 pe-0 d-flex flex-wrap`}
+              >
+                <div className={`col-md-4 col-6 ${styles.info}`}>
                   <label htmlFor="name" className="form-label pb-2 fw-bold ">
                     姓名 <span className=" ps pe-4 fw-bold ">| name</span>
                   </label>
@@ -340,7 +342,7 @@ export default function UpdateInfo({
                     value={user.name}
                   />
                 </div>
-                <div className={`col-4 ${styles.info} `}>
+                <div className={`col-md-4 col-6  ${styles.info}`}>
                   <label htmlFor="nickname" className="form-label pb-2 fw-bold">
                     暱稱 <span className="ps pe-4 fw-bold">| nickname</span>
                   </label>{' '}
@@ -352,7 +354,7 @@ export default function UpdateInfo({
                     className={`form-control ${styles['form-control2']} `}
                   />
                 </div>
-                <div className={`col-4 ${styles.info} `}>
+                <div className={`col-md-4  col-6 ${styles.info} mt-md-0 mt-5 `}>
                   <label htmlFor="title " className="form-label pb-2 fw-bold">
                     稱謂 <span className=" ps pe-4 fw-bold">| title</span>
                   </label>{' '}
@@ -367,8 +369,12 @@ export default function UpdateInfo({
                     <option value="2">女士</option>
                   </select>
                 </div>
-                <div className={`col-3 ${styles.info} mt-5`}>
-                  <label htmlFor="birthday" className="form-label pb-2 fw-bold">
+                {/*  */}
+                <div className={`col-6 col-md-3  ${styles.info} mt-5`}>
+                  <label
+                    htmlFor="birthday"
+                    className={`form-label pb-2 fw-bold`}
+                  >
                     生日 <span className=" ps pe-4 fw-bold">| birthday</span>
                   </label>{' '}
                   <input
@@ -379,7 +385,7 @@ export default function UpdateInfo({
                     onChange={handleFieldChange}
                   />
                 </div>
-                <div className={`col-3 ${styles.info} mt-5`}>
+                <div className={`col-12 col-md-3 ${styles.info} mt-5`}>
                   <label htmlFor="phone" className="form-label pb-2 fw-bold">
                     手機 <span className=" ps pe-4 fw-bold">| phone</span>
                   </label>{' '}
@@ -392,7 +398,7 @@ export default function UpdateInfo({
                     name="phone"
                   />
                 </div>
-                <div className={`col-6 ${styles.info} mt-5`}>
+                <div className={`col-md-6 col-12 ${styles.info} mt-5`}>
                   <label htmlFor="email" className="form-label pb-2 fw-bold">
                     信箱 <span className=" ps pe-5 fw-bold">| email</span>
                   </label>{' '}
@@ -407,8 +413,8 @@ export default function UpdateInfo({
                 </div>
               </div>
 
-              <div className="col-3 d-flex justify-content-center align-items-center">
-                <div className="ratio ratio-1x1 w-75">
+              <div className={`${styles['avatar-area']}  col-0 col-md-3  `}>
+                <div className={`${styles['avatar']} ratio ratio-1x1 w-75`}>
                   <PreviewUploadImage
                     userId={user.id}
                     avatar={
@@ -433,7 +439,9 @@ export default function UpdateInfo({
           <div
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
           >
-            <div className={`col ${styles.info} ${styles['address-margin']}`}>
+            <div
+              className={`col-6 col-md-3 ${styles.info} ${styles['address-margin']}`}
+            >
               <label htmlFor="city" className={`form-label pb-2 fw-bold`}>
                 縣市
                 <span className={`ps fw-bold ${styles['info-address']}`}>
@@ -454,7 +462,9 @@ export default function UpdateInfo({
                 ))}
               </select>
             </div>
-            <div className={`col ${styles.info} ${styles['address-margin']}`}>
+            <div
+              className={`col-6 col-md-3 ${styles.info} ${styles['address-margin']}`}
+            >
               <label htmlFor="area" className={`form-label pb-2 fw-bold`}>
                 區域
                 <span className={`ps fw-bold ${styles['info-address']}`}>
@@ -476,7 +486,9 @@ export default function UpdateInfo({
                   ))}
               </select>
             </div>
-            <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
+            <div
+              className={`col-12 col-md-6 ${styles.info} ${styles['address-margin']}`}
+            >
               <label htmlFor="address" className={`form-label pb-2 fw-bold`}>
                 地址
                 <span className={`ps ${styles['info-address']} fw-bold`}>
