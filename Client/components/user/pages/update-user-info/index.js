@@ -82,7 +82,6 @@ export default function UpdateInfo({
     address: '',
     create_at: '',
     updated_at: 'Now()',
-    // points: '',
   })
   // 錯誤訊息狀態
   const [errors, setErrors] = useState({
@@ -117,7 +116,7 @@ export default function UpdateInfo({
     if (newTownshipIndex > -1) {
       setUser((prevUser) => ({
         ...prevUser,
-        area: townships[countryIndex][newTownshipIndex], // 更新 area
+        area: townships[countryIndex][newTownshipIndex],
       }))
     }
   }
@@ -161,9 +160,9 @@ export default function UpdateInfo({
         if (resData.status === 'success') {
           toast.success('會員頭像修改成功', {
             style: {
-              border: '1.2px solid #90957a',
               padding: '12px 40px',
               color: '#626553',
+              fontSize: '18px',
             },
             iconTheme: {
               primary: '#626553',
@@ -177,9 +176,9 @@ export default function UpdateInfo({
           // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
           toast.error('更新失敗，請稍後再試', {
             style: {
-              border: '1.2px solid #90957a',
               padding: '12px 40px',
               color: '#963827',
+              fontSize: '18px',
             },
             iconTheme: {
               primary: '#963827',
@@ -195,9 +194,9 @@ export default function UpdateInfo({
       if (resData.status === 'success') {
         toast.success('您已更新個人資料', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -211,9 +210,9 @@ export default function UpdateInfo({
         // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
         toast.error('更新失敗，請稍後再試', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -225,9 +224,9 @@ export default function UpdateInfo({
       // console.error('更新失敗:', error)
       toast.error('更新失敗，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -278,9 +277,9 @@ export default function UpdateInfo({
       // console.log('用戶刪除成功')
       toast.success('您已成功申請停權', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#626553',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#626553',
@@ -294,9 +293,9 @@ export default function UpdateInfo({
       // console.error('刪除過程中發生錯誤:', error)
       toast.error('刪除過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',

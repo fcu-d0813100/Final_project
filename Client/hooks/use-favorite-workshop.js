@@ -55,11 +55,14 @@ export function useFavoriteWorkshop() {
     if (!auth.isAuth) {
       toast.error('請先登入以使用收藏功能', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
-        iconTheme: { primary: '#963827', secondary: '#fff' },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
       })
       router.push('/user/login/user')
       return
@@ -88,11 +91,14 @@ export function useFavoriteWorkshop() {
 
         toast.success('已移除收藏', {
           style: {
-            border: '1.2px solid #626553',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
-          iconTheme: { primary: '#626553', secondary: '#fff' },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
         })
       } else {
         // 新增收藏
@@ -107,11 +113,14 @@ export function useFavoriteWorkshop() {
 
         toast.success('您已收藏此課程', {
           style: {
-            border: '1.2px solid #626553',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
-          iconTheme: { primary: '#626553', secondary: '#fff' },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
         })
       }
     } catch (error) {

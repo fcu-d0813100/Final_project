@@ -108,8 +108,8 @@ const CommentBoard = ({orderItemId, productId, colorId, brand, productName, colo
     }
     await submitReview(productId, colorId, { 
       ...reviewData, 
-      order_id: orderItemId, // 确保发送正确的 order_item_id
-      user_id: auth.userData.id, // 添加用户 ID
+      order_id: orderItemId,  
+      user_id: auth.userData.id, 
     }, mediaFiles);
     fetchReviews();
   };
@@ -144,7 +144,7 @@ const CommentBoard = ({orderItemId, productId, colorId, brand, productName, colo
   //       setFilteredReviews(updatedReviews);
   //     } else {
   //       console.error('更新點讚失敗');
-  //     }
+  //     } 
   //   } catch (error) {
   //     console.error('點讚時出錯:', error);
   //   }
@@ -241,7 +241,7 @@ const CommentBoard = ({orderItemId, productId, colorId, brand, productName, colo
                             Your browser does not support the video tag.
                           </video>
                         ) : (
-                          <img
+                          <Image
                             key={media.id}
                             src={`http://localhost:3005/upload/reviews/images/${media.file_name}`}
                             alt="Review media"
