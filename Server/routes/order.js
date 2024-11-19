@@ -87,9 +87,10 @@ router.get('/detail/:orderId', async function (req, res, next) {
     o.order_number,
     o.total_amount,
     o.shipping_address,
-      o.status,
-    u.name,
-    u.phone,
+    o.status,
+    o.recipient_name AS name,
+    o.phone,
+    o.email,
     cp.id as coupon_id,
     cp.discount_value,
     pm.method as payment,
@@ -132,7 +133,7 @@ LEFT JOIN
 LEFT JOIN 
     workshop_time ON oi.workshop_id = workshop_time.id
 LEFT JOIN 
-    workshop w ON workshop_time.workshop_id = w.id
+     workshop w ON workshop_time.workshop_id = w.id
 JOIN 
     user u ON o.user_id = u.id
 JOIN
@@ -151,6 +152,10 @@ WHERE
     o.id = ${orderId}
 GROUP BY 
     o.id;`
+//     LEFT JOIN 
+//     workshop_time ON oi.workshop_id = workshop_time.workshop_id
+// LEFT JOIN 
+//     workshop w ON workshop_time.workshop_id = w.id
         const [result] = await db.query(sqlSelect, [orderId]) // 使用參數化查詢
 
         // 檢查結果

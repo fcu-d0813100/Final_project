@@ -48,7 +48,7 @@ export default function ItemDiscount({
                     </div>
                 </div>
             </div>
-            <div className={`${styles.count} text-center`}>x{quantity}</div>
+            <div className={`${styles.count} text-center h6`}>x{quantity}</div>
             <div className={`${styles['sub-total']} text-end h6`}>
                 <del className={`p ${styles.del}`}>NT$ {originalPrice}
                 </del> NT$ {discountedPrice}

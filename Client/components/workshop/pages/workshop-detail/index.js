@@ -71,13 +71,13 @@ export default function WorkshopDetail() {
     console.log('加入購物車前的 selectedTime:', selectedTime)
     if (selectedTime) {
       onAddWorkshop({
-        id: tworkshop.id,
+        id: selectedTime.id,
         name: tworkshop.name,
         date: selectedTime.date,
         beginTime: selectedTime.beginTime,
         endTime: selectedTime.endTime,
         typeId: tworkshop.type_id,
-        classId: selectedTime.id,
+        // classId: selectedTime.id,
         price: tworkshop.price,
         cover: tworkshop.img_cover,
         teacher: tworkshop.teacher_name,

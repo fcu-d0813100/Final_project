@@ -11,14 +11,21 @@ const WheelOfFortune = () => {
   const [coupon, setCoupon] = useState(null); // 存儲獲得的優惠券
   const [showModal, setShowModal] = useState(false); // 控制 modal 顯示與隱藏
   const { auth } = useAuth(); // 假設 useAuth hook 會提供用戶的認證狀態
-  const router = useRouter();
   const [hasPlayedToday, setHasPlayedToday] = useState(false); // 是否已經玩過
   const [playHistory, setPlayHistory] = useState([]); // 儲存遊玩歷史
   const [historyVisible, setHistoryVisible] = useState(false); // 控制遊玩歷史顯示或隱藏
   const [autoRotating, setAutoRotating] = useState(true); // 控制是否啟動自動旋轉
-
   const wheelRef = useRef(null); // 用於引用轉盤 DOM 元素
   const autoRotateIntervalRef = useRef(null); // 用來管理自動旋轉的 interval
+
+  // const [auth, setAuth] = useState({
+  //   isAuth: false, // 表示是否已登入
+  //   userData: {
+  //     identity: '', // 身分：如 admin、teacher
+  //   },
+  // })
+  const router = useRouter();
+
 
   // 優惠券項目
   const coupons = [
@@ -79,12 +86,12 @@ const WheelOfFortune = () => {
 
     // 檢查用戶是否已登入
     if (!auth.isAuth) {
-     // 如果用戶未登入，顯示登入提示 Modal
-     setShowModal(true);
+      // 如果用戶未登入，顯示登入提示 Modal
+      setShowModal(true);
       return; // 停止執行，避免未登入的用戶進行旋轉
     }
 
- 
+
     // 檢查用戶今天是否已經玩過遊戲
     const today = new Date().toISOString().slice(0, 10); // 取得今天的日期（YYYY-MM-DD）
     const lastPlayedDate = localStorage.getItem('lastPlayedDate'); // 讀取 localStorage 中的最後遊玩日期

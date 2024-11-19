@@ -1,0 +1,49 @@
+@import '@/styles/_variant.scss';
+
+.header {
+  background-color: #626553;
+  height: 72px;
+  color: $gray-100;
+}
+.main {
+  padding: 70px 120px;
+  padding-left: 420px;
+  margin: auto;
+  .section1 {
+    padding-inline: 80px;
+    padding-block: 50px;
+
+    .uploadMainInfo {
+      margin-left: 80px;
+
+      .subtitle {
+        border-bottom: 1px solid $green-600;
+        padding-inline: 30px;
+        padding-block: 5px;
+        margin-bottom: 30px;
+        h4 {
+          color: $green-700;
+        }
+      }
+      .inputArea {
+        padding-inline: 30px;
+      }
+    }
+  }
+  .section02 {
+    padding-inline: 80px;
+    padding-block: 50px;
+
+    .workshopDetail {
+      background-color: #f8f8f8;
+      border-radius: 5px;
+    }
+  }
+  .section03 {
+    padding-inline: 80px;
+    padding-block: 50px;
+    h4 {
+      color: $green-700;
+    }
+  }
+}

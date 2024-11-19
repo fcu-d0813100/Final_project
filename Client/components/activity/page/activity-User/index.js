@@ -137,7 +137,7 @@ export default function Index(props) {
                               >
                                 {item.CHN_name}
                                 <div
-                                  className={styles['heart-icon']}
+                                  className={`${styles['heart-icon']} me-3`}
                                   onClick={() =>
                                     toggleHeart(item.id, item.is_favorite)
                                   }
