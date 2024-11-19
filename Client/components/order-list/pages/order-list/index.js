@@ -5,6 +5,7 @@ import OrderSection from '@/components/order-list/common/order-section'; // 訂�
 import Nav from 'react-bootstrap/Nav'; // 引入Bootstrap的Nav組件，用於導航
 import { useAuth } from '@/hooks/use-auth'; // 自定義的驗證Hook，用來獲取用戶信息
 import { HiMiniMagnifyingGlass } from "react-icons/hi2"; // 引入放大鏡圖標
+import Link from 'next/link';
 
 export default function OrderList() {
     const { auth } = useAuth(); // 使用useAuth hook來獲取用戶的驗證信息
@@ -15,7 +16,7 @@ export default function OrderList() {
     const [searchTerm, setSearchTerm] = useState(''); // 用來保存搜尋框的內容
 
     // 從 AuthContext 獲取 userId
-    const userId = auth.isAuth ? auth.userData.id : null; 
+    const userId = auth.isAuth ? auth.userData.id : null;
     console.log("用戶 ID 從 auth:", userId); // 打印 userId 來確認
 
     const handleSelect = (key) => {
@@ -34,10 +35,10 @@ export default function OrderList() {
         // 根據訂單編號或商品名稱過濾
         const filtered = filteredByStatus.filter(order => {
             const orderMatches = order.order_number.includes(search); // 訂單編號匹配
-            const itemMatches = order.items.some(item => 
+            const itemMatches = order.items.some(item =>
                 item.product_name.toLowerCase().includes(search.toLowerCase()) // 商品名稱匹配
             );
-            const worckshopMatches = order.items.some(item => 
+            const worckshopMatches = order.items.some(item =>
                 item.type.toLowerCase().includes(search.toLowerCase()) // 商品名稱匹配
             );
             return orderMatches || itemMatches || worckshopMatches; // 任一條件匹配即可
@@ -134,7 +135,23 @@ export default function OrderList() {
                         />
                     ))
                 ) : (
-                    <div className='d-flex justify-content-center m-5'>暫無訂單</div> // 如果沒有匹配的訂單，顯示無訂單訊息
+                    <>
+                        <div className={`row ${styles.line}`}>
+                            <div
+                                className={`col-12 ${styles['favorite-area']} d-flex justify-content-center align-items-center`}
+                            >
+                                <h5 className="h5">目前沒有訂單資料</h5>
+                            </div>
+                            <div className="col-12 d-flex justify-content-center align-items-center mt-5">
+                                <h5 className="p">您在本商城沒有訂單，快去購買喜愛的商品吧</h5>
+                            </div>
+                            <div className="col-12 d-flex justify-content-center align-items-center my-5">
+                                <Link href="/product/product-list" passHref>
+                                    <button className="btn-primary h6">前往收藏</button>
+                                </Link>
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
         </OrderSection>
