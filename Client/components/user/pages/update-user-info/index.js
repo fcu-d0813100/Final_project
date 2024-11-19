@@ -8,8 +8,6 @@ import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
 import PreviewUploadImage from '@/components/user/common/preview-upload-image'
-// import utils from '@/components/cart/common/tw-zipcode'
-// import dataTownships from '@/components/cart/common/tw-zipcode'
 import {
   countries,
   townships,
@@ -315,7 +313,7 @@ export default function UpdateInfo({
     setUser(user)
     setTimeout(() => {
       router.push('/user')
-    }, 1500)
+    }, 2000)
   }
 
   return (
