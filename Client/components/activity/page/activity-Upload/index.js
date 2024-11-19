@@ -6,7 +6,7 @@ import SelectInput from '@/components/activity/common/inputSelect'
 import InputStyle from '@/components/activity/common/inputStyle'
 import Textarea from '@/components/activity/common/Textarea'
 import { PiArrowRight } from 'react-icons/pi'
-import styles from '@/components/teacher/common/upload.module.scss'
+import styles from '@/components/activity/page/activity-Upload/index.module.scss'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
 import Sidebar from '@/components/activity/common/Sidebar'
 import Swal from 'sweetalert2'
@@ -188,20 +188,23 @@ export default function Upload(props) {
             <DashboardTitle chTitle="活動上架" enTitle="New activity" />
             <div className={`${styles.section1} d-flex align-items-end`}>
               <UploadImg
-                width="445px"
-                height="320px"
+                width="100px"
+                height="10Y0px"
+                // 445 320
                 onFileChange={handleFileChange}
                 hasError={!!errors.maxREG}
               />
-
+            </div>
+            <hr className="opacity-75" />
+            <div className={`${styles.section02}`}>
               <div className={`${styles.uploadMainInfo} flex-grow-1`}>
                 <div className={styles.subtitle}>
-                  <h4 className="h4 pb-2">主要資訊</h4>
+                  <h4 className="h4 mb-4 pb-2">主要資訊</h4>
                 </div>
                 <div className={styles.inputArea}>
-                  <div className="container d-flex justify-content-between gap-3 mb-3">
+                  <div className="container d-flex justify-content-between mb-3">
                     <InputStyle
-                      addclass="col-4"
+                      addclass="col-4 me-2"
                       forText="name"
                       titleCh="活動中文名稱"
                       titleEn=" | name"
@@ -212,7 +215,7 @@ export default function Upload(props) {
                       hasError={!!errors.CHN_name}
                     />
                     <InputStyle
-                      addclass="col-4"
+                      addclass="col-4 ms-2 me-2"
                       forText="name"
                       titleCh="活動英文名稱"
                       titleEn=" | name"
@@ -223,7 +226,7 @@ export default function Upload(props) {
                       hasError={!!errors.ENG_name}
                     />
                     <InputStyle
-                      addclass="col-4"
+                      addclass="col-4 ms-2 me-1"
                       forText="price"
                       titleCh="活動名額"
                       titleEn=" | amount"
@@ -235,9 +238,9 @@ export default function Upload(props) {
                     />
                   </div>
 
-                  <div className="container d-flex gap-4 mb-3">
+                  <div className="container d-flex  align-items-end justify-content-between  mb-3">
                     <SelectInput
-                      addClass="col-5"
+                      addClass="col-5 me-1"
                       forText="type"
                       titleCh="活動品牌"
                       titleEn="brand"
@@ -245,8 +248,11 @@ export default function Upload(props) {
                       onChange={handleInputChange}
                       hasError={!!errors.brand}
                     />
+                    <p className="col d-flex justify-content-center align-items-center opacity-0">
+                      <PiArrowRight className="ph" />
+                    </p>
                     <InputStyle
-                      addclass="col-7"
+                      addclass="col-7 ms-1"
                       forText="address"
                       titleCh="活動地點"
                       titleEn=" | address"
@@ -257,9 +263,9 @@ export default function Upload(props) {
                       hasError={!!errors.address}
                     />
                   </div>
-                  <div className="container d-flex align-items-end justify-content-between gap-2">
+                  <div className="container d-flex align-items-end justify-content-between ">
                     <InputStyle
-                      addclass="col-5 me-1"
+                      addclass="col-6 me-1"
                       forText="start_at"
                       titleCh="報名開始時間"
                       titleEn=" | registration start"
@@ -269,11 +275,11 @@ export default function Upload(props) {
                       onChange={handleInputChange}
                       hasError={!!errors.start_at}
                     />
-                    <p className="col- d-flex justify-content-center align-items-center">
+                    <p className="col d-flex justify-content-center align-items-center">
                       <PiArrowRight className="ph" />
                     </p>
                     <InputStyle
-                      addclass="col-5 ms-1"
+                      addclass="col-6 ms-1"
                       forText="end_at"
                       titleCh="報名結束時間"
                       titleEn=" | registration end"
@@ -286,10 +292,7 @@ export default function Upload(props) {
                   </div>
                 </div>
               </div>
-            </div>
-            <hr className="opacity-75" />
-            <div className={`${styles.section02}`}>
-              <div className={`${styles.workshopDetail} p-5`}>
+              <div className={`${styles.workshopDetail} ms-3 mt-5 p-5`}>
                 <Textarea
                   addclass="mb-4"
                   title="課程簡介"
