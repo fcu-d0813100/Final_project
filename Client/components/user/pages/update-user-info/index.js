@@ -430,7 +430,7 @@ export default function UpdateInfo({
           <div
             className={`row ${styles['address-line']} d-flex align-items-center pb-3 my-5`}
           >
-            <h3 className={`h4 ${styles['center-title']} pb-2`}>收件地址</h3>
+            <h3 className={`h4 ${styles['center-title']} pb-2`}>收件資訊</h3>
           </div>
           <div
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
