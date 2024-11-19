@@ -45,7 +45,7 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
             } else if (item.wid) {
                 // 工作坊商品，加入 workshopCartItems 陣列
                 WorkshopCartItems.push({
-                    id: item.wid,
+                    id: item.wt_id,
                     typeId: item.type_id,
                     cover: `${item.img_cover}`, // 工作坊圖片路徑
                     name: item.type, // 工作坊類型名稱
