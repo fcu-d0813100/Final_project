@@ -11,15 +11,6 @@ export default function BuyRule(props) {
     setIsChecked(!isChecked) // 切換勾選狀態
   }
 
-  // 確保勾選框必須勾選
-  const handleSubmit = () => {
-    if (!isChecked) {
-      alert('您必須同意條款與條件才能繼續!')
-      return
-    }
-    // 提交邏輯...
-  }
-
   return (
     <>
       <div className={style['buy-rule']}>
