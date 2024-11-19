@@ -790,6 +790,7 @@ router.put(
     }
   }
 )
+
 // 加入收藏
 router.post('/favorite/:workshop_id/:user_id', async (req, res) => {
   const { workshop_id, user_id } = req.params

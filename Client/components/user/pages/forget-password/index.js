@@ -39,9 +39,9 @@ export default function ForgetPassword() {
     if (delay !== null) {
       toast.error(' 60s內無法重新獲得驗證碼', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -59,9 +59,9 @@ export default function ForgetPassword() {
     if (res.data.status === 'success') {
       toast.success('驗證碼已寄送到電子郵件中', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#626553',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#626553',
@@ -74,9 +74,9 @@ export default function ForgetPassword() {
     } else {
       toast.error(`${res.data.message}`, {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -92,9 +92,9 @@ export default function ForgetPassword() {
     if (!email) {
       toast.error('請填寫電子郵件', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -108,9 +108,9 @@ export default function ForgetPassword() {
     if (!token) {
       toast.error('請填寫驗證碼', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -122,9 +122,9 @@ export default function ForgetPassword() {
     if (!password || !confirmPassword) {
       toast.error('密碼欄位為必填', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -137,9 +137,9 @@ export default function ForgetPassword() {
     if (password !== confirmPassword) {
       toast.error('新密碼與確認密碼不同', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -154,11 +154,11 @@ export default function ForgetPassword() {
     // console.log(res.data)
 
     if (res.data.status === 'success') {
-      toast.success('密碼已成功修改，請重新登入', {
+      toast.success('密碼已成功修改', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#626553',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#626553',
@@ -171,9 +171,9 @@ export default function ForgetPassword() {
     } else {
       toast.error(` ${res.data.message}`, {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',

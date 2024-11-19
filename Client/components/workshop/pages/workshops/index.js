@@ -6,6 +6,7 @@ import styles from '@/components/workshop/common/workshops.module.scss'
 import WorkshopsBN from '@/components/workshop/common/workshop-bn'
 import WorkshopCardLg from '@/components/shared/workshop-card-lg'
 import React, { useState, useEffect } from 'react'
+import Pagination from '@/components/shared/pagination'
 
 export default function WorkshopAll(props) {
   const [workshop, setWorkshop] = useState([])
@@ -19,6 +20,20 @@ export default function WorkshopAll(props) {
   const [selectedOrder, setSelectedOrder] = useState('排序')
   const [selectedType, setSelectedType] = useState('類型')
   const [selectedStatus, setSelectedStatus] = useState('狀態')
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(12)
+  const currentItems = workshop.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+  const filteredWorkshops = workshop.filter((item) => {
+    const datesArray = item.dates ? item.dates.split(',') : []
+    const endDate =
+      datesArray.length > 0 ? new Date(datesArray.slice(-1)[0]) : null
+
+    return !endDate || endDate >= new Date() // 排除已結束的課程
+  })
 
   useEffect(() => {
     fetchData()
@@ -164,8 +179,8 @@ export default function WorkshopAll(props) {
 
       <div className={`${styles.section03} container`}>
         <div className={`${styles.tOwnWorkshops} row row-cols-3 mt-4 mb-5`}>
-          {workshop.length > 0 ? (
-            workshop.map((item) => {
+          {currentItems.length > 0 ? (
+            currentItems.map((item) => {
               // 將 dates 字串轉換成陣列
               const datesArray = item.dates ? item.dates.split(',') : []
 
@@ -220,6 +235,13 @@ export default function WorkshopAll(props) {
             </p>
           )}
         </div>
+        {/* 分頁元件 */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(filteredWorkshops.length / itemsPerPage)}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+        <div className="my-5 py-1"></div>
       </div>
     </>
   )

@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react'
 export default function Page1({ onNextPage }) {
   const role = 'teacher'
   const { auth, login, logout } = useAuth()
-  const { userData } = auth // 撈取 teacherData 資料
+  const { userData } = auth // 撈取 teacherData
   console.log(auth)
 
   const [teacher, setTeacher] = useState(null)

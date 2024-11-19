@@ -9,25 +9,19 @@ export function useFavoriteWorkshop() {
   const [favoritesWorkshopList, setfavoritesWorkshopList] = useState([]) // 儲存收藏列表
   const router = useRouter()
 
-  // useEffect(() => {
-  //   if (auth.isAuth) {
-  //     fetchFavoritesWorkshop() // 當使用者登入時，抓取收藏列表
-  //   } else if (Object.keys(favoriteWorkshop).length > 0) {
-  //     // 如果 favoriteWorkshop 狀態變更時不希望自動觸發 API 抓取，可以加額外條件
-  //     console.log('收藏狀態已更新，但不需重新抓取')
-  //   }
-  // }, [auth.isAuth, favoriteWorkshop])
-
   useEffect(() => {
     if (auth.isAuth) {
-      fetchFavoritesWorkshop()
+      fetchFavoritesWorkshop() // 當使用者登入時，抓取收藏列表
+    } else if (Object.keys(favoriteWorkshop).length > 0) {
+      // 如果 favoriteWorkshop 狀態變更時不希望自動觸發 API 抓取，可以加額外條件
+      console.log('收藏狀態已更新，但不需重新抓取')
     }
-  }, [auth.isAuth])
+  }, [auth.isAuth, favoriteWorkshop])
 
-  useEffect(() => {
-    // 當 favoriteWorkshop 狀態變更時，重新抓取收藏列表
-    fetchFavoritesWorkshop()
-  }, [favoriteWorkshop])
+  // useEffect(() => {
+  //   // 當 favoriteWorkshop 狀態變更時，重新抓取收藏列表
+  //   fetchFavoritesWorkshop()
+  // }, [favoriteWorkshop])
 
   // useEffect(() => {
   //   if (auth.isAuth) {
@@ -44,7 +38,7 @@ export function useFavoriteWorkshop() {
       setfavoritesWorkshopList(data)
       setFavoriteWorkshop(
         data.reduce((acc, workshop) => {
-          acc[workshop.workshop_id] = true // 確保使用的是 workshop_id
+          acc[workshop.workshop_id] = true
           return acc
         }, {})
       )
@@ -54,20 +48,22 @@ export function useFavoriteWorkshop() {
   }
 
   const handleFavoriteWorkshopClick = async (workshop) => {
-    const { workshop_id } = workshop // 直接從 workshop 中提取 workshop_id
+    const { workshop_id } = workshop
     console.log('Workshop details:', workshop)
 
     if (!auth.isAuth) {
-      // 如果未登入，跳轉到登入頁面
       toast.error('請先登入以使用收藏功能', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
-        iconTheme: { primary: '#963827', secondary: '#fff' },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
       })
-      router.push('/user/login/user') // 跳轉到登入頁面
+      router.push('/user/login/user')
       return
     }
 
@@ -80,14 +76,12 @@ export function useFavoriteWorkshop() {
       if (favoriteWorkshop[workshop_id]) {
         // 移除收藏
         await removeFavoriteWorkshop(workshop_id, auth.userData.id)
-
         setFavoriteWorkshop((prevFavorites) => {
           const updatedFavorites = { ...prevFavorites }
-          delete updatedFavorites[workshop_id] // 根據 workshop_id 移除收藏
+          delete updatedFavorites[workshop_id]
           return updatedFavorites
         })
 
-        // 更新收藏列表並即時反映在介面上
         setfavoritesWorkshopList((prevList) =>
           prevList.filter((item) => item.workshop_id !== workshop_id)
         )
@@ -96,11 +90,14 @@ export function useFavoriteWorkshop() {
 
         toast.success('已移除收藏', {
           style: {
-            border: '1.2px solid #626553',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
-          iconTheme: { primary: '#626553', secondary: '#fff' },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
         })
       } else {
         // 新增收藏
@@ -108,19 +105,21 @@ export function useFavoriteWorkshop() {
 
         setFavoriteWorkshop((prevFavorites) => ({
           ...prevFavorites,
-          [workshop_id]: true, // 新增收藏時設為 true
+          [workshop_id]: true,
         }))
 
-        // 立即更新收藏列表並反映在介面上
         setfavoritesWorkshopList((prevList) => [...prevList, workshop])
 
         toast.success('您已收藏此課程', {
           style: {
-            border: '1.2px solid #626553',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
-          iconTheme: { primary: '#626553', secondary: '#fff' },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
         })
       }
     } catch (error) {
