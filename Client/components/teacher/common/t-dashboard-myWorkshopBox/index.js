@@ -1,4 +1,5 @@
 'use client'
+import DeleteModal from '@/components/shared/modal-delete'
 import {
   PiMagnifyingGlass,
   PiCaretDown,
@@ -24,7 +25,6 @@ export default function MyWorkshopBox({
   filterStatus,
   id,
   setWorkshop,
-
 }) {
   //----------吐司訊息
   const { upload1Toast } = ToastSuccess({
@@ -49,6 +49,7 @@ export default function MyWorkshopBox({
   })
 
   //------------------------------------------------------------
+  const [showModal, setShowModal] = useState(false)
   const [workshopStatus, setWorkshopStatus] = useState(false)
 
   //發佈課程
@@ -192,8 +193,7 @@ export default function MyWorkshopBox({
     valid1Toast()
   }
 
-  const handleSubmitisDelete = async (e) => {
-    e.preventDefault()
+  const handleSubmitisDelete = async () => {
 
     try {
       const response = await fetch(
@@ -237,19 +237,34 @@ export default function MyWorkshopBox({
   if (isUpload === 0) {
     statusText = '未發布'
     statusClass = styles.unUpload
-  } else if (now < regEnd) {
+  } else if (now >= regStart && now <= regEnd) {
     statusText = '報名中'
     statusClass = styles.registering
-  } else if (now >= regEnd && now <= endDateObj) {
+  } else if (now < regStart) {
+    statusText = '即將開課'
+    statusClass = styles.prepare
+  } else if (now > regEnd && now <= endDateObj) {
     statusText = '已截止'
     statusClass = styles.end
   } else if (now > endDateObj) {
     statusText = '已過期'
     statusClass = styles.expired
   }
+
   return (
     <>
       <form>
+        {showModal && (
+          <DeleteModal
+            title="刪除課程"
+            content={`刪除後將無法恢復，確定要刪除課程資訊嗎 ?`}
+            btnConfirm="確定刪除"
+            btnCancel="取消"
+            ConfirmFn={handleSubmitisDelete} // 直接傳入函式
+            show={showModal}
+            handleClose={() => setShowModal(false)}
+          />
+        )}
         <p name="id" className="d-none">
           {id}
         </p>
@@ -318,10 +333,11 @@ export default function MyWorkshopBox({
                   >
                     復原
                   </button>
+                  {/* onClick={handleSubmitisDelete} */}
                   <button
                     className={`${styles.deleteBtn} h6 mx-2 text-decoration-none`}
-                    type="submit"
-                    onClick={handleSubmitisDelete}
+                    type="button"
+                    onClick={() => setShowModal(true)}
                   >
                     永久刪除
                   </button>

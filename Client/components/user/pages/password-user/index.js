@@ -42,9 +42,9 @@ export default function Password() {
     if (!userPassword.new || !userPassword.origin || !userPassword.confirm) {
       toast.error('密碼欄位為必填', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -57,9 +57,9 @@ export default function Password() {
     if (userPassword.new !== userPassword.confirm) {
       toast.error('新密碼與確認密碼不同', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -79,9 +79,9 @@ export default function Password() {
     if (res.data.status === 'success') {
       toast.success('密碼修改成功', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#626553',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#626553',
@@ -92,9 +92,9 @@ export default function Password() {
     } else {
       toast.error('密碼修改失敗', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',

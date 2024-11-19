@@ -27,14 +27,36 @@ export default function LineLogin() {
 
     // 成功登出並回復初始會員狀態
     if (res.data.status === 'success') {
-      toast.success('已成功登出')
+      toast.success('已成功登出'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        }
 
       setAuth({
         isAuth: false,
         userData: initUserData,
       })
     } else {
-      toast.error('登出失敗')
+      toast.error('登出失敗'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 
@@ -68,17 +90,50 @@ export default function LineLogin() {
           userData,
         })
 
-        toast.success('已成功登入')
+        toast.success('已成功登入'),
+          {
+            style: {
+              padding: '12px 40px',
+              color: '#626553',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#626553',
+              secondary: '#fff',
+            },
+          }
       } else {
         console.error(
           '登入後無法得到會員資料:',
           res1.data.message || '未知錯誤'
         )
-        toast.error('登入後無法得到會員資料')
+        toast.error('登入後無法得到會員資料'),
+          {
+            style: {
+              padding: '12px 40px',
+              color: '#963827',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#963827',
+              secondary: '#fff',
+            },
+          }
       }
     } else {
       console.error('已是登入狀態或登入失敗:', res.data.message || '未知錯誤')
-      toast.error('已是登入狀態或登入失敗')
+      toast.error('已是登入狀態或登入失敗'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 

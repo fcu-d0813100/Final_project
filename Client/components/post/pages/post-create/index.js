@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { RxCross2, RxPlus } from 'react-icons/rx'
@@ -8,7 +8,11 @@ import UserSection from '@/components/user/common/user-section'
 import styles from './index.module.scss'
 import { useAuth } from '@/hooks/use-auth'
 import useAlert from '@/hooks/alert/use-alert'
+import useToast from '@/hooks/toast/use-toast'
+// import toast, { Toaster } from 'react-hot-toast' // 引入 toast
+
 export default function PostCreate(props) {
+  const showToast = useToast()
   // User Data
   const { auth } = useAuth()
   const userId = auth.userData.id
@@ -56,6 +60,7 @@ export default function PostCreate(props) {
       showAlert('請至少上傳一張圖片')
       return
     }
+    URL.revokeObjectURL(imgs[index])
     setImgs((prevImgs) => prevImgs.filter((_, i) => i !== index))
   }
   // tag delete
@@ -79,6 +84,11 @@ export default function PostCreate(props) {
     setImgs(newImgs)
     draggedItemIndex = null
   }
+  // image preview debounce
+  const imagePreview = useMemo(() => {
+    return imgs.map((img) => URL.createObjectURL(img))
+  }, [imgs])
+
   // title & content
   const titleHandle = (e) => {
     setTitle(e.target.value)
@@ -152,6 +162,8 @@ export default function PostCreate(props) {
       })
       if (response.ok) {
         // 成功處理後的操作
+        // toast.success('發布貼文成功')
+        // showToast('發布貼文成功', 'success')
         showAlert('發布貼文成功', <RiCheckboxCircleFill color="#90957A" />)
         router.push('/user/post') // 跳轉到 /success 頁面
       } else {
@@ -162,6 +174,7 @@ export default function PostCreate(props) {
       alert('提交錯誤，請再試一次！')
     }
   }
+
   return (
     <>
       <UserSection titleCN="我的貼文" titleENG="My Post">
@@ -209,7 +222,7 @@ export default function PostCreate(props) {
                         onDrop={(e) => dropHandle(e, index)}
                       >
                         <Image
-                          src={URL.createObjectURL(file)}
+                          src={imagePreview[index]}
                           width={98}
                           height={98}
                           alt="image"

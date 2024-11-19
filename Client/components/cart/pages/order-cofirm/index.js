@@ -140,10 +140,17 @@ export default function OrderComfirm() {
       <div className={style.step}>
         <Image
           src="/cart/step3.svg"
-          alt="Step2"
+          alt="Step1"
           width={1400}
-          height={300}
-          className="img-fluid d-none d-lg-block"
+          height={500}
+          className="img-fluid d-none d-md-block"
+        />
+        <Image
+          src="/cart/RWDstep.3.svg"
+          alt="Step1"
+          width={200}
+          height={400}
+          className="img-fluid d-md-none -block"
         />
       </div>
       <div className={style.outer}>
@@ -209,9 +216,7 @@ export default function OrderComfirm() {
                 <div className={style.payment}>
                   <div className={`h5 ${style['payment-topic']}`}>付款方式</div>
                   <div className={style.home}>
-                    {orderData?.paymentMethod === 'cod'
-                      ? '貨到付款'
-                      : '綠界 ecPay'}
+                    {orderData?.paymentMethod === 'cod' ? '貨到付款' : '信用卡'}
                   </div>
                 </div>
               </Form>
@@ -241,9 +246,7 @@ export default function OrderComfirm() {
               </div>
             </div>
 
-            <div
-              className={`mt-5 mb-5 d-xl-flex justify-content-end ${style['checkout_btn']}`}
-            >
+            <div className={`text-end  ${style['checkout_btn']}`}>
               <button
                 className="btn-primary"
                 onClick={() => router.push('/cart/checkout')}

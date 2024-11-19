@@ -27,7 +27,14 @@ const upload = multer({ storage: storage })
 router.use('/workshop', express.static(path.join(__dirname, 'public/workshop')))
 
 router.get('/', async function (req, res, next) {
-  const { search = '', order, min = '', max = '' } = req.query
+  const {
+    search = '',
+    order,
+    min = '',
+    max = '',
+    type_id = '',
+    status = '',
+  } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -37,7 +44,6 @@ router.get('/', async function (req, res, next) {
     teachers.id AS teacher_id,
     teachers.name AS teacher_name,
     GROUP_CONCAT(workshop_time.date ORDER BY workshop_time.date ASC) AS dates,
-    workshop_time.date,
     workshop.registration_start,
     workshop.registration_end,
     workshop.isUpload,
@@ -57,9 +63,46 @@ router.get('/', async function (req, res, next) {
      AND workshop.isUpload = 1
 `
 
-  // 若 min 和 max 存在，則加入日期範圍篩選條件
-  if (min && max) {
-    sqlSelect += ` AND workshop_time.date BETWEEN ? AND ?`
+  // 查詢預設的日期範圍
+  let dateRange = { min, max }
+  if (!min || !max) {
+    const dateQuery = `
+        SELECT 
+          MIN(workshop_time.date) AS minDate,
+          MAX(workshop_time.date) AS maxDate
+        FROM 
+          workshop
+        JOIN
+          workshop_time ON workshop_time.workshop_id = workshop.id
+        WHERE
+          workshop.valid = 1 AND workshop.isUpload = 1
+      `
+    const [dateResult] = await db.query(dateQuery)
+    if (!min) dateRange.min = dateResult.minDate
+    if (!max) dateRange.max = dateResult.maxDate
+  }
+
+  // 動態加入篩選條件
+  if (dateRange.min && dateRange.max) {
+    sqlSelect += ` AND workshop_time.date BETWEEN '${min}' AND '${max}'`
+  } else if (dateRange.min) {
+    sqlSelect += ` AND workshop_time.date >= '${min}'`
+  } else if (dateRange.max) {
+    sqlSelect += ` AND workshop_time.date <= '${max}'`
+  }
+
+  // 若有選擇 type_id，則加上 type_id 篩選條件
+  if (type_id) {
+    sqlSelect += ` AND workshop.type_id = ${type_id}`
+  }
+
+  // 若有選擇 status，則加上 status 篩選條件
+  if (status === 'open') {
+    sqlSelect += ` AND NOW() BETWEEN workshop.registration_start AND workshop.registration_end`
+  } else if (status === 'closed') {
+    sqlSelect += ` AND NOW() > workshop.registration_end`
+  } else if (status === 'prepare') {
+    sqlSelect += ` AND NOW() < workshop.registration_start`
   }
 
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
@@ -70,14 +113,16 @@ router.get('/', async function (req, res, next) {
   } else if (order === '2') {
     sqlSelect += ` ORDER BY workshop.price DESC` // 價格降冪
   } else if (order === '3') {
-    sqlSelect += ` ORDER BY workshop_time.date ASC` // 日期升冪
+    sqlSelect += ` ORDER BY workshop_time.date DESC` // 日期升冪
   }
 
   // 設置查詢參數
   const queryParams = [`%${search}%`, `%${search}%`, `%${search}%`]
-  if (min && max) {
-    queryParams.push(min, max) // 添加 min 和 max 到查詢參數
-  }
+
+  // 如果有 type_id 參數，將其加入 queryParams
+  // if (type_id) {
+  //   queryParams.push(type_id)
+  // }
 
   const result = await db
     .query(sqlSelect, queryParams)
@@ -85,9 +130,10 @@ router.get('/', async function (req, res, next) {
   res.json(result)
   //console.log(result)
 })
+
 router.get('/myWorkshop', authenticate, async function (req, res, next) {
   const id = req.user.id
-  const { search = '', order } = req.query
+  const { search = '', order = '', type_id = '', status = '' } = req.query
   let sqlSelect = `SELECT
     workshop.id,
     workshop.name,
@@ -112,10 +158,24 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
  LEFT JOIN
     workshop_type ON workshop.type_id = workshop_type.id
  WHERE
-     (workshop.name LIKE '%${search}%' OR teachers.name LIKE '%${search}%' OR workshop_type.type LIKE '%${search}%')
+     (workshop.name LIKE '%${search}%' OR workshop_time.date LIKE '%${search}%' OR workshop.price LIKE '%${search}%')
 
      AND teachers.id = ${id}
 `
+
+  // 若有選擇 type_id，則加上 type_id 篩選條件
+  if (type_id) {
+    sqlSelect += ` AND workshop.type_id = ${type_id}`
+  }
+
+  // 若有選擇 status，則加上 status 篩選條件
+  if (status === 'open') {
+    sqlSelect += ` AND NOW() BETWEEN workshop.registration_start AND workshop.registration_end`
+  } else if (status === 'closed') {
+    sqlSelect += ` AND NOW() > workshop.registration_end`
+  } else if (status === 'prepare') {
+    sqlSelect += ` AND NOW() < workshop.registration_start`
+  }
 
   sqlSelect += ` GROUP BY workshop.id, teachers.id, workshop.isUpload, workshop.valid`
 
@@ -125,7 +185,7 @@ router.get('/myWorkshop', authenticate, async function (req, res, next) {
   } else if (order === '2') {
     sqlSelect += ` ORDER BY workshop.price DESC` // 價格降冪
   } else if (order === '3') {
-    sqlSelect += ` ORDER BY workshop_time.date ASC` // 日期升冪
+    sqlSelect += ` ORDER BY workshop_time.date DESC` // 日期升冪
   }
 
   // 設置查詢參數
@@ -730,6 +790,7 @@ router.put(
     }
   }
 )
+
 // 加入收藏
 router.post('/favorite/:workshop_id/:user_id', async (req, res) => {
   const { workshop_id, user_id } = req.params
@@ -834,7 +895,5 @@ router.get('/favorite/search/:user_id', async (req, res) => {
     res.status(500).json({ message: '查詢過程中發生錯誤，請稍後再試' })
   }
 })
-
-
 
 export default router

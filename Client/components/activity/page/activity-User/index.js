@@ -94,7 +94,7 @@ export default function Index(props) {
       <UserSection titleCN="活動紀錄" titleENG="Activity favorite">
         <Tab.Container defaultActiveKey="/pdlike">
           <div className={styles['post-navbar']}>
-            <Nav variant="underline" className={`${styles['nav-item']} h6`}>
+            <Nav variant="underline" className={`${styles['nav-item']} h6 `}>
               <Nav.Item className={`${styles['nav-link']} `}>
                 <Nav.Link
                   className={`${styles['link-style']} `}

@@ -7,6 +7,9 @@
   border: 1px solid $gray-200;
   border-radius: 5px;
   color: $green-700;
+  .buy-rule-topic {
+    font-size: 20px;
+  }
   p {
     font-weight: 600;
     padding: 5px;
@@ -24,6 +27,32 @@
         border-color: $green-500;
         box-shadow: none;
       }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .buy-rule {
+    margin-block: 30px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .buy-rule {
+    margin-inline: 15px;
+    .buy-rule-topic {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    p {
+      font-size: 14px;
+      font-weight: 500;
+      padding: 2px;
+      line-height: 25px;
+    }
+    .buy-rule-checkbox {
+      font-weight: 500;
+      font-size: 14px;
     }
   }
 }

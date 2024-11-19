@@ -64,6 +64,7 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 4;
         overflow: hidden;
+        line-height: normal;
         @media (max-width: 390px) {
           -webkit-line-clamp: 1;
           height: 20px;

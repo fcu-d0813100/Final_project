@@ -2,7 +2,7 @@
 
 .dropdownTitle {
     height: 28px;
-    width: 120px;
+    width: 100%;
     padding-inline: 10px;
     text-decoration: none;
     color: white;
@@ -10,6 +10,7 @@
 
     .downIcon {
     padding-top: 3px;
+    margin-left: 10px;
     font-size: 22px;
   }
   }
@@ -27,4 +28,8 @@
     --bs-dropdown-link-hover-color: #4b4d3f;
     --bs-dropdown-link-hover-bg: #bfbfbf;
     --bs-dropdown-min-width: 9rem;
+  }
+  .firstOption{
+    --bs-dropdown-link-hover-bg: #4b4d3f;
+    --bs-dropdown-link-hover-color: #d8d8d8;
   }
