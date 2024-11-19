@@ -26,7 +26,7 @@ export default function InputStyle({
   }
 
   return (
-    <div className={`${styles.inputstyle} ${addclass}`}>
+    <div className={`${styles.inputstyle} ${styles.addclass} ${addclass}`}>
       <label htmlFor={forText} className="d-block p mb-2">
         {titleCh}
         <span>{titleEn}</span>

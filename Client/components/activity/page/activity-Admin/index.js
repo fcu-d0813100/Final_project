@@ -6,6 +6,7 @@ import styles from './index.module.scss'
 import UserCard from '../../common/userCard'
 import Sidebar from '@/components/activity/common/Sidebar'
 import UserTitle from '@/components/user/common/user-title'
+import Pagination from '@/components/shared/pagination'
 
 export default function Index() {
   const [activities, setActivities] = useState([])
@@ -52,6 +53,10 @@ export default function Index() {
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1)
   }
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+    console.log(`切換到頁碼: ${page}`)
+  }
 
   return (
     <>
@@ -91,7 +96,7 @@ export default function Index() {
           </div>
 
           {/* 控制page*/}
-          <div
+          {/* <div
             className="d-flex justify-content-center
            align-items-center gap-5  mt-5"
           >
@@ -112,6 +117,13 @@ export default function Index() {
             >
               下一頁
             </button>
+          </div> */}
+          <div className="mt-5">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
