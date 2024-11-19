@@ -158,9 +158,9 @@ export function AuthProvider({ children }) {
       if (resData.status === 'success') {
         toast.success('您已註冊成功', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -173,9 +173,9 @@ export function AuthProvider({ children }) {
       } else if (resData.message === '電子郵件或帳號已被註冊') {
         toast.error(resData.message, {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -186,9 +186,9 @@ export function AuthProvider({ children }) {
         console.error('註冊失敗:', resData)
         toast.error('註冊失敗，請稍後再試', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -200,9 +200,9 @@ export function AuthProvider({ children }) {
       console.error('註冊過程中發生錯誤:', error)
       toast.error('註冊過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -235,9 +235,9 @@ export function AuthProvider({ children }) {
 
         toast.success('已成功登入', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -250,9 +250,9 @@ export function AuthProvider({ children }) {
       } else {
         toast.error('登入失敗，請稍後再試', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -263,9 +263,9 @@ export function AuthProvider({ children }) {
     } catch (error) {
       toast.error('登入失敗，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -307,9 +307,9 @@ export function AuthProvider({ children }) {
         // 顯示成功訊息
         toast.success('您已登入成功', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -340,9 +340,9 @@ export function AuthProvider({ children }) {
           case '身份不符合':
             toast.error('您無登入權限', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -353,9 +353,9 @@ export function AuthProvider({ children }) {
           case '無教師權限':
             toast.error('您並無老師登入權限', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -366,9 +366,9 @@ export function AuthProvider({ children }) {
           case '無管理員權限':
             toast.error('您並無管理員登入權限', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -379,9 +379,9 @@ export function AuthProvider({ children }) {
           case '密碼錯誤':
             toast.error('帳號或密碼錯誤', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -392,9 +392,9 @@ export function AuthProvider({ children }) {
           case '該會員不存在':
             toast.error('您並未註冊', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -405,9 +405,9 @@ export function AuthProvider({ children }) {
           default:
             toast.error('登入失敗，請稍後再試', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -421,9 +421,9 @@ export function AuthProvider({ children }) {
       // console.error('登入過程中發生錯誤:', error)
       toast.error('登入過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -488,9 +488,9 @@ export function AuthProvider({ children }) {
       if (resData.status === 'success') {
         toast.success('您已登出', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -512,9 +512,9 @@ export function AuthProvider({ children }) {
       } else {
         toast.error('登出失敗，請稍後再試', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -526,9 +526,9 @@ export function AuthProvider({ children }) {
       console.error('登出過程中發生錯誤:', error)
       toast.error('登出過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -554,12 +554,12 @@ export function AuthProvider({ children }) {
       if (resData.status === 'success') {
         toast.success('用戶已成功標記為刪除', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
-            color: '#626553',
+            color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
-            primary: '#626553',
+            primary: '#963827',
             secondary: '#fff',
           },
         })
@@ -569,9 +569,9 @@ export function AuthProvider({ children }) {
       } else {
         toast.error('刪除失敗，請稍後再試', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -582,9 +582,9 @@ export function AuthProvider({ children }) {
     } catch (error) {
       toast.error('刪除過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -617,6 +617,7 @@ export function AuthProvider({ children }) {
         const nextAuth = {
           isAuth: true,
           userData: {
+            ...user,
             id: user.id,
             account: user.account,
           },
@@ -628,9 +629,9 @@ export function AuthProvider({ children }) {
           // 減緩跳轉時間
           toast.error('請先登入以訪問該頁面', {
             style: {
-              border: '1.2px solid #90957a',
               padding: '12px 40px',
               color: '#963827',
+              fontSize: '18px',
             },
             iconTheme: {
               primary: '#963827',
@@ -652,7 +653,7 @@ export function AuthProvider({ children }) {
     // 加入router.pathname是為了要在伺服器檢查後
     // 如果是隱私路由+未登入，就要執行跳轉到登入頁路由的工作
     // eslint-disable-next-line
-   }, [router.isReady, router.pathname])
+  }, [router.isReady, router.pathname])
 
   //3. 最外(上)元件階層包裹提供者元件，可以提供它的值給所有後代⼦孫元件使⽤，包含所有頁面元件，與頁面中的元件
   return (

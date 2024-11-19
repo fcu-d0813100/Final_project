@@ -302,10 +302,17 @@ export default function Checkout({
         <div className={style.step}>
           <Image
             src="/cart/step2.svg"
-            alt="Step2"
+            alt="Step1"
             width={1400}
-            height={300}
-            className="img-fluid d-none d-lg-block"
+            height={500}
+            className="img-fluid d-none d-md-block"
+          />
+          <Image
+            src="/cart/RWDstep.2.svg"
+            alt="Step1"
+            width={200}
+            height={400}
+            className="img-fluid d-md-none -block"
           />
         </div>
         {/* <TWZipCode /> */}
@@ -314,9 +321,11 @@ export default function Checkout({
             <div className={style.order}>
               <div className={`h5 ${style['order-topic']}`}>填寫訂購資料</div>
               <div className={style['order-box']}>
-                <OrderBox />
+                <div className={style['order-info']}>
+                  <OrderBox />
+                </div>
                 <div className={style.shipping}>
-                  <Form className="p-4">
+                  <Form className="p-3">
                     <Form.Group className="mb-3">
                       <Form.Label>
                         <div className={`h5 ${style['shipping-topic']}`}>
@@ -324,7 +333,7 @@ export default function Checkout({
                         </div>
                       </Form.Label>
                       <Form.Check
-                        className="mb-3"
+                        className={`mb-3 ${style['method-topic']}`}
                         type="radio"
                         label="宅配"
                         name="deliveryMethod"
@@ -334,6 +343,7 @@ export default function Checkout({
                         onChange={() => handleDeliveryChange('home')}
                       />
                       <Form.Check
+                        className={`${style['method-topic']}`}
                         type="radio"
                         label="7-11"
                         name="deliveryMethod"
@@ -412,7 +422,9 @@ export default function Checkout({
                           </Col>
                           <Col md={6}>
                             <Form.Group controlId="recipient-district">
-                              <Form.Label>區</Form.Label>
+                              <Form.Label className="mt-3 mt-md-0">
+                                區
+                              </Form.Label>
                               <Form.Select
                                 className={style['form-input']}
                                 name="recipient_district"
@@ -504,6 +516,7 @@ export default function Checkout({
                     </div>
                     <div className="mb-3">
                       <Form.Check
+                        className={`${style['method-topic']}`}
                         type="radio"
                         id="cod"
                         name="payment"
@@ -515,10 +528,11 @@ export default function Checkout({
                     </div>
                     <div className="mb-4">
                       <Form.Check
+                        className={`${style['method-topic']}`}
                         type="radio"
                         id="ecPay"
                         name="payment"
-                        label="綠界"
+                        label="信用卡"
                         value="ecPay"
                         checked={paymentMethod === 'ecPay'}
                         onChange={handlePaymentChange}
@@ -532,22 +546,22 @@ export default function Checkout({
           </div>
 
           <div className={style.checkout}>
-            <div className="mb-5">
+            <div className={style.sticky}>
               <CheckoutBox />
-            </div>
 
-            <div
-              className={` justify-content-between d-xl-flex d-none ${style['checkout_btn']}`}
-            >
-              <button
-                className="btn-primary"
-                onClick={() => router.push('/cart/')}
+              <div
+                className={`justify-content-between d-xl-flex ${style['checkout_btn']}`}
               >
-                返回
-              </button>
-              <button className="ms-2 btn-secondary" onClick={handleCheckout}>
-                前往結賬
-              </button>
+                <button
+                  className="btn-primary"
+                  onClick={() => router.push('/cart/')}
+                >
+                  返回
+                </button>
+                <button className="ms-2 btn-secondary" onClick={handleCheckout}>
+                  前往結賬
+                </button>
+              </div>
             </div>
           </div>
         </div>

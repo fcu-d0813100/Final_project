@@ -59,7 +59,18 @@ export default function GoogleLoginRedirect() {
           userData,
         })
 
-        toast.success('已成功登入')
+        toast.success('已成功登入'),
+          {
+            style: {
+              padding: '12px 40px',
+              color: '#626553',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#626553',
+              secondary: '#fff',
+            },
+          }
       } else {
         toast.error('登入後無法得到會員資料')
         // 這裡可以讓會員登出，因為這也算登入失敗，有可能會造成資料不統一
@@ -76,7 +87,18 @@ export default function GoogleLoginRedirect() {
     console.log(res.data)
 
     if (res.data.status === 'success') {
-      toast.success('已登入會員')
+      toast.success('已登入會員'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        }
     } else {
       toast.error(`非會員身份`)
     }
@@ -91,7 +113,18 @@ export default function GoogleLoginRedirect() {
 
     // 成功登出後，回復初始會員狀態
     if (res.data.status === 'success') {
-      toast.success('已成功登出')
+      toast.success('已成功登出'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        }
 
       setAuth({
         isAuth: false,

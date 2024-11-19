@@ -85,10 +85,17 @@ export default function CartList() {
   }, [])
 
   // console.log(coupons)
-  let discountValue = 1
-  if (selectedCoupon && selectedCoupon.discount_value <= 1) {
-    discountValue = selectedCoupon.discount_value
+  let discountValue
+
+  if (selectedCoupon) {
+    if (selectedCoupon.discount_value <= 1) {
+      discountValue = selectedCoupon.discount_value // 折扣比例
+    } else if (selectedCoupon.discount_value > 1) {
+      discountValue = selectedCoupon.discount_value // 折扣金額
+    }
   }
+
+  // console.log(discountValue)
 
   return (
     <>
@@ -96,7 +103,7 @@ export default function CartList() {
       {showProductModal && (
         <Confrim
           title="移除商品"
-          content="您即將移除此商品，操作無法復原。確定要執行此操作嗎？"
+          content={`您即將移除此商品，操作無法復原。\n確定要執行此操作嗎？`}
           btnConfirm="確定刪除"
           btnCancel="取消"
           ConfirmFn={handleDeleteConfirmP}
@@ -217,12 +224,17 @@ export default function CartList() {
                         {/* 商品價格 */}
                         <div className={`h6 ${style.price}`}>
                           NT$
-                          {(selectedCoupon && selectedCoupon.discount_value <= 1
-                            ? Math.floor(
-                                product.price * product.qty * discountValue
-                              )
-                            : product.price * product.qty
-                          ).toLocaleString()}
+                          {selectedCoupon
+                            ? selectedCoupon.discount_value <= 1
+                              ? Math.floor(
+                                  product.price * product.qty * discountValue
+                                ).toLocaleString()
+                              : Math.floor(
+                                  product.price * product.qty
+                                ).toLocaleString()
+                            : Math.floor(
+                                product.price * product.qty
+                              ).toLocaleString()}
                           <div className={style['origin_price']}>
                             NT$
                             {(
@@ -252,6 +264,11 @@ export default function CartList() {
                         再享受 {selectedCoupon.discount_value * 100}% 折扣
                       </div>
                     )}
+                    {selectedCoupon && selectedCoupon.discount_value > 1 && (
+                      <div className="ps text-danger">
+                        再享受 -NT${selectedCoupon.discount_value}元折扣
+                      </div>
+                    )}
                     {/* 如果有優惠券，顯示折扣提示文字 */}
                     <span className={style['title']}> 商品小計：</span>
                     <span className={style['origin-price']}>
@@ -260,10 +277,12 @@ export default function CartList() {
                     {/* 判斷是否有優惠券，顯示折扣後的價格 */}
                     <span className={style['discount-price']}>
                       NT$
-                      {selectedCoupon && selectedCoupon.discount_value <= 1
-                        ? Math.floor(
-                            pTotalPrice * discountValue
-                          ).toLocaleString()
+                      {selectedCoupon
+                        ? selectedCoupon.discount_value <= 1
+                          ? Math.floor(
+                              pTotalPrice * discountValue
+                            ).toLocaleString()
+                          : (pTotalPrice - discountValue).toLocaleString()
                         : pTotalPrice.toLocaleString()}
                     </span>
                   </div>

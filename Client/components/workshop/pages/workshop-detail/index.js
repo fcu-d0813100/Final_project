@@ -1,4 +1,5 @@
 'use client'
+import Brands from '@/components/home/common/brands'
 import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import axios from 'axios'
@@ -67,6 +68,7 @@ export default function WorkshopDetail() {
   }
 
   const handleAddToCart = (navigateToCart = false) => {
+    console.log('加入購物車前的 selectedTime:', selectedTime)
     if (selectedTime) {
       onAddWorkshop({
         id: tworkshop.id,
@@ -75,9 +77,10 @@ export default function WorkshopDetail() {
         beginTime: selectedTime.beginTime,
         endTime: selectedTime.endTime,
         typeId: tworkshop.type_id,
-        classId: selectedTime.key,
+        classId: selectedTime.id,
         price: tworkshop.price,
         cover: tworkshop.img_cover,
+        teacher: tworkshop.teacher_name,
       })
 
       addToCartToast()
@@ -156,6 +159,7 @@ export default function WorkshopDetail() {
             return (
               <TimeSelect
                 key={timeId[index]}
+                id={timeId[index]}
                 date={date.replace(/-/g, '/')}
                 beginTime={startTimes[index].slice(0, 5)} // 對應的開始時間
                 endTime={endTimes[index].slice(0, 5)} // 對應的結束時間
@@ -229,6 +233,7 @@ export default function WorkshopDetail() {
         note={tworkshop.notes}
         imgS02={`http://localhost:3005/workshop/${tworkshop.img_sm02}`}
       />
+      <Brands />
     </>
   )
 }

@@ -37,7 +37,7 @@
   justify-content: center;
   margin-bottom: 100px;
   .list {
-    width: 1000px;
+    // width: 1000px;
     .cosmetic-topic,
     .course-topic {
       border-radius: 5px 5px 0 0;
@@ -268,7 +268,7 @@
     justify-content: center;
     margin-bottom: 100px;
     .list {
-      width: 540px;
+      // width: 540px;
       .cosmetic-topic,
       .course-topic {
         border-radius: 5px 5px 0 0;
@@ -400,6 +400,29 @@
   .course-topic {
     margin-inline: 15px;
   }
+  //小計box
+  .checkout {
+    // margin-left: 0px;
+
+    .sticky {
+      // width: 360px;
+      // text-align: center;
+      // width: 360px;
+      // background-color: pink;
+    }
+
+    .checkout_btn {
+      // background-color: pink;
+      margin-inline: 15px;
+      text-align: end;
+      margin-top: 30px;
+      button {
+        width: 150px;
+        height: 44px;
+        font-size: 14px;
+      }
+    }
+  }
 }
 
 //RWD
@@ -440,7 +463,7 @@
     justify-content: center;
     margin-bottom: 100px;
     .list {
-      width: 360px;
+      // width: 360px;
       .cosmetic-topic,
       .course-topic {
         font-size: 14px;
@@ -583,7 +606,6 @@
 
     .checkout_btn {
       // background-color: pink;
-      margin-inline: 15px;
       text-align: end;
       margin-top: 30px;
       margin-bottom: 100px;
