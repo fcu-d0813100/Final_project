@@ -7,6 +7,7 @@
     background-image: url("/discount/coupon/coupon-lg-black.svg");
     background-size: cover;
     position: relative;
+    justify-content: space-around;
 
     .overlay {
         position: absolute;
@@ -40,12 +41,15 @@
     .text {
         color: #fff;
         width: 250px;
+        text-align: start;
 
         .name {
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .discount {
+            padding-top: 5px;
+            font-size: 46px;
             line-height: 100%;
         }
 
@@ -79,7 +83,7 @@
             width: 180px;
 
             .name {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .discount {
@@ -105,6 +109,7 @@
         width: 300px;
         height: 94px;
         background-image: url("/discount/coupon/coupon-sm-black.svg");
+        
 
         .coupon-image {
             width: 60px;

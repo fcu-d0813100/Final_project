@@ -1,128 +1,195 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { format } from 'date-fns'
-
-import { PiChatCircle } from 'react-icons/pi'
-import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
+import { RiCheckboxCircleFill } from 'react-icons/ri'
+import { PiChatCircle, PiDotsThree } from 'react-icons/pi'
+import { useAuth } from '@/hooks/use-auth'
 import styles from './index.module.scss'
+import PostIcon from '../post-icon'
+import { usePost } from '@/hooks/post/use-post'
+import useAlert from '@/hooks/alert/use-alert'
 
 export default function ReplyInfo({
   onReplyClick = () => {},
   comments,
+  commentId,
+  commentAuthorId,
   commentAuthor,
   commentAuthorAvatar,
   commentCreateTime,
   commentContent,
   commentLikeCount,
-  commentReplyCount,
+  commentReplyTarget,
 }) {
   const userRef = useRef()
+  const userIdRef = useRef()
   const replyRef = useRef()
-  const [active, setActive] = useState(false)
   const [show, setShow] = useState(false)
+  const [commentLiked, setCommentLiked] = useState(false) // comment like
+  const { auth } = useAuth()
+  const userId = auth.userData.id
+  const { forceUpdate } = usePost()
+  const commentIdRef = useRef() //delete comment
+  const showAlert = useAlert()
   const formattedTime = commentCreateTime
     ? format(new Date(commentCreateTime), 'yyyy-MM-dd HH:mm')
     : ''
-  const handle = () => {
-    setActive(!active)
-  }
-
-  const icon = {
-    default: <FgThumbsUp height="24" width="24" fill="#8A8A8A" />,
-    hover: <FgThumbUpFill height="24" width="24" fill="#8A8A8A" />,
-  }
 
   const replyHandle = () => {
     let user = userRef.current.textContent
+    let replyTargetId = userIdRef.current.textContent
     user = '回覆 ' + user
     const text = replyRef.current.textContent
-    onReplyClick(text, user) // 傳遞回父組件
+    onReplyClick(text, user, replyTargetId, comments.comment_id) // 傳遞回父組件
+    // console.log(commentId)
   }
   const showMoreHandle = () => {
     setShow(!show)
   }
-  const isRootComment = comments.parent_id === null
+
+  // GET COMMENT LIKE
+  useEffect(() => {
+    if (commentId && userId) {
+      fetchCommentLike(commentId)
+    }
+  }, [commentId, userId])
+
+  const fetchCommentLike = async (commentId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/post/comment/isLiked/${commentId}/${userId}`
+      )
+      const data = await response.json()
+      setCommentLiked(data.isLiked)
+      // console.log(data.isLiked)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // COMMENT LIKE TOGGLE
+  const commentLikeToggle = async () => {
+    try {
+      if (commentLiked) {
+        await fetch(
+          `http://localhost:3005/api/post/comment/dislike/${commentId}/${userId}`,
+          {
+            method: 'DELETE',
+          }
+        )
+      } else {
+        await fetch(
+          `http://localhost:3005/api/post/comment/like/${commentId}/${userId}`,
+          {
+            method: 'POST',
+          }
+        )
+      }
+      setCommentLiked(!commentLiked)
+      forceUpdate()
+    } catch (error) {
+      console.log('Error', error)
+    }
+  }
+  //DELETE COMMENT
+  const deleteComment = async () => {
+    if (!userId || userId == 0) {
+      alert('請先登入')
+    }
+    let deleteCommentId = commentIdRef.current.textContent
+    // console.log(deleteCommentId)
+    // console.log(userId)
+    try {
+      await fetch(`http://localhost:3005/api/post/comment_delete`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          commentId: deleteCommentId,
+          userId,
+        }),
+      })
+      showAlert('刪除成功', <RiCheckboxCircleFill color="#90957A" />)
+      forceUpdate()
+    } catch (err) {
+      showAlert('刪除失敗，請稍後再試！')
+    }
+  }
 
   return (
     <>
-      {/* 根評論渲染 */}
       {comments.comment_id === null ? (
         <div>目前尚無評論</div>
       ) : (
         <div
-          className={`${styles['reply-wrap']} ${
-            isRootComment ? styles['root-comment'] : styles['children-comment']
-          }`}
+          className={`${styles['reply-wrap']} ${styles['children-comment']}`}
         >
           <Image
             className={styles['user-image']}
-            src={`/user/img/${commentAuthorAvatar}`}
+            // src={`/user/img/${commentAuthorAvatar}`}
+            src={`http://localhost:3005/avatar/${commentAuthorAvatar}`}
             alt="User Image"
             width={40}
             height={40}
           />
           <div className={styles['reply-info']}>
             <div className={styles['user-name']}>
-              <span ref={userRef}>{commentAuthor}</span>
-              <span>{formattedTime}</span>
+              <div className={styles['user-info']}>
+                <span ref={userRef}>{commentAuthor}</span>
+                <span ref={userIdRef} style={{ display: 'none' }}>
+                  {commentAuthorId}
+                </span>
+                <span>{formattedTime}</span>
+              </div>
+
+              {commentAuthorId === userId && (
+                <span role="button" tabIndex={0} onBlur={() => setShow(false)}>
+                  <PiDotsThree
+                    style={{ cursor: 'pointer' }}
+                    onClick={showMoreHandle}
+                  />
+                  {show && (
+                    <div className={styles['reply-delete-wrap']}>
+                      <div
+                        className={styles['reply-delete']}
+                        onClick={deleteComment}
+                      >
+                        刪除
+                      </div>
+                    </div>
+                  )}
+                </span>
+              )}
             </div>
             <div className={styles['user-reply']} ref={replyRef}>
+              <span>
+                {commentReplyTarget ? `回覆 ${commentReplyTarget} : ` : null}
+              </span>
               {commentContent}
+            </div>
+            <div ref={commentIdRef} style={{ display: 'none' }}>
+              {commentId}
             </div>
             <div className={styles['post-icons']}>
               <div className={styles['like']}>
-                <div onClick={handle}>{active ? icon.hover : icon.default}</div>
-                <span>{commentLikeCount}</span>
+                <PostIcon
+                  id={commentId}
+                  icon="like"
+                  size={24}
+                  count={commentLikeCount}
+                  initialToggled={commentLiked}
+                  onToggle={commentLikeToggle}
+                />
+                {/* <div onClick={toggleHandle}>{icon.like}</div>
+                <span>{commentLikeCount}</span> */}
               </div>
               <div className={styles['reply']} onClick={replyHandle}>
                 <PiChatCircle size={24} fill="#8A8A8A" />
-                <span>
-                  {commentReplyCount > 0 ? commentReplyCount : `回覆`}
-                </span>
+                <span>回覆</span>
               </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* 渲染第一條子評論 */}
-      {comments.children && comments.children.length > 0 && (
-        <div className={styles['children-comments']}>
-          <ReplyInfo
-            key={comments.children[0].comment_id}
-            onReplyClick={onReplyClick}
-            comments={comments.children[0]}
-            commentAuthor={comments.children[0].comment_author_nickname}
-            commentAuthorAvatar={comments.children[0].comment_author_img}
-            commentCreateTime={comments.children[0].created_at}
-            commentContent={comments.children[0].comment_content}
-            commentLikeCount={comments.children[0].comment_like_count}
-            commentReplyCount={comments.children[0].comment_reply_count}
-          />
-        </div>
-      )}
-      {/* 展開按鈕 */}
-      {!show && comments.children && comments.children.length > 1 && (
-        <div className={styles['reply-more']} onClick={showMoreHandle}>
-          展開 {comments.children.length - 1} 條回覆
-        </div>
-      )}
-      {/* 顯示剩下的子評論 */}
-      {show && comments.children && comments.children.length > 1 && (
-        <div className={styles['children-comments']}>
-          {comments.children.slice(1).map((childComment) => (
-            <ReplyInfo
-              key={childComment.comment_id}
-              onReplyClick={onReplyClick}
-              comments={childComment}
-              commentAuthor={childComment.comment_author_nickname}
-              commentAuthorAvatar={childComment.comment_author_img}
-              commentCreateTime={childComment.created_at}
-              commentContent={childComment.comment_content}
-              commentLikeCount={childComment.comment_like_count}
-              commentReplyCount={childComment.comment_reply_count}
-            />
-          ))}
         </div>
       )}
     </>

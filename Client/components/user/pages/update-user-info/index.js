@@ -1,48 +1,124 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import UserSection from '@/components/user/common/user-section'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/router'
+import DeleteModal from '@/components/shared/modal-delete'
+import { toast, Toaster } from 'react-hot-toast'
+import PreviewUploadImage from '@/components/user/common/preview-upload-image'
+// import utils from '@/components/cart/common/tw-zipcode'
+// import dataTownships from '@/components/cart/common/tw-zipcode'
+import {
+  countries,
+  townships,
+  postcodes,
+} from '@/components/cart/common/tw-zipcode/data-townships'
 
-export default function UpdateInfo() {
-  // 從勾子的context得到註冊函式
-  const { update, getUser } = useAuth()
+export default function UpdateInfo({
+  initPostcode = '',
+  onPostcodeChange = (country, township, postcode) => {},
+}) {
+  const [selectedFile, setSelectedFile] = useState(null)
+  const { auth, update, getUser, deleteUser } = useAuth()
   const router = useRouter()
+  // 串地址
+  //console.log(countries, townships, postcodes)
+
+  // 記錄陣列的索引值，預設值是-1，相當於"請選擇xxx"
+  const [countryIndex, setCountryIndex] = useState(-1)
+  const [townshipIndex, setTownshipIndex] = useState(-1)
+
+  // 郵遞區號使用字串(數字字串)
+  const [postcode, setPostcode] = useState('')
+
+  // 利用傳入時的initPostcode初始化用
+  useEffect(() => {
+    if (initPostcode) {
+      setPostcode(initPostcode)
+      // 使用initPostcode尋找對應的countryIndex, townshipIndex
+      for (let i = 0; i < postcodes.length; i++) {
+        for (let j = 0; j < postcodes[i].length; j++) {
+          if (postcodes[i][j] === initPostcode) {
+            setCountryIndex(i)
+            setTownshipIndex(j)
+            return // 跳出巢狀for迴圈
+          }
+        }
+      }
+    }
+  }, [initPostcode])
+
+  // 當countryIndex, townshipIndex均有值時，設定postcode值
+  useEffect(() => {
+    if (countryIndex > -1 && townshipIndex > -1) {
+      setPostcode(postcodes[countryIndex][townshipIndex])
+    }
+  }, [countryIndex, townshipIndex])
+
+  // 當使用者改變的countryIndex, townshipIndex，使用onPostcodeChange回傳至父母元件
+  useEffect(() => {
+    if (postcode && postcode !== initPostcode) {
+      onPostcodeChange(
+        countries[countryIndex],
+        townships[countryIndex][townshipIndex],
+        postcode
+      )
+    }
+  }, [postcode])
+
   // 狀態為物件，屬性對應到表單的欄位名稱
   const [user, setUser] = useState({
     name: '',
-    // account: '',
-    // password: '',
-    // confirmPassword: '',
     nickname: '',
     gender: '',
     birthday: '',
     email: '',
     img: '',
     phone: '',
+    city: '',
+    area: '',
     address: '',
     create_at: '',
     updated_at: 'Now()',
-    // points: '',
   })
   // 錯誤訊息狀態
   const [errors, setErrors] = useState({
     name: '',
     email: '',
-    // account: '',
-    // password: '',
-    // confirmPassword: '',
   })
 
   // 多欄位共用事件函式
   const handleFieldChange = (e) => {
-    // ES6特性: 計算得來的物件屬性名稱(computed property name)
     let nextUser = { ...user, [e.target.name]: e.target.value }
-
     setUser(nextUser)
+  }
+
+  const handleCityChange = (e) => {
+    const newCountryIndex = +e.target.value
+    setCountryIndex(newCountryIndex)
+    setTownshipIndex(-1)
+    setPostcode('')
+
+    if (newCountryIndex > -1) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        city: countries[newCountryIndex], // 更新 city
+      }))
+    }
+  }
+
+  const handleAreaChange = (e) => {
+    const newTownshipIndex = +e.target.value
+    setTownshipIndex(newTownshipIndex)
+
+    if (newTownshipIndex > -1) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        area: townships[countryIndex][newTownshipIndex],
+      }))
+    }
   }
 
   const checkError = (user) => {
@@ -61,10 +137,8 @@ export default function UpdateInfo() {
     if (!user.email) {
       newErrors.email = 'Email為必填'
     }
-
     // 如果newErrors中的物件值中其中有一個非空白字串，代表有錯誤發生
     const hasErrors = Object.values(newErrors).some((v) => v)
-
     // 表單檢查--END---
     return { newErrors, hasErrors }
   }
@@ -72,41 +146,123 @@ export default function UpdateInfo() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const { newErrors, hasErrors } = checkError(user)
-    console.log('錯誤檢查:', newErrors, hasErrors) // 檢查錯誤狀態
+    // console.log('錯誤檢查:', newErrors, hasErrors)
     setErrors(newErrors)
     if (hasErrors) {
       return
     }
+
     try {
-      console.log('發送用戶資料:', user) // 確認發送的資料
-      await update(user)
-      console.log('更新成功')
-      router.push('/user') // 跳轉到 /user 頁面
+      // 如果有選擇檔案，執行更新頭像的動作
+      if (selectedFile) {
+        const resData = await update(user, selectedFile)
+        // console.log('Response data:', resData)
+        if (resData.status === 'success') {
+          toast.success('會員頭像修改成功', {
+            style: {
+              padding: '12px 40px',
+              color: '#626553',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#626553',
+              secondary: '#fff',
+            },
+          })
+          setTimeout(() => {
+            router.push('/user')
+          }, 1500)
+        } else {
+          // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+          toast.error('更新失敗，請稍後再試', {
+            style: {
+              padding: '12px 40px',
+              color: '#963827',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#963827',
+              secondary: '#fff',
+            },
+          })
+        }
+      }
+
+      // 執行用戶資料的更新
+      const resData = await update(user)
+      // console.log('用戶資料更新結果:', resData)
+      if (resData.status === 'success') {
+        toast.success('您已更新個人資料', {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        setTimeout(() => {
+          router.push('/user')
+        }, 1500)
+      } else {
+        // console.error('更新失敗 - 響應數據狀態錯誤:', resData.message)
+        toast.error('更新失敗，請稍後再試', {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
     } catch (error) {
-      console.error('更新失敗:', error)
+      // console.error('更新失敗:', error)
+      toast.error('更新失敗，請稍後再試', {
+        style: {
+          padding: '12px 40px',
+          color: '#963827',
+          fontSize: '18px',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     }
   }
 
-  // 初始化資料的狀態
-  // const [initialUser] = useState({
-  //   name: '',
-  //   account: '',
-  //   nickname: '',
-  //   gender: '',
-  //   birthday: '',
-  //   email: '',
-  //   img: '',
-  //   phone: '',
-  //   address: '',
-  //   create_at: '',
-  //   updated_at: 'Now()',
-  // })
-
   // 初始化會員資料
   const initUserData = async () => {
-    const user = await getUser()
-    // setUser({ ...user, password: '', confirmPassword: '' })
-    setUser(user)
+    const userData = await getUser()
+    setUser(userData)
+
+    // 查找對應的 countryIndex 和 townshipIndex
+    let initialCountryIndex = -1
+    let initialTownshipIndex = -1
+
+    countries.forEach((country, i) => {
+      if (country === userData.city) {
+        initialCountryIndex = i
+        townships[i].forEach((township, j) => {
+          if (township === userData.area) {
+            initialTownshipIndex = j
+          }
+        })
+      }
+    })
+
+    setCountryIndex(initialCountryIndex)
+    setTownshipIndex(initialTownshipIndex)
+
+    // 設置對應的郵遞區號（如果有）
+    if (initialCountryIndex > -1 && initialTownshipIndex > -1) {
+      setPostcode(postcodes[initialCountryIndex][initialTownshipIndex])
+    }
   }
 
   // 本頁一開始render後就會設定到user狀態中
@@ -114,7 +270,55 @@ export default function UpdateInfo() {
     initUserData()
   }, [])
 
-  // 生日、地址無法更新
+  const [showModal, setShowModal] = useState(false)
+  const handleDeleteUser = async () => {
+    try {
+      // console.log(`開始刪除用戶，ID: ${user.id}`)
+      // console.log('用戶刪除成功')
+      toast.success('您已成功申請停權', {
+        style: {
+          padding: '12px 40px',
+          color: '#626553',
+          fontSize: '18px',
+        },
+        iconTheme: {
+          primary: '#626553',
+          secondary: '#fff',
+        },
+      })
+      setShowModal(false) // 確保模態對話框被關閉
+      await deleteUser(user.id)
+      router.push('/user/information/update')
+    } catch (error) {
+      // console.error('刪除過程中發生錯誤:', error)
+      toast.error('刪除過程中發生錯誤，請稍後再試', {
+        style: {
+          padding: '12px 40px',
+          color: '#963827',
+          fontSize: '18px',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
+  const openModal = () => {
+    // e.preventDefault()
+    // 阻止表單提交
+    setShowModal(true)
+  }
+  const closeModal = () => {
+    setShowModal(false)
+  }
+  const handleCancel = () => {
+    setUser(user)
+    setTimeout(() => {
+      router.push('/user')
+    }, 1500)
+  }
 
   return (
     <>
@@ -124,10 +328,10 @@ export default function UpdateInfo() {
           method="post"
           encType="multipart/form-data"
         >
-          <div className="d-flex mt-4 container">
-            <div className="d-flex row justify-content-between align-items-center">
-              <div className="col-9 px-0   d-flex flex-wrap">
-                <div className={`col-4 mt-5 ${styles.info} `}>
+          <div className="mt-5 container-fluid">
+            <div className="row justify-content-center align-items-center">
+              <div className="col-9 pe-3 d-flex flex-wrap">
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="name" className="form-label pb-2 fw-bold ">
                     姓名 <span className=" ps pe-4 fw-bold ">| name</span>
                   </label>
@@ -140,7 +344,7 @@ export default function UpdateInfo() {
                     value={user.name}
                   />
                 </div>
-                <div className={`col-4 mt-5 ${styles.info} `}>
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="nickname" className="form-label pb-2 fw-bold">
                     暱稱 <span className="ps pe-4 fw-bold">| nickname</span>
                   </label>{' '}
@@ -152,7 +356,7 @@ export default function UpdateInfo() {
                     className={`form-control ${styles['form-control2']} `}
                   />
                 </div>
-                <div className={`col-4 mt-5 ${styles.info} `}>
+                <div className={`col-4 ${styles.info} `}>
                   <label htmlFor="title " className="form-label pb-2 fw-bold">
                     稱謂 <span className=" ps pe-4 fw-bold">| title</span>
                   </label>{' '}
@@ -206,14 +410,19 @@ export default function UpdateInfo() {
                   />
                 </div>
               </div>
-              <div className="col-3 d-flex align-items-center">
+
+              <div className="col-3 d-flex justify-content-center align-items-center">
                 <div className="ratio ratio-1x1 w-75">
-                  <Image
-                    width={255}
-                    height={255}
-                    className={styles.avatar}
-                    src={`/user/img/${user.img}`}
-                    alt=""
+                  <PreviewUploadImage
+                    userId={user.id}
+                    avatar={
+                      user.img ? `http://localhost:3005/avatar/${user.img}` : ''
+                    } // 傳入 avatar 照片
+                    avatarBaseUrl="http://localhost:3005/avatar"
+                    defaultImg="avatar01.jpg"
+                    setSelectedFile={setSelectedFile}
+                    selectedFile={selectedFile}
+                    photoUrl={user.photo_url} // 傳入 photo_url
                   />
                 </div>
               </div>
@@ -229,39 +438,59 @@ export default function UpdateInfo() {
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
           >
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                縣市{' '}
+              <label htmlFor="city" className={`form-label pb-2 fw-bold`}>
+                縣市
                 <span className={`ps fw-bold ${styles['info-address']}`}>
                   | city
                 </span>
-              </label>
-              <select className={`form-select  ${styles['form-select2']}`}>
-                <option value="">請選擇縣市</option>
-                {/* Options omitted for brevity */}
+              </label>{' '}
+              <select
+                name="city"
+                value={countryIndex}
+                onChange={handleCityChange}
+                className={`form-select ${styles['form-select2']}`}
+              >
+                <option value="-1">選擇縣市</option>
+                {countries.map((value, index) => (
+                  <option key={index} value={index}>
+                    {value}
+                  </option>
+                ))}
               </select>
             </div>
             <div className={`col ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                區域{' '}
-                <span className={` ps fw-bold ${styles['info-address']}`}>
+              <label htmlFor="area" className={`form-label pb-2 fw-bold`}>
+                區域
+                <span className={`ps fw-bold ${styles['info-address']}`}>
                   | area
                 </span>
-              </label>
-              <select className={`form-select ${styles['form-select2']}`}>
-                <option value="">請選擇區域</option>
+              </label>{' '}
+              <select
+                name="area"
+                value={townshipIndex}
+                onChange={handleAreaChange}
+                className={`form-select ${styles['form-select2']}`}
+              >
+                <option value="-1">選擇區域</option>
+                {countryIndex > -1 &&
+                  townships[countryIndex].map((value, index) => (
+                    <option key={index} value={index}>
+                      {value}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
-              <label className={`form-label pb-2 fw-bold`}>
-                地址{' '}
+              <label htmlFor="address" className={`form-label pb-2 fw-bold`}>
+                地址
                 <span className={`ps ${styles['info-address']} fw-bold`}>
                   | address
                 </span>
-              </label>
+              </label>{' '}
               <input
                 type="text"
                 className={`form-control ${styles['form-control2']}`}
-                name="streetAddress"
+                name="address"
                 placeholder="請輸入完整地址"
                 value={user.address}
                 onChange={handleFieldChange}
@@ -279,11 +508,25 @@ export default function UpdateInfo() {
               </p>
             </div>
             <div
-              className={`col-3 d-flex justify-content-end align-items-center`}
+              className={`col-3 pe-3 d-flex justify-content-end align-items-center`}
             >
-              <a href="" className={`p ${styles['delete-account']}`}>
-                停用會員帳戶
-              </a>
+              <button
+                type="button"
+                onClick={openModal}
+                className={` ${styles['delete-account']}`}
+              >
+                {' '}
+                停用會員帳戶{' '}
+              </button>{' '}
+              <DeleteModal
+                title="您確定要停用帳戶嗎 ?"
+                content="停用帳戶後，您將無法登入及享有會員權益，如需恢復帳戶，請聯繫客服以重新啟用。"
+                btnConfirm="停用帳戶"
+                btnCancel="取消"
+                ConfirmFn={handleDeleteUser}
+                show={showModal}
+                handleClose={closeModal}
+              />
             </div>
           </div>
 
@@ -293,7 +536,7 @@ export default function UpdateInfo() {
             <button
               type="button"
               className="btn-secondary h6 me-4"
-              onClick={() => setUser(user)}
+              onClick={handleCancel}
             >
               取消
             </button>

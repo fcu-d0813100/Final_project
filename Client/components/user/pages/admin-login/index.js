@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styles from './index.module.scss'
 import { useAuth } from '@/hooks/use-auth'
-
+import { useRouter } from 'next/router'
 export default function AdminLogin(props) {
+  const router = useRouter()
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const role = 'admin'
@@ -24,7 +25,17 @@ export default function AdminLogin(props) {
               <div
                 className={`d-flex flex-column align-items-center justify-content-center ${styles['card-img']}`}
               >
-                <h2 className={styles['logo']}>Beautique</h2>
+                <button
+                  type="button"
+                  className={styles['logo']}
+                  onClick={() => {
+                    setTimeout(() => {
+                      router.push('/')
+                    }, 1500)
+                  }}
+                >
+                  Beautique
+                </button>
                 <h3 className={styles['slogan']}>WELCOME！Admin </h3>
                 <h6 className={`h6 ${styles['text']}`}>
                   歡迎回到 Beautique 管理介面！

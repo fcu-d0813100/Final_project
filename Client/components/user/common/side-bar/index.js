@@ -40,12 +40,12 @@ const navLinks = [
     label: '我的收藏',
     key: 'favorite',
   },
-  {
-    href: '/user/workshop',
-    icon: <PiNotebook size={65} />,
-    label: '我的課程',
-    key: 'workshop',
-  },
+  // {
+  //   href: '/user/workshop',
+  //   icon: <PiNotebook size={65} />,
+  //   label: '我的課程',
+  //   key: 'workshop',
+  // },
   {
     href: '/user/post',
     icon: <PiListPlus size={65} />,
@@ -108,7 +108,7 @@ export default function Index() {
       />
       <Navbar.Collapse
         id="basic-navbar-nav"
-        className={`${styles['collapse']} justify-content-center`}
+        className={`${styles['collapse']} justify-content-center align-items-start`}
       >
         <Nav>
           {navLinks.map((link) => (

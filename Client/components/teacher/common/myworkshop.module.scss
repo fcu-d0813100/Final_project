@@ -2,7 +2,9 @@
 .main {
   padding: 70px 120px;
   padding-left: 420px;
+  min-height: 100vh;
   margin: auto;
+
   .selectbar {
     margin-block: 20px;
     height: 65px;
@@ -45,29 +47,33 @@
       }
     }
     .active {
-      border-bottom: 2px solid $green-600;
+      border-bottom: 2.5px solid $green-600;
     }
   }
   .workshopArea {
     padding-inline: 40px;
-    padding-bottom: 50px;
-   
 
     .myWorkshop {
-      background-color: #ffffff;
+      background-color: #f8f8f8;
+      border-radius: 5px;
       padding: 22px;
       margin-block: 30px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-       width: 100%;
-       border: none;
-       transition: 0.2s;
+      width: 100%;
+      border: none;
+      transition: 0.2s;
       .imgArea {
         width: 190px;
         height: 190px;
         background-color: rgb(97, 97, 97);
         margin-right: 30px;
+        .coverImg {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
       }
       .infoText {
         text-align: start;
@@ -95,6 +101,11 @@
         .registering {
           color: white;
           background-color: $green-600;
+        }
+        .prepare {
+          color: white;
+          background-color: rgb(211, 193, 110);
+          border: none;
         }
         .end {
           color: white;
@@ -135,7 +146,7 @@
         align-items: center;
         transition: 0.2s;
         &:hover {
-          background: $green-500;
+          background: $green-700;
           color: white;
         }
       }
@@ -150,23 +161,52 @@
         align-items: center;
         justify-content: center;
         transition: 0.2s;
-        .arrow{
+        .arrow {
           display: none;
           color: white;
-           transition: 0.2s;
+          transition: 0.2s;
         }
         &:hover {
           background: black;
           color: white;
-          .arrow{
-          display: inline-block;
-        }
+          .arrow {
+            display: inline-block;
+          }
         }
       }
-      &:hover{
-        background-color: #f5f5f5;
+      .deleteBtn {
+        width: 140px;
+        height: 40px;
+        border: 1.5px solid $red-500;
+        border-radius: 20px;
+        color: $red-500;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+        &:hover {
+          background: $red-500;
+          color: white;
+          .arrow {
+            display: inline-block;
+          }
+        }
       }
-      
+      &:hover {
+        background-color: #ececec;
+      }
+    }
+  }
+  .noneWorkshopText {
+    height: 100%;
+    text-align: center;
+    padding-top: 120px;
+    font-size: 20px;
+    color: $green-500;
+    .noneWorkshopIcon {
+      font-size: 40px;
+      margin-block: 20px;
     }
   }
 }

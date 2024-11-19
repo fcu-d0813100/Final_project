@@ -14,6 +14,7 @@
     flex-direction: column;
     box-shadow: none;
     height: auto;
+    border-radius: 0;
   }
 }
 /* #endregion base */
@@ -21,23 +22,56 @@
 /* #region right */
 /* post-user */
 .post-card3 {
-  .post-img {
+  .post-img-wrap {
+    width: 100%;
+    height: 100%;
     position: relative;
-    height: 650px;
+    // height: 650px;
     justify-content: center;
     align-items: center;
     flex: 53;
-    overflow: hidden;
-
-    img {
-      min-height: 650px;
-      width: 100%;
-      // height: 100%;
+    // overflow: hidden;
+    @media (max-width: 390px) {
+      height: 390px;
+    }
+    > div {
+      position: unset !important;
+    }
+    .post-image {
+      // min-height: 650px;
+      // width: 100%;
+      // height: 100%
+      // object-fit: cover;
+      // object-position: center; // 居中
       object-fit: cover;
-      object-position: center; // 保持图片居中
-
+      width: 100% !important;
+      height: 650px !important;
+      position: relative !important;
+      // height: unset !important;
       @media screen and (max-width: 768px) {
-        border-radius: 0;
+        height: 540px !important;
+      }
+      @media screen and (max-width: 576px) {
+        height: 460px !important;
+      }
+      @media screen and (max-width: 390px) {
+        height: 390px !important;
+      }
+    }
+    button {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-inline: 5px;
+      &:hover {
+      }
+    }
+    span {
+      display: none;
+    }
+    &:hover {
+      span {
+        display: block;
       }
     }
   }
@@ -184,6 +218,10 @@
       font-size: 20px;
       line-height: 0;
       text-align: end;
+      svg {
+        width: 26px;
+        height: 26px;
+      }
       & > div {
         display: flex;
         gap: 2px;

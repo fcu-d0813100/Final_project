@@ -1,16 +1,15 @@
 @import '@/styles/_variant.scss';
 
-.btn {
-    background-color: transparent;
-    border: transparent;
-}
-
 .selection-group {
     label{
         margin: 5px;
     }
 
     input[type="checkbox"] {
+        display: none;
+    }
+
+    input[type="radio"] {
         display: none;
     }
 
@@ -21,7 +20,7 @@
 
     .button {
         padding-inline: 20px;
-        padding-block: 3px;
+        padding-block: 5px;
         border-radius: 25px;
         background-color: $gray-100;
         color: $green-500;
@@ -32,4 +31,9 @@
             color: #fff;
         }
     }
+}
+.re{
+    margin-inline: 5px;
+    width: 60px;
+    height: 40px;
 }

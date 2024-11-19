@@ -12,6 +12,7 @@
   padding-left: 420px;
   margin: auto;
 
+
   .basicInformation {
     display: flex;
     justify-content: space-between;
@@ -90,7 +91,7 @@
     padding-block: 50px;
     .account {
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       border-bottom: 1px solid $green-700;
       padding-bottom: 10px;
       color: $green-600;

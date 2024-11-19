@@ -2,25 +2,115 @@
 
 .item {
     padding-inline: 20px;
+    @media (max-width: 500px) {
+        padding-inline: 0px;
+    }
+}
+
+.item-left {
+    width: 400px;
+
+    @media (max-width: 1300px) {
+        width: 350px;
+    }
+    @media (max-width: 720px) {
+        width: 300px;
+    }
+    @media (max-width: 500px) {
+        width: 270px;
+        padding-inline: 0px;
+    }
 }
 
 .item-img {
     width: 160px;
     height: 160px;
-}
 
-.item-left {
-    width: 400px;
+    @media (max-width: 1300px) {
+        max-width: 120px;
+        max-height: 120px;
+    }
+    @media (max-width: 500px) {
+        max-width: 100px;
+        max-height: 100px;
+    }
 }
 
 .text-group {
     width: 200px;
+
+    .item-name {
+        color: $gray-200;
+    }
+
+    @media (max-width: 1400px) {
+        width: 200px;
+    }
+
+    @media (max-width: 720px) {
+        width: 160px;
+
+        .class {
+            font-size: 16px;
+        }
+
+        .item-name {
+            font-size: 12px;
+            color: $gray-200;
+        }
+
+    }
+}
+
+.time {
+    width: 200px;
+    line-height: 110%;
+    span{
+        color: $green-500;
+    }
+    @media (max-width: 1400px) {
+        font-size: 12px;
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        font-size: 10px;
+    }
 }
 
 .count {
     width: 200px;
+    @media (max-width: 1400px) {
+        width: 150px;
+        font-size: 16px;
+    }
+
+    @media (max-width: 720px) {
+        
+        width: 80px;
+        display: none;
+    }
 }
 
 .sub-total {
     width: 200px;
+    color: $red-500;
+    .del {
+        color: $gray-200;
+        font-size: 12px;
+    }
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        width: 80px;
+        font-size: 12px;
+        display: flex;
+        flex-wrap: wrap-reverse;
+        justify-content: flex-end;
+        .del {
+            font-size: 8px;
+        }
+    } 
 }

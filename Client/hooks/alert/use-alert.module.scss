@@ -1,0 +1,14 @@
+.custom-popup {
+  top: -55%;
+  & div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 !important;
+    span {
+      display: flex;
+    }
+  }
+  padding: 0;
+}

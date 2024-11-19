@@ -9,34 +9,69 @@ import styles from '@/components/teacher/common/information.module.scss'
 import React, { useState, useEffect } from 'react'
 
 export default function Page1({ onNextPage }) {
-  const role = 'admin'
+  const role = 'teacher'
   const { auth, login, logout } = useAuth()
-  const { teacherData } = auth // 撈取 teacherData 資料
+  const { userData } = auth // 撈取 teacherData
   console.log(auth)
+
+  const [teacher, setTeacher] = useState(null)
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/teacher/information',
+        {
+          credentials: 'include', //一定要加，才會帶cookie
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      if (!response.ok) {
+        throw new Error('網路回應不成功：' + response.status)
+      }
+      const data = await response.json()
+      //const filteredData = data.find((teacher) => teacher.id === userData.id) // 篩選符合 userData.id 的資料
+      setTeacher(data) // 只設定符合 id 的資料
+      console.log(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <>
       <div className={styles.main}>
         <DashboardTitle chTitle="個人資訊" enTitle="Information" />
+        {teacher ? (
+          <div>
+            <TPersonalInfo
+              name={teacher.name}
+              account={teacher.user_account}
+              email={teacher.email}
+              birthday={teacher.birthday}
+              years={teacher.years}
+              gender={teacher.gender === 'female' ? '女' : '男'}
+              nation={teacher.nation}
+              teacherImg={`/teacher/teachers_img/T_${teacher.id}_color.jpg`}
+            />
 
-        <TPersonalInfo
-          // name={teacherData.account}
-          account="Gina-Bettelli"
-          email="ginabettelli@gmail.com"
-          birthday="1987.03.30"
-          years="17"
-          gender="女"
-          nation="美國"
-          teacherImg="/teacher/teachers_img/T_1_color.jpg"
-        />
+            <hr className="opacity-75" />
 
-        <hr className="opacity-75" />
-
-        <TPersonalMoreInfo
-          slogan=" “我喜歡贈送口紅。口紅如此豐富多變，一旦你用過了它們，你就離不開了！”"
-          about="現任職彩妝藝術總監。身為一個表演者，我喜歡後台的能量和創造力，但無論在哪裡 - 在世界各地教授彩妝大師班，在全球舉行活動或參與密集的時裝週活動 - 品牌的多樣性仍然是我持續的靈感來源。"
-          experience="擔任 M.A.C 彩妝藝術總監 17年與 Grace Jones 一起合作，並由 Jean-Paul Goude 負責拍攝V雜誌封面。"
-        />
-
+            <TPersonalMoreInfo
+              slogan={teacher.slogan}
+              about={teacher.about}
+              experience={teacher.experience}
+            />
+          </div>
+        ) : (
+          <p>載入中或找不到資料</p>
+        )}
         <div className={`${styles.button} d-flex`}>
           <button
             className="btn-primary h6 ms-auto"

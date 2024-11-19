@@ -6,6 +6,8 @@
     margin-bottom: 20px;
     background-image: url("/discount/coupon/coupon-lg-black.svg");
     background-size: cover;
+    justify-content: space-around;
+    
 
     .coupon-image {
         width: 98px;
@@ -21,10 +23,11 @@
         width: 250px;
 
         .name {
-            font-size: 24px;
+            font-size: 18px;
         }
 
         .discount {
+            font-size: 46px;
             line-height: 100%;
         }
 
@@ -73,7 +76,7 @@
             width: 180px;
 
             .name {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .discount {
@@ -99,6 +102,7 @@
         width: 300px;
         height: 94px;
         background-image: url("/discount/coupon/coupon-sm-black.svg");
+        justify-content: space-between;
 
         .coupon-image {
             width: 60px;
@@ -106,7 +110,7 @@
         }
 
         .text {
-            width: 120px;
+            width: 130px;
 
             .name {
                 font-size: 11px;
@@ -123,14 +127,15 @@
         }
 
         .btn-outline-light {
-            width: 50px;
-            height: 20px;
+            width: 43px;
+            height: 17px;
             font-size: 10px;
+            margin-bottom: 3px;
         }
 
         .right-ps {
             line-height: 100%;
-            font-size: 4px;
+            font-size: 6px;
         }
 
     }

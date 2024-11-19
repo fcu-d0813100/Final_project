@@ -1,0 +1,139 @@
+@import '@/styles/_variant.scss';
+
+.coupon-lg {
+    width: 550px;
+    height: 170px;
+    margin-bottom: 20px;
+    background-image: url("/discount/coupon/coupon-sm-red.svg");
+    background-size: cover;
+    position: relative;
+    justify-content: space-around;
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(155, 155, 155, 0.8);
+
+        .pass {
+            width: 100px;
+            height: 35px;
+            text-align: center;
+            align-content: center;
+            color: #fff;
+            background-color: #000;
+            border-radius: 0 0 5px 0;
+        }
+    }
+
+
+    .text {
+        color: #fff;
+        width: 250px;
+
+        .name {
+            font-size: 18x;
+        }
+
+        .discount {
+            padding-top: 5px;
+            font-size: 52px;
+            line-height: 120%;
+        }
+
+        .max {
+            font-size: 16px;
+            color: $gray-200;
+            line-height: 2rem;
+        }
+    }
+
+}
+
+.right-ps {
+    color: $gray-200;
+    line-height: 1.5rem;
+    font-size: 12px;
+}
+
+
+@media (max-width: 960px) {
+    .coupon-lg {
+        width: 500px;
+        height: 160px;
+        background-image: url("/discount/coupon/coupon-sm-red.svg");
+
+
+        .text {
+            width: 180px;
+
+            .name {
+                font-size: 16px;
+            }
+
+            .discount {
+                font-size: 36px;
+            }
+
+            .max {
+                font-size: 16px;
+            }
+        }
+
+        .align-self-end {
+            .right-ps {
+                font-size: 8px;
+            }
+        }
+    }
+}
+
+
+@media (max-width: 576px) {
+    .coupon-lg {
+        width: 300px;
+        height: 94px;
+        background-image: url("/discount/coupon/coupon-sm-red.svg");
+
+
+        .overlay {
+
+            .pass {
+                font-size: 10px;
+                width: 50px;
+                height: 25px;
+                text-align: center;
+                align-content: center;
+                color: #fff;
+                background-color: #000;
+                border-radius: 0 0 5px 0;
+            }
+        }
+
+        .text {
+            width: 120px;
+
+            .name {
+                font-size: 11px;
+            }
+
+            .discount {
+                font-size: 24px;
+            }
+
+            .max {
+                line-height: 1rem;
+                font-size: 8px;
+            }
+        }
+
+        .right-ps {
+            line-height: 100%;
+            font-size: 4px;
+        }
+
+    }
+
+}

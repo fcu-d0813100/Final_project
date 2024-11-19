@@ -1,32 +1,131 @@
 @import '@/styles/_variant.scss';
 
-.del {
-    color: $gray-200;
-}
-
 .item {
     padding-inline: 20px;
-}
 
-.item-img {
-    width: 160px;
-    height: 160px;
+    @media (max-width: 500px) {
+        padding-inline: 0px;
+    }
 }
 
 .item-left {
     width: 400px;
+
+    @media (max-width: 1300px) {
+        width: 350px;
+    }
+
+    @media (max-width: 720px) {
+        width: 300px;
+    }
+
+    @media (max-width: 500px) {
+        width: 250px;
+        padding-inline: 0px;
+    }
+}
+
+.item-img {
+    width: 160px;
+    height: 160px; // 確保保持比例
+
+    @media (max-width: 1300px) {
+        max-width: 120px;
+        max-height: 120px;
+    }
+
+    @media (max-width: 500px) {
+        max-width: 110px;
+        max-height: 110px;
+    }
 }
 
 .text-group {
     width: 200px;
+
+    .item-name {
+        line-height: 120%;
+        margin-bottom: 16px;
+    }
+
+    @media (max-width: 720px) {
+
+        .brand {
+            font-size: 11px;
+            line-height: 100%;
+        }
+
+        .item-name {
+            font-size: 16px;
+        }
+
+        .color-right {
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 500px) {
+
+        .brand {
+            font-size: 11px;
+            line-height: 100%;
+        }
+
+        .item-name {
+            font-size: 16px;
+        }
+
+        .color-right {
+            font-size: 12px;
+        }
+    }
 }
 
 .count {
     width: 200px;
+
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        width: 80px;
+        display: none;
+    }
 }
 
 .sub-total {
     width: 200px;
+    color: $red-500;
+
+    .del {
+        color: $gray-200;
+        font-size: 12px;
+    }
+
+    @media (max-width: 1400px) {
+        width: 150px;
+    }
+
+    @media (max-width: 720px) {
+        width: 80px;
+        font-size: 12px;
+        display: flex;
+        // flex-wrap: wrap-reverse;
+        justify-content: flex-end;
+        flex-direction: column;
+        order: 3;
+
+        .del {
+            order: 1;
+            font-size: 8px;
+        }
+
+        .link {
+            order: 2;
+        }
+    }
+
 }
 
 .color-right {
@@ -36,28 +135,45 @@
 .color-left {
     width: 30px;
     height: 30px;
-    border: 2px solid #998568;
+    border: 1px solid $gray-200;
 
     .color {
         width: 20px;
         height: 20px;
-        background-color: #998568;
+    }
+
+    @media (max-width: 700px) {
+        width: 15px;
+        height: 15px;
+
+        .color {
+            width: 11px;
+            height: 11px;
+        }
     }
 }
+
 
 .btn {
     width: 90px;
     padding-block: 2px;
     border-radius: 1px;
     border: $red-500 solid 1px;
-    background-color:$red-500;
+    background-color: $red-500;
     color: white;
 
-    &:hover {
-        border:$red-500 solid 1px;
-        background-color: white;
-        color:$red-500;
-        transition: ease 0.3s;
+    @media (max-width: 720px) {
+        line-height: 100%;
+        width: 50px;
+        padding-block: 5px;
+        font-size: 10px;
+        align-content: top;
     }
 
+    &:hover {
+        border: $red-500 solid 1px;
+        background-color: white;
+        color: $red-500;
+        transition: ease 0.3s;
+    }
 }

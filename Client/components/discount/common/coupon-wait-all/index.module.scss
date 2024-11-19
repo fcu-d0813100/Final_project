@@ -1,0 +1,127 @@
+@import '@/styles/_variant.scss';
+
+.coupon-lg {
+    width: 550px;
+    height: 170px;
+    padding-left: 30px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    background-image: url("/discount/coupon/coupon-lg-red.svg");
+    background-size: cover;
+    justify-content: space-between;
+
+    .text {
+        color: #fff;
+        width: 250px;
+        text-align: start;
+
+        .name {
+            font-size: 18px;
+        }
+
+        .discount {
+            padding-top: 5px;
+            font-size: 52px;
+            line-height: 120%;
+        }
+
+        .max {
+            color: $gray-200;
+            line-height: 2rem;
+        }
+    }
+
+    .btn-outline-light {
+        background-color: #fff;
+        color: #000;
+        border-radius: 1px;
+        padding: 0px;
+        width: 100px;
+        height: 30px;
+
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #fff;
+            transition: ease 0.5s;
+        }
+    }
+}
+
+.right-ps {
+    color: $gray-200;
+    line-height: 1.5rem;
+    font-size: 12px;
+}
+
+
+@media (max-width: 960px) {
+    .coupon-lg {
+        width: 500px;
+        height: 160px;
+        background-image: url("/discount/coupon/coupon-red.svg");
+
+        .text {
+            width: 180px;
+
+            .name {
+                font-size: 16px;
+            }
+
+            .discount {
+                font-size: 36px;
+            }
+
+            .max {
+                font-size: 16px;
+            }
+        }
+
+        .align-self-end {
+            .right-ps {
+                font-size: 8px;
+            }
+        }
+    }
+}
+
+
+@media (max-width: 576px) {
+    .coupon-lg {
+        width: 300px;
+        height: 94px;
+        background-image: url("/discount/coupon/coupon-sm-red.svg");
+        justify-content: space-between;
+
+        .text {
+            width: 150px;
+
+            .name {
+                font-size: 11px;
+            }
+
+            .discount {
+                font-size: 24px;
+            }
+
+            .max {
+                line-height: 1rem;
+                font-size: 8px;
+            }
+        }
+
+        .btn-outline-light {
+            width: 43px;
+            height: 17px;
+            font-size: 8px;
+            margin-bottom: 3px;
+        }
+
+        .right-ps {
+            line-height: 100%;
+            font-size: 6px;
+        }
+
+    }
+
+}

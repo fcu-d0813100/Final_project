@@ -9,8 +9,10 @@ PostContext.displayName = 'PostContext'
 // 2. 建立 Provider
 export function PostProvider({ children }) {
   const [post, setPost] = useState(null)
+  const [force, setForce] = useState(false)
   const router = useRouter()
   const { postId } = router.query
+  const [type, setType] = useState('total_count')
 
   useEffect(() => {
     async function getPostCard() {
@@ -19,14 +21,19 @@ export function PostProvider({ children }) {
           `http://localhost:3005/api/post/post_wall/${postId}`,
           { withCredentials: true }
         )
+
         setPost(response.data.post)
       }
     }
     getPostCard()
-  }, [postId])
+  }, [postId, force])
 
   return (
-    <PostContext.Provider value={{ post }}>{children}</PostContext.Provider>
+    <PostContext.Provider
+      value={{ post, forceUpdate: () => setForce(!force), type, setType }}
+    >
+      {children}
+    </PostContext.Provider>
   )
 }
 //3.建立一個包裝的hook

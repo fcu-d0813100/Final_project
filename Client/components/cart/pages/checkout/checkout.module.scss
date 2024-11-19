@@ -2,6 +2,7 @@
 
 .step {
   margin-block: 100px;
+  text-align: center;
 }
 
 //checkedbox樣式變更
@@ -11,24 +12,14 @@
   box-shadow: none;
 }
 
-//input樣式變更
-.form-control {
-  border-color: $gray-200;
-  border-radius: 5px;
+.form-input {
+  &:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1.5px solid $green-500;
+  }
   &::placeholder {
     color: $gray-200;
-  }
-  &:focus {
-    border-color: $green-500;
-    box-shadow: 0 0 0 1px $green-500;
-  }
-}
-//select樣式變更
-.form-select {
-  border-color: $gray-200;
-  &:focus {
-    border-color: $green-500;
-    box-shadow: 0 0 0 1px $green-500;
   }
 }
 
@@ -66,13 +57,6 @@
       }
 
       .shipping-form {
-        margin: 20px 30px;
-        padding: 10px 40px;
-        border-radius: 5px;
-        background-color: $gray-100;
-      }
-
-      .credit-card {
         margin: 20px 30px;
         padding: 10px 40px;
         border-radius: 5px;
@@ -212,6 +196,115 @@
       span {
         font-size: 20px;
         color: $red-500;
+      }
+    }
+  }
+}
+
+//RWD
+@media screen and (max-width: 1200px) {
+  .step {
+    margin-block: 50px;
+  }
+  .outer {
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    .list {
+      width: 100%;
+      padding: 0;
+    }
+    .brand {
+      font-size: 14px;
+    }
+    .checkout {
+      width: 100%;
+      margin: 0;
+      .checkout_discount {
+        margin-bottom: 50px;
+      }
+      .checkout_total_box {
+        display: none;
+      }
+    }
+  }
+  .checkout {
+    .checkout_btn {
+      // background-color: pink;
+      text-align: end;
+      margin-top: 30px;
+      margin-bottom: 150px;
+    }
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .outer {
+    .list {
+      .order {
+        //訂單簡易展示方框
+        .order-box {
+          padding: 16px 12px;
+          .order-info {
+            padding: 0px 12px;
+            margin-bottom: 20px;
+          }
+        }
+        .payment-topic,
+        .shipping-topic {
+          margin-top: 10px;
+          margin-bottom: 16px;
+          font-weight: 600;
+          font-size: 16px;
+          span {
+            font-size: 14px;
+            font-weight: 400;
+          }
+        }
+        .method-topic {
+          padding: 0px;
+        }
+
+        .shipping-form {
+          font-size: 14px;
+          margin: 10px 0px;
+          padding: 16px 16px;
+        }
+      }
+    }
+  }
+  .order-topic {
+    border-radius: 5px 5px 0 0;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: $green-700;
+  }
+
+  .form-input {
+    height: 35px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .outer {
+    .order-topic,
+    .order-box {
+      margin-inline: 15px;
+    }
+  }
+  //小計box
+  .checkout {
+    // margin-left: 0px;
+    .checkout_btn {
+      // background-color: pink;
+      margin-inline: 15px;
+      button {
+        width: 150px;
+        height: 44px;
+        font-size: 14px;
       }
     }
   }

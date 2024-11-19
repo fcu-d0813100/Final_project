@@ -1,4 +1,5 @@
 'use client'
+
 import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import Page1 from '@/components/teacher/pages/information/page-1'
@@ -11,18 +12,18 @@ export default function TeacherInformation(props) {
   // 切換到下一頁並滾動到頂部
   const handleNextPage = () => {
     setIsPage2(true)
-    window.scrollTo(0, 580) // 滾動到頁面頂部
+    window.scrollTo(0, 580)
   }
 
   // 回到前一頁並滾動到頂部
   const handlePreviousPage = () => {
     setIsPage2(false)
-    window.scrollTo(0, 580) // 滾動到頁面頂部
+    window.scrollTo(0, 580)
   }
 
   return (
     <>
-      <TDashboardBN teacher="Gina Bettelli" />
+      <TDashboardBN />
       <div>
         <Sidebar />
         {!isPage2 ? (

@@ -3,7 +3,8 @@ import ProductPage from '@/components/product/common/product-list';
 export default function Explore(props) {
   return (
     <>
-      <ProductPage />
+      {/* <ProductPage /> */}
+      <ProductList />
     </>
   );
 }

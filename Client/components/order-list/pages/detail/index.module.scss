@@ -1,34 +1,7 @@
 @import '@/styles/_variant.scss';
 
-.nav {
-    padding-bottom: 20px;
-
-    a {
-        color: $green-500;
-    }
-}
-
 .right {
-    flex: 1 0 0;
-    padding-block: 70px;
-    padding-inline: 120px;
-
-    .title {
-        border-bottom: $gray-200 solid 2px;
-    }
-}
-
-
-.title-right {
-    color: $green-500;
-
-    a {
-        color: $green-500;
-
-        &:hover {
-            color: $green-800;
-        }
-    }
+    padding: 20px;
 }
 
 .order-det-header {
@@ -36,11 +9,15 @@
     height: 80px;
     border-radius: 3px;
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+    display: flex;
+    @media (max-width: 700px) {
+        display: none;
+    }
 
     .squ {
         width: 30px;
         height: 67px;
-        background-color: $green-500;
+        background-color: $green-700;
     }
 
     .order-num {
@@ -50,24 +27,63 @@
     .header-right {
         color: $red-500;
     }
+
 }
 
+
 .order-det-content {
+    margin-top: 10px;
+    .topTitle {
+        text-align: center;
+        align-content: center;
+        height: 45px;
+        background-color: $green-700;
+        border-radius: 5px 5px 0px 0px;
+        color: #fff;
+        display: none;
+
+        @media (max-width: 500px) {
+            display: block;
+        }
+    }
+
     .msg {
         padding-block: 20px;
         padding-inline: 80px;
+        align-items: center;
+
+        @media (max-width: 700px) {
+            padding: 10px;
+            border-bottom: 1px solid $gray-200;
+            align-items: start;;
+        }
 
         .msg-left {
             width: 450px;
-            .left-title{
-                color: $green-500;
+
+            .left-title {
+                color: $green-600;
+                margin-bottom: 20px;
+
+                @media (max-width: 500px) {
+                    font-size: 16px;
+                    margin-bottom: 10px;
+                }
             }
         }
 
         .msg-right {
             width: 450px;
-            .right-title{
-                color: $green-500;
+            margin-bottom: 20px;
+
+            .right-title {
+                color: $green-600;
+                margin-bottom: 20px;
+
+                @media (max-width: 500px) {
+                    font-size: 16px;
+                    margin-bottom: 10px;
+                }
             }
         }
     }
@@ -75,17 +91,31 @@
     .line {
         width: 1px;
         height: 200px;
+        margin-right: 5px;
         background: #BFBFBF;
+
+        @media (max-width: 500px) {
+            height: 100px;
+        }
     }
 
     .detail div {
         padding-bottom: 5px;
+
+        @media (max-width: 500px) {
+            font-size: 11px;
+        }
     }
 }
 
-.content{
-    .header{
-        color: $green-500;
+.content {
+    padding: 10px;
+    .header {
+        color: $green-600;
+
+        @media (max-width: 700px) {
+            display: none;
+        }
     }
 }
 
@@ -95,10 +125,18 @@
     .total-text-group {
         width: 300px;
 
+        @media (max-width: 700px) {
+            width: 100%;
+        }
+
         div {
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            @media (max-width: 700px) {
+                font-size: 16px;
+            }
         }
     }
 }

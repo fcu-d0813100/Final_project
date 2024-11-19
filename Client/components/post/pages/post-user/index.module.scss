@@ -2,14 +2,7 @@
 .user-layout {
   display: flex;
 }
-.member-post {
-  max-width: 100%;
-  padding: 70px 120px;
-  box-sizing: border-box;
-  @media (max-width: 390px) {
-    padding: 15px;
-  }
-}
+
 .post-title {
   display: flex;
   justify-content: space-between;
@@ -69,8 +62,9 @@
 
         a {
           color: #000;
-          // border-bottom: 2px $red-500 solid;
 
+          // border-bottom: 2px $red-500 solid;
+          &:visited,
           &:hover,
           &:active {
             border-bottom: 2px $red-500 solid;
@@ -78,7 +72,7 @@
         }
         @media (max-width: 390px) {
           padding: 5px 0 3px;
-          font-size: 20px;
+          font-size: 18px;
         }
         .active {
           position: relative;
@@ -105,7 +99,7 @@
 
       @media (max-width: 390px) {
         position: absolute;
-        top: -48px;
+        // top: -48px;
         right: 15px;
         width: 35px;
         height: 35px;
@@ -121,6 +115,13 @@
         span {
           display: inline-block;
           opacity: 1;
+        }
+        @media (max-width: 390px) {
+          width: 35px;
+          span {
+            display: none;
+            opacity: 0;
+          }
         }
       }
     }
@@ -149,16 +150,26 @@
   flex-direction: column;
   padding: 20px;
   gap: 20px;
-  @media (max-width: 390px) {
+  @media (max-width: 576px) {
     padding: 0;
+  }
+  @media (max-width: 390px) {
+    padding-top: 12px;
   }
 }
 
 .save-all {
   display: flex;
   flex-wrap: wrap;
+  // justify-content: center;
   gap: 25px;
   padding: 20px 40px;
+  @media (max-width: 576px) {
+    padding: 0;
+  }
+  @media (max-width: 390px) {
+    padding-top: 12px;
+  }
 }
 
 .my-masonry-grid {

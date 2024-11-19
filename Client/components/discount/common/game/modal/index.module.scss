@@ -1,0 +1,72 @@
+@import '@/styles/_variant.scss';
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* 背景遮罩 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  /* 使關閉按鈕浮動在右上角 */
+
+
+}
+
+.closeButton {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 40px;
+  color: #888;
+  cursor: pointer;
+
+
+}
+
+.closeButton:hover {
+  color: #333;
+}
+
+.coupon{
+  width: 200px;
+  height: 50px;
+  background: url('/discount/Subtract.svg');
+}
+
+.copyAndGoButton {
+  background-color: $green-600;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+
+  &:hover {
+    background-color: $green-800;
+  }
+}
+
+@media (max-width: 576px) {
+  .modalContent{
+    max-width: 300px;
+  }
+}

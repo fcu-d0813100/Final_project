@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { Nav, Navbar } from 'react-bootstrap'
-import { useRouter } from 'next/router'
+import React, { useState, useEffect } from 'react';
+import { Nav, Navbar } from 'react-bootstrap';
+import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks/use-auth'
-
-import { PiClockCountdown, PiTicket } from 'react-icons/pi'
-import styles from './index.module.scss'
+import {
+  PiClockCountdown,
+  PiTicket,
+} from 'react-icons/pi';
+import styles from './index.module.scss';
 
 const navLinks = [
   {
@@ -19,41 +21,42 @@ const navLinks = [
     label: '優惠券管理',
     key: 'coupon',
   },
-]
+];
 
 export default function Index() {
-  const router = useRouter()
+  const router = useRouter();
   const { logout } = useAuth()
+
   const [linkState, setLinkState] = useState(
     navLinks.reduce((acc, link) => {
-      acc[link.key] = { hover: false, active: router.pathname === link.href }
-      return acc
+      acc[link.key] = { hover: false, active: router.pathname === link.href };
+      return acc;
     }, {})
-  )
+  );
 
   useEffect(() => {
     setLinkState((prev) => {
-      const newLinkState = { ...prev }
+      const newLinkState = { ...prev };
       navLinks.forEach((link) => {
-        newLinkState[link.key].active = router.pathname === link.href
-      })
-      return newLinkState
-    })
-  }, [router.pathname])
+        newLinkState[link.key].active = router.pathname === link.href;
+      });
+      return newLinkState;
+    });
+  }, [router.pathname]);
 
   const handleMouseEnter = (key) => {
     setLinkState((prev) => ({
       ...prev,
       [key]: { ...prev[key], hover: true },
-    }))
-  }
+    }));
+  };
 
   const handleMouseLeave = (key) => {
     setLinkState((prev) => ({
       ...prev,
       [key]: { ...prev[key], hover: false },
-    }))
-  }
+    }));
+  };
 
   return (
     <Navbar expand="lg" className={styles['nav']}>
@@ -65,18 +68,17 @@ export default function Index() {
         id="basic-navbar-nav"
         className={`${styles['collapse']} justify-content-center`}
       >
-        <Nav>
+        <Nav >
           {navLinks.map((link) => (
             <Nav.Link
               key={link.key}
               href={link.href}
-              className={`${
-                linkState[link.key].active
-                  ? styles['active']
-                  : linkState[link.key].hover
+              className={`${linkState[link.key].active
+                ? styles['active']
+                : linkState[link.key].hover
                   ? styles['hover']
                   : ''
-              } h6`}
+                } h6`}
               onMouseEnter={() => handleMouseEnter(link.key)}
               onMouseLeave={() => handleMouseLeave(link.key)}
             >
@@ -84,16 +86,9 @@ export default function Index() {
               {link.label}
             </Nav.Link>
           ))}
-          <button
-            className="btn-logout h6"
-            onClick={() => {
-              logout()
-            }}
-          >
-            登出
-          </button>
+          <button className={`btn-logout h6 ${styles.out}`} onClick={logout} >登出</button>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
-  )
+  );
 }

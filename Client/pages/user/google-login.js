@@ -1,52 +1,29 @@
 import useFirebase from '@/hooks/use-firebase'
 import { initUserData, useAuth } from '@/hooks/use-auth'
-import {
-  googleLogin,
-  checkAuth,
-  logout,
-  parseJwt,
-  getUserById,
-} from '@/services/user'
+import { googleLogin, checkAuth, logout, parseJwt } from '@/services/user'
 import toast, { Toaster } from 'react-hot-toast'
 import GoogleLogo from '@/components/icons/google-logo'
 
-// 因瀏覽器安全限制，改用signInWithPopup，詳見以下討論
-// https://github.com/orgs/mfee-react/discussions/129
 export default function GoogleLoginPopup() {
   const { loginGoogle, logoutFirebase } = useFirebase()
   const { auth, setAuth } = useAuth()
 
   // 處理google登入後，要向伺服器進行登入動作
   const callbackGoogleLoginPopup = async (providerData) => {
-    console.log(providerData)
+    console.log('Google登入資料:', providerData)
 
-    // 如果目前react(next)已經登入中，不需要再作登入動作
     if (auth.isAuth) return
 
-    // 向伺服器進行登入動作
-    const res = await googleLogin(providerData)
+    try {
+      const res = await googleLogin(providerData)
+      console.log('Google登入回應:', res.data)
 
-    // console.log(res.data)
+      if (res.data.status === 'success') {
+        const jwtUser = parseJwt(res.data.data.accessToken)
+        console.log('JWT用戶資料:', jwtUser)
 
-    if (res.data.status === 'success') {
-      // 從JWT存取令牌中解析出會員資料
-      // 注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
-      const jwtUser = parseJwt(res.data.data.accessToken)
-      // console.log(jwtUser)
-
-      const res1 = await getUserById(jwtUser.id)
-      //console.log(res1.data)
-
-      if (res1.data.status === 'success') {
         // 只需要initUserData中的定義屬性值，詳見use-auth勾子
-        const dbUser = res1.data.data.user
-        const userData = { ...initUserData }
-
-        for (const key in userData) {
-          if (Object.hasOwn(dbUser, key)) {
-            userData[key] = dbUser[key] || ''
-          }
-        }
+        const userData = { ...initUserData, ...jwtUser }
 
         // 設定到全域狀態中
         setAuth({
@@ -54,46 +31,120 @@ export default function GoogleLoginPopup() {
           userData,
         })
 
-        toast.success('已成功登入')
+        toast.success('已成功登入'),
+          {
+            style: {
+              padding: '12px 40px',
+              color: '#626553',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#626553',
+              secondary: '#fff',
+            },
+          }
       } else {
-        toast.error('登入後無法得到會員資料')
-        // 這裡可以讓會員登出，因為這也算登入失敗，有可能會造成資料不統一
+        toast.error('登入失敗'),
+          {
+            style: {
+              padding: '12px 40px',
+              color: '#963827',
+              fontSize: '18px',
+            },
+            iconTheme: {
+              primary: '#963827',
+              secondary: '#fff',
+            },
+          }
       }
-    } else {
-      toast.error(`登入失敗`)
+    } catch (error) {
+      console.error('Google登入失敗:', error)
+      toast.error('登入失敗') <
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 
   // 處理檢查登入狀態
   const handleCheckAuth = async () => {
     const res = await checkAuth()
-
-    console.log(res.data)
+    console.log('檢查登入狀態回應:', res.data)
 
     if (res.data.status === 'success') {
-      toast.success('已登入會員')
+      toast.success('已登入會員'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        }
     } else {
-      toast.error(`非會員身份`)
+      toast.error('非會員身份'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 
   // 處理登出
   const handleLogout = async () => {
-    // firebase logout(注意，這並不會登出google帳號，是登出firebase的帳號)
     logoutFirebase()
 
     const res = await logout()
 
-    // 成功登出後，回復初始會員狀態
     if (res.data.status === 'success') {
-      toast.success('已成功登出')
+      toast.success('已成功登出'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        }
 
       setAuth({
         isAuth: false,
         userData: initUserData,
       })
     } else {
-      toast.error(`登出失敗`)
+      toast.error('登出失敗'),
+        {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        }
     }
   }
 

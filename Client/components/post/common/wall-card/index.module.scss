@@ -6,6 +6,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  @media (max-width: 576px) {
+    width: 200px;
+    gap: 5px;
+  }
   @media (max-width: 390px) {
     width: 160px;
     gap: 5px;
@@ -26,6 +30,7 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    line-height: normal;
     overflow: hidden;
     text-overflow: ellipsis;
   }

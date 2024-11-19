@@ -1,22 +1,30 @@
 @import '@/styles/_variant.scss';
 .modal {
-  transform: translateX(150%);
-  border-radius: 0px !important;
+  // display: flex;
+  // justify-content: center;
+  // position: absolute;
+  left: 50% !important;
+  transform: translateX(-50%);
+  // transform: translateX(150%);
   width: 400px;
+  & > div > div {
+    border-radius: 0px;
+  }
   .modal-header {
     border: none;
-    padding: 30px 30px 26px;
+    padding: 30px 30px 4px;
     font-size: 20px;
-
     button {
-      &:active {
+      &:active,
+      &:focus {
         box-shadow: none;
+        border: none;
       }
     }
   }
   .modal-body {
     border: none;
-    padding: 0 30px;
+    padding: 10px 30px 20px;
     font-size: 16px;
   }
   .modal-footer {
@@ -24,6 +32,16 @@
     justify-content: center;
     padding: 26px 30px 30px;
     border: none;
-    // gap: 20px;
+    button {
+      width: 174px;
+      font-size: 18px;
+      &:hover {
+        color: #fff;
+      }
+      &:active {
+        background-color: #616654;
+        border: none;
+      }
+    }
   }
 }

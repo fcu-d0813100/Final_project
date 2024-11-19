@@ -1,38 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Swal from 'sweetalert2'
-import Image from 'next/image'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { RxCross2, RxPlus } from 'react-icons/rx'
-import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
+import { RiCheckboxCircleFill } from 'react-icons/ri'
+import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
-// import router from 'next/router'
-import axios from 'axios'
 import Link from 'next/link'
 import UserSection from '@/components/user/common/user-section'
 import styles from './index.module.scss'
-import ReactDOMServer from 'react-dom/server'
-export default function Index(props) {
+import useAlert from '@/hooks/alert/use-alert'
+export default function PostEdit(props) {
+  // User Data
   const { auth } = useAuth()
-  const [imgs, setImgs] = useState([])
-  //Focus
+  const userId = auth.userData.id
+  const router = useRouter()
+  const { postId } = router.query
+
+  // Focus
   const [TitleFocus, setTitleFocus] = useState(false)
   const [ContentFocus, setContentFocus] = useState(false)
   const [tagFocus, setTagFocus] = useState(false)
 
+  // Data
+  const [imgs, setImgs] = useState([])
   const [title, setTitle] = useState('')
   const [titleLength, setTitleLength] = useState('')
   const [content, setContent] = useState('')
   const [contentLength, setContentLength] = useState('')
 
+  // Tags
   const [tagInput, setTagInput] = useState('')
   const [suggestedTags, setSuggestedTags] = useState([])
   const [selectedTags, setSelectedTags] = useState([])
-  const router = useRouter()
-  const inputRef = useRef(null)
-  const { postId } = router.query
-  const userId = auth.userData.id
 
-  let draggedItemIndex = null
+  // input alert draggedItemIndex
+  const inputRef = useRef(null)
+  const showAlert = useAlert()
+
+  const [draggedItemIndex, setDraggedItemIndex] = useState(null)
+  // let draggedItemIndex = null
   //render
   useEffect(() => {
     if (postId && userId) {
@@ -49,40 +54,18 @@ export default function Index(props) {
     )
     const [data] = await response.json()
     setTitle(data.title)
-    // setTitleLength(data.title.length)
+    setTitleLength(data.title.length)
     setContent(data.content)
+    setContentLength(data.title.length)
     setSelectedTags(data.tags ? data.tags.split(',') : [])
     setImgs(data.post_imgs ? data.post_imgs.split(',') : [])
   }
-  //Sweet Alert setting
-  const showAlert = (
-    message,
-    icon = <RiCloseCircleFill color="#963827" />,
-    timer = 1500
-  ) => {
-    const iconHtml = ReactDOMServer.renderToString(icon)
-    Swal.fire({
-      html: `
-      <div class="custom-alert-content">
-        <span class="custom-icon">${iconHtml}</span>
-        <span>${message}</span>
-      </div>
-    `,
-      showConfirmButton: false,
-      timer: timer,
-      position: 'center',
-      width: '300px',
-      padding: '1em',
-      customClass: {
-        popup: `${styles['custom-popup']}`,
-      },
-    })
-  }
-  //img upload
+
+  //img upload v
   const inputHandle = () => {
     inputRef.current.click()
   }
-  //img upload show
+  //img upload show v
   const showHandle = (e) => {
     const files = Array.from(e.target.files)
     if (files.length + imgs.length > 5) {
@@ -92,34 +75,54 @@ export default function Index(props) {
     // const nextImgs = files.map((file) => URL.createObjectURL(file))
     setImgs((prevImgs) => [...prevImgs, ...files])
   }
-  //delete img
+  //delete img v
   const deleteImg = (index) => {
     if (imgs.length === 1) {
       showAlert('請至少上傳一張圖片')
       return
     }
-    setImgs((prevImgs) => prevImgs.filter((_, i) => i !== index))
+
+    setImgs((prevImgs) =>
+      prevImgs.filter((_, i) => {
+        if (i === index && typeof prevImgs[i] !== 'string') {
+          URL.revokeObjectURL(prevImgs[i]) // 清理 Object URL
+        }
+        return i !== index
+      })
+    )
   }
+
+  // image preview debounce
+  const imagePreview = useMemo(() => {
+    return imgs.map((file) =>
+      file instanceof File
+        ? URL.createObjectURL(file)
+        : `http://localhost:3005/post/${file}`
+    )
+  }, [imgs])
+
+  // tag delete v
   const deleteTag = (index) => {
     setSelectedTags((prevTags) => prevTags.filter((_, i) => i !== index))
   }
-  //img drag
-  //拖曳圖片的索引
+  //img drag & drop
   const dragStartHandle = (index) => {
-    draggedItemIndex = index
+    setDraggedItemIndex(index)
   }
   const dragEndHandle = () => {
-    draggedItemIndex = null //不會判斷是否有放入正確
+    setDraggedItemIndex(null) //不會判斷是否有放入正確
   }
   const dropHandle = (e, dropIndex) => {
     e.preventDefault()
     if (draggedItemIndex === null || draggedItemIndex === dropIndex) return
-    const newImgs = [...imgs]
-    const draggedItem = newImgs[draggedItemIndex] //賦值 拖曳圖片在新陣列中的位置
-    newImgs.splice(draggedItemIndex, 1)
-    newImgs.splice(dropIndex, 0, draggedItem)
-    setImgs(newImgs)
-    draggedItemIndex = null
+    setImgs((prevImgs) => {
+      const newImgs = [...prevImgs]
+      const draggedItem = newImgs[draggedItemIndex]
+      newImgs.splice(draggedItemIndex, 1)
+      newImgs.splice(dropIndex, 0, draggedItem)
+      return newImgs // 確保更新狀態後返回新順序
+    })
+    setDraggedItemIndex(null)
   }
   // title & content
   const titleHandle = (e) => {
@@ -130,7 +133,7 @@ export default function Index(props) {
     setContent(e.target.value)
     setContentLength(e.target.value.length)
   }
-  // add tag
+  // tags add
   const addTagHandle = (e, tag) => {
     e.preventDefault()
     if (tagInput === '') return
@@ -139,15 +142,19 @@ export default function Index(props) {
     }
     setTagInput('')
   }
-  //動態搜尋
+  // tags search - dynamic
   useEffect(() => {
     if (tagInput) {
       const fetchTags = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:3005/api/post/tags?tagInput=${tagInput}`
+          const response = await fetch(
+            `http://localhost:3005/api/post/tags?tagInput=${tagInput}`,
+            {
+              credentials: 'include',
+            }
           )
-          setSuggestedTags(response.data)
+          const data = await response.json()
+          setSuggestedTags(data)
         } catch (error) {
           console.error('Failed to fetch tags:', error)
         }
@@ -157,12 +164,14 @@ export default function Index(props) {
       setSuggestedTags([])
     }
   }, [tagInput])
-  //表單送出
+
+  // console.log(imgs)
+  // Form submit
   const submitHandle = async (e) => {
     e.preventDefault()
     // Verify form
-    if (titleLength > 20) {
-      showAlert('標題超過20')
+    if (titleLength > 30) {
+      showAlert('標題超過30')
       return
     }
     if (contentLength > 1000) {
@@ -171,26 +180,30 @@ export default function Index(props) {
     }
     // Collect form
     const formData = new FormData()
+    formData.append('postId', postId)
     formData.append('title', title)
     formData.append('content', content)
     formData.append('userId', userId)
-    imgs.forEach((file) => formData.append('files', file))
-
-    for (let i = 0; i < selectedTags.length; i++) {
-      formData.append('tags', selectedTags[i])
-    }
+    formData.append('updateImgs', imgs)
+    // 保留的舊圖片&上傳的新圖片
+    const oldImgs = imgs.filter((img) => typeof img === 'string')
+    const newFiles = imgs.filter((img) => img instanceof File)
+    oldImgs.forEach((img) => formData.append('imgs', img))
+    newFiles.forEach((file) => formData.append('files', file))
+    // 標籤
+    selectedTags.forEach((tag) => formData.append('tags', tag))
 
     // Submit form
     try {
       const response = await fetch('http://localhost:3005/api/post/update', {
-        method: 'POST',
+        method: 'PUT',
         body: formData,
         credentials: 'include',
       })
       if (response.ok) {
         // 成功處理後的操作
-        showAlert('發布貼文成功', <RiCheckboxCircleFill color="#90957A" />)
-        router.push('/user/post') // 跳轉到 /success 頁面
+        showAlert('更新貼文成功', <RiCheckboxCircleFill color="#90957A" />)
+        router.push('/user/post')
       } else {
         alert('提交失敗，請再試一次！')
       }
@@ -199,6 +212,7 @@ export default function Index(props) {
       alert('提交錯誤，請再試一次！')
     }
   }
+
   return (
     <>
       <UserSection titleCN="我的貼文" titleENG="My Post">
@@ -227,6 +241,7 @@ export default function Index(props) {
                 <div
                   className={styles['img-upload-area']}
                   onClick={inputHandle}
+                  style={imgs.length === 5 ? { display: 'none' } : {}}
                 >
                   <span className="h3">+</span>
                   <span>添加</span>
@@ -235,10 +250,10 @@ export default function Index(props) {
                   <div className={styles['img-container']}>
                     {/* map上傳的圖片 */}
                     {imgs.map((file, index) => {
-                      const src =
-                        file instanceof File
-                          ? URL.createObjectURL(file)
-                          : `/post/${file}`
+                      // const src =
+                      //   file instanceof File
+                      //     ? URL.createObjectURL(file)
+                      //     : `http://localhost:3005/post/${file}`
                       return (
                         //eslint-disable-next-line
                         <div className={styles['image-wrapper']}
@@ -249,7 +264,12 @@ export default function Index(props) {
                           onDragOver={(e) => e.preventDefault()}
                           onDrop={(e) => dropHandle(e, index)}
                         >
-                          <Image src={src} width={98} height={98} alt="image" />
+                          <Image
+                            src={imagePreview[index]}
+                            width={98}
+                            height={98}
+                            alt="image"
+                          />
                           {/* //eslint-disable-next-line */}
                           <div
                             className={styles['delete-btn']}
@@ -271,7 +291,7 @@ export default function Index(props) {
                 <div
                   className={`${styles['info-title']} ${
                     styles[TitleFocus ? 'focused' : '']
-                  }`}
+                  } ${styles[titleLength > 30 ? 'over-limit' : '']}`}
                   onFocus={() => setTitleFocus(true)}
                   onBlur={() => setTitleFocus(false)}
                 >
@@ -283,14 +303,14 @@ export default function Index(props) {
                     onChange={titleHandle}
                   />
                   <div className={styles['count-tip']}>
-                    {titleLength == 0 ? 0 : titleLength}/20
+                    {titleLength == 0 ? 0 : titleLength}/30
                   </div>
                 </div>
                 <div>
                   <div
                     className={`${styles['info-content']} ${
                       styles[ContentFocus ? 'focused' : '']
-                    }`}
+                    } ${styles[contentLength > 1000 ? 'over-limit' : '']}`}
                     onFocus={() => setContentFocus(true)}
                     onBlur={() => setContentFocus(false)}
                   >
@@ -355,10 +375,10 @@ export default function Index(props) {
               </div>
             </div>
           </div>
-          {/* 按鈕 */}
+          {/* btn */}
           <div className={styles['post-btn']}>
             <button className="btn-primary h6" type="submit">
-              發布
+              更新
             </button>
             <Link href="/user/post" className={`btn-secondary ${styles['']}`}>
               取消

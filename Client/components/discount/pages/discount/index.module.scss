@@ -1,5 +1,8 @@
 @import '@/styles/_variant.scss';
-
+.main {
+    position: relative;
+    padding-inline: 20px;
+}
 
 .nav {
     margin-top: 3%;
@@ -25,12 +28,63 @@
     }
 }
 
-.phoneSize {
+.carouselContainer {
     display: none;
+}
+
+.point {
+    position: sticky;
+    bottom: 10px;
+    left: 0;
+}
+
+.game {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: url('/discount/gamepoint.svg') center no-repeat;
+    background-size: cover;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    transition: transform 0.3s ease;
+    /* 平滑的轉換效果 */
+    /* 定義旋轉動畫 */
+    animation: rotateLeftRight 3s infinite ease-in-out;
+
+    @media (max-width: 1700px) {
+        width: 150px;
+        height: 150px;
+    }
+
+    @media (max-width: 1400px) {
+        width: 140px;
+        height: 140px;
+    }
+
+    @media (max-width: 900px) {
+        width: 100px;
+        height: 100px;
+    }
+    @media (max-width: 576px){
+    display: block;
+    }
+}
+
+/* 定義旋轉動畫的關鍵幀 */
+@keyframes rotateLeftRight {
+  0% {
+    transform: rotate(10deg); /* 初始位置 */
+  }
+  50% {
+    transform: rotate(-10deg); /* 旋轉 180 度，這是左轉 */
+  }
+  100% {
+    transform: rotate(10deg); /* 完成 360 度旋轉，這是右轉回來 */
+  }
 }
 
 @media (max-width: 576px) {
     .carouselContainer {
+        display: block;
         ul {
             bottom: 10px;
             li {

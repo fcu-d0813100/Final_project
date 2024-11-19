@@ -1,0 +1,43 @@
+.user-section {
+    display: flex;
+    // position: relative;
+    width: 100%;
+}
+
+.any-section {
+    // max-width: 100%;
+    padding: 70px 120px;
+    box-sizing: border-box;
+    flex: 1;
+
+}
+
+@media (max-width:1250px) {
+    .any-section {
+        padding: 40px 20px 30px 20px;
+    }
+}
+
+
+@media (max-width: 1100px) {
+    .ordertitle{
+        display: none;
+    }
+    .any-section {
+        padding: 40px 0px;
+    }
+}
+
+
+@media (max-width: 575px) {
+    .any-section {
+        padding: 0px 0px;
+    }
+
+    .user-section {
+        display: inline;
+        // position: relative;
+        width: 100%;
+    }
+
+}

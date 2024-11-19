@@ -1,23 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import Stars from "react-stars";
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useAuth } from '@/hooks/use-auth';
 
-const CommentForm = () => {
+const CommentForm = ({ orderId, quantity, productId, colorId, color_name, productName, brand, color, imageSrc }) => {
+
+  console.log("傳入的參數：");
+  console.log("orderId:", orderId);
+  console.log("quantity:", quantity);
+  console.log("productId:", productId);
+  console.log("colorId:", colorId);
+  console.log("color_name:", color_name);
+  console.log("productName:", productName);
+  console.log("brand:", brand);
+  console.log("color:", color);
+  console.log("imageSrc:", imageSrc);
+
+  const { auth } = useAuth(); // 使用 useAuth 來取得登入狀態與使用者資料
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [images, setImages] = useState([
-    '/product/commentimg1.png',
-    '/product/commentimg2.png'
-  ]);
+  const [images, setImages] = useState([]);
+  const router = useRouter();
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
 
   const handleCommentChange = (e) => {
-    setComment(e.target.innerText);
+    setComment(e.target.value);
   };
 
   const handleAddImage = () => {
@@ -26,8 +39,7 @@ const CommentForm = () => {
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map(file => URL.createObjectURL(file));
-    setImages(prevImages => [...prevImages, ...newImages]);
+    setImages((prevImages) => [...prevImages, ...files]); // 將文件物件直接存入 images 狀態
   };
 
   const handleRemoveImage = (index) => {
@@ -37,15 +49,58 @@ const CommentForm = () => {
   const handleCancel = () => {
     setComment('');
     setRating(0);
-    setImages([
-      '/product/commentimg1.png',
-      '/product/commentimg2.png'
-    ]);
+    setImages([]);
   };
 
-  const handleSave = () => {
-    console.log('Save clicked');
-    // Save review logic here
+  // 清理使用的 URL 對象，防止內存洩漏
+  useEffect(() => {
+    return () => {
+      images.forEach((file) => {
+        if (file instanceof File) {
+          URL.revokeObjectURL(file);
+        }
+      });
+    };
+  }, [images]);
+
+  // 保存評論到後端
+  const handleSave = async () => {
+    if (!auth.isAuth) {
+      alert('請先登入後再提交評論');
+      router.push('/user/login/user'); // 導向登入頁面
+      return;
+    }
+
+    console.log("User ID:", auth.userData.id); // 檢查是否獲得正確的使用者 ID
+
+    const formData = new FormData();
+    formData.append("order_id", orderId);
+    formData.append("quantity", quantity);
+    formData.append("product_id", productId);
+    formData.append("color_id", colorId);
+    formData.append("comment", comment);
+    formData.append("rating", rating);
+    formData.append("user_id", auth.userData.id); // 傳遞登入使用者的 ID
+
+    images.forEach((image) => {
+      formData.append("mediaFiles", image);
+    });
+
+    try {
+      const response = await fetch(`http://localhost:3005/api/product/create-review/${productId}/${colorId}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('評論提交成功');
+        router.push(`/product/product-list/${colorId}#reviews`);
+      } else {
+        console.error('評論提交失敗');
+      }
+    } catch (error) {
+      console.error('提交評論時出錯:', error);
+    }
   };
 
   return (
@@ -55,14 +110,17 @@ const CommentForm = () => {
           <Image
             width={160}
             height={160}
-            src="/product/LANCOME_LS01_M_196.webp"
-            alt="Product"
+            src={imageSrc}
+            alt={`${brand} ${productName}`}
           />
         </Col>
         <Col xs={10} className={styles['order-detail']}>
-          <h5 className='p'>LANCOME <br/></h5>
-          <div className={`${styles['productname']} h6`}>玲瓏巧思五色眼影盤</div>
-          <p className={`${styles['color']} ps`}><span className={styles['color-swatch']} ></span><span className={styles['color-text']}>顏色：來杯摩卡-#01</span></p>
+          <h5 className='p'>{brand}</h5>
+          <div className={`${styles['productname']} h6`}>{productName}</div>
+          <p className={`${styles['color']} ps`}>
+            <span className={styles['color-swatch']} style={{ backgroundColor: color }}></span>
+            <span className={styles['color-text']}>顏色：{color_name}</span>
+          </p>
         </Col>
       </Row>
 
@@ -81,20 +139,17 @@ const CommentForm = () => {
 
       <Row className="mb-4">
         <Col xs={12} className="d-flex gap-2">
-          {images.map((src, index) => (
+          {images.map((file, index) => (
             <div key={index} className={styles['image-wrapper']} style={{ position: 'relative' }}>
               <Image
                 width={98}
                 height={98}
-                src={src}
+                src={file instanceof File ? URL.createObjectURL(file) : file} // 確保 file 是 File 對象
                 alt={`Review image ${index + 1}`}
               />
-              <button
-          onClick={() => handleRemoveImage(index)}
-          className={styles['remove-button']}
-        >
-          &times;
-        </button>
+              <button onClick={() => handleRemoveImage(index)} className={styles['remove-button']}>
+                &times;
+              </button>
             </div>
           ))}
           <div className={styles['add-image']} onClick={handleAddImage}>
@@ -116,21 +171,22 @@ const CommentForm = () => {
         <Col xs={12}>
           <Form.Group controlId="comment">
             <Form.Label className="h5">評論</Form.Label>
-            <div
-              contentEditable
-              className={`${styles['editable-comment']}`}
+            <textarea
+              value={comment}
+              onChange={handleCommentChange}
               placeholder="分享您的購物體驗或是幫助其他人更好了解此商品的優缺點"
-              onInput={handleCommentChange}
+              className={`${styles['editable-comment']}`}
               style={{
                 border: '1px solid #ddd',
                 padding: '8px',
                 minHeight: '120px',
                 borderRadius: '4px',
                 overflowY: 'auto',
+                resize: 'none',
+                outline: 'none',
+                fontSize: '16px',
               }}
-            >
-              {comment}
-            </div>
+            />
           </Form.Group>
         </Col>
       </Row>

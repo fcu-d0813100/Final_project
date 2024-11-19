@@ -1,4 +1,5 @@
 'use client'
+import Brands from '@/components/home/common/brands'
 import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import axios from 'axios'
@@ -11,21 +12,14 @@ import WorkshopDetailInfo from '@/components/workshop/common/workshop-detail-inf
 import WorkshopAddCartInfo from '@/components/workshop/common/workshop-addcart-info'
 import { PiMinus, PiPlus, PiPlusCircle, PiHandbagSimple } from 'react-icons/pi'
 import React, { useState, useEffect } from 'react'
+import ToastSuccess from '@/components/shared/toast-success'
 
 export default function WorkshopDetail() {
-  //------吐司訊息
-  const addPnotify = () =>
-    toast.success('新增1件商品', {
-      style: {
-        border: '1.2px solid #90957a',
-        padding: '12px 40px',
-        color: '#626553',
-      },
-      iconTheme: {
-        primary: '#626553',
-        secondary: '#fff',
-      },
-    })
+  //----------吐司訊息
+  const { addToCartToast } = ToastSuccess({
+    message: '成功加入購物車！',
+    functionName: 'addToCartToast', // 動態函數名稱
+  })
 
   const { onAddWorkshop } = useCartWorkshop()
   const router = useRouter()
@@ -72,9 +66,6 @@ export default function WorkshopDetail() {
   const handleSelectTime = (time) => {
     setSelectedTime(time)
   }
-  const notify = () => {
-    toast.success('已成功加入購物車!')
-  }
 
   const handleAddToCart = (navigateToCart = false) => {
     if (selectedTime) {
@@ -87,8 +78,12 @@ export default function WorkshopDetail() {
         typeId: tworkshop.type_id,
         classId: selectedTime.key,
         price: tworkshop.price,
+        cover: tworkshop.img_cover,
+        teacher: tworkshop.teacher_name,
       })
-      notify(tworkshop.name) // 顯示成功訊息
+
+      addToCartToast()
+
       if (navigateToCart) {
         router.push('/cart') // 只有當參數為 true 時才跳轉
       }
@@ -134,7 +129,7 @@ export default function WorkshopDetail() {
         address={tworkshop.address}
         type={tworkshop.workshop_type_type}
         teacher={tworkshop.teacher_name}
-        cover={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-c.jpg`}
+        cover={`http://localhost:3005/workshop/${tworkshop.img_cover}`}
       />
 
       <div className={styles.workshopSpace}>
@@ -182,6 +177,8 @@ export default function WorkshopDetail() {
 
         <div className="d-flex justify-content-between align-items-end pb-2">
           <WorkshopAddCartInfo
+            wid={tworkshop.id}
+            // 要加這個我的收藏才能帶到id
             name={tworkshop.name}
             registrationStart={tworkshop.registration_start}
             registrationEnd={tworkshop.registration_end}
@@ -228,13 +225,13 @@ export default function WorkshopDetail() {
       </div>
       <WorkshopDetailInfo
         teacher={tworkshop.teacher_name}
-        bn={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-f.jpg`}
-        imgS01={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-s-1.jpg`}
+        bn={`http://localhost:3005/workshop/${tworkshop.img_lg}`}
+        imgS01={`http://localhost:3005/workshop/${tworkshop.img_sm01}`}
         outline={tworkshop.outline}
         note={tworkshop.notes}
-        imgS02={`/workshop/workshop_img/${tworkshop.workshop_type_id}-${tworkshop.id}-s-2.jpg`}
+        imgS02={`http://localhost:3005/workshop/${tworkshop.img_sm02}`}
       />
-      <Toaster />
+      <Brands />
     </>
   )
 }

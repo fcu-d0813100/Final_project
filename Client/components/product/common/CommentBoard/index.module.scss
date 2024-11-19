@@ -4,7 +4,18 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 0;
+  padding: 0px 0;
+  .commentList{
+    margin-bottom: 100px;
+  }
+  .no-reviews{
+    text-align: center;
+    margin: 10% 0;
+    .no-reviews-p{
+      margin-bottom: 40px;
+      font-weight: bold;
+    }
+  }
   .commentupper{
     display: flex;
     // justify-content: space-between;
@@ -50,14 +61,14 @@
         display: inline-block;
         width: 212px;
         height: 12px;
-        background-color: #e0e0e0; // 背景顏色，例如灰色
+        background-color: #ccc;
         position: relative;
       }
 
       .ratingFill {
         height: 100%;
-        background-color: #90957a; // 填滿顏色
-        transition: width 0.3s ease; // 讓動畫效果更平滑
+        background-color: #90957a; // 填滿的動態顏色
+        transition: width 1s ease; // 平滑的動畫效果
       }
 
       .percentage {
@@ -100,6 +111,7 @@
       position: relative; // 為了定位「編輯」和「刪除」按鈕
 
       .userInfo {
+        position: relative;
         display: flex;
         gap: 10px;
         align-items: center;
@@ -117,6 +129,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            .date-likes{
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              position: absolute;
+              right: 0;
+            }
+           
             
             .username {
               font-weight: bold;
@@ -180,5 +200,87 @@
         }
       }
     }
+  }
+}
+
+.starfilter{
+  border: 1px solid #ccc !important;
+  color: #9ea28b !important;
+  background-color: #fff !important;
+  transition: all 0.3s ease !important;
+  &:hover {
+    color: #fff !important;
+    background-color: #9ea28b !important; // Hover時的背景顏色
+    border-color: #9ea28b !important;    // Hover時的邊框顏色
+  }
+}
+
+.like-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px; /* 調整圖標和文字的間距 */
+}
+
+.like-button img {
+  width: 20px;
+  height: 20px;
+}
+
+.like-text {
+  font-size: 14px;
+  color: #90957a; /* 或根據需求設置顏色 */
+}
+
+.btn-cancel{
+  height: 2.5rem;
+  width: auto;
+  border-radius: 3px;
+  border: black solid 1px;
+  background-color: white;
+  color: black;
+  box-sizing: border-box;
+  margin: 0 10px;
+  &:hover {
+    background-color: black;
+    color: white;
+    border: black solid 1px;
+    transition: ease 0.3s;
+  }
+}
+.btn-save{
+  height: 2.5rem;
+  width: auto;
+  border-radius: 3px;
+  border: black solid 1px;
+  background-color: black;
+  color: white;
+  margin: 0;
+  &:hover {
+    border: black solid 1px;
+    background-color: white;
+    color: black;
+    transition: ease 0.3s;
+  }
+}
+.productInfo{
+  align-items: center;
+  .infoName{
+    transform: translate(0, 15%);
+  }
+}
+.commentText{
+  height: 100px;
+  border: 1px solid #ccc;
+  margin: 20px 0;
+  outline: none;
+}
+.uploadButton{
+  &:hover{
+    background-color: #9ea28b;
   }
 }

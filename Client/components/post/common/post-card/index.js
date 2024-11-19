@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { format } from 'date-fns'
+import { PiChatCircle } from 'react-icons/pi'
+import Image from 'next/image'
 import Carousel from 'react-bootstrap/Carousel'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import {
-  PiHeartStraight,
-  PiHeartStraightFill,
-  PiChatCircle,
-} from 'react-icons/pi'
-import { FgThumbsUp, FgThumbUpFill } from '@/components/icons/figma'
 import { usePost } from '@/hooks/post/use-post'
-import { useAuth } from '@/hooks/use-auth'
-import styles from './index.module.scss'
+import { useAction } from '@/hooks/post/use-action'
+import { useModal } from '@/hooks/use-modal'
 import ReplyInfo from '../reply-info'
-export default function PostCard1({
+import PostIcon from '../post-icon'
+import styles from './index.module.scss'
+// import ModalConfirm from '@/components/shared/modal-confirm'
+export default function PostCard({
   postAuthor,
   authorAvatar,
   title,
@@ -24,112 +22,124 @@ export default function PostCard1({
   saveCount,
   commentCount,
   postCreateTime,
+  comments,
+  sendHandle,
+  setCancelHandle = {},
 }) {
-  const { postId } = usePost()
-  const { auth } = useAuth()
-  const [active, setActive] = useState({ 1: null, 2: null, 3: false })
+  // post & user
+  const { post } = usePost()
+  const postId = post?.id
+
+  const { ensureLoggedIn } = useModal()
+
+  // action
+  const { liked, likeToggle, saved, saveToggle } = useAction(postId, {
+    fetchLike: true,
+    fetchSave: true,
+  })
+  // data
   const [inputValue, setInputValue] = useState('')
-  const [focus, setFocus] = useState(false)
-  const [user, setUser] = useState('')
+  const [replyTarget, setReplyTarget] = useState('')
+  const [replyTargetId, setReplyTargetId] = useState('')
   const [reply, setReply] = useState('')
-  const userId = auth.userData.id
+  const [replyId, setReplyId] = useState('')
+  // ui
+  const [index, setIndex] = useState(0)
+  const [focus, setFocus] = useState(false)
 
-  // const [index, setIndex] = useState(0)
-  // const [isSaved, setIsSaved] = useState(false)
-  // Like Init (only if user is logged in)
-  useEffect(() => {
-    if (auth.isAuth) {
-      fetch(`/api/post/${postId}/${userId}/isLiked`)
-        .then((res) => res.json())
-        .then((data) => {
-          setActive((prevState) => ({
-            ...prevState,
-            1: data.isLiked, // icon id 1 是按赞
-          }))
-          console.log(data.isLiked)
-        })
-        .catch((err) => console.error(err))
-    }
-  }, [postId, userId, auth.isAuth])
-
-  const icons = [
-    {
-      id: 1,
-      default: <FgThumbsUp height="26" width="26" fill="#8A8A8A" />,
-      active: <FgThumbUpFill height="26" width="26" fill="#8A8A8A" />,
-    },
-    {
-      id: 2,
-      default: <PiHeartStraight size={26} fill="#8A8A8A" />,
-      active: <PiHeartStraightFill size={26} fill="#963827" />,
-    },
-    {
-      id: 3,
-      default: <PiChatCircle size={26} fill="#8A8A8A" />,
-      active: <PiChatCircle size={26} fill="#8A8A8A" />,
-    },
-  ]
-
+  const images = postImages.split(',')
   const formattedTime = postCreateTime
     ? format(new Date(postCreateTime), 'yyyy-MM-dd HH:mm')
     : ''
-  // console.log(postImages)
-  let { post } = usePost()
-  if (!post) {
-    return <p></p>
-  }
-  const { comments } = post
+
+  useEffect(() => {
+    setCancelHandle(() => cancelHandle)
+  }, [setCancelHandle])
+
+  useEffect(() => {
+    if (focus) {
+      if (!ensureLoggedIn()) return
+    }
+  }, [focus])
 
   const cancelHandle = (e) => {
-    e.preventDefault()
+    e && e.preventDefault()
     setInputValue('')
     setFocus(false)
-    setUser('')
+    setReplyTarget('')
     setReply('')
+    setReplyId('')
   }
-  const replyHandle = (text, user) => {
-    setUser(user)
+
+  const replyHandle = (text, user, replyTargetId, replyId) => {
+    if (!ensureLoggedIn()) return
+
+    setReplyTargetId(replyTargetId)
+    setReplyId(replyId)
+    setReplyTarget(user)
     setReply(text)
     setFocus(true)
   }
-  // const iconHandle = (iconId) => {
-  //   //先複製原本的狀態 然後動態搜尋 改相反
-  //   setActive((prevState) => ({
-  //     ...prevState,
-  //     [iconId]: !prevState[iconId],
-  //   }))
-  // }
 
-  // const SelectHandle = (index, e) => {
-  //   const imagesCount = postImages.split(',').length
-  //   if (index === 0 && e?.direction === 'next' && index === imagesCount - 1) {
-  //     return
-  //   }
-  //   setIndex(index)
-  // }
+  // carousel
+  const handlePrev = () => {
+    if (index > 0) {
+      setIndex(index - 1)
+    }
+  }
+
+  const handleNext = () => {
+    if (index < images.length - 1) {
+      setIndex(index + 1)
+    }
+  }
+
   return (
     <>
       <div className={styles['post-card3']}>
-        {/* post-img with Sw*/}
-        <div className={styles['post-img']}>
+        {/* post-img with Carousel */}
+        <div className={styles['post-img-wrap']}>
           <Carousel
+            indicators={true}
+            activeIndex={index}
             interval={null}
-            // onSelect={SelectHandle}
-            // controls={postImages.split(',').length > 1}
+            prevIcon={
+              <span
+                aria-hidden="true"
+                className="carousel-control-prev-icon"
+                onClick={handlePrev}
+                style={{ cursor: index === 0 ? 'not-allowed' : 'pointer' }}
+              />
+            }
+            nextIcon={
+              <span
+                aria-hidden="true"
+                className="carousel-control-next-icon"
+                onClick={handleNext}
+                style={{
+                  cursor:
+                    index === images.length - 1 ? 'not-allowed' : 'pointer',
+                }}
+              />
+            }
           >
-            {postImages.split(',').map((image, index) => (
-              <Carousel.Item key={index}>
-                <Image
-                  className={styles['user-image']}
-                  src={`/post/${image}`}
-                  alt="User Image"
-                  // fill
-                  // layout="responsive"
-                  width={600}
-                  height={650}
-                />
-              </Carousel.Item>
-            ))}
+            {postImages.split(',').map((image, index) => {
+              const imgSrc = `http://localhost:3005/post/${image}`
+              return (
+                <Carousel.Item key={index}>
+                  <Image
+                    className={styles['post-image']}
+                    src={imgSrc}
+                    alt="Share Image"
+                    // width={600}
+                    // height={650}
+                    priority
+                    fill
+                    // layout="responsive"
+                  />
+                </Carousel.Item>
+              )
+            })}
           </Carousel>
         </div>
         {/* post-text */}
@@ -138,7 +148,8 @@ export default function PostCard1({
           <div className={styles['post-user']}>
             <Image
               className={styles['user-image']}
-              src={`/user/img/${authorAvatar}`}
+              // src={`/user/img/${authorAvatar}`}
+              src={`http://localhost:3005/avatar/${authorAvatar}`}
               alt="User Image"
               width={40}
               height={40}
@@ -152,9 +163,10 @@ export default function PostCard1({
               <div className={`${styles['info-title']} h6`}>{title}</div>
               <div>
                 <span className={styles['info-content']}>{content}</span>
-                {tags.split(',').map((tag, index) => (
-                  <span key={index}>#{tag}</span>
-                ))}
+                {tags &&
+                  tags
+                    .split(',')
+                    .map((tag, index) => <span key={index}>#{tag}</span>)}
               </div>
               <div className={styles['info-date']}>{formattedTime}</div>
             </div>
@@ -168,23 +180,37 @@ export default function PostCard1({
                 {comments.map((comment) => (
                   <ReplyInfo
                     key={comment.comment_id}
-                    onReplyClick={replyHandle}
+                    onReplyClick={(text, user, commentId) =>
+                      replyHandle(text, user, commentId)
+                    }
                     comments={comment}
+                    commentId={comment.comment_id}
+                    commentAuthorId={comment.comment_author_id}
                     commentAuthor={comment.comment_author_nickname}
                     commentAuthorAvatar={comment.comment_author_img}
                     commentCreateTime={comment.created_at}
                     commentContent={comment.comment_content}
                     commentLikeCount={comment.comment_like_count}
                     commentReplyCount={comment.comment_reply_count}
+                    commentReplyTarget={comment.reply_user_nickname}
+                    commentDepth={comment.depth}
+                    initialToggled={liked}
+                    onToggle={likeToggle}
                   />
                 ))}
               </div>
             </div>
           </div>
-          {/* bott */}
-          <form className={styles['post-comment']}>
+          {/* bottom */}
+          <form
+            className={styles['post-comment']}
+            onSubmit={(e) => {
+              e.preventDefault()
+              sendHandle(replyTargetId, replyId, inputValue)
+            }}
+          >
             <div className={styles['reply-user']}>
-              <span> {user}</span>
+              <span> {replyTarget}</span>
               <span>{reply}</span>
             </div>
             <div className={styles['reply-wrap']}>
@@ -198,25 +224,31 @@ export default function PostCard1({
               />
               {!focus ? (
                 <div className={styles['comment-icons']}>
-                  {icons.map((icon) => (
-                    <div key={icon.id}>
-                      {/* onClick={(e) => iconHandle(icon.id)} */}
-                      <div>{active[icon.id] ? icon.active : icon.default}</div>
-                      <span>
-                        {icon.id === 1
-                          ? likeCount
-                          : icon.id === 2
-                          ? saveCount
-                          : icon.id === 3
-                          ? commentCount
-                          : 1}
-                      </span>
+                  <PostIcon
+                    id={postId}
+                    icon="like"
+                    count={likeCount}
+                    initialToggled={liked}
+                    onToggle={likeToggle}
+                  />
+                  <PostIcon
+                    id={postId}
+                    icon="save"
+                    count={saveCount}
+                    initialToggled={saved}
+                    onToggle={saveToggle}
+                  />
+                  <div onClick={() => setFocus(true)}>
+                    <div>
+                      <PiChatCircle />
                     </div>
-                  ))}
+                    <span>{commentCount}</span>
+                  </div>
+                  {/* <PostIcon id={postId} icon="comment" count={commentCount} /> */}
                 </div>
               ) : (
                 <div className={styles['btns']}>
-                  <button className={` ${styles['send']}`}>發送</button>
+                  <button className={`${styles['send']}`}>發送</button>
                   <button
                     className={`${styles['cancel']}`}
                     onClick={cancelHandle}
@@ -229,6 +261,18 @@ export default function PostCard1({
           </form>
         </div>
       </div>
+      {/* {showModal && (
+        <ModalConfirm
+          title="尚未登入會員"
+          content={`是否前往登入?`}
+          btnConfirm="前往登入"
+          ConfirmFn={() => {
+            router.push('/user/login/user')
+          }}
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )} */}
     </>
   )
 }

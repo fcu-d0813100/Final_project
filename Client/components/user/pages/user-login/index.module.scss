@@ -55,6 +55,8 @@
   word-wrap: break-word;
   color: white;
   text-align: center;
+  border: none;
+  background-color:transparent ;
 }
 
 .slogan {
@@ -171,6 +173,10 @@
   width: 40px;
   margin-right: 10px;
   color: rgb(41, 41, 41);
+  cursor: pointer;
+  &:hover {
+      opacity: 0.8;
+    }
 }
 
 .icon-google {
@@ -181,6 +187,11 @@
   border: 2px solid rgb(41, 41, 41);
   border-radius: 10px;
   padding: 5px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .form-check-input2:checked {

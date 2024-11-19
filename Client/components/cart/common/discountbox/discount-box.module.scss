@@ -48,6 +48,19 @@
       color: $green-500;
     }
   }
+  .no-coupon {
+    cursor: pointer;
+    background-color: $green-500;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
 
   .btn-comfirm {
     display: flex;
@@ -64,5 +77,14 @@
         transition: ease 0.3s;
       }
     }
+  }
+}
+
+//RWD
+@media screen and (max-width: 540px) {
+  .checkout_discount {
+    margin-inline: 15px;
+    padding: 14px 20px;
+    font-size: 14px;
   }
 }

@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
+import { googleLogin, parseJwt } from '@/services/user'
+import { deleteUser } from 'firebase/auth'
 
 // import { register } from 'module'
 
@@ -9,11 +11,12 @@ import toast, { Toaster } from 'react-hot-toast'
 // !!注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
 export const initUserData = {
   id: 0,
-  username: '',
+  account: '',
   google_uid: '',
   line_uid: '',
   name: '',
   email: '',
+  identity: '',
 }
 
 // 1. 建立與導出它
@@ -25,6 +28,75 @@ AuthContext.displayName = 'AuthContext'
 
 export function AuthProvider({ children }) {
   const router = useRouter()
+  // 課程收藏-----------------------------//
+  // 加入收藏
+  const addFavoriteWorkshop = async (workshop) => {
+    try {
+      // 使用 workshop.workshop_id 而非 workshop.id
+      const response = await fetch(
+        `http://localhost:3005/api/workshop/favorite/${workshop.workshop_id}/${auth.userData.id}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+      if (!response.ok) throw new Error('收藏失敗')
+      console.log(`Added product to favorites: ${workshop.workshop_id}`)
+    } catch (error) {
+      console.error('Error adding favorite:', error)
+    }
+  }
+
+  // 移除收藏函數
+  const removeFavoriteWorkshop = async (workshop_id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/workshop/favorite/${workshop_id}/${auth.userData.id}`,
+        {
+          method: 'DELETE',
+        }
+      )
+      if (!response.ok) throw new Error('取消收藏失敗')
+      console.log(
+        `Removed workshop from favorites with workshop_id: ${workshop_id}`
+      )
+    } catch (error) {
+      console.error('Error removing favorite:', error)
+    }
+  }
+  // 商品收藏-----------------------------//
+  // 加入收藏函數
+  const addFavorite = async (product) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/product/favorite/${product.color_id}/${auth.userData.id}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+      if (!response.ok) throw new Error('收藏失敗')
+      console.log(`Added product to favorites: ${product.color_id}`)
+    } catch (error) {
+      console.error('Error adding favorite:', error)
+    }
+  }
+
+  // 移除收藏函數
+  const removeFavorite = async (color_id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/product/favorite/${color_id}/${auth.userData.id}`,
+        {
+          method: 'DELETE',
+        }
+      )
+      if (!response.ok) throw new Error('取消收藏失敗')
+      console.log(`Removed product from favorites with color_id: ${color_id}`)
+    } catch (error) {
+      console.error('Error removing favorite:', error)
+    }
+  }
 
   const [auth, setAuth] = useState({
     isAuth: false, // 代表會員是否已經登入的信號值
@@ -35,6 +107,7 @@ export function AuthProvider({ children }) {
       account: '',
       google_uid: '',
       line_uid: '',
+      identity: '',
     },
   })
 
@@ -85,9 +158,9 @@ export function AuthProvider({ children }) {
       if (resData.status === 'success') {
         toast.success('您已註冊成功', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -96,13 +169,13 @@ export function AuthProvider({ children }) {
         })
         setTimeout(() => {
           router.push('/user/login/user')
-        }, 2000)
+        }, 1500)
       } else if (resData.message === '電子郵件或帳號已被註冊') {
         toast.error(resData.message, {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -110,11 +183,12 @@ export function AuthProvider({ children }) {
           },
         })
       } else {
+        console.error('註冊失敗:', resData)
         toast.error('註冊失敗，請稍後再試', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -123,12 +197,75 @@ export function AuthProvider({ children }) {
         })
       }
     } catch (error) {
-      // console.error('註冊過程中發生錯誤:', error)
+      console.error('註冊過程中發生錯誤:', error)
       toast.error('註冊過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
+  // Google登入
+  const callbackGoogleLogin = async (providerData) => {
+    console.log('Google登入資料:', providerData)
+
+    if (auth.isAuth) return
+
+    try {
+      const res = await googleLogin(providerData)
+      console.log('Google登入回應:', res.data)
+
+      if (res.data.status === 'success') {
+        const jwtUser = parseJwt(res.data.data.accessToken)
+        console.log('JWT用戶資料:', jwtUser)
+
+        const userData = { ...initUserData, ...jwtUser }
+
+        setAuth({
+          isAuth: true,
+          userData,
+        })
+
+        toast.success('已成功登入', {
+          style: {
+            padding: '12px 40px',
+            color: '#626553',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#626553',
+            secondary: '#fff',
+          },
+        })
+        setTimeout(() => {
+          router.push('/user')
+        }, 1500)
+      } else {
+        toast.error('登入失敗，請稍後再試', {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      toast.error('登入失敗，請稍後再試', {
+        style: {
+          padding: '12px 40px',
+          color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -170,9 +307,9 @@ export function AuthProvider({ children }) {
         // 顯示成功訊息
         toast.success('您已登入成功', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -182,6 +319,7 @@ export function AuthProvider({ children }) {
 
         // 根據角色跳轉到相應頁面
         setTimeout(() => {
+          console.log(role)
           switch (role) {
             case 'admin':
               router.push('/admin/activity')
@@ -192,20 +330,19 @@ export function AuthProvider({ children }) {
             case 'user':
               router.push('/user')
               break
-            default: // 處理身份不明的情況
+            default:
               router.push('/login')
               break
           }
         }, 2000)
       } else {
-        // 根據不同錯誤訊息顯示相應的吐司提示
         switch (resData.message) {
           case '身份不符合':
             toast.error('您無登入權限', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -216,9 +353,9 @@ export function AuthProvider({ children }) {
           case '無教師權限':
             toast.error('您並無老師登入權限', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -229,9 +366,9 @@ export function AuthProvider({ children }) {
           case '無管理員權限':
             toast.error('您並無管理員登入權限', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -242,9 +379,9 @@ export function AuthProvider({ children }) {
           case '密碼錯誤':
             toast.error('帳號或密碼錯誤', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -255,9 +392,9 @@ export function AuthProvider({ children }) {
           case '該會員不存在':
             toast.error('您並未註冊', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -268,9 +405,9 @@ export function AuthProvider({ children }) {
           default:
             toast.error('登入失敗，請稍後再試', {
               style: {
-                border: '1.2px solid #90957a',
                 padding: '12px 40px',
                 color: '#963827',
+                fontSize: '18px',
               },
               iconTheme: {
                 primary: '#963827',
@@ -284,9 +421,9 @@ export function AuthProvider({ children }) {
       // console.error('登入過程中發生錯誤:', error)
       toast.error('登入過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -295,37 +432,42 @@ export function AuthProvider({ children }) {
       })
     }
   }
+  // 更新會員資料
+  const update = async (user, selectedFile) => {
+    const formData = new FormData()
+    formData.append('name', user.name)
+    formData.append('email', user.email)
+    formData.append('nickname', user.nickname)
+    formData.append('gender', user.gender)
+    formData.append('phone', user.phone)
+    formData.append('city', user.city)
+    formData.append('area', user.area)
+    formData.append('address', user.address)
+    formData.append('birthday', user.birthday)
 
-  // 更新資料
-  const update = async (user) => {
-    // 向伺服器作fetch
-    const res = await fetch('http://localhost:3005/api/user', {
-      credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'PUT', //更新時用PUT
-      body: JSON.stringify(user),
-    })
+    if (selectedFile) {
+      formData.append('avatar', selectedFile)
+    }
 
-    const resData = await res.json()
-    if (resData.status === 'success') {
-      confirm('success', '更新完成', '已更新完成', '確認', () => {
-        // 在這裡可以添加更新完成後的操作
+    try {
+      const res = await fetch('http://localhost:3005/api/user', {
+        credentials: 'include',
+        method: 'PUT',
+        body: formData,
       })
-    } else {
-      confirm(
-        'error',
-        '失敗',
-        `${resData.message}\n請檢查以下錯誤詳細信息：${JSON.stringify(
-          resData.errors || {}
-        )}`,
-        '重試',
-        () => {
-          // 在這裡可以添加失敗後的操作
-        }
-      )
+
+      // 檢查回應是否有效
+      if (!res.ok) {
+        console.error(`HTTP error! status: ${res.status}`)
+        throw new Error(`HTTP error! status: ${res.status}`)
+      }
+
+      // 確保返回解析後的 JSON
+      const resData = await res.json()
+      return resData // 確保返回已解析的 JSON
+    } catch (error) {
+      console.error('更新失敗:', error)
+      return { status: 'error', message: '更新失敗' } // 返回錯誤格式
     }
   }
 
@@ -346,9 +488,9 @@ export function AuthProvider({ children }) {
       if (resData.status === 'success') {
         toast.success('您已登出', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#626553',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#626553',
@@ -370,9 +512,9 @@ export function AuthProvider({ children }) {
       } else {
         toast.error('登出失敗，請稍後再試', {
           style: {
-            border: '1.2px solid #90957a',
             padding: '12px 40px',
             color: '#963827',
+            fontSize: '18px',
           },
           iconTheme: {
             primary: '#963827',
@@ -384,9 +526,65 @@ export function AuthProvider({ children }) {
       console.error('登出過程中發生錯誤:', error)
       toast.error('登出過程中發生錯誤，請稍後再試', {
         style: {
-          border: '1.2px solid #90957a',
           padding: '12px 40px',
           color: '#963827',
+          fontSize: '18px',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
+    }
+  }
+
+  // 會員軟刪除
+  const deleteUser = async (userId) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/user/${userId}`, {
+        method: 'DELETE',
+        credentials: 'include', // 設定cookie必要設定，如果有需要授權或認証一定要加
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const resData = await res.json()
+
+      if (resData.status === 'success') {
+        toast.success('用戶已成功標記為刪除', {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+        setTimeout(() => {
+          router.push('/user/information/update')
+        }, 2000)
+      } else {
+        toast.error('刪除失敗，請稍後再試', {
+          style: {
+            padding: '12px 40px',
+            color: '#963827',
+            fontSize: '18px',
+          },
+          iconTheme: {
+            primary: '#963827',
+            secondary: '#fff',
+          },
+        })
+      }
+    } catch (error) {
+      toast.error('刪除過程中發生錯誤，請稍後再試', {
+        style: {
+          padding: '12px 40px',
+          color: '#963827',
+          fontSize: '18px',
         },
         iconTheme: {
           primary: '#963827',
@@ -419,6 +617,7 @@ export function AuthProvider({ children }) {
         const nextAuth = {
           isAuth: true,
           userData: {
+            ...user,
             id: user.id,
             account: user.account,
           },
@@ -430,9 +629,9 @@ export function AuthProvider({ children }) {
           // 減緩跳轉時間
           toast.error('請先登入以訪問該頁面', {
             style: {
-              border: '1.2px solid #90957a',
               padding: '12px 40px',
               color: '#963827',
+              fontSize: '18px',
             },
             iconTheme: {
               primary: '#963827',
@@ -454,12 +653,26 @@ export function AuthProvider({ children }) {
     // 加入router.pathname是為了要在伺服器檢查後
     // 如果是隱私路由+未登入，就要執行跳轉到登入頁路由的工作
     // eslint-disable-next-line
-   }, [router.isReady, router.pathname])
+  }, [router.isReady, router.pathname])
 
   //3. 最外(上)元件階層包裹提供者元件，可以提供它的值給所有後代⼦孫元件使⽤，包含所有頁面元件，與頁面中的元件
   return (
     <AuthContext.Provider
-      value={{ auth, getUser, login, logout, register, update }}
+      value={{
+        auth,
+        getUser,
+        login,
+        logout,
+        register,
+        update,
+        setAuth,
+        callbackGoogleLogin,
+        deleteUser,
+        addFavorite,
+        removeFavorite,
+        addFavoriteWorkshop,
+        removeFavoriteWorkshop,
+      }}
     >
       {children}
     </AuthContext.Provider>

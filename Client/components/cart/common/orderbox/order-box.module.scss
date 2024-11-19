@@ -20,25 +20,32 @@
   }
 }
 
+.order-title {
+  font-size: 20px;
+  padding: 15px;
+}
+
 //點擊後，訂單表細節內容
 .order-list {
   background-color: $gray-100;
   table {
     width: 100%;
     border-collapse: collapse;
+    .product-qty {
+      padding: 18px;
+    }
   }
   .old-price {
     color: $gray-200;
     font-size: 14px;
     text-decoration: line-through;
-    margin-right: 5px;
   }
   .new-price {
     color: $red-500;
   }
   th,
   td {
-    padding: 10px 10px 10px 10px;
+    padding: 8px;
     text-align: left;
     color: $gray-300;
   }
@@ -53,5 +60,67 @@
   th:nth-child(4),
   td:nth-child(4) {
     text-align: right;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .order-box .order-header {
+    button {
+      padding: 10px 20px;
+      background-color: $gray-100 !important;
+      color: black !important;
+      &:focus {
+        background-color: $gray-200 !important;
+        box-shadow: none !important;
+        color: black !important;
+      }
+      .order-detail {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+  }
+
+  .order-title {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  //點擊後，訂單表細節內容
+  .order-list {
+    font-size: 12px;
+    background-color: $gray-100;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .old-price {
+      color: $gray-200;
+      font-size: 10px;
+      text-decoration: line-through;
+    }
+    .new-price {
+      color: $red-500;
+    }
+    th,
+    td {
+      padding: 6px;
+      text-align: left;
+      color: $gray-300;
+    }
+    th {
+      color: #000;
+    }
+    th:nth-child(3),
+    td:nth-child(3) {
+      text-align: center;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      text-align: right;
+    }
   }
 }

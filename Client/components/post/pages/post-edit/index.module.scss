@@ -106,7 +106,11 @@
       .info-content,
       .tag-input {
         &.focused {
-          border: 1px solid $green-600;
+          border: 1px $green-600 solid;
+        }
+        &.over-limit {
+          border: 1px $red-500 solid;
+          color: $red-500;
         }
         border: 1px $green-200 solid;
         display: flex;
@@ -212,7 +216,7 @@
 
 .post-btn {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 32px;
   box-sizing: border-box;
   @media (max-width: 390px) {

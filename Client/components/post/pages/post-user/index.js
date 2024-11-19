@@ -4,65 +4,103 @@ import { Tab, Nav } from 'react-bootstrap'
 import { PiNotePencilBold } from 'react-icons/pi'
 import Link from 'next/link'
 import Masonry from 'react-masonry-css'
-import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import { useAuth } from '@/hooks/use-auth'
 import UserSection from '@/components/user/common/user-section'
 import PublishCard from '@/components/post/common/publish-card'
 import WallCard from '@/components/post/common/wall-card'
-export default function Index(props) {
+import DeleteModal from '@/components/shared/modal-delete'
+import Pagination from '@/components/post/common/pagination'
+
+export default function PostUser(props) {
   const [publishCard, setPublishCard] = useState([])
   const [wallCard, setWallCard] = useState([])
-  const [showModal] = useState(false)
-
+  const [showModal, setShowModal] = useState(false)
+  const [deleteId, setDeleteId] = useState(null)
   const { auth } = useAuth()
   const userId = auth.userData.id
 
-  useEffect(() => {
-    async function getPublishCard() {
-      if (userId) {
-        try {
-          let response = await axios.get(
-            `http://localhost:3005/api/post/post_publish/${userId}`,
-            {
-              withCredentials: true,
-            }
-          )
-          setPublishCard(response.data)
-        } catch (error) {
-          console.error('Error fetching publish card data:', error)
-        }
-      }
+  const getPublishCard = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:3005/api/post/post_publish/${userId}`
+      )
+      const data = await res.json()
+      setPublishCard(data)
+    } catch (error) {
+      console.error('無法取得發布貼文列表')
     }
-    console.log(userId)
+  }
+  const getWallCard = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:3005/api/post/post_save/${userId}`
+      )
+      const data = await res.json()
+      setWallCard(data)
+    } catch (error) {
+      console.error('無法取得收藏貼文列表')
+    }
+  }
+  const deletePost = async () => {
+    try {
+      await fetch(`http://localhost:3005/api/post/delete`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          postId: deleteId,
+          userId,
+        }),
+      })
+      //即時更新狀態
+      setPublishCard(publishCard.filter((item) => item.id !== deleteId))
+      setShowModal(false)
+    } catch (err) {
+      alert('刪除失敗，請稍後再試！')
+    }
+  }
+  useEffect(() => {
     getPublishCard()
   }, [userId])
+
   useEffect(() => {
-    async function getWallCard() {
-      if (userId) {
-        try {
-          let response = await axios.get(
-            `http://localhost:3005/api/post/post_save/${userId}`,
-            {
-              withCredentials: true,
-            }
-          )
-          setWallCard(response.data)
-        } catch (error) {
-          console.error('Error fetching save card data:', error)
-        }
-      }
-    }
-    console.log(userId)
     getWallCard()
   }, [userId])
+  console.log(publishCard)
   const breakpoint = {
     default: 4,
     1600: 3,
     1200: 3,
     700: 2,
   }
+  const itemsPerPage = 5 // 每頁顯示的項目數量
+
+  const renderPublishCard = (post) => {
+    const imgSrc = `http://localhost:3005/post/${post.post_img}`
+
+    return (
+      <PublishCard
+        key={post.id}
+        postId={post.id}
+        userId={userId}
+        imageSrc={imgSrc}
+        title={post.title}
+        content={post.content}
+        createTime={post.created_at}
+        likeCount={post.like_count}
+        commentCount={post.comment_count}
+        onDelete={() => {
+          setShowModal(true)
+          setDeleteId(post.id)
+        }}
+      />
+    )
+  }
+
   return (
     <>
       <UserSection titleCN="我的貼文" titleENG="My Post">
@@ -86,35 +124,18 @@ export default function Index(props) {
                 passHref
                 className={styles['post-add']}
               >
-                <PiNotePencilBold size={30} />
+                <PiNotePencilBold size={22} />
                 <span>建立</span>
               </Link>
             </div>
             <Tab.Content>
               <Tab.Pane eventKey="/publish">
                 <div className={styles['publish-all']}>
-                  {/* 記得換網址 */}
-                  {/* http://localhost:3005/upload/${post.post_img} */}
-                  {publishCard.map((post) => {
-                    const imgSrc = post.post_img.startsWith('post')
-                      ? `http://localhost:3005/upload/${post.post_img}` // 後端圖片路徑
-                      : `/post/${post.post_img}` // 前端靜態圖片路徑
-
-                    return (
-                      <PublishCard
-                        key={post.id}
-                        postId={post.id}
-                        imageSrc={imgSrc}
-                        title={post.title}
-                        content={post.content}
-                        createTime={post.created_at}
-                        likeCount={post.like_count}
-                        commentCount={post.comment_count}
-                      />
-                    )
-                  })}
-
-                  <div className={styles['pagination']}></div>
+                  <Pagination
+                    data={publishCard}
+                    itemsPerPage={itemsPerPage}
+                    renderCard={renderPublishCard}
+                  />
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="/save">
@@ -124,16 +145,21 @@ export default function Index(props) {
                     className={styles['my-masonry-grid']}
                     columnClassName={styles['my-masonry-grid_column']}
                   >
-                    {wallCard.map((post) => (
-                      <WallCard
-                        key={post.id}
-                        imageSrc={`/post/${post.post_img}`}
-                        title={post.title}
-                        username={post.nickname}
-                        avatarSrc={`/user/img/${post.user_img}`}
-                        likeCount={post.like_count}
-                      />
-                    ))}
+                    {wallCard.map((post) => {
+                      const imgSrc = `http://localhost:3005/post/${post.post_img}`
+
+                      return (
+                        <WallCard
+                          key={post.id}
+                          href={`/post/${post.id}`}
+                          imageSrc={imgSrc}
+                          title={post.title}
+                          // username={post.nickname}
+                          // avatarSrc={`/user/img/${post.user_img}`}
+                          // likeCount={post.like_count}
+                        />
+                      )
+                    })}
                   </Masonry>
                 </div>
               </Tab.Pane>
@@ -141,6 +167,18 @@ export default function Index(props) {
           </Tab.Container>
         </div>
       </UserSection>
+
+      {showModal && (
+        <DeleteModal
+          title="刪除貼文"
+          content={`刪除後將無法恢復，\n確定要刪除這篇貼文嗎 ?`}
+          btnConfirm="確定刪除"
+          btnCancel="取消"
+          ConfirmFn={() => deletePost(deleteId)}
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )}
     </>
   )
 }
