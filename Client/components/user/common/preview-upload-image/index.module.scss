@@ -92,31 +92,25 @@
     transform: scale(1.2); 
   }
 }
-
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1600px) {
   .avatar{
     width: 200px;
     height: 200px;
+  }
+}
+
+
+@media screen and (max-width: 1200px) {
+  .avatar{
+    width: 180px;
+    height: 180px;
   }
 }
 @media screen and (max-width: 800px) {
    .avatar{
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
+    margin-bottom: 30px;
   }
 }
-@media screen and (max-width: 650px) {
-  .avatar{
 
-   width: 130px;
-   height: 130px;
- }
-
-}
-@media screen and (max-width: 560px) {
-  .avatar{
-    width: 200px;
-    height: 200px;
-  }
-
-}

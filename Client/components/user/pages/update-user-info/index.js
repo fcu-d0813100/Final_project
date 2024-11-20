@@ -327,9 +327,9 @@ export default function UpdateInfo({
           <div className="mt-5 container-fluid">
             <div className={`${styles['form-container']} row`}>
               <div
-                className={`${styles['form-content']} col-sm-9 col-12 pe-md-3 pe-0 d-flex flex-wrap`}
+                className={`${styles['form-content']} col-md-9 col-12 pe-md-3 pe-0 d-flex flex-wrap`}
               >
-                <div className={`col-md-4 col-6 ${styles.info}`}>
+                <div className={`col-md-4 col-6 ${styles.info} `}>
                   <label htmlFor="name" className="form-label pb-2 fw-bold ">
                     姓名 <span className=" ps pe-4 fw-bold ">| name</span>
                   </label>
@@ -414,22 +414,22 @@ export default function UpdateInfo({
               </div>
 
               <div className={`${styles['avatar-area']}  col-0 col-md-3  `}>
-                <div className={`${styles['avatar']} ratio ratio-1x1 w-75`}>
-                  <PreviewUploadImage
-                    userId={user.id}
-                    avatar={
-                      user.img ? `http://localhost:3005/avatar/${user.img}` : ''
-                    }
-                    avatarBaseUrl="http://localhost:3005/avatar"
-                    defaultImg="avatar01.jpg"
-                    setSelectedFile={setSelectedFile}
-                    selectedFile={selectedFile}
-                    photoUrl={user.photo_url}
-                  />
-                </div>
+                {/* <div className={`${styles['avatar']} ratio ratio-1x1 w-75`}> */}
+                <PreviewUploadImage
+                  userId={user.id}
+                  avatar={
+                    user.img ? `http://localhost:3005/avatar/${user.img}` : ''
+                  }
+                  avatarBaseUrl="http://localhost:3005/avatar"
+                  defaultImg="avatar01.jpg"
+                  setSelectedFile={setSelectedFile}
+                  selectedFile={selectedFile}
+                  photoUrl={user.photo_url}
+                />
               </div>
             </div>
           </div>
+          {/* </div> */}
           {/* 收件資訊 */}
           <div
             className={`row ${styles['address-line']} d-flex align-items-center pb-3 my-5`}

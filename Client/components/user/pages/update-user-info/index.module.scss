@@ -107,16 +107,6 @@
     align-items: center;
 
   }
-  .avatar-area{
-    order: 1;
-    // height: 300px;
-    .avatar{
-      // width: 255px;
-      height: 255px;
-
-    }
-
-  }
   .form-content{
     order: 2;
   }
@@ -127,9 +117,17 @@
     align-items: center ;
   }
   .avatar-area{
+    width: 100%;
+    order: 1;
     display: flex;
-    justify-content: center !important;
-    align-items: center !important;
+    justify-content: center ;
+    align-items: center ;
+    .avatar{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+    }
   }
   
 }
@@ -178,6 +176,7 @@
   .cancel-btn{
     width: 170px;
   }
+
 }
 
 
