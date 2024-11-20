@@ -8,7 +8,6 @@ import {
   PiLockOpen,
   PiListMagnifyingGlass,
   PiHeartStraight,
-  PiNotebook,
   PiListPlus,
   PiClockCountdown,
   PiTicket,
@@ -16,12 +15,7 @@ import {
 import styles from './index.module.scss'
 
 const navLinks = [
-  {
-    href: '/user',
-    icon: <PiUser size={68} />,
-    label: '個人資訊',
-    key: 'user',
-  },
+  { href: '/user', icon: <PiUser size={68} />, label: '個人資訊', key: 'user' },
   {
     href: '/user/password',
     icon: <PiLockOpen size={68} />,
@@ -40,12 +34,6 @@ const navLinks = [
     label: '我的收藏',
     key: 'favorite',
   },
-  // {
-  //   href: '/user/workshop',
-  //   icon: <PiNotebook size={65} />,
-  //   label: '我的課程',
-  //   key: 'workshop',
-  // },
   {
     href: '/user/post',
     icon: <PiListPlus size={68} />,
@@ -66,7 +54,7 @@ const navLinks = [
   },
 ]
 
-export default function Index() {
+export default function Index({ isOpen, toggleSidebar }) {
   const router = useRouter()
   const { logout } = useAuth()
   const [linkState, setLinkState] = useState(
@@ -101,44 +89,55 @@ export default function Index() {
   }
 
   return (
-    <Navbar expand="lg" className={styles['nav']}>
-      <Navbar.Toggle
-        aria-controls="basic-navbar-nav"
-        className={styles['toggle-btn']}
-      />
-      <Navbar.Collapse
-        id="basic-navbar-nav"
-        className={`${styles['collapse']} justify-content-center align-items-start`}
+    <>
+      {/* 遮罩部分 */}
+      {isOpen && (
+        <div className={styles['overlay']} onClick={toggleSidebar}></div>
+      )}
+      {/* 側邊欄 */}
+      <Navbar
+        expand="lg"
+        className={`${styles['nav']} ${isOpen ? styles['open'] : ''}`}
       >
-        <Nav>
-          {navLinks.map((link) => (
-            <Nav.Link
-              key={link.key}
-              href={link.href}
-              className={`${
-                linkState[link.key].active
-                  ? styles['active']
-                  : linkState[link.key].hover
-                  ? styles['hover']
-                  : ''
-              } h6`}
-              onMouseEnter={() => handleMouseEnter(link.key)}
-              onMouseLeave={() => handleMouseLeave(link.key)}
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          className={styles['toggle-btn']}
+          onClick={toggleSidebar}
+        />
+        <Navbar.Collapse
+          id="basic-navbar-nav"
+          className={`${styles['collapse']} justify-content-center align-items-start`}
+        >
+          <Nav>
+            {navLinks.map((link) => (
+              <Nav.Link
+                key={link.key}
+                href={link.href}
+                className={`${
+                  linkState[link.key].active
+                    ? styles['active']
+                    : linkState[link.key].hover
+                    ? styles['hover']
+                    : ''
+                } h6`}
+                onMouseEnter={() => handleMouseEnter(link.key)}
+                onMouseLeave={() => handleMouseLeave(link.key)}
+              >
+                {link.icon}
+                {link.label}
+              </Nav.Link>
+            ))}
+            <button
+              className="btn-logout h6"
+              onClick={() => {
+                logout()
+              }}
             >
-              {link.icon}
-              {link.label}
-            </Nav.Link>
-          ))}
-          <button
-            className="btn-logout h6"
-            onClick={() => {
-              logout()
-            }}
-          >
-            登出
-          </button>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+              登出
+            </button>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    </>
   )
 }
