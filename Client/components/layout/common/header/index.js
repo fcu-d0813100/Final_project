@@ -25,6 +25,12 @@ function TopBar({ cartitems }) {
     if (!ensureLoggedIn()) {
       return
     }
+    if (auth.userData.identity === 'admin') {
+      return
+    }
+    if (auth.userData.identity === 'teacher') {
+      return
+    }
     window.location.href = '/cart'
   }
 

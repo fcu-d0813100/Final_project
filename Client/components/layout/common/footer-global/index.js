@@ -58,7 +58,7 @@ export default function index() {
             <ul className={styles['shopping-area']}>
               <li>SHOPPING</li>
               <li>
-                <Link href="/product">彩妝商品</Link>
+                <Link href="/product/product-list">彩妝商品</Link>
               </li>
               <li>
                 <Link href="/workshop">美妝課程</Link>
