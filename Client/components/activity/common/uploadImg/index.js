@@ -79,40 +79,46 @@ export default function UploadImg({ width, height, onFileChange, hasError }) {
 
   return (
     <>
-      <div
-        className={`${styles.uploadCover} ${
-          hasError ? styles.errorBorder : ''
-        }`}
-        style={{ width, height }}
-      >
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-          id="fileInput"
-          multiple
-        />
+      <div className={`${styles.uploadWrapper}`}>
+        {/* 左側上傳區域 */}
         <div
-          className="text-center"
+          className={`${styles.uploadCover} ${
+            hasError ? styles.errorBorder : ''
+          }`}
           style={{ width, height }}
-          role="button"
-          tabIndex="0"
-          onClick={() => document.getElementById('fileInput').click()}
-          onKeyDown={(e) =>
-            handleKeyDown(e, () => document.getElementById('fileInput').click())
-          }
         >
-          {previews.length === 0 ? (
-            <div className={`${styles.picUploadText} d-flex flex-column`}>
-              <PiPlus className={styles.plus} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            id="fileInput"
+            multiple
+          />
+          <div
+            className="text-center"
+            style={{ width, height }}
+            role="button"
+            tabIndex="0"
+            onClick={() => document.getElementById('fileInput').click()}
+            onKeyDown={(e) =>
+              handleKeyDown(e, () =>
+                document.getElementById('fileInput').click()
+              )
+            }
+          >
+            {previews.length === 0 ? (
+              <div className={`${styles.picUploadText} d-flex flex-column`}>
+                <PiPlus className={styles.plus} />
+                <p className="h6 mt-3">新增圖片</p>
+              </div>
+            ) : null}
+          </div>
+        </div>
 
-              <p className="h4 mt-3">
-                新增圖片
-                <br /> <span className="p">(必填)</span>
-              </p>
-            </div>
-          ) : (
+        {/* 右側圖片預覽區域 */}
+        <div className={styles.imagePreviewWrapper} style={{ width, height }}>
+          {previews.length > 0 ? (
             <div className={styles.imageGrid}>
               {previews.map((src, index) => (
                 <div className={styles.imageContainer} key={index}>
@@ -137,23 +143,10 @@ export default function UploadImg({ width, height, onFileChange, hasError }) {
                 </div>
               ))}
             </div>
+          ) : (
+            <p className="text-center"></p>
           )}
         </div>
-
-        {previews.length > 0 && (
-          <a
-            className={`${styles.reSelectImg} btn-outline h6`}
-            role="button"
-            tabIndex="0"
-            onClick={(e) => {
-              e.stopPropagation()
-              handleReSelect()
-            }}
-            onKeyDown={(e) => handleKeyDown(e, handleReSelect)}
-          >
-            重新選取
-          </a>
-        )}
       </div>
     </>
   )

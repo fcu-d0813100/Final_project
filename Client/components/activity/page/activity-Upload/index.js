@@ -112,7 +112,7 @@ export default function Upload(props) {
           case 'end_at':
             return msg
           case 'description':
-            return '請填寫課程簡介'
+            return '請填寫活動簡介'
           default:
             return msg
         }
@@ -186,13 +186,15 @@ export default function Upload(props) {
         <form onSubmit={handleSubmit}>
           <div className={styles.main}>
             <DashboardTitle chTitle="活動上架" enTitle="New activity" />
-            <div className={`${styles.section1} d-flex align-items-end`}>
+            <div
+              className={`${styles.section1} 
+            `}
+            >
               <UploadImg
-                width="100px"
-                height="10Y0px"
-                // 445 320
+                width="200px"
+                height="200px"
                 onFileChange={handleFileChange}
-                hasError={!!errors.maxREG}
+                hasError={selectedFiles.length !== 3}
               />
             </div>
             <hr className="opacity-75" />
@@ -201,119 +203,125 @@ export default function Upload(props) {
                 <div className={styles.subtitle}>
                   <h4 className="h4 mb-4 pb-2">主要資訊</h4>
                 </div>
-                <div className={styles.inputArea}>
-                  <div className="container d-flex justify-content-between mb-3">
-                    <InputStyle
-                      addclass="col-4 me-2"
-                      forText="name"
-                      titleCh="活動中文名稱"
-                      titleEn=" | name"
-                      typeText="text"
-                      placeholder="請輸入活動名稱"
-                      name="CHN_name"
-                      onChange={handleInputChange}
-                      hasError={!!errors.CHN_name}
-                    />
-                    <InputStyle
-                      addclass="col-4 ms-2 me-2"
-                      forText="name"
-                      titleCh="活動英文名稱"
-                      titleEn=" | name"
-                      typeText="text"
-                      placeholder="請輸入活動名稱"
-                      name="ENG_name"
-                      onChange={handleInputChange}
-                      hasError={!!errors.ENG_name}
-                    />
-                    <InputStyle
-                      addclass="col-4 ms-2 me-1"
-                      forText="price"
-                      titleCh="活動名額"
-                      titleEn=" | amount"
-                      typeText="text"
-                      placeholder="請填入活動名額"
-                      name="maxREG"
-                      onChange={handleInputChange}
-                      hasError={!!errors.maxREG}
-                    />
-                  </div>
+                <div className={`${styles.inputArea} d-flex `}>
+                  <div className="left col-6">
+                    <div className="container d-flex justify-content-between mb-3">
+                      <InputStyle
+                        addclass="col-4 me-2"
+                        forText="name"
+                        titleCh="活動中文名稱"
+                        titleEn=" | name"
+                        typeText="text"
+                        placeholder="請輸入活動名稱"
+                        name="CHN_name"
+                        onChange={handleInputChange}
+                        hasError={!!errors.CHN_name}
+                      />
+                      <InputStyle
+                        addclass="col-4 ms-2 me-2"
+                        forText="name"
+                        titleCh="活動英文名稱"
+                        titleEn=" | name"
+                        typeText="text"
+                        placeholder="請輸入活動名稱"
+                        name="ENG_name"
+                        onChange={handleInputChange}
+                        hasError={!!errors.ENG_name}
+                      />
+                      <InputStyle
+                        addclass="col-4 ms-2 me-1"
+                        forText="price"
+                        titleCh="活動名額"
+                        titleEn=" | amount"
+                        typeText="text"
+                        placeholder="請填入活動名額"
+                        name="maxREG"
+                        onChange={handleInputChange}
+                        hasError={!!errors.maxREG}
+                      />
+                    </div>
 
-                  <div className="container d-flex  align-items-end justify-content-between  mb-3">
-                    <SelectInput
-                      addClass="col-5 me-1"
-                      forText="type"
-                      titleCh="活動品牌"
-                      titleEn="brand"
-                      name="brand"
-                      onChange={handleInputChange}
-                      hasError={!!errors.brand}
-                    />
-                    <p className="col d-flex justify-content-center align-items-center opacity-0">
-                      <PiArrowRight className="ph" />
-                    </p>
-                    <InputStyle
-                      addclass="col-7 ms-1"
-                      forText="address"
-                      titleCh="活動地點"
-                      titleEn=" | address"
-                      typeText="text"
-                      placeholder="請填入地址"
-                      name="address"
-                      onChange={handleInputChange}
-                      hasError={!!errors.address}
-                    />
+                    <div className="container d-flex  align-items-end justify-content-between  mb-3">
+                      <SelectInput
+                        addClass="col-5 me-1"
+                        forText="type"
+                        titleCh="活動品牌"
+                        titleEn="brand"
+                        name="brand"
+                        onChange={handleInputChange}
+                        hasError={!!errors.brand}
+                      />
+                      <p className="col d-flex justify-content-center align-items-center opacity-0">
+                        <PiArrowRight className="ph" />
+                      </p>
+                      <InputStyle
+                        addclass="col-7 ms-1"
+                        forText="address"
+                        titleCh="活動地點"
+                        titleEn=" | address"
+                        typeText="text"
+                        placeholder="請填入地址"
+                        name="address"
+                        onChange={handleInputChange}
+                        hasError={!!errors.address}
+                      />
+                    </div>
+                    <div className="container d-flex align-items-end justify-content-between ">
+                      <InputStyle
+                        addclass="col-6 me-1"
+                        forText="start_at"
+                        titleCh="報名開始時間"
+                        titleEn=" | registration start"
+                        typeText="date"
+                        placeholder="開始日期"
+                        name="start_at"
+                        onChange={handleInputChange}
+                        hasError={!!errors.start_at}
+                      />
+                      <p className="col d-flex justify-content-center align-items-center">
+                        <PiArrowRight className="ph" />
+                      </p>
+                      <InputStyle
+                        addclass="col-6 ms-1"
+                        forText="end_at"
+                        titleCh="報名結束時間"
+                        titleEn=" | registration end"
+                        typeText="date"
+                        placeholder="結束日期"
+                        name="end_at"
+                        onChange={handleInputChange}
+                        hasError={!!errors.end_at}
+                      />
+                    </div>
                   </div>
-                  <div className="container d-flex align-items-end justify-content-between ">
-                    <InputStyle
-                      addclass="col-6 me-1"
-                      forText="start_at"
-                      titleCh="報名開始時間"
-                      titleEn=" | registration start"
-                      typeText="date"
-                      placeholder="開始日期"
-                      name="start_at"
-                      onChange={handleInputChange}
-                      hasError={!!errors.start_at}
-                    />
-                    <p className="col d-flex justify-content-center align-items-center">
-                      <PiArrowRight className="ph" />
-                    </p>
-                    <InputStyle
-                      addclass="col-6 ms-1"
-                      forText="end_at"
-                      titleCh="報名結束時間"
-                      titleEn=" | registration end"
-                      typeText="date"
-                      placeholder="結束日期"
-                      name="end_at"
-                      onChange={handleInputChange}
-                      hasError={!!errors.end_at}
-                    />
+                  <div className="right col-6">
+                    {' '}
+                    <div className={`${styles.workshopDetail} ms-5  `}>
+                      <Textarea
+                        addclass="mb-4"
+                        title="活動簡介"
+                        titleEn=" | description"
+                        name="description"
+                        rows="5"
+                        width="100%"
+                        placeholder="活動描述..."
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        hasError={!!errors.description}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className={`${styles.workshopDetail} ms-3 mt-5 p-5`}>
-                <Textarea
-                  addclass="mb-4"
-                  title="課程簡介"
-                  name="description"
-                  rows="5"
-                  width="100%"
-                  placeholder="最多輸入200字"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  hasError={!!errors.description}
-                />
-              </div>
             </div>
 
-            <div className="ms-auto d-flex justify-content-end mt-2">
+            <div className={`${styles.Btncon} d-flex justify-content-end `}>
               <Link href="/admin/activity">
                 <button className="btn-secondary h6 me-3" type="button">
                   取消
                 </button>
               </Link>
-              <button className="btn-primary h6" type="submit">
+              <button className="btn-primary h6 " type="submit">
                 上架
               </button>
             </div>

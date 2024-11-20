@@ -161,13 +161,16 @@
 .save-all {
   display: flex;
   flex-wrap: wrap;
-  // justify-content: center;
   gap: 25px;
   padding: 20px 40px;
   @media (max-width: 576px) {
+    justify-content: center;
+
     padding: 0;
   }
   @media (max-width: 390px) {
+    justify-content: center;
+
     padding-top: 12px;
   }
 }
