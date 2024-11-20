@@ -1,0 +1,14 @@
+@import '@/styles/_variant.scss';
+.bestSeller {
+    width: 100%;
+    height: auto;
+    overflow: hidden; // 隱藏溢出部分
+    display: flex;
+    align-items: center;
+   
+    img {
+        background-color: $green-500;
+        max-width: 100%; // 使圖片最大寬度為容器的寬度
+        height: auto; // 高度自動調整
+    }
+}
