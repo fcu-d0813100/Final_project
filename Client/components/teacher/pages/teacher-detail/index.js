@@ -134,7 +134,7 @@ export default function TeacherDetail(props) {
               </a>
             </div>
 
-            <div className="d-flex">
+            <div className={`${styles.dropdownStyles} d-flex`}>
               <Dropdown
                 name="狀態"
                 items={[
@@ -157,7 +157,9 @@ export default function TeacherDetail(props) {
             </div>
           </div>
 
-          <div className={`${styles.tOwnWorkshops} row row-cols-3 my-5`}>
+          <div
+            className={`${styles.tOwnWorkshops} row row-cols-sm-1 row-cols-md-2 row-cols-xl-3 my-5`}
+          >
             {workshop.map((item) => {
               // 將 dates 字串轉換成陣列
               const datesArray = item.dates ? item.dates.split(',') : []
