@@ -510,13 +510,13 @@ export default function UpdateInfo({
           <div
             className={`row d-flex justify-content-between align-items-center mt-3`}
           >
-            <div className={`col-6`}>
+            <div className={`col-12 col-md-6`}>
               <p className={`ps ${styles.explain}`}>
                 ※請填寫完整的個人資訊，以享有更多會員權益。
               </p>
             </div>
             <div
-              className={`col-3 pe-3 d-flex justify-content-end align-items-center`}
+              className={`col-12 col-md-3 pe-3 mt-3 mt-md-0 d-flex justify-content-end align-items-center`}
             >
               <button
                 type="button"
@@ -538,17 +538,18 @@ export default function UpdateInfo({
             </div>
           </div>
 
-          <div
-            className={`${styles['submit-area']} d-flex justify-content-end align-items-center row`}
-          >
+          <div className={`${styles['submit-area']} row`}>
             <button
               type="button"
-              className="btn-secondary h6 me-4"
+              className={`btn-secondary h6 me-3 me-sm-4 ${styles['cancel-btn']}`}
               onClick={handleCancel}
             >
               取消
             </button>
-            <button type="submit" className={`btn-primary h6`}>
+            <button
+              type="submit"
+              className={`btn-primary h6 ${styles['cancel-btn']}`}
+            >
               儲存
             </button>
           </div>
