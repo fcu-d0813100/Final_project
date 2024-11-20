@@ -332,7 +332,7 @@ const UserCoupon = () => {
                 {/* 分頁控制 */}
                 <div className={styles.pagination}>
                     <button
-                        className={`${styles.pageBtn} ${currentPage === 1 ? styles.disabled : ''}`}
+                        className={` ${styles.btnnone} ${currentPage === 1 ? styles.disabled : ''}`}
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}  // 上一頁
                         disabled={currentPage === 1}
                     >
@@ -348,7 +348,7 @@ const UserCoupon = () => {
                         </button>
                     ))}
                     <button
-                        className={`${styles.pageBtn} ${currentPage === totalPages ? styles.disabled : ''}`}
+                        className={`${styles.btnnone} ${currentPage === totalPages ? styles.disabled : ''}`}
                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}  // 下一頁
                         disabled={currentPage === totalPages}
                     >

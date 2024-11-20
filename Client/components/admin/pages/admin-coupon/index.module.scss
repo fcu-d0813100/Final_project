@@ -39,24 +39,24 @@
 }
 
 .pagination {
+  margin-block: 20px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 35px;
+  gap: 0.5rem;
 }
 
 .pageBtn {
-  width: 30px;
-  height: 30px;
-  color: $green-500;
-  background-color: transparent;
-  border: 2px solid transparent;
+  background: none;
+  border: none;
+  color: #90957a;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
 
-  &:hover {
-    border-bottom: 2px solid $green-500;
-    cursor: pointer; // Ensure pointer on hover
-  }
   &.active {
-    color: $green-500; // Active page number color
-    border-bottom: 2px solid $green-500;
+    font-weight: bold;
+    color: #626553;
+    border-bottom: 2px solid #626553;
   }
 }

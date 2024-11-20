@@ -154,7 +154,7 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                                 </div>
                             </Link>
                         </div>
-                        <button onClick={toggleShowItems} className={`btn ${styles.showItem} `}>
+                        <button onClick={toggleShowItems} className={`btn ${styles.showItem} ps`}>
                             {showAllItems ? <>隱藏其他商品<GoChevronUp /></> : <>檢視其他商品<GoChevronDown /></>}
                         </button>
                     </div>
@@ -163,11 +163,11 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
 
 
             <div className={`${styles.footer} d-flex flex-column justify-content-end align-items-end border-top p-2`}>
-                <div className={`total p-2`}>
+                <div className={`${styles.total} p-2`}>
                     訂單金額：<span className="h4">NT$ {new Intl.NumberFormat().format(totalAmount)}</span>
                 </div>
                 <div className="botton-group d-flex justify-content-end p-2 h6">
-                    <div className={`${styles.again} btn btn-primary align-content-center me-3`} onClick={handleBuyAgain}>
+                    <div className={`${styles.again} btn btn-primary align-content-center`} onClick={handleBuyAgain}>
                         再買一次
                     </div>
                     {/* <div className={`${styles.btn}  btn-primary align-content-center`}>評論</div> */}
