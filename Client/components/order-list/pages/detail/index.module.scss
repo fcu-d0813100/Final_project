@@ -10,6 +10,8 @@
     border-radius: 3px;
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
     display: flex;
+    
+
     @media (max-width: 700px) {
         display: none;
     }
@@ -21,7 +23,9 @@
     }
 
     .order-num {
+        font-size: 24px;
         color: $green-500;
+        font-weight: 550;
     }
 
     .header-right {
@@ -33,6 +37,7 @@
 
 .order-det-content {
     margin-top: 10px;
+
     .topTitle {
         text-align: center;
         align-content: center;
@@ -48,14 +53,22 @@
     }
 
     .msg {
+        background-color: #fdfdfd;
         padding-block: 20px;
         padding-inline: 80px;
         align-items: center;
 
+        @media (max-width: 1600px) {
+            padding: 20px;
+            align-items: start;
+            ;
+        }
+
         @media (max-width: 700px) {
             padding: 10px;
             border-bottom: 1px solid $gray-200;
-            align-items: start;;
+            align-items: start;
+            ;
         }
 
         .msg-left {
@@ -65,10 +78,16 @@
                 color: $green-600;
                 margin-bottom: 20px;
 
-                @media (max-width: 500px) {
+                @media (max-width: 600px) {
                     font-size: 16px;
                     margin-bottom: 10px;
                 }
+            }
+            @media (max-width: 1600px) {
+                width: 400px;
+            }
+            @media (max-width: 700px) {
+                width: 220px;
             }
         }
 
@@ -80,10 +99,18 @@
                 color: $green-600;
                 margin-bottom: 20px;
 
-                @media (max-width: 500px) {
+
+
+                @media (max-width: 600px) {
                     font-size: 16px;
                     margin-bottom: 10px;
                 }
+            }
+            @media (max-width: 1600px) {
+                width: 400px;
+            }
+            @media (max-width: 700px) {
+                width: 220px;
             }
         }
     }
@@ -102,7 +129,7 @@
     .detail div {
         padding-bottom: 5px;
 
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
             font-size: 11px;
         }
     }
@@ -110,6 +137,7 @@
 
 .content {
     padding: 10px;
+
     .header {
         color: $green-600;
 

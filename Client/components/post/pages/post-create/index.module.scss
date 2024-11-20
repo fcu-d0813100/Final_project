@@ -105,6 +105,7 @@
       .info-title,
       .info-content,
       .tag-input {
+        line-height: 1.5;
         &.focused {
           border: 1px solid $green-600;
         }
@@ -170,6 +171,7 @@
           flex-wrap: wrap;
           gap: 8px;
           button {
+            line-height: 1.5;
             display: flex;
             gap: 8px;
             align-items: center;
@@ -187,6 +189,7 @@
         }
         .suggested-tags {
           button {
+            line-height: 1.5;
             background-color: #fff;
             color: #000;
             border: 1px #000 solid;

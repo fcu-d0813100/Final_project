@@ -126,12 +126,14 @@ export default function Edit() {
             <DashboardTitle chTitle="活動編輯" enTitle="Activity Edit" />
             <div className={`${styles.section1} d-flex align-items-end`}>
               <UploadImg
-                width="445px"
-                height="320px"
+                width="200px"
+                height="200px"
                 onFileChange={handleFileChange}
               />
-
-              <div className={`${styles.uploadMainInfo} flex-grow-1`}>
+            </div>
+            <hr className="opacity-75" />
+            <div className={`${styles.section02} d-flex`}>
+              <div className={`${styles.uploadMainInfo} flex-grow-1 col-6`}>
                 <div className={styles.subtitle}>
                   <h4 className="h4 pb-2">主要資訊</h4>
                 </div>
@@ -176,9 +178,9 @@ export default function Edit() {
                       />
                     </div>
                   </div>
-                  <div className="container d-flex gap-4 mb-3">
+                  <div className="container d-flex  mb-3">
                     <SelectInput
-                      addClass="col-5"
+                      addClass="col-5 me-1"
                       forText="brand"
                       titleCh="活動品牌"
                       titleEn="brand"
@@ -186,7 +188,10 @@ export default function Edit() {
                       value={formData.brand}
                       onChange={handleInputChange}
                     />
-                    <div className={`${styles.inputstyle} col-7`}>
+                    <p className="col d-flex justify-content-center align-items-center opacity-0">
+                      <PiArrowRight className="ph" />
+                    </p>
+                    <div className={`${styles.inputstyle} col-7 ms-1`}>
                       <label htmlFor="address" className="d-block p mb-2">
                         活動地點 <span>| address</span>
                       </label>
@@ -199,7 +204,7 @@ export default function Edit() {
                       />
                     </div>
                   </div>
-                  <div className="container d-flex align-items-end justify-content-between gap-2">
+                  <div className="container d-flex align-items-end justify-content-between">
                     <div className={`${styles.inputstyle} col-6 me-1`}>
                       <label htmlFor="start_at" className="d-block p mb-2">
                         報名開始時間 <span>| registration start</span>
@@ -212,10 +217,10 @@ export default function Edit() {
                       />
                     </div>
 
-                    <p className="col-1 d-flex justify-content-center align-items-center">
+                    <p className="col d-flex justify-content-center align-items-center">
                       <PiArrowRight className="ph" />
                     </p>
-                    <div className={`${styles.inputstyle} col-6 me-1`}>
+                    <div className={`${styles.inputstyle} col-6 ms-1`}>
                       <label htmlFor="end_at" className="d-block p mb-2">
                         報名結束時間 <span>| registration end</span>
                       </label>
@@ -229,16 +234,14 @@ export default function Edit() {
                   </div>
                 </div>
               </div>
-            </div>
-            <hr className="opacity-75" />
-            <div className={`${styles.section02}`}>
-              <div className={`${styles.workshopDetail} p-5`}>
+              <div className={`${styles.workshopDetail} p-5 col-6`}>
                 <div className={`mb-4`}>
                   <label
                     htmlFor="description"
                     className={`${styles.label} h4 mb-3 d-block`}
                   >
                     活動簡介
+                    <span>| description</span>
                   </label>
                   <textarea
                     name="description"
@@ -253,7 +256,7 @@ export default function Edit() {
               </div>
             </div>
 
-            <div className="ms-auto d-flex justify-content-end mt-2">
+            <div className={`${styles.Btncon} d-flex justify-content-end`}>
               <Link href="/admin/activity">
                 <button className="btn-secondary h6 me-3">取消</button>
               </Link>

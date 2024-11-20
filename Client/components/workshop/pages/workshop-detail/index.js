@@ -68,15 +68,16 @@ export default function WorkshopDetail() {
   }
 
   const handleAddToCart = (navigateToCart = false) => {
+    console.log('加入購物車前的 selectedTime:', selectedTime)
     if (selectedTime) {
       onAddWorkshop({
-        id: tworkshop.id,
+        id: selectedTime.id,
         name: tworkshop.name,
         date: selectedTime.date,
         beginTime: selectedTime.beginTime,
         endTime: selectedTime.endTime,
         typeId: tworkshop.type_id,
-        classId: selectedTime.key,
+        // classId: selectedTime.id,
         price: tworkshop.price,
         cover: tworkshop.img_cover,
         teacher: tworkshop.teacher_name,
@@ -158,6 +159,7 @@ export default function WorkshopDetail() {
             return (
               <TimeSelect
                 key={timeId[index]}
+                id={timeId[index]}
                 date={date.replace(/-/g, '/')}
                 beginTime={startTimes[index].slice(0, 5)} // 對應的開始時間
                 endTime={endTimes[index].slice(0, 5)} // 對應的結束時間

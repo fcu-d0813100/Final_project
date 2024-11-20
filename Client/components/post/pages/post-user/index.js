@@ -73,9 +73,8 @@ export default function PostUser(props) {
   console.log(publishCard)
   const breakpoint = {
     default: 4,
-    1600: 3,
-    1200: 3,
-    700: 2,
+    1640: 3,
+    1200: 2,
   }
   const itemsPerPage = 5 // 每頁顯示的項目數量
 
@@ -131,11 +130,17 @@ export default function PostUser(props) {
             <Tab.Content>
               <Tab.Pane eventKey="/publish">
                 <div className={styles['publish-all']}>
-                  <Pagination
-                    data={publishCard}
-                    itemsPerPage={itemsPerPage}
-                    renderCard={renderPublishCard}
-                  />
+                  {publishCard.length === 0 ? (
+                    <div className={styles['no-data']}>
+                      <p>沒有發布的貼文</p>
+                    </div>
+                  ) : (
+                    <Pagination
+                      data={publishCard}
+                      itemsPerPage={itemsPerPage}
+                      renderCard={renderPublishCard}
+                    />
+                  )}
                 </div>
               </Tab.Pane>
               <Tab.Pane eventKey="/save">
@@ -145,21 +150,24 @@ export default function PostUser(props) {
                     className={styles['my-masonry-grid']}
                     columnClassName={styles['my-masonry-grid_column']}
                   >
-                    {wallCard.map((post) => {
-                      const imgSrc = `http://localhost:3005/post/${post.post_img}`
+                    {wallCard.length === 0 ? (
+                      <div className={styles['no-data']}>
+                        <p>沒有收藏的貼文</p>
+                      </div>
+                    ) : (
+                      wallCard.map((post) => {
+                        const imgSrc = `http://localhost:3005/post/${post.post_img}`
 
-                      return (
-                        <WallCard
-                          key={post.id}
-                          href={`/post/${post.id}`}
-                          imageSrc={imgSrc}
-                          title={post.title}
-                          // username={post.nickname}
-                          // avatarSrc={`/user/img/${post.user_img}`}
-                          // likeCount={post.like_count}
-                        />
-                      )
-                    })}
+                        return (
+                          <WallCard
+                            key={post.id}
+                            href={`/post/${post.id}`}
+                            imageSrc={imgSrc}
+                            title={post.title}
+                          />
+                        )
+                      })
+                    )}
                   </Masonry>
                 </div>
               </Tab.Pane>

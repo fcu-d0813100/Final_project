@@ -11,14 +11,14 @@ const WheelOfFortune = () => {
   const [coupon, setCoupon] = useState(null); // 存儲獲得的優惠券
   const [showModal, setShowModal] = useState(false); // 控制 modal 顯示與隱藏
   const { auth } = useAuth(); // 假設 useAuth hook 會提供用戶的認證狀態
-  const router = useRouter();
   const [hasPlayedToday, setHasPlayedToday] = useState(false); // 是否已經玩過
   const [playHistory, setPlayHistory] = useState([]); // 儲存遊玩歷史
   const [historyVisible, setHistoryVisible] = useState(false); // 控制遊玩歷史顯示或隱藏
   const [autoRotating, setAutoRotating] = useState(true); // 控制是否啟動自動旋轉
-
   const wheelRef = useRef(null); // 用於引用轉盤 DOM 元素
   const autoRotateIntervalRef = useRef(null); // 用來管理自動旋轉的 interval
+  const router = useRouter();
+
 
   // 優惠券項目
   const coupons = [
@@ -32,14 +32,14 @@ const WheelOfFortune = () => {
 
   // 檢查用戶是否已登入，並顯示歷史紀錄
   useEffect(() => {
-    if (auth.isAuth) {
+    if (auth.isAuth && auth.userData.identity==='user') {
       const history = localStorage.getItem('playHistory');
       const parsedHistory = history ? JSON.parse(history) : [];
       setPlayHistory(parsedHistory);
     } else {
       setPlayHistory([]);
     }
-  }, [auth.isAuth]);
+  }, [auth.isAuth,auth.userData.identity]);
 
   // 自動旋轉轉盤 (只在 autoRotating 狀態為 true 時才會啟動)
   useEffect(() => {
@@ -78,13 +78,13 @@ const WheelOfFortune = () => {
     if (spinning) return; // 如果轉盤正在旋轉，禁止重複點擊
 
     // 檢查用戶是否已登入
-    if (!auth.isAuth) {
-     // 如果用戶未登入，顯示登入提示 Modal
-     setShowModal(true);
+    if (!auth.isAuth || auth.userData.identity!=='user') {
+      // 如果用戶未登入，顯示登入提示 Modal
+      setShowModal(true);
       return; // 停止執行，避免未登入的用戶進行旋轉
     }
 
- 
+
     // 檢查用戶今天是否已經玩過遊戲
     const today = new Date().toISOString().slice(0, 10); // 取得今天的日期（YYYY-MM-DD）
     const lastPlayedDate = localStorage.getItem('lastPlayedDate'); // 讀取 localStorage 中的最後遊玩日期
@@ -217,7 +217,7 @@ const WheelOfFortune = () => {
 
       {showModal && <Modal coupon={coupon} onClose={closeModal} />}
 
-      {auth.isAuth && (
+      {auth.isAuth && auth.userData.identity==='user' && (
         <div className={styles.historyButtonWrapper}>
           <button className={`${styles.historyButton} h5`} onClick={toggleHistory}>
             {historyVisible ? '隱藏遊玩歷史' : '顯示遊玩歷史'}
@@ -242,7 +242,7 @@ const WheelOfFortune = () => {
       )}
 
       {
-        !auth.isAuth && showModal && (
+        !auth.isAuth || auth.userData.identity!=='user' && showModal && (
           <ModalConfirm
             title="尚未登入會員"
             content={`是否前往登入?`}

@@ -12,20 +12,21 @@
   .section1 {
     padding-inline: 80px;
     padding-block: 50px;
-
+  }
+  .section02 {
+    padding-inline: 80px;
+    padding-top: 50px;
     .uploadMainInfo {
-      margin-left: 80px;
-
       .subtitle {
-        border-bottom: 1px solid $green-600;
         padding-inline: 30px;
         padding-block: 5px;
-        margin-bottom: 30px;
+
         h4 {
           color: $green-700;
         }
       }
       .inputArea {
+        margin-top: 30px;
         padding-inline: 30px;
         .inputstyle {
           span {
@@ -52,14 +53,38 @@
         }
       }
     }
-  }
-  .section02 {
-    padding-inline: 80px;
-    padding-block: 50px;
-
     .workshopDetail {
-      background-color: #f8f8f8;
+      margin-top: 30px;
+      .label {
+        font-size: 16px;
+        span {
+          color: $green-500;
+          font-size: 14px;
+        }
+      }
       border-radius: 5px;
+    }
+    .detailTextarea {
+      border-radius: 5px;
+      border: 1.5px solid $gray-200;
+      padding-inline: 15px;
+      height: 240px;
+      span {
+        color: $green-500;
+        font-size: 14px;
+      }
+
+      &:focus {
+        outline: none;
+        border: 2px solid $green-500;
+      }
+
+      &::placeholder {
+        color: #cbcbcb;
+      }
+    }
+    .errorInput {
+      border: 1px solid $red-500; // 當有錯誤時的紅色邊框顏色
     }
   }
   .section03 {
@@ -68,5 +93,8 @@
     h4 {
       color: $green-700;
     }
+  }
+  .Btncon {
+    margin-right: 13% !important;
   }
 }
