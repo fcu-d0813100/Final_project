@@ -39,9 +39,15 @@ export default function OrderList() {
                 item.product_name.toLowerCase().includes(search.toLowerCase()) // 商品名稱匹配
             );
             const worckshopMatches = order.items.some(item =>
-                item.type.toLowerCase().includes(search.toLowerCase()) // 商品名稱匹配
+                item.type.toLowerCase().includes(search.toLowerCase()) // 課程名稱匹配
             );
-            return orderMatches || itemMatches || worckshopMatches; // 任一條件匹配即可
+            const brandsMatches = order.items.some(item =>
+                item.name.toLowerCase().includes(search.toLowerCase()) // 品牌名稱匹配
+            );
+            const teacherMatches = order.items.some(item =>
+                item.teachers_name.toLowerCase().includes(search.toLowerCase()) // 品牌名稱匹配
+            );
+            return orderMatches || itemMatches || worckshopMatches || brandsMatches || teacherMatches; // 任一條件匹配即可
         });
 
         setFilteredOrders(filtered); // 更新過濾後的訂單
@@ -147,7 +153,7 @@ export default function OrderList() {
                             </div>
                             <div className="col-12 d-flex justify-content-center align-items-center my-5">
                                 <Link href="/product/product-list" passHref>
-                                    <button className="btn-primary h6">前往收藏</button>
+                                    <button className="btn-primary h6">前往選購</button>
                                 </Link>
                             </div>
                         </div>
