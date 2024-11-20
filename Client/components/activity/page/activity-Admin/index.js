@@ -4,7 +4,7 @@ import { PiPlus } from 'react-icons/pi'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import UserCard from '../../common/userCard'
-import Sidebar from '@/components/admin/common/admin-side-bar'
+import Sidebar from '@/components/activity/common/Sidebar'
 import UserTitle from '@/components/user/common/user-title'
 import Pagination from '@/components/shared/pagination'
 import {
@@ -90,7 +90,7 @@ export default function Index() {
 
   return (
     <>
-      <AdminTitle/>
+      <AdminTitle />
 
       <div className={styles['user-section']}>
         <Sidebar />
