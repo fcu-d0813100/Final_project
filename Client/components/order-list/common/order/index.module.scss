@@ -31,6 +31,9 @@
     &:hover {
         color: $gray-200;
     }
+    &:focus{
+        border: transparent;
+    }
 }
 
 /* 定義過渡效果 */
