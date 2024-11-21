@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/router';
 
-const useFetchReviews = (order_item_id, productId, colorId) => {
+const useFetchReviews = (orderItemId=0, productId, colorId) => {
   const { auth } = useAuth(); // 從 useAuth 中獲取認證數據
   const currentUser = auth.user; // 當前用戶
   const [reviews, setReviews] = useState([]); // 儲存評論數據
   const [loading, setLoading] = useState(true); // 加載狀態
 
-  console.log('useFetchReviews - productId:', productId, 'colorId:', colorId);
+  const router = useRouter()
+
+  console.log('useFetchReviews - productId:', productId, 'colorId:', colorId, 'order_item_id' , orderItemId);
 
   // 定義 fetchReviews 函數，獲取評論數據
-  const fetchReviews = async () => {
+  const fetchReviews = async (colorId) => {
     console.log('auth.userData at fetchReviews:', auth.userData); // 查看加載時狀態
+    console.log('1234colorId', colorId)
     try {
-      const response = await fetch(`http://localhost:3005/api/product/product-list/reviews/${order_item_id}/${productId}/${colorId}`);
+      const response = await fetch(`http://localhost:3005/api/product/product-list/reviews/${orderItemId}/${productId}/${colorId}`);
       if (!response.ok) throw new Error(`Failed to fetch reviews: ${response.status}`);
       
       const data = await response.json();
@@ -77,11 +81,12 @@ const useFetchReviews = (order_item_id, productId, colorId) => {
 
   // useEffect 用於監聽 order_item_id 並調用 fetchReviews
   useEffect(() => {
-    console.log('useEffect triggered with order_item_id:', order_item_id); // 打印 order_item_id
-    if (order_item_id) { // 確保 order_item_id 存在
-      fetchReviews();
+    console.log('useEffect triggered with order_item_id:', orderItemId); // 打印 order_item_id
+    // console.log('query.cid', router.query.cid)
+    if (orderItemId) { // 確保 order_item_id 存在
+      fetchReviews(router.query.cid);
     }
-  }, [order_item_id]);
+  }, [orderItemId, router.query]);
 
   // 返回評論數據、加載狀態、fetchReviews 函數和 handleLike 函數
   return { reviews, loading, fetchReviews, handleLike };
