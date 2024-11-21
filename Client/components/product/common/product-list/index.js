@@ -8,7 +8,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/bundle'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { FaSearch, FaHeart, FaRegHeart } from 'react-icons/fa'
+import { FaSearch, FaHeart, FaRegHeart, BsFilterLeft } from 'react-icons/fa'
 import ProductCarousel from './ProductCarousel'
 import Image from 'next/image'
 import { useCartProduct } from '@/hooks/use-cartP'
@@ -70,6 +70,7 @@ const ProductPage = ({
   const [searchKeyword, setSearchKeyword] = useState('')
   const [sortOrder, setSortOrder] = useState('asc') // 排序方式
 
+  
   // 關鍵字搜尋處理函數
   const handleSearch = async () => {
     if (searchKeyword.trim()) {
@@ -112,27 +113,6 @@ const ProductPage = ({
     }
   }
 
-  //   // 處理收藏按鈕點擊事件
-  // const handleFavoriteClick = (color_id) => {
-  //   if (!auth.isAuth) {
-  //     // 如果未登入，跳轉到登入頁面
-  //     toast.error('請先登入以使用收藏功能', {
-  //       style: { border: '1.2px solid #90957a', padding: '12px 40px', color: '#963827' },
-  //       iconTheme: { primary: '#963827', secondary: '#fff' },
-  //     })
-  //     router.push('/user/login/user') // 跳轉到登入頁面
-  //     return
-  //   }
-
-  //   // 如果已登入，加入或移除收藏
-  //   setFavoriteProducts((prevFavorites) => ({
-  //     ...prevFavorites,
-  //     [color_id]: !prevFavorites[color_id],
-  //   }))
-
-  //   // 在此處將收藏的商品新增到 `UserSection` 的收藏清單
-  //   // 可以考慮用 context 或直接傳遞 state 來管理
-  // }
 
   // 定義價格和品牌選項
   const priceOptions = [
@@ -219,26 +199,39 @@ const ProductPage = ({
     router.push(`/product/product-list/${color_id}`)
   }
 
-  return (
-    <div className={styles['container']}>
-      <header>
-        <div className={styles['hamburger-menu']}>
-          <i className="fa-solid fa-bars"></i>
-        </div>
-      </header>
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false) // 新增狀態管理 sidebar 開關
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev)
+  }
+
+  // 點擊分類篩選(手機版)
+  const handleCategoryClick = (mainCategory, subCategory) => {
+    onCategoryClick(mainCategory, subCategory); // 調用分類篩選函數
+    setIsSidebarOpen(false); // 點擊篩選後關閉 sidebar
+  };
+
+  // 點擊子分類篩選(手機版))
+  const handleSubCategoryClick = (mainCategory, subCategory) => {
+    onSubCategoryClick(mainCategory, subCategory); // 調用子分類篩選函數
+    setIsSidebarOpen(false); // 點擊篩選後關閉 sidebar
+  };
+
+  return (
+    <div className={styles['product-container']}>
+     
       <ProductCarousel />
 
       <div
-        className={`${styles['product-container-w']} ${styles['container-sm']} container`}
+        className={`${styles['product-container-w']} ${styles['container-sm']} container col-6`}
       >
-        <div className={`${styles['row']} ${styles['product-row-w']}`}>
-          <aside className={`${styles['product-sidebar-w']} col-lg-2`}>
+        <div className={`${styles['row']} ${styles['product-row-w']} row`}>
+          <aside className={`${styles['product-sidebar-w']} ${isSidebarOpen ? styles['sidebar-open'] : styles['sidebar-closed']} col-lg-2`}>
             <div className={styles['product-sidebarcontent-w']}>
               <ul>
                 <li>
                   <a href="#">
-                    <h4 style={{ color: '#90957a' }}>彩妝商城</h4>
+                    <h4  className={styles['shop']} style={{ color: '#90957a' }}>彩妝商城</h4>
                   </a>
                 </li>
                 <li>
@@ -247,6 +240,7 @@ const ProductPage = ({
                     onClick={(e) => {
                       e.preventDefault()
                       clearAndFetchProducts(onNewArrivalsClick)
+                      setIsSidebarOpen(false);
                     }}
                     className="p"
                   >
@@ -259,6 +253,7 @@ const ProductPage = ({
                     onClick={(e) => {
                       e.preventDefault()
                       clearAndFetchProducts(onHandlePopularClick)
+                      setIsSidebarOpen(false);
                     }}
                     className="p"
                   >
@@ -271,6 +266,7 @@ const ProductPage = ({
                     onClick={(e) => {
                       e.preventDefault()
                       clearAndFetchProducts(onNarsDiscountClick)
+                      setIsSidebarOpen(false);
                     }}
                     className="p"
                   >
@@ -283,6 +279,7 @@ const ProductPage = ({
                     onClick={(e) => {
                       e.preventDefault()
                       clearAndFetchProducts(onAll)
+                      setIsSidebarOpen(false);
                     }}
                     className="p"
                   >
@@ -310,6 +307,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onCategoryClick(1, null)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -322,6 +320,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(1, 1)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -334,6 +333,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(1, 2)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -364,6 +364,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onCategoryClick(2, null)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -376,6 +377,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(2, 3)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -388,6 +390,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(2, 4)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -418,6 +421,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onCategoryClick(4, null)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -430,6 +434,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(4, 9)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -442,6 +447,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(4, 10)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -472,6 +478,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onCategoryClick(3, null)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -484,6 +491,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(3, 5)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -496,6 +504,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(3, 6)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -508,6 +517,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(3, 7)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -520,6 +530,7 @@ const ProductPage = ({
                           onClick={(e) => {
                             e.preventDefault()
                             onSubCategoryClick(3, 8)
+                            setIsSidebarOpen(false);
                           }}
                           className="p"
                         >
@@ -536,10 +547,12 @@ const ProductPage = ({
                 name="價格"
                 items={priceOptions.map((option) => ({
                   option: option.label,
-                  onClick: () =>
+                  onClick: () => {
                     clearAndFetchProducts(() =>
                       onPriceFilterClick(option.minPrice, option.maxPrice)
-                    ),
+                    )
+                    setIsSidebarOpen(false) // 點擊後關閉 sidebar
+                  },
                 }))}
                 className={styles['dropdownTitle']}
               />
@@ -547,10 +560,10 @@ const ProductPage = ({
                 name="品牌"
                 items={brandOptions.map((option) => ({
                   option: option.option,
-                  onClick: () =>
-                    clearAndFetchProducts(() =>
-                      onBrandFilterClick(option.option)
-                    ),
+                  onClick: () => {
+                    clearAndFetchProducts(() => onBrandFilterClick(option.option))
+                    setIsSidebarOpen(false) // 點擊後關閉 sidebar
+                  },
                 }))}
                 className={styles['dropdownTitle']}
               />
@@ -559,14 +572,18 @@ const ProductPage = ({
 
           <section className={`${styles['product-list-w']}  col-lg-10`}>
             <Toaster position="top-center" reverseOrder={true} />
+             {/* 點擊按鈕控制 sidebar */}
+          
             <div
-              className={`${styles['row']} justify-content-between align-items-center mb-5`}
+              className={`${styles['product-top']} row justify-content-between align-items-center mb-5`}
             >
-
-              <div className="col-md-6 col-lg-4 mb-md-0">
+              <div className="col-md-6 col-lg-4  mb-md-0">
                 <div
                   className={`${styles['product-search-w']} d-flex align-items-center justify-content-center`}
                 >
+                  {/* <button onClick={toggleSidebar} className={styles['sidebar-toggle-btn']}>
+                    <FaSearch size={18} />
+                  </button> */}
                   <input
                     type="text"
                     className="form-control p"
@@ -592,9 +609,9 @@ const ProductPage = ({
                 </div>
               </div>
 
-              <div className="d-flex col-md-6 col-lg-5 justify-content-md-end pb-3">
-                <Dropdown name="商品排序" items={sortOptions} />
-                <Dropdown name="每頁顯示" items={itemsPerPageOptions} />
+              <div  className={`${styles['product-filter-w']} d-flex col-md-6 col-lg-5  justify-content-md-end pb-3`}>
+                  <Dropdown name="商品排序" items={sortOptions} className={styles['dropdownTitle']}/>
+                  <Dropdown name="每頁顯示" items={itemsPerPageOptions} className={styles['dropdownTitle']}/>
               </div>
             </div>
 
@@ -647,8 +664,9 @@ const ProductPage = ({
                   <Image
                     width={200}
                     height={200}
+                    layout="intrinsic"
                     src={`/product/mainimage/${product.mainimage}`}
-                    className={styles['product-cardimg-w']}
+                    className={`${styles['product-cardimg-w']} responsive-image`}
                     alt={product.product_name}
                   />
                   <div className={styles['product-cardbody-w']}>

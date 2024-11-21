@@ -116,7 +116,7 @@
         border: 1px $green-200 solid;
         display: flex;
         justify-content: space-between;
-        align-items: end;
+        align-items: flex-end;
         gap: 10px;
         padding: 10px 16px;
         border-radius: 2px;
@@ -257,7 +257,7 @@
   cursor: pointer;
   padding: 0px 5px;
   border-top-right-radius: 5px;
-
+  line-height: 1.5;
   transition: background-color 0.3s;
 }
 .delete-btn:hover {

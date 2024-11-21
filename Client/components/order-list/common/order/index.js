@@ -11,8 +11,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
     const router = useRouter(); // 初始化 router
 
     const handleClick = () => {
-        // 存儲 orderId 到 localStorage
-        localStorage.setItem('orderId', orderId);
+    // 存儲 orderId 到 localStorage
+    localStorage.setItem('orderId', orderId);
     };
 
     const [showAllItems, setShowAllItems] = useState(false);
@@ -61,14 +61,26 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
         // 將普通商品資料存到 localStorage
         if (productCartItems.length > 0) {
             localStorage.setItem('productCart', JSON.stringify(productCartItems));
+        } else {
+            // 如果工作坊陣列為空，可以選擇移除 Workshopcart 的 localStorage 項目
+            localStorage.removeItem('productCart');
         }
 
         // 將工作坊商品資料存到 localStorage
         if (WorkshopCartItems.length > 0) {
             localStorage.setItem('Workshopcart', JSON.stringify(WorkshopCartItems));
+        } else {
+            // 如果工作坊陣列為空，可以選擇移除 Workshopcart 的 localStorage 項目
+            localStorage.removeItem('Workshopcart');
         }
 
-        router.push('/cart');
+        // router.push('/cart');
+        // // 跳轉到 /cart 並強制刷新頁面
+        // router.push('/cart').then(() => {
+        //     // 使用 window.location.reload() 強制重新整理頁面
+        //     window.location.reload()
+        // })
+        window.location.href = '/cart';
     };
 
     return (
@@ -89,7 +101,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
 
                         {/* 顯示第一個商品 */}
                         <div>
-                            <Link className={`text-decoration-none ${styles.link}`} href="/user/order/detail" passHref onClick={handleClick}>
+                            <Link className={`text-decoration-none ${styles.link}`} href={`/user/order/detail`} passHref onClick={handleClick}>
+                                {/*  */}
                                 <div key={items[0].id}>
                                     {items[0].product_id && (
                                         <Item

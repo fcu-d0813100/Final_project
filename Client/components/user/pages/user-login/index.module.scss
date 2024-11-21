@@ -269,9 +269,11 @@
 @media (max-width: 750px) {
   .container-login {
     position: relative;
+    height: 800px;
   }
 
   .bg-img {
+    position: relative;
     background: linear-gradient(0deg,
         rgba(0, 0, 0, 0.4) 0%,
         rgba(0, 0, 0, 0.4) 100%),
@@ -279,13 +281,13 @@
   }
 
   .login-section {
-    margin: 50px 0 10px 0;
+    margin: 30px 0 10px 0;
   }
 
   .logo {
-    z-index: 2;
+    z-index: 1;
     position: absolute;
-    top: 30px;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 32px;

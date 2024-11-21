@@ -5,7 +5,7 @@ import { PiPlus, PiX, PiArrowRight } from 'react-icons/pi'
 import styles from '@/components/teacher/common/t-dashboard-add-worshopTime/add-workshopTime.module.scss'
 import React, { useState, useEffect } from 'react'
 
-export default function AddWorkshopTime({ onAddTime, workshopIdVal }) {
+export default function AddWorkshopTime({ onAddTime, workshopIdVal, registrationEnd }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [selectedTime, setSelectedTime] = useState({
@@ -110,6 +110,7 @@ export default function AddWorkshopTime({ onAddTime, workshopIdVal }) {
               placeholder="請選擇日期"
               name="date"
               value={selectedTime.date}
+              min={registrationEnd}
               onChange={handleChange}
             />
 
@@ -154,10 +155,11 @@ export default function AddWorkshopTime({ onAddTime, workshopIdVal }) {
                 forText="min_students"
                 titleCh="人數區間"
                 titleEn=""
-                typeText="text"
+                typeText="number"
                 placeholder="最少人數"
                 name="min_students"
                 value={selectedTime.min_students}
+                min={1} // 最少人數不能小於 1
                 onChange={handleChange}
               />
               <p className="col-1 d-flex justify-content-center align-items-center">
@@ -169,9 +171,10 @@ export default function AddWorkshopTime({ onAddTime, workshopIdVal }) {
                 forText="max_students"
                 titleCh=""
                 titleEn=""
-                typeText="text"
+                typeText="number"
                 placeholder="最多人數"
                 name="max_students"
+                min={1} // 最少人數不能小於 1
                 value={selectedTime.max_students}
                 onChange={handleChange}
               />

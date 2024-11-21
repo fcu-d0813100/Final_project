@@ -5,8 +5,6 @@ import { PiNotePencilBold } from 'react-icons/pi'
 import { PiMagnifyingGlass } from 'react-icons/pi'
 import { useAuth } from '@/hooks/use-auth'
 import ModalConfirm from '@/components/shared/modal-confirm'
-// import InputIME from '@/components/shared/input-amend'
-import { usePost } from '@/hooks/post/use-post'
 import Masonry from 'react-masonry-css'
 import WallCard from '@/components/post/common/wall-card'
 import styles from './index.module.scss'
@@ -33,6 +31,7 @@ export default function PostWall(props) {
     if (router.isReady) {
       const querySort = router.query.sort || 'total_count'
       setSort(querySort)
+      return
     }
   }, [router.isReady, router.query.sort])
 

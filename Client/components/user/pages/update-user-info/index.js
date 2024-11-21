@@ -8,8 +8,6 @@ import { useRouter } from 'next/router'
 import DeleteModal from '@/components/shared/modal-delete'
 import { toast, Toaster } from 'react-hot-toast'
 import PreviewUploadImage from '@/components/user/common/preview-upload-image'
-// import utils from '@/components/cart/common/tw-zipcode'
-// import dataTownships from '@/components/cart/common/tw-zipcode'
 import {
   countries,
   townships,
@@ -104,7 +102,7 @@ export default function UpdateInfo({
     if (newCountryIndex > -1) {
       setUser((prevUser) => ({
         ...prevUser,
-        city: countries[newCountryIndex], // 更新 city
+        city: countries[newCountryIndex],
       }))
     }
   }
@@ -273,8 +271,6 @@ export default function UpdateInfo({
   const [showModal, setShowModal] = useState(false)
   const handleDeleteUser = async () => {
     try {
-      // console.log(`開始刪除用戶，ID: ${user.id}`)
-      // console.log('用戶刪除成功')
       toast.success('您已成功申請停權', {
         style: {
           padding: '12px 40px',
@@ -317,7 +313,7 @@ export default function UpdateInfo({
     setUser(user)
     setTimeout(() => {
       router.push('/user')
-    }, 1500)
+    }, 2000)
   }
 
   return (
@@ -329,9 +325,11 @@ export default function UpdateInfo({
           encType="multipart/form-data"
         >
           <div className="mt-5 container-fluid">
-            <div className="row justify-content-center align-items-center">
-              <div className="col-9 pe-3 d-flex flex-wrap">
-                <div className={`col-4 ${styles.info} `}>
+            <div className={`${styles['form-container']} row`}>
+              <div
+                className={`${styles['form-content']} col-md-9 col-12 pe-md-3 pe-0 d-flex flex-wrap`}
+              >
+                <div className={`col-md-4 col-6 ${styles.info} `}>
                   <label htmlFor="name" className="form-label pb-2 fw-bold ">
                     姓名 <span className=" ps pe-4 fw-bold ">| name</span>
                   </label>
@@ -344,7 +342,7 @@ export default function UpdateInfo({
                     value={user.name}
                   />
                 </div>
-                <div className={`col-4 ${styles.info} `}>
+                <div className={`col-md-4 col-6  ${styles.info}`}>
                   <label htmlFor="nickname" className="form-label pb-2 fw-bold">
                     暱稱 <span className="ps pe-4 fw-bold">| nickname</span>
                   </label>{' '}
@@ -356,7 +354,7 @@ export default function UpdateInfo({
                     className={`form-control ${styles['form-control2']} `}
                   />
                 </div>
-                <div className={`col-4 ${styles.info} `}>
+                <div className={`col-md-4  col-6 ${styles.info} mt-md-0 mt-5 `}>
                   <label htmlFor="title " className="form-label pb-2 fw-bold">
                     稱謂 <span className=" ps pe-4 fw-bold">| title</span>
                   </label>{' '}
@@ -371,8 +369,12 @@ export default function UpdateInfo({
                     <option value="2">女士</option>
                   </select>
                 </div>
-                <div className={`col-3 ${styles.info} mt-5`}>
-                  <label htmlFor="birthday" className="form-label pb-2 fw-bold">
+                {/*  */}
+                <div className={`col-6 col-md-3  ${styles.info} mt-5`}>
+                  <label
+                    htmlFor="birthday"
+                    className={`form-label pb-2 fw-bold`}
+                  >
                     生日 <span className=" ps pe-4 fw-bold">| birthday</span>
                   </label>{' '}
                   <input
@@ -383,7 +385,7 @@ export default function UpdateInfo({
                     onChange={handleFieldChange}
                   />
                 </div>
-                <div className={`col-3 ${styles.info} mt-5`}>
+                <div className={`col-12 col-md-3 ${styles.info} mt-5`}>
                   <label htmlFor="phone" className="form-label pb-2 fw-bold">
                     手機 <span className=" ps pe-4 fw-bold">| phone</span>
                   </label>{' '}
@@ -396,7 +398,7 @@ export default function UpdateInfo({
                     name="phone"
                   />
                 </div>
-                <div className={`col-6 ${styles.info} mt-5`}>
+                <div className={`col-md-6 col-12 ${styles.info} mt-5`}>
                   <label htmlFor="email" className="form-label pb-2 fw-bold">
                     信箱 <span className=" ps pe-5 fw-bold">| email</span>
                   </label>{' '}
@@ -411,23 +413,23 @@ export default function UpdateInfo({
                 </div>
               </div>
 
-              <div className="col-3 d-flex justify-content-center align-items-center">
-                <div className="ratio ratio-1x1 w-75">
-                  <PreviewUploadImage
-                    userId={user.id}
-                    avatar={
-                      user.img ? `http://localhost:3005/avatar/${user.img}` : ''
-                    } // 傳入 avatar 照片
-                    avatarBaseUrl="http://localhost:3005/avatar"
-                    defaultImg="avatar01.jpg"
-                    setSelectedFile={setSelectedFile}
-                    selectedFile={selectedFile}
-                    photoUrl={user.photo_url} // 傳入 photo_url
-                  />
-                </div>
+              <div className={`${styles['avatar-area']}  col-0 col-md-3  `}>
+                {/* <div className={`${styles['avatar']} ratio ratio-1x1 w-75`}> */}
+                <PreviewUploadImage
+                  userId={user.id}
+                  avatar={
+                    user.img ? `http://localhost:3005/avatar/${user.img}` : ''
+                  }
+                  avatarBaseUrl="http://localhost:3005/avatar"
+                  defaultImg="avatar01.jpg"
+                  setSelectedFile={setSelectedFile}
+                  selectedFile={selectedFile}
+                  photoUrl={user.photo_url}
+                />
               </div>
             </div>
           </div>
+          {/* </div> */}
           {/* 收件資訊 */}
           <div
             className={`row ${styles['address-line']} d-flex align-items-center pb-3 my-5`}
@@ -437,7 +439,9 @@ export default function UpdateInfo({
           <div
             className={`d-flex row ${styles['address-line']} ${styles['address-area']} align-items-center justify-content-start p-0 m-0`}
           >
-            <div className={`col ${styles.info} ${styles['address-margin']}`}>
+            <div
+              className={`col-6 col-md-3 ${styles.info} ${styles['address-margin']}`}
+            >
               <label htmlFor="city" className={`form-label pb-2 fw-bold`}>
                 縣市
                 <span className={`ps fw-bold ${styles['info-address']}`}>
@@ -458,7 +462,9 @@ export default function UpdateInfo({
                 ))}
               </select>
             </div>
-            <div className={`col ${styles.info} ${styles['address-margin']}`}>
+            <div
+              className={`col-6 col-md-3 ${styles.info} ${styles['address-margin']}`}
+            >
               <label htmlFor="area" className={`form-label pb-2 fw-bold`}>
                 區域
                 <span className={`ps fw-bold ${styles['info-address']}`}>
@@ -480,7 +486,9 @@ export default function UpdateInfo({
                   ))}
               </select>
             </div>
-            <div className={`col-7 ${styles.info} ${styles['address-margin']}`}>
+            <div
+              className={`col-12 col-md-6 ${styles.info} ${styles['address-margin']}`}
+            >
               <label htmlFor="address" className={`form-label pb-2 fw-bold`}>
                 地址
                 <span className={`ps ${styles['info-address']} fw-bold`}>
@@ -502,13 +510,13 @@ export default function UpdateInfo({
           <div
             className={`row d-flex justify-content-between align-items-center mt-3`}
           >
-            <div className={`col-6`}>
+            <div className={`col-12 col-md-6`}>
               <p className={`ps ${styles.explain}`}>
                 ※請填寫完整的個人資訊，以享有更多會員權益。
               </p>
             </div>
             <div
-              className={`col-3 pe-3 d-flex justify-content-end align-items-center`}
+              className={`col-12 col-md-3 pe-3 mt-3 mt-md-0 d-flex justify-content-end align-items-center`}
             >
               <button
                 type="button"
@@ -530,17 +538,18 @@ export default function UpdateInfo({
             </div>
           </div>
 
-          <div
-            className={`${styles['submit-area']} d-flex justify-content-end align-items-center row`}
-          >
+          <div className={`${styles['submit-area']} row`}>
             <button
               type="button"
-              className="btn-secondary h6 me-4"
+              className={`btn-secondary h6 me-3 me-sm-4 ${styles['cancel-btn']}`}
               onClick={handleCancel}
             >
               取消
             </button>
-            <button type="submit" className={`btn-primary h6`}>
+            <button
+              type="submit"
+              className={`btn-primary h6 ${styles['cancel-btn']}`}
+            >
               儲存
             </button>
           </div>

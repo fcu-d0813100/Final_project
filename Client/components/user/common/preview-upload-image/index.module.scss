@@ -1,14 +1,17 @@
 @import '@/styles/_variant.scss';
 
-.image-upload{
-  width: 255px;
-  height: 100%;
-}
+// .image-upload{
+//   width: 200px;
+//   height: 100%;
+// }
+
 .image-upload > input {
   display: none;
 }
 
 .avatar {
+  // width: 100%;
+  // height: auto;
   cursor: pointer;
   border-radius: 50%;
   object-fit: cover;
@@ -54,7 +57,7 @@
 }
 
 .error p {
-  margin: 0; /* 去除預設的 margin 使對齊更準確 */
+  margin: 0;
 }
 
 .image-container {
@@ -86,6 +89,28 @@
     background-color: rgba(255, 255, 255, 1);
     color: $red-500;
     border-color: $red-500;
-    transform: scale(1.2); /* 增加放大效果 */
+    transform: scale(1.2); 
   }
 }
+@media screen and (max-width: 1600px) {
+  .avatar{
+    width: 200px;
+    height: 200px;
+  }
+}
+
+
+@media screen and (max-width: 1200px) {
+  .avatar{
+    width: 180px;
+    height: 180px;
+  }
+}
+@media screen and (max-width: 800px) {
+   .avatar{
+    width: 180px;
+    height: 180px;
+    margin-bottom: 30px;
+  }
+}
+

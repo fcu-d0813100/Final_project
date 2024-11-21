@@ -82,7 +82,7 @@ const LandingPage = () => {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)', // 黑色透明遮罩
+              backgroundColor: 'rgba(0, 0, 0, 0.2)', // 黑色透明遮罩
             }}
           ></div>
 
@@ -93,9 +93,9 @@ const LandingPage = () => {
             transition={{ duration: 1, delay: 0.5 }} // 設置延遲讓它們逐漸顯現
             className={`${styles.title} flex-column justify-content-center align-content-center h-100 w-100 text-center`}
           >
-            <div>
+            <div className='mb-5 pb-5'>
               <div className={`${styles.name} h1-L`}>Beautique</div>
-              <div className={`${styles.sutitle} h3-L`}>Where Beauty Meets Uniqueness.</div>
+              <div className={`${styles.sutitle} h3-L`}>Where Beauty <br/> Meets Uniqueness .</div>
             </div>
 
             {/* 按鈕 */}
@@ -104,7 +104,7 @@ const LandingPage = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }} // 控制按鈕顯示的延遲
-                className={`${styles.homeBtn} btn h6 enter-button d-flex justify-content-center align-items-center`}
+                className={`${styles.homeBtn} btn h5 enter-button d-flex justify-content-center align-items-center`}
                 onClick={handleButtonClick}
               >
                 SHOW NOW  <BsArrowRight className={styles.right} size={30}/>

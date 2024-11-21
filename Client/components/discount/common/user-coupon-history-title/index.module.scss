@@ -1,41 +1,34 @@
 @import '@/styles/_variant.scss';
 
 .post-title {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    border-bottom: 2px $green-500 solid;
-    box-sizing: border-box;
-    margin: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 2px $green-500 solid;
+  box-sizing: border-box;
+  margin: 0;
 
-    & span:last-child {
-        color: $green-700;
+  & span:last-child {
+    color: $green-700;
 
-        @media (max-width:992px) {
-            // padding: 10px 0;
-            font-size: 28px;
-        }
-
-
-        @media (max-width:768px) {
-            // padding: 10px 0;
-            font-size: 24px;
-        }
-
-        @media (max-width: 390px) {
-            // padding: 10px 0;
-            font-size: 20px;
-        }
-
+    @media (max-width: 992px) {
+      // padding: 10px 0;
+      font-size: 28px;
     }
+
+    @media (max-width: 768px) {
+      // padding: 10px 0;
+      font-size: 24px;
+    }
+
+    @media (max-width: 390px) {
+      // padding: 10px 0;
+      font-size: 20px;
+    }
+  }
 }
 
 .left {
-    font-size: 20px; /* 根据需要调整 */
-    color: $green-500; /* 根据需要调整 */
-
+  font-size: 20px; /* 根据需要调整 */
+  color: $green-500; /* 根据需要调整 */
 }
-
-
-
-

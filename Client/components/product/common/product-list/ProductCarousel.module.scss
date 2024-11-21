@@ -50,11 +50,15 @@
 }
 
 .pagination-dots {
+  @media screen and (max-width: 391px) {
+    display: none;
+  }
   position: absolute;
   text-align: center;
   bottom: 3%;
   right: 45%;
   z-index: 1;
+  
   button {
     width: 8px;
     height: 10px;

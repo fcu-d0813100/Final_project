@@ -25,7 +25,7 @@
     right: 0;
     bottom: 0;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
 
     transition: 0.3s;
@@ -64,8 +64,8 @@
           border-radius: 17px;
           padding-inline: 20px;
         }
-        .prepare{
-            color: white;
+        .prepare {
+          color: white;
           background-color: rgb(211, 193, 110);
           border-radius: 17px;
           padding-inline: 20px;
@@ -108,4 +108,94 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
+}
+
+@media (max-width: 1440px) {
+  .workshop {
+    height: 550px;
+    margin-bottom: 65px;
+    color: black;
+
+    .workshopImg {
+      .coverImg {
+        height: 55%;
+      }
+      transition: 0.2s;
+    }
+    .wInformation {
+      width: 100%;
+      height: 260px;
+
+      .innerText {
+        width: 95%;
+      }
+      .wTitle {
+        width: 100%;
+      }
+    }
+    transition: 0.2s;
+    &:hover {
+      .workshopImg {
+        padding: 20px;
+      }
+      .innerText {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .workshop {
+    height: 500px;
+    width: 500px;
+    margin-bottom: 65px;
+    color: black;
+
+    .workshopImg {
+      .coverImg {
+        height: 70%;
+      }
+      transition: 0.2s;
+    }
+    .wInformation {
+      width: 100%;
+      height: 260px;
+      background-color: #ffffff;
+    }
+    transition: 0.2s;
+    &:hover {
+      .workshopImg {
+        padding: 0px;
+      }
+      .innerText {
+        width: 100%;
+      }
+      .wInformation {
+        bottom: 0px;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .workshop {
+    height: 460px;
+    width: 332px;
+    margin-bottom: 65px;
+    color: black;
+
+    .workshopImg {
+      .coverImg {
+        height: 70%;
+      }
+      transition: 0.2s;
+    }
+    .wInformation {
+      width: 100%;
+      height: 240px;
+    }
+   
+   
+  }
 }
