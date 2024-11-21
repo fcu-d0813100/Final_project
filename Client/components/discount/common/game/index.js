@@ -17,13 +17,6 @@ const WheelOfFortune = () => {
   const [autoRotating, setAutoRotating] = useState(true); // 控制是否啟動自動旋轉
   const wheelRef = useRef(null); // 用於引用轉盤 DOM 元素
   const autoRotateIntervalRef = useRef(null); // 用來管理自動旋轉的 interval
-
-  // const [auth, setAuth] = useState({
-  //   isAuth: false, // 表示是否已登入
-  //   userData: {
-  //     identity: '', // 身分：如 admin、teacher
-  //   },
-  // })
   const router = useRouter();
 
 
@@ -39,14 +32,14 @@ const WheelOfFortune = () => {
 
   // 檢查用戶是否已登入，並顯示歷史紀錄
   useEffect(() => {
-    if (auth.isAuth) {
+    if (auth.isAuth && auth.userData.identity==='user') {
       const history = localStorage.getItem('playHistory');
       const parsedHistory = history ? JSON.parse(history) : [];
       setPlayHistory(parsedHistory);
     } else {
       setPlayHistory([]);
     }
-  }, [auth.isAuth]);
+  }, [auth.isAuth,auth.userData.identity]);
 
   // 自動旋轉轉盤 (只在 autoRotating 狀態為 true 時才會啟動)
   useEffect(() => {
@@ -85,7 +78,7 @@ const WheelOfFortune = () => {
     if (spinning) return; // 如果轉盤正在旋轉，禁止重複點擊
 
     // 檢查用戶是否已登入
-    if (!auth.isAuth) {
+    if (!auth.isAuth || auth.userData.identity!=='user') {
       // 如果用戶未登入，顯示登入提示 Modal
       setShowModal(true);
       return; // 停止執行，避免未登入的用戶進行旋轉
@@ -224,7 +217,7 @@ const WheelOfFortune = () => {
 
       {showModal && <Modal coupon={coupon} onClose={closeModal} />}
 
-      {auth.isAuth && (
+      {auth.isAuth && auth.userData.identity==='user' && (
         <div className={styles.historyButtonWrapper}>
           <button className={`${styles.historyButton} h5`} onClick={toggleHistory}>
             {historyVisible ? '隱藏遊玩歷史' : '顯示遊玩歷史'}
@@ -249,7 +242,7 @@ const WheelOfFortune = () => {
       )}
 
       {
-        !auth.isAuth && showModal && (
+        !auth.isAuth || auth.userData.identity!=='user' && showModal && (
           <ModalConfirm
             title="尚未登入會員"
             content={`是否前往登入?`}

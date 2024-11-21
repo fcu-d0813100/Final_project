@@ -25,6 +25,12 @@ function TopBar({ cartitems }) {
     if (!ensureLoggedIn()) {
       return
     }
+    if (auth.userData.identity === 'admin') {
+      return
+    }
+    if (auth.userData.identity === 'teacher') {
+      return
+    }
     window.location.href = '/cart'
   }
 
@@ -62,7 +68,7 @@ function TopBar({ cartitems }) {
                 <Form className="d-none d-lg-block">
                   <input
                     type="text"
-                    placeholder="新上市口紅 |"
+                    placeholder="新上市口紅"
                     className="me-3"
                   />
                   <PiMagnifyingGlass size={22} />
@@ -140,7 +146,7 @@ function TopBar({ cartitems }) {
               >
                 <div className={styles['dropdown-content-wrapper']}>
                   <div className={styles['dropdown-section']}>
-                    <Dropdown.Header>臉部妝容</Dropdown.Header>
+                    <Dropdown.Item>臉部妝容</Dropdown.Item>
                     <Dropdown.Item href="/product/product-list?main_category=1&sub_category=1">
                       粉底
                     </Dropdown.Item>

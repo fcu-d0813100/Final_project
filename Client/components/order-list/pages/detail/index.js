@@ -70,7 +70,7 @@ const OrderDetail = () => {
             <div className={`${styles["order-det-header"]} mt-3 justify-content-between align-items-center mb-2`}>
                 <div className={`header-left d-flex align-items-center`}>
                     <div className={`${styles.squ} me-3`}></div>
-                    <div className={`${styles["order-num"]} h4`}>訂單編號 {order_number}</div>
+                    <div className={`${styles["order-num"]}`}>訂單編號 {order_number}</div>
                 </div>
                 <div className={`${styles["header-right"]} p`}>
                     {status === "已付款" ? "已完成" : "未付款"}
@@ -84,7 +84,7 @@ const OrderDetail = () => {
                 {/* 訂單信息和收件信息 */}
                 <div className={`${styles.msg} d-flex justify-content-around`}>
                     <div className={styles["msg-left"]}>
-                        <div className={`${styles["left-title"]} h4 `}>訂單信息</div>
+                        <div className={`${styles["left-title"]} h4 `}>訂單資訊</div>
                         <div className={`${styles.detail} h6 ms-3`}>
                             <div>訂單編號：{order_number}</div>
                             <div>付款方式：{payment}</div>

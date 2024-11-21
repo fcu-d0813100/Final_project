@@ -73,9 +73,8 @@ export default function PostUser(props) {
   console.log(publishCard)
   const breakpoint = {
     default: 4,
-    1600: 3,
-    1200: 3,
-    700: 2,
+    1640: 3,
+    1200: 2,
   }
   const itemsPerPage = 5 // 每頁顯示的項目數量
 

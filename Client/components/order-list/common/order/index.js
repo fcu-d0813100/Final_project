@@ -45,13 +45,13 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
             } else if (item.wid) {
                 // 工作坊商品，加入 workshopCartItems 陣列
                 WorkshopCartItems.push({
-                    id: item.wid,
+                    id: item.wt_id,
                     typeId: item.type_id,
                     cover: `${item.img_cover}`, // 工作坊圖片路徑
                     name: item.type, // 工作坊類型名稱
-                    date: item.ws_date,
-                    beginTime: item.start_time,
-                    endTime: item.end_time,
+                    date: item.ws_date.replace(/-/g, '/'),
+                    beginTime: item.start_time.split(':').slice(0, 2).join(':'),
+                    endTime: item.end_time.split(':').slice(0, 2).join(':'),
                     qty: item.quantity,
                     price: item.workshop_price,
                 });
@@ -67,7 +67,6 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
         if (WorkshopCartItems.length > 0) {
             localStorage.setItem('Workshopcart', JSON.stringify(WorkshopCartItems));
         }
-
 
         router.push('/cart');
     };
@@ -111,8 +110,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                                             imageSrc={`http://localhost:3005/workshop/${items[0].img_cover}`}
                                             title={items[0].type}
                                             instructor={items[0].teachers_name}
-                                            date={`${items[0].ws_date}`}
-                                            time={`${items[0].start_time} - ${items[0].end_time}`}
+                                            date={`${items[0].ws_date.replace(/-/g, '/')}`}
+                                            time={`${items[0].start_time.split(':').slice(0, 2).join(':')} - ${items[0].end_time.split(':').slice(0, 2).join(':')}`}
                                             price={new Intl.NumberFormat().format(items[0].workshop_price)}
                                             dsPrice={new Intl.NumberFormat().format(items[0].workshop_price * 0.95)}
                                             quantity={items[0].quantity}
@@ -143,8 +142,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                                                     imageSrc={`http://localhost:3005/workshop/${item.img_cover}`}
                                                     title={item.type}
                                                     instructor={item.teachers_name}
-                                                    date={`${item.ws_date}`}
-                                                    time={`${item.start_time} - ${item.end_time}`}
+                                                    date={`${item.ws_date.replace(/-/g, '/')}`}
+                                                    time={`${item.start_time.split(':').slice(0, 2).join(':')} - ${item.end_time.split(':').slice(0, 2).join(':')}`}
                                                     price={new Intl.NumberFormat().format(item.workshop_price)}
                                                     dsPrice={new Intl.NumberFormat().format(item.workshop_price * 0.95)}
                                                     quantity={item.quantity}
@@ -155,7 +154,7 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                                 </div>
                             </Link>
                         </div>
-                        <button onClick={toggleShowItems} className={`btn ${styles.showItem} `}>
+                        <button onClick={toggleShowItems} className={`btn ${styles.showItem} ps`}>
                             {showAllItems ? <>隱藏其他商品<GoChevronUp /></> : <>檢視其他商品<GoChevronDown /></>}
                         </button>
                     </div>
@@ -164,11 +163,11 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
 
 
             <div className={`${styles.footer} d-flex flex-column justify-content-end align-items-end border-top p-2`}>
-                <div className={`total p-2`}>
+                <div className={`${styles.total} p-2`}>
                     訂單金額：<span className="h4">NT$ {new Intl.NumberFormat().format(totalAmount)}</span>
                 </div>
                 <div className="botton-group d-flex justify-content-end p-2 h6">
-                    <div className={`${styles.btn} btn-primary align-content-center me-3`} onClick={handleBuyAgain}>
+                    <div className={`${styles.again} btn btn-primary align-content-center`} onClick={handleBuyAgain}>
                         再買一次
                     </div>
                     {/* <div className={`${styles.btn}  btn-primary align-content-center`}>評論</div> */}

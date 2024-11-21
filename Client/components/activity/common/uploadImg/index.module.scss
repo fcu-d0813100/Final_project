@@ -1,20 +1,29 @@
 @import '@/styles/_variant.scss';
 
+// 整體容器
+.uploadWrapper {
+  display: flex !important; // 左右區域佈局
+  gap: 50px; // 左右區域間距
+}
+
+// 左側上傳區域
 .uploadCover {
   border: 3px dashed $green-200;
 
   border-radius: 10px;
   background-color: #f8f8f8;
   position: relative;
+  transition: all 0.2s;
 
   .plus {
-    font-size: 60px;
+    font-size: 40px;
     padding: 10px;
     border: 2.5px dashed $green-200;
     color: $green-600;
     border-radius: 50%;
     transition: all 0.2s;
   }
+
   .picUploadText {
     color: $green-600;
     display: flex;
@@ -27,55 +36,71 @@
       transition: all 0.2s;
     }
   }
-  transition: all 0.2s;
+
   &:hover {
     background: rgb(209, 209, 209);
     border: 3px dashed $green-400;
+
     .plus {
       border: 2.5px dashed $green-400;
     }
+
     span {
       color: $gray-300;
     }
   }
-  .previewImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-  .reSelectImg {
-    position: absolute;
-    bottom: 50px;
-    left: calc(50% - 100px);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }
 
+// 右側圖片預覽區域
+.imagePreviewWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 1000px !important;
+  justify-content: center; // 將內容對齊右側
+  gap: 10px; // 圖片間距
+  border-radius: 10px;
+}
+
+// 圖片網格
 .imageGrid {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(100px, 1fr)
-  ); // 根據容器寬度自動分配圖片
-  gap: 10px; // 圖片之間的間距
+    minmax(200px, 1fr)
+  ); // 圖片寬度最小為 200px，容器大小自動適應
+  gap: 10px;
 }
+
+// 單個圖片容器
 .imageContainer {
-  position: relative; // 為刪除按鈕提供絕對定位的參考
-}
-.removeImageButton {
-  position: absolute; // 絕對定位於圖片右上角
-  top: 5px;
-  right: 5px;
-  background: rgba(255, 255, 255, 1); // 半透明背景
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 18px;
-  width: 35%;
-  color: #000000; // 刪除按鈕顏色
-  padding: 5px; // 按鈕內邊距
+  position: relative;
+  width: 200px; // 固定寬度
+  height: 200px; // 固定高度
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+
+  .previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // 確保圖片填滿容器並保持比例
+  }
+
+  .removeImageButton {
+    position: absolute; // 絕對定位於右上角
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 1); // 半透明背景
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #000;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

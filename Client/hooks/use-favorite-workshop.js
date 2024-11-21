@@ -11,24 +11,9 @@ export function useFavoriteWorkshop() {
 
   useEffect(() => {
     if (auth.isAuth) {
-      fetchFavoritesWorkshop() // 當使用者登入時，抓取收藏列表
-    } else if (Object.keys(favoriteWorkshop).length > 0) {
-      // 如果 favoriteWorkshop 狀態變更時不希望自動觸發 API 抓取，可以加額外條件
-      console.log('收藏狀態已更新，但不需重新抓取')
+      fetchFavoritesWorkshop()
     }
-  }, [auth.isAuth, favoriteWorkshop])
-
-
-  // useEffect(() => {
-  //   // 當 favoriteWorkshop 狀態變更時，重新抓取收藏列表
-  //   fetchFavoritesWorkshop()
-  // }, [favoriteWorkshop])
-
-  // useEffect(() => {
-  //   if (auth.isAuth) {
-  //     fetchFavoritesWorkshop()
-  //   }
-  // }, [auth.isAuth])
+  }, [auth.isAuth])
 
   const fetchFavoritesWorkshop = async () => {
     try {

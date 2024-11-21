@@ -28,7 +28,8 @@ export default function OrderSuccess() {
       const data = await response.json()
 
       if (data.status === 'success') {
-        alert('Email 已成功發送！')
+        // alert('Email 已成功發送！')
+        console.log('發送成功')
       } else {
         alert('Email 發送失敗：' + data.message)
       }
