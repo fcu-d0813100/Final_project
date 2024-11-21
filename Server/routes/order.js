@@ -69,7 +69,7 @@ GROUP BY
 
         // 返回結果
         res.json(result)
-        console.log('Query result:', result)
+        // console.log('Query result:', result)
     } catch (error) {
         console.error('Database query error:', error) // 輸出錯誤日誌
         res
@@ -165,7 +165,7 @@ GROUP BY
 
         // 返回結果
         res.json(result)
-        console.log('Query result:', result)
+        // console.log('Query result:', result)
     } catch (error) {
         console.error('Database query error:', error) // 輸出錯誤日誌
         res

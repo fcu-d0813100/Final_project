@@ -3,20 +3,23 @@ import styles from './index.module.scss'; // 頁面樣式
 import Item from '@/components/order-list/common/item-discount/comment-btn';
 import Workshop from '@/components/order-list/common/workshop';
 import OrderSection from '@/components/user/common/user-section';
-import Link from 'next/link';
+import { useRouter } from 'next/router'; // 引入 useRouter
 
 const OrderDetail = () => {
+    const router = useRouter(); // 初始化 useRouter
+    const { order_id } = router.query; // 從 URL 參數中獲取 orderId
     const [orderData, setOrderData] = useState(null); // 用來存儲訂單資料
     const [loading, setLoading] = useState(true); // 載入狀態
 
+
     useEffect(() => {
-        const orderId = localStorage.getItem('orderId'); // 從 localStorage 取得 orderId
-        if (!orderId) return;
+        // const orderId = localStorage.getItem('orderId'); // 從 localStorage 取得 orderId
+        if (!order_id) return;
 
         // 獲取訂單詳細資料
         const fetchOrderDetail = async () => {
             try {
-                const response = await fetch(`http://localhost:3005/api/order/detail/${orderId}`, {
+                const response = await fetch(`http://localhost:3005/api/order/detail/${order_id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
