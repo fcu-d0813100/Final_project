@@ -219,7 +219,7 @@ export default function PostEdit(props) {
         <form
           className={styles['post-form']}
           onSubmit={submitHandle}
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
         >
           <div className={styles['post-content']}>
             {/* 圖片編輯 */}

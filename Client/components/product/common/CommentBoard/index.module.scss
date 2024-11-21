@@ -284,3 +284,20 @@
     background-color: #9ea28b;
   }
 }
+
+@media screen and (max-width: 391px) {
+  .ratingOverview{
+    display: flex !important;
+    flex-direction: column !important;
+    border: none !important;
+  }
+  .ratingScore{
+    font-size: 50px !important;
+  }
+  .ratingDistribution{
+    padding: 0 !important;
+  }
+  .commentBoard{
+    border: none;
+  }
+}

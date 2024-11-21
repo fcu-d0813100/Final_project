@@ -63,6 +63,7 @@ export default function Page1({
   // 處理表單數據變更
   const handleChange = (e) => {
     const { name, value } = e.target
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -140,9 +141,10 @@ export default function Page1({
                   forText="price"
                   titleCh="價錢"
                   titleEn=" | price"
-                  typeText="text"
+                  typeText="number"
                   placeholder="請填入金額"
                   name="price"
+                  min={0}
                   value={formData.price}
                   onChange={handleChange}
                 />
@@ -189,6 +191,7 @@ export default function Page1({
                   placeholder="Beginning Date"
                   name="registration_start"
                   value={formData.registration_start}
+                  min={new Date().toISOString().split('T')[0]} // 設定最小日期為今天
                   onChange={handleChange}
                 />
                 <p className="col-1 mx-1 d-flex justify-content-center align-items-center">
@@ -204,6 +207,7 @@ export default function Page1({
                   placeholder="End Date"
                   name="registration_end"
                   value={formData.registration_end}
+                  min={formData.registration_start}
                   onChange={handleChange}
                 />
               </div>
@@ -292,6 +296,7 @@ export default function Page1({
                         placeholder="請選擇日期"
                         name="date"
                         value={selectedTime.date}
+                        min={formData.registration_end}
                         onChange={(e) =>
                           setSelectedTime({
                             ...selectedTime,
@@ -405,7 +410,10 @@ export default function Page1({
                 )}
               </div>
             ))}
-            <AddWorkshopTime onAddTime={handleAddTime} />
+            <AddWorkshopTime
+              onAddTime={handleAddTime}
+              registrationEnd={formData.registration_end}
+            />
           </div>
         </div>
         <div className="ms-auto d-flex justify-content-end mt-2">

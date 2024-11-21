@@ -11,6 +11,8 @@ export default function InputStyle({
   placeholder = '',
   name = '',
   value = '',
+  min = '',
+  max = '',
   onChange,
 }) {
   return (
@@ -25,6 +27,8 @@ export default function InputStyle({
           placeholder={placeholder}
           name={name}
           value={value} // 設定 value 為狀態變數
+          min={min}
+          max={max}
           onChange={onChange} // 添加 onChange 事件
         />
       </div>

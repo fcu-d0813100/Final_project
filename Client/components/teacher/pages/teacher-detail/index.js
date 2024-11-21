@@ -1,4 +1,5 @@
 'use client'
+import CardCarousel from '@/components/product/common/product-container1'
 import Dropdown from '@/components/workshop/common/dropdown'
 import { useRouter } from 'next/router'
 import styles from '@/components/teacher/common/teacher-detail.module.scss'
@@ -15,6 +16,7 @@ export default function TeacherDetail(props) {
   const router = useRouter()
   const [teacher, setTeacher] = useState({})
   const [workshop, setWorkshop] = useState([])
+  const [newArrivalProducts, setNewArrivalProducts] = useState([])
 
   const fetchData = async (tid) => {
     try {
@@ -47,6 +49,24 @@ export default function TeacherDetail(props) {
       fetchData(router.query.tid)
     }
   }, [router.isReady])
+
+  // 新品上市
+  useEffect(() => {
+    // Fetch 新品上市商品資料
+    const fetchNewArrivals = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/product/product-list?isNewArrivals=true&timestamp=${Date.now()}`
+        )
+        if (!response.ok) throw new Error('Failed to fetch new arrivals')
+        const data = await response.json()
+        setNewArrivalProducts(data)
+      } catch (error) {
+        console.error('Error fetching new arrivals:', error)
+      }
+    }
+    fetchNewArrivals()
+  }, [])
 
   const nationMap = {
     臺灣: 'Taiwan',
@@ -114,7 +134,7 @@ export default function TeacherDetail(props) {
               </a>
             </div>
 
-            <div className="d-flex">
+            <div className={`${styles.dropdownStyles} d-flex`}>
               <Dropdown
                 name="狀態"
                 items={[
@@ -137,7 +157,9 @@ export default function TeacherDetail(props) {
             </div>
           </div>
 
-          <div className={`${styles.tOwnWorkshops} row row-cols-3 my-5`}>
+          <div
+            className={`${styles.tOwnWorkshops} row row-cols-sm-1 row-cols-md-2 row-cols-xl-3 my-5`}
+          >
             {workshop.map((item) => {
               // 將 dates 字串轉換成陣列
               const datesArray = item.dates ? item.dates.split(',') : []
@@ -188,6 +210,7 @@ export default function TeacherDetail(props) {
           </div>
         </div>
       </div>
+      <CardCarousel products={newArrivalProducts} />
     </>
   )
 }
