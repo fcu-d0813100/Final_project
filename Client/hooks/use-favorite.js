@@ -91,7 +91,7 @@ export function useFavorite() {
           },
         })
         // 成功收藏後，跳轉到收藏頁面
-        router.push('/user/favorite')
+        // router.push('/user/favorite')
       }
     } catch (error) {
       console.error('Error adding/removing favorite:', error)
