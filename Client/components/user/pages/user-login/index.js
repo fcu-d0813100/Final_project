@@ -305,7 +305,7 @@ export default function UserLogin() {
                 <div className="row pt-4 d-flex justify-content-end align-items-start">
                   <div className={`col-7 ${styles['signin-rwd']}`}>
                     還沒有帳號?{' '}
-                    <Link href="/user/signup" className="text-black">
+                    <Link href="/user/register" className="text-black">
                       立即註冊
                     </Link>
                   </div>

@@ -39,21 +39,27 @@
   }
 
   .collapse {
-    // width: 100%;
-    // display: flex;
-    // flex-direction: column;
     flex: 1 1 0;
     background-color: $green-800;
 
     @media (max-width: 991px) {
-      // width:fit-content;
-      // display: unset !important;
-      // position: absolute;
       position: fixed;
       z-index: 1000;
-      // top: -500px;
       left: 0px;
       top: 0px;
+      overflow-y: auto; /* 可滾動 */
+      max-height: 100vh;
+      &::-webkit-scrollbar {
+        width: 6px; /* 滾動條寬度 (Webkit-based) */
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        background-color: $gray-300; /* 滾動條顏色 */
+      }
+    
+      &::-webkit-scrollbar-track {
+        background: $gray-100; /* 滾動條軌道背景 */
+      }
     }
 
     & > div {
@@ -66,13 +72,7 @@
       text-align: center;
       align-items: stretch;
 
-      // @media(max-width: 390px) {
-      //     gap: 16px;
-      //     padding-top: 0;
-      // }
-
       & > a {
-        // max-width: 300px;
         flex: 1;
         position: relative;
         color: $gray-100;
@@ -88,10 +88,6 @@
 
         svg {
           display: none;
-
-          // @media (max-width: 390px) {
-          //     display: none;
-          // }
         }
 
         &.active {
@@ -108,9 +104,6 @@
             color: $green-700;
             margin-right: 50px;
             display: inline;
-            // @media (max-width: 575px) {
-            //     display: none;
-            // }
           }
         }
 
@@ -127,9 +120,6 @@
             margin-right: 50px;
             display: inline;
 
-            // @media (max-width: 390px) {
-            //     display: none;
-            // }
           }
         }
       }
@@ -139,18 +129,6 @@
   button {
     margin-block: 70px;
     margin-inline: 48px;
-
-    // @media(max-width: 390px) {
-    //     margin-inline: 20px;
-    //     width: 120px;
-    //     padding: 10px;
-    // }
-  }
-}
-
-@media (max-width: 991px) {
-  .nav {
-    width: 0px;
   }
 }
 

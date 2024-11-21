@@ -32,7 +32,11 @@ export default function Index() {
   }
 
   // 課程收藏區域
-  const { favoritesWorkshopList } = useFavoriteWorkshop()
+  const {
+    favoritesWorkshopList,
+    favoriteWorkshop,
+    handleFavoriteWorkshopClick,
+  } = useFavoriteWorkshop()
   const hasFavoritesWorkshop = favoritesWorkshopList.length > 0
   const handleWorkshopClick = (workshop) => {
     router.push(`/workshop/detail/${workshop}`)
@@ -246,6 +250,10 @@ export default function Index() {
                         endDate={endDate}
                         price={workshop.price}
                         status={status}
+                        favoriteWorkshop={favoriteWorkshop}
+                        handleFavoriteWorkshopClick={
+                          handleFavoriteWorkshopClick
+                        }
                         onClick={() => handleWorkshopClick(workshop)} // 點擊卡片跳轉到商品詳細頁
                       />
                     )
