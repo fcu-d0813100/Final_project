@@ -140,7 +140,8 @@ function TopBar({ cartitems }) {
               >
                 <div className={styles['dropdown-content-wrapper']}>
                   <div className={styles['dropdown-section']}>
-                    <Dropdown.Header>臉部妝容</Dropdown.Header>
+                    <Dropdown.Item href="/product/product-list">彩妝商城</Dropdown.Item>
+                    <Dropdown.Item href="/product/product-list?main_category=1">臉部彩妝</Dropdown.Item>
                     <Dropdown.Item href="/product/product-list?main_category=1&sub_category=1">
                       粉底
                     </Dropdown.Item>
@@ -149,7 +150,7 @@ function TopBar({ cartitems }) {
                     </Dropdown.Item>
                   </div>
                   <div className={styles['dropdown-section']}>
-                    <Dropdown.Header>雙頰妝容</Dropdown.Header>
+                    <Dropdown.Item href="/product/product-list?main_category=2">雙頰彩妝</Dropdown.Item>
                     <Dropdown.Item href="/product/product-list?main_category=2&sub_category=3">
                       腮紅
                     </Dropdown.Item>
@@ -158,7 +159,7 @@ function TopBar({ cartitems }) {
                     </Dropdown.Item>
                   </div>
                   <div className={styles['dropdown-section']}>
-                    <Dropdown.Header>眼部妝容</Dropdown.Header>
+                    <Dropdown.Item href="/product/product-list?main_category=3">眼部彩妝</Dropdown.Item>
                     <Dropdown.Item href="/product/product-list?main_category=3&sub_category=5">
                       眼影
                     </Dropdown.Item>
@@ -167,7 +168,7 @@ function TopBar({ cartitems }) {
                     </Dropdown.Item>
                   </div>
                   <div className={styles['dropdown-section']}>
-                    <Dropdown.Header>唇部彩妝</Dropdown.Header>
+                    <Dropdown.Item href="/product/product-list?main_category=4">唇部彩妝</Dropdown.Item>
                     <Dropdown.Item href="/product/product-list?main_category=4&sub_category=9">
                       唇膏
                     </Dropdown.Item>

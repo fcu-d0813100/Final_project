@@ -9,6 +9,7 @@
   .ph {
     font-size: 20px;
   }
+ 
 }
 //
 .dropdownMenu {
@@ -26,4 +27,10 @@
   --bs-dropdown-link-hover-bg: #797d66;
   --bs-dropdown-min-width: 9rem;
   --bs-dropdown-border-color: white;
+}
+
+@media screen and (max-width: 391px) {
+  .dropdownTitle{
+  }
+
 }
