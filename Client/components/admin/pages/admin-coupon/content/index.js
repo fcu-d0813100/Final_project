@@ -39,8 +39,13 @@ export default function Index() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        // 更新狀態
-        setCoupon((prev) => ({ ...prev, [name]: value }));
+        // 如果更新的是開始日期，則更新最小結束日期
+        if (name === 'start_date') {
+            setCoupon((prev) => ({ ...prev, start_date: value }));
+            setMinEndDate(value);  // 更新最小結束日期
+        } else {
+            setCoupon((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     // 隨機生成優惠碼
