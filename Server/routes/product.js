@@ -201,10 +201,10 @@ router.post('/create-review/:productId/:colorId', upload, async function (req, r
 });
 
 // 查詢評論(有product_id跟 color_id版本)--------------------------------------------------------
-router.get('/product-list/reviews/:order_item_id/:productId/:colorId', async (req, res) => {
-  const { order_item_id,productId, colorId} = req.params; // 獲取路由參數中的 order_item_id
+router.get('/product-list/reviews/:orderItemId/:productId/:colorId', async (req, res) => {
+  const { orderItemId,productId, colorId} = req.params; // 獲取路由參數中的 order_item_id
   // const { productId, colorId } = req.query;
-  console.log('Received order_item_id:', order_item_id); // 打印接收到的 order_item_id
+  console.log('Received orderItemId:', orderItemId); // 打印接收到的 order_item_id
   console.log('Received product_id:', productId);
   console.log('Received color_id:', colorId);
 
@@ -232,13 +232,13 @@ router.get('/product-list/reviews/:order_item_id/:productId/:colorId', async (re
       LEFT JOIN 
         review_file rf ON r.id = rf.review_id
       WHERE 
-        r.order_item_id = ${order_item_id} AND r.color_id = ${colorId}
+        r.order_item_id = ${orderItemId} AND r.color_id = ${colorId}
       ORDER BY 
         r.review_date DESC;
     `;
 
     // 執行查詢
-    const [reviews] = await db.query(sqlSelect, [order_item_id], [colorId]);
+    const [reviews] = await db.query(sqlSelect, [orderItemId], [colorId]);
 
     // 整理數據，將每個評論的媒體文件分組
     const reviewsWithMedia = [];
