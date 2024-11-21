@@ -254,86 +254,94 @@
 }
 
 @media (max-width: 992px) {
-  .container-login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px auto;
-    padding: 0;
-  }
 
-  .login-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    padding-inline:15px ;
-  }
+.container-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding-inline: 20px;
+}
 
-  .bg-card {
-    z-index: 1;
-    max-height: 100%;
-    max-width: 750px;
-    max-height: 800px;
-    background-color: #fff;
-    border-radius: 10px;
-    display: flex;
-    justify-content: row;
-    background: rgba(255, 255, 255, 0.9)
-  }
+.login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0;
+}
 
-  .card-login {
-    padding: 60px 30px 30px 30px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
+.card-img{
+  background-size: 130%;
 
-  .card-img {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.276) 100%), url(/user/signup.jpg) lightgray 50% / cover no-repeat;
-    background-position: center center;
-    background-position: center calc(70%);
-    height: 100%;
-    width: 825px;
-    padding: 120px 0 50px 0;
-    border-radius: 0 10px 10px 0;
-  }
+}
+.bg-card {
+  z-index: 1;
+  max-height: 100%;
+  max-width: 750px;
+  max-height: 600px;
+  background-color: #fff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: row;
+}
 
-  .text {
-    font-size: 14px;
-  }
+.card-login {
+  padding: 60px 20px 30px 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.input-area{
+  padding: 5px 0 !important;
+}
+
+
+.text {
+  font-size: 14px;
+}
+
 }
 
 @media (max-width: 750px) {
-  .signup-rwd {
+  .signup-rwd{
+    // padding-top: 30px;
     display: flex;
-    padding-top: 15px;
   }
-  
-  .card-login {
-    padding-top: 30px;
-  }
-
-
   .container-login {
     position: relative;
-  }
+    height: 100%;
 
+  }
+  .card-login {
+    padding: 20px;
+    display: inline-block;
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+    width: 370px ;
+  }
   .bg-img {
+    padding: 40px 0;
+    position: relative;
     background: linear-gradient(0deg,
         rgba(0, 0, 0, 0.4) 0%,
         rgba(0, 0, 0, 0.4) 100%),
       url(/user/login-bg.jpg) lightgray 50% / cover no-repeat;
-      height: 100vh;
+    height: 100vh;
+    width: 100%;
   }
 
   .login-section {
-    margin: 50px 0 10px 0;
+    margin: 30px 20px 10px 20px;
   }
 
   .logo {
+    display: block;
+    margin-bottom: 20px;
+    z-index: 1;
     position: absolute;
-    top: 30px;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 32px;
@@ -347,24 +355,14 @@
   }
 
   .input-area {
-    padding: 12px 0;
+    padding: 10px 0;
   }
 
-  // .bg-card {
-  //   max-height: 100%;
-  //   max-width: 600px;
-  //   max-height: 800px;
-  //   background: rgba(255, 255, 255, 0.9);
-  //   padding: 20px 0 50px 0;
-  // }
-  .bg-card{
-    height: auto;
-    padding: 20px 0 50px 0;
-
-  }
-
-  .form-area {
-    padding-block: 10px;
+  .bg-card {
+    margin-top: 50px;
+    max-height: 100%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.9);
   }
 
   .card-img {
@@ -394,38 +392,42 @@
     border: #6f2619 solid 1px;
   }
 
-  .signin-rwd {
-    display: block;
-  }
+}
+.signin-area{
+  margin-bottom: 50px;
 }
 
 .copyright {
   padding-top: 30px;
 }
-// .container-login{
-//   padding-block:20px;
-// }
+
 
 @media (max-width: 400px) {
-  .card-login {
-    width: 100%;
-    height: auto;
-  }
-
-  .container-login {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
-
-  // .bg-card {
-  //   border-radius: 0;
-  //   width: 100%;
-  //   height: auto;
-  // }
+.card-login {
+  width: 100%;
+  height: auto;
 }
 
-.error {
-  color: $red-500;
-  font-size: 12px;
+.container-login {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.bg-card {
+  width: 100%;
+  height: auto;
+  
+}
+}
+
+.eyeiclosed {
+width: 22px;
+height: 22px;
+cursor: pointer;
+position: absolute;
+right: 8px;
+top: 50%;
+background-color: transparent;
+border: none;
 }
