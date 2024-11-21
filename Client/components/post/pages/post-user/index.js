@@ -70,7 +70,7 @@ export default function PostUser(props) {
   useEffect(() => {
     getWallCard()
   }, [userId])
-  console.log(publishCard)
+  // console.log(publishCard)
   const breakpoint = {
     default: 4,
     1640: 3,

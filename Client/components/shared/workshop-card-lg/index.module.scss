@@ -25,7 +25,7 @@
     right: 0;
     bottom: 0;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
 
     transition: 0.3s;
@@ -64,8 +64,8 @@
           border-radius: 17px;
           padding-inline: 20px;
         }
-        .prepare{
-            color: white;
+        .prepare {
+          color: white;
           background-color: rgb(211, 193, 110);
           border-radius: 17px;
           padding-inline: 20px;
