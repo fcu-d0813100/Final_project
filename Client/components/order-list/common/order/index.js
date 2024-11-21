@@ -10,10 +10,10 @@ import { GoChevronDown, GoChevronUp } from "react-icons/go";
 export default function Order({ orderId, order_number, totalAmount, status = "已完成", items = [] }) {
     const router = useRouter(); // 初始化 router
 
-    const handleClick = () => {
-        // 存儲 orderId 到 localStorage
-        localStorage.setItem('orderId', orderId);
-    };
+    // const handleClick = () => {
+    // 存儲 orderId 到 localStorage
+    // localStorage.setItem('orderId', orderId);
+    // };
 
     const [showAllItems, setShowAllItems] = useState(false);
 
@@ -61,7 +61,7 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
         // 將普通商品資料存到 localStorage
         if (productCartItems.length > 0) {
             localStorage.setItem('productCart', JSON.stringify(productCartItems));
-        }else {
+        } else {
             // 如果工作坊陣列為空，可以選擇移除 Workshopcart 的 localStorage 項目
             localStorage.removeItem('productCart');
         }
@@ -69,17 +69,17 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
         // 將工作坊商品資料存到 localStorage
         if (WorkshopCartItems.length > 0) {
             localStorage.setItem('Workshopcart', JSON.stringify(WorkshopCartItems));
-        }else {
+        } else {
             // 如果工作坊陣列為空，可以選擇移除 Workshopcart 的 localStorage 項目
             localStorage.removeItem('Workshopcart');
         }
 
+        // router.push('/cart');
         // // 跳轉到 /cart 並強制刷新頁面
         // router.push('/cart').then(() => {
         //     // 使用 window.location.reload() 強制重新整理頁面
         //     window.location.reload()
         // })
-        // router.push('/cart');
         window.location.href = '/cart';
     };
 
@@ -101,7 +101,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
 
                         {/* 顯示第一個商品 */}
                         <div>
-                            <Link className={`text-decoration-none ${styles.link}`} href="/user/order/detail" passHref onClick={handleClick}>
+                            <Link className={`text-decoration-none ${styles.link}`} href={`/user/order/detail?order_id=${orderId}`} passHref >
+                                {/* onClick={handleClick} */}
                                 <div key={items[0].id}>
                                     {items[0].product_id && (
                                         <Item
