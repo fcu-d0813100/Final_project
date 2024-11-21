@@ -29,28 +29,26 @@
     span {
       color: $green-500;
       font-size: 14px;
-      white-space: nowrap;      
+      white-space: nowrap;
     }
 
     th {
       padding: 5px 30px;
       border-left: 3px solid $green-200;
-      white-space: nowrap; 
+      white-space: nowrap;
     }
 
     td {
       padding-right: 30px;
-      white-space: nowrap; 
+      white-space: nowrap;
     }
-    
   }
-  .timeStyle th{
-    white-space: nowrap; 
+  .timeStyle th {
+    white-space: nowrap;
   }
-  .timeStyle td{
-    white-space: nowrap; 
+  .timeStyle td {
+    white-space: nowrap;
   }
-  
 }
 .userImg {
   width: 255px;
@@ -79,14 +77,13 @@
   td {
     padding-right: 30px;
   }
-
 }
-.color{
+.color {
   color: $green-600;
   font-weight: bold;
 }
-.editBtn{
-  justify-content: end;
+.editBtn {
+  justify-content: flex-end;
 }
 
 // // 積分
@@ -115,10 +112,9 @@
 //   border-radius: 0 0 5px 5px;
 // }
 
-.timeStyle{
+.timeStyle {
   display: flex;
   justify-content: space-around;
-  
 }
 @media screen and (max-width: 1650px) {
   .userImg {
@@ -130,7 +126,7 @@
       height: 200px;
     }
   }
-  .timeStyle{
+  .timeStyle {
     display: inline-block;
     flex-direction: column;
   }
@@ -141,177 +137,165 @@
     padding-inline: 0px;
     padding-block: 30px;
     margin: 0 20px;
-     .textArea{
-       height: 400px;
-       width: 600px;
+    .textArea {
+      height: 400px;
+      width: 600px;
       padding-left: 40px;
-      margin-right:10px;
-      }
+      margin-right: 10px;
+    }
   }
-  .infoTable th{
+  .infoTable th {
     width: 200px;
   }
-  .timeArea{
+  .timeArea {
     // display: block;
-    justify-content: start;
+    justify-content: flex-start;
     justify-content: space-between;
-
   }
- 
 }
 
 @media screen and (max-width: 1160px) {
   .basicInformation {
     // display: block;
-     .textArea{
-       height:400px;
-       width: 500px;
+    .textArea {
+      height: 400px;
+      width: 500px;
       padding-left: 40px;
-      margin-right:10px;
-      }
+      margin-right: 10px;
+    }
   }
-  .levelImg{
+  .levelImg {
     width: 200px;
     height: auto;
   }
-
 }
 
 @media screen and (max-width: 768px) {
   .basicInformation {
     display: flex;
     flex-direction: column;
-    align-items: center; 
-  .userImg {
-    order: 1;
-    margin-bottom: -60px;
-    // z-index: 1;
-  }
-  
-  .textArea  {
-    order: 2;
-    width: 100%; 
-    margin-bottom: 20px;
-    z-index: -1;
+    align-items: center;
+    .userImg {
+      order: 1;
+      margin-bottom: -60px;
+      // z-index: 1;
+    }
 
-  }
-  
-  .timeArea {
-    display: flex;
-    order: 3;
-    width: 100%; 
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    align-content: center;
-    
-  }
-  .editBtn{
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  order:1
-  }
-  .btn{
-    width: 330px;
-  }
-  .levelArea {
-    order: 4;
-    width: 100%; 
+    .textArea {
+      order: 2;
+      width: 100%;
+      margin-bottom: 20px;
+      z-index: -1;
+    }
 
+    .timeArea {
+      display: flex;
+      order: 3;
+      width: 100%;
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      align-content: center;
+    }
+    .editBtn {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      order: 1;
+    }
+    .btn {
+      width: 330px;
+    }
+    .levelArea {
+      order: 4;
+      width: 100%;
+    }
+    .levelFlex {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .levelImg {
+      width: 250px;
+      height: auto;
+    }
+    .timeStyle {
+      margin-top: 0;
+      padding-top: 0;
+      width: 100%;
+    }
+    .timeStyle {
+      order: 2;
+    }
+    .underline {
+      display: none;
+    }
   }
-  .levelFlex{
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  gap: 20px;
-  }
-  .levelImg{
-    width: 250px;
-    height: auto;
-  }
-  .timeStyle{
-    margin-top: 0;
-    padding-top: 0;
-    width: 100%;
-  }
-  .timeStyle{
-    order:2
-  }
-  .underline{
-    display: none;
-  }
-}
-
 }
 @media screen and (max-width: 560px) {
-  .basicInformation{
+  .basicInformation {
     margin: 0;
     padding: 0;
   }
-  .infoTable th{
+  .infoTable th {
     // display: block;
     width: 100px;
   }
-  .infoTable tr{
+  .infoTable tr {
     // display: block;
     width: 100px;
   }
-  .infoTable table{
-    width:100%
+  .infoTable table {
+    width: 100%;
   }
 
-  .color{
-  width: 100%;
-  padding-top: 50px;
-  padding-left: 10px;
+  .color {
+    width: 100%;
+    padding-top: 50px;
+    padding-left: 10px;
   }
-  .basicInformation .textArea{
+  .basicInformation .textArea {
     width: 100%;
     padding: 10px 0 0 0;
   }
-  .profile{
+  .profile {
     width: 100%;
   }
-    .timeStyle{
+  .timeStyle {
     width: 100%;
     padding: 0;
     margin: 0;
   }
-  .timeStyle th{
+  .timeStyle th {
     padding-left: 0px;
     padding-right: 0px;
     white-space: nowrap;
     border-left: none;
     font-size: 14px;
-    
   }
-  .timeStyle td{
+  .timeStyle td {
     padding-left: 10px;
-    white-space: nowrap; 
+    white-space: nowrap;
     font-size: 14px;
-
   }
 
-  .timeArea{
+  .timeArea {
     width: 100%;
     padding: 0;
-
   }
 
-  .basicInformation .infoTable th{
-    padding: 5px 10px ;
+  .basicInformation .infoTable th {
+    padding: 5px 10px;
   }
   .infoTable .tableWidth td {
     padding-left: 10px;
   }
 
-  .infoTable .tdWidth td{
+  .infoTable .tdWidth td {
     padding-left: 22px;
   }
-  .basicInformation .userImg{
+  .basicInformation .userImg {
     margin-top: 20px;
   }
-
-
 }

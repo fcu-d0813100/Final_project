@@ -260,5 +260,59 @@
     }
   }
 
+  @media screen and (max-width: 391px) {
+    .product-page{
+      padding: 0 !important;
+    }
+    .product-page .container {
+      display: flex;
+      flex-direction: row; // 讓縮圖和主圖在同一行顯示
+      justify-content: space-between;
+      align-items: flex-start; // 保證縮圖和主圖對齊
+      flex-wrap: nowrap; // 防止縮圖和主圖換行
+    }
+    .thumbnail-gallery{
+    align-items: center
+    }
+    .thumbnail {
+      width: 50px; // 調整縮圖導覽的寬度
+      height: 50px;
+    }
   
+    .main-image-container{
+      padding: 0;
+      transform: translate(-5%, 0);
+    }
+    .image {
+      width: 294px;
+      height: 332px;
+    }
+    .color-swatch{
+      width: 30px !important;
+      height: 30px !important;
+    }
+    .quantity-selector{
+      margin: 10px !important;
+    }
+    .quantity-selector{
+      margin-left: 0 !important;
+    }
+    .product-details-container{
+      font-size: 14px !important;
+    }
+    .product-details{
+      padding: 0 !important;
+      // font-size: 14px !important;
+    }
+    .nav-link{
+      font-size: 18px !important;
+    }
+    .post-navbar{
+      // height: 50px;
+      transform: translate(0 , -30%) !important;
+    }
+    .description-content-context{
+      font-size: 18px !important;
+    }
+  }
   

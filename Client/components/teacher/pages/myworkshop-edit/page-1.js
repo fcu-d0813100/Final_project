@@ -194,7 +194,7 @@ export default function Page1({
                   forText="price"
                   titleCh="價錢"
                   titleEn=" | price"
-                  typeText="text"
+                  typeText="number"
                   placeholder="請填入金額"
                   name="price"
                   value={workshop.price}
@@ -236,6 +236,7 @@ export default function Page1({
                   placeholder="Beginning Date"
                   name="registration_start"
                   value={workshop.registration_start}
+                  min={new Date().toISOString().split('T')[0]} // 設定最小日期為今天
                   onChange={handleChange}
                 />
                 <p className="col-1 mx-1 d-flex justify-content-center align-items-center">
@@ -251,6 +252,7 @@ export default function Page1({
                   placeholder="End Date"
                   name="registration_end"
                   value={workshop.registration_end}
+                  min={workshop.registration_start}
                   onChange={handleChange}
                 />
               </div>
@@ -340,6 +342,7 @@ export default function Page1({
                         placeholder="請選擇日期"
                         name="date"
                         value={selectedTime.date}
+                        min={workshop.registration_end}
                         onChange={(e) =>
                           setSelectedTime({
                             ...selectedTime,
@@ -456,6 +459,7 @@ export default function Page1({
             <AddWorkshopTime
               onAddTime={handleAddTime}
               workshopIdVal={workshop.id}
+              registrationEnd={workshop.registration_end}
             />
           </div>
         </div>

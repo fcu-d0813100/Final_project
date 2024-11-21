@@ -97,13 +97,13 @@ export default function Index() {
         <div className={styles['any-section']}>
           <UserTitle CN="活動管理" ENG="Activity Management" />
 
-          <div className="newAct text-end">
+          <div className={`${styles['newAct']} `}>
             <Link href="/admin/activity/upload">
-              <button className="btn btn-primary">+</button>
+              <button className="btn btn-primary">新增活動</button>
             </Link>
           </div>
 
-          <div className={`${styles['card-Area']} d-flex mt-5 flex-wrap`}>
+          <div className={`${styles['card-Area']} d-flex  flex-wrap`}>
             {currentActivities.map((item) => (
               <div key={item.id} className={`${styles.fav} col-4 mt-5`}>
                 <div className={`${styles.workshop} p-0`}>

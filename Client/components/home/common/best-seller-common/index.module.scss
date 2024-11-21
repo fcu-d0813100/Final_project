@@ -30,7 +30,6 @@
   width: 950px;
   padding: 2%;
 
-
   .textGroup {
     color: #fff;
 
@@ -57,7 +56,6 @@
   }
 }
 
-
 @media (max-width: 1700px) {
   .bestSeller {
     background-color: transparent;
@@ -68,12 +66,11 @@
 }
 
 @media (max-width: 1480px) {
-
   .right {
     padding-right: 40px;
 
     .cartGroup {
-      justify-content: end;
+      justify-content: flex-end;
     }
   }
 }
@@ -126,7 +123,7 @@
   }
 }
 
-@media (max-width:800px) {
+@media (max-width: 800px) {
   .cart {
     width: 275px;
     height: 380px;
