@@ -232,7 +232,7 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    padding: 0;
+    padding-inline: 20px;
   }
 
   .login-section {
@@ -273,11 +273,13 @@
   }
 
   .bg-img {
+    padding: 40px 0;
     position: relative;
     background: linear-gradient(0deg,
         rgba(0, 0, 0, 0.4) 0%,
         rgba(0, 0, 0, 0.4) 100%),
       url(/user/login-bg.jpg) lightgray 50% / cover no-repeat;
+      height: 100vh;
   }
 
   .login-section {
@@ -342,6 +344,9 @@
     display: block;
   }
 }
+.signin-area{
+  margin-bottom: 50px;
+}
 
 .copyright {
   padding-top: 30px;
@@ -360,7 +365,6 @@
   }
 
   .bg-card {
-    border-radius: 0;
     width: 100%;
     height: auto;
   }

@@ -305,8 +305,8 @@ export default function RegisterForm() {
                       創建帳號
                     </button>
                   </div>
-                  <div className="row d-flex justify-content-end align-items-start">
-                    <div className={`col-7 ${styles['signup-rwd']}`}>
+                  <div className="d-flex justify-content-end align-items-start">
+                    <div className={`${styles['signup-rwd']}`}>
                       已經有帳號了?{' '}
                       <Link href="/user/login/user" className="text-black">
                         立即登入

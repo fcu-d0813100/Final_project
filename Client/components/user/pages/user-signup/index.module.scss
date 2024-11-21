@@ -258,7 +258,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    margin: 10px auto;
     padding: 0;
   }
 
@@ -267,7 +267,7 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    padding: 0;
+    padding-inline:15px ;
   }
 
   .bg-card {
@@ -279,6 +279,7 @@
     border-radius: 10px;
     display: flex;
     justify-content: row;
+    background: rgba(255, 255, 255, 0.9)
   }
 
   .card-login {
@@ -304,6 +305,11 @@
 }
 
 @media (max-width: 750px) {
+  .signup-rwd {
+    display: flex;
+    padding-top: 15px;
+  }
+  
   .card-login {
     padding-top: 30px;
   }
@@ -318,6 +324,7 @@
         rgba(0, 0, 0, 0.4) 0%,
         rgba(0, 0, 0, 0.4) 100%),
       url(/user/login-bg.jpg) lightgray 50% / cover no-repeat;
+      height: 100vh;
   }
 
   .login-section {
@@ -343,12 +350,17 @@
     padding: 12px 0;
   }
 
-  .bg-card {
-    max-height: 100%;
-    max-width: 600px;
-    height: 1000px;
-    background: rgba(255, 255, 255, 0.9);
+  // .bg-card {
+  //   max-height: 100%;
+  //   max-width: 600px;
+  //   max-height: 800px;
+  //   background: rgba(255, 255, 255, 0.9);
+  //   padding: 20px 0 50px 0;
+  // }
+  .bg-card{
+    height: auto;
     padding: 20px 0 50px 0;
+
   }
 
   .form-area {
@@ -390,6 +402,9 @@
 .copyright {
   padding-top: 30px;
 }
+// .container-login{
+//   padding-block:20px;
+// }
 
 @media (max-width: 400px) {
   .card-login {
@@ -403,11 +418,11 @@
     width: 100%;
   }
 
-  .bg-card {
-    border-radius: 0;
-    width: 100%;
-    height: auto;
-  }
+  // .bg-card {
+  //   border-radius: 0;
+  //   width: 100%;
+  //   height: auto;
+  // }
 }
 
 .error {
