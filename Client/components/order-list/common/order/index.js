@@ -10,10 +10,10 @@ import { GoChevronDown, GoChevronUp } from "react-icons/go";
 export default function Order({ orderId, order_number, totalAmount, status = "已完成", items = [] }) {
     const router = useRouter(); // 初始化 router
 
-    // const handleClick = () => {
+    const handleClick = () => {
     // 存儲 orderId 到 localStorage
-    // localStorage.setItem('orderId', orderId);
-    // };
+    localStorage.setItem('orderId', orderId);
+    };
 
     const [showAllItems, setShowAllItems] = useState(false);
 
@@ -101,8 +101,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
 
                         {/* 顯示第一個商品 */}
                         <div>
-                            <Link className={`text-decoration-none ${styles.link}`} href={`/user/order/detail?order_id=${orderId}`} passHref >
-                                {/* onClick={handleClick} */}
+                            <Link className={`text-decoration-none ${styles.link}`} href={`/user/order/detail`} passHref onClick={handleClick}>
+                                {/*  */}
                                 <div key={items[0].id}>
                                     {items[0].product_id && (
                                         <Item
