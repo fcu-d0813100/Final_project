@@ -133,6 +133,7 @@ const CommentForm = ({ orderId, quantity, productId, colorId, color_name, produc
             size={24}
             onChange={handleRatingChange}
             color2={"#90957a"}
+            color1={"#ccc"}
           />
         </Col>
       </Row>
@@ -154,7 +155,7 @@ const CommentForm = ({ orderId, quantity, productId, colorId, color_name, produc
           ))}
           <div className={styles['add-image']} onClick={handleAddImage}>
             <span className={styles['add-icon']}>+</span>
-            <span className={styles['add-text']}>增加圖/影片</span>
+            <span className={styles['add-text']}>增加圖片</span>
           </div>
           <input
             type="file"
@@ -193,12 +194,12 @@ const CommentForm = ({ orderId, quantity, productId, colorId, color_name, produc
 
       <Row className="justify-content-end">
         <Col xs="auto">
-          <Button variant="outline-secondary" onClick={handleCancel}>
+          <Button className={`${styles['product-comment-cancel']} btn-secondary`} onClick={handleCancel}>
             取消
           </Button>
         </Col>
         <Col xs="auto">
-          <Button variant="dark" onClick={handleSave}>
+          <Button className={`${styles['product-comment-save']} btn-primary`}  onClick={handleSave}>
             儲存
           </Button>
         </Col>
