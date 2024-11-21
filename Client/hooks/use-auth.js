@@ -17,6 +17,8 @@ export const initUserData = {
   name: '',
   email: '',
   identity: '',
+  img: '',
+  photo_url: '',
 }
 
 // 1. 建立與導出它

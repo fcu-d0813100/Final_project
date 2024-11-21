@@ -2,6 +2,27 @@
   display: flex;
   // position: relative;
   width: 100%;
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+    z-index: 98; /* 確保遮罩顯示在側邊欄和內容上方 */
+  }
+  
+  .overlay {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  
+    &.show {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  
 }
 
 .any-section {
@@ -9,8 +30,8 @@
   padding: 70px 120px;
   box-sizing: border-box;
   flex: 1;
-  line-height: 0.9; /* 調整行高，讓文字更接近邊框 */
-  padding-bottom: -5px; /* 下方內縮，可使用負值 */
+  line-height: 0.9; 
+  padding-bottom: -5px; 
 }
 
 @media (max-width: 1400px) {

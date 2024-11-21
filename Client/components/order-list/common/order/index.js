@@ -11,8 +11,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
     const router = useRouter(); // 初始化 router
 
     const handleClick = () => {
-        // 存儲 orderId 到 localStorage
-        localStorage.setItem('orderId', orderId);
+    // 存儲 orderId 到 localStorage
+    localStorage.setItem('orderId', orderId);
     };
 
     const [showAllItems, setShowAllItems] = useState(false);
@@ -49,9 +49,9 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                     typeId: item.type_id,
                     cover: `${item.img_cover}`, // 工作坊圖片路徑
                     name: item.type, // 工作坊類型名稱
-                    date: item.ws_date.replace(/-/g,'/'),
-                    beginTime: item.start_time.split(':').slice(0,2).join(':'),
-                    endTime: item.end_time.split(':').slice(0,2).join(':'),
+                    date: item.ws_date.replace(/-/g, '/'),
+                    beginTime: item.start_time.split(':').slice(0, 2).join(':'),
+                    endTime: item.end_time.split(':').slice(0, 2).join(':'),
                     qty: item.quantity,
                     price: item.workshop_price,
                 });
@@ -61,15 +61,26 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
         // 將普通商品資料存到 localStorage
         if (productCartItems.length > 0) {
             localStorage.setItem('productCart', JSON.stringify(productCartItems));
+        } else {
+            // 如果工作坊陣列為空，可以選擇移除 Workshopcart 的 localStorage 項目
+            localStorage.removeItem('productCart');
         }
 
         // 將工作坊商品資料存到 localStorage
         if (WorkshopCartItems.length > 0) {
             localStorage.setItem('Workshopcart', JSON.stringify(WorkshopCartItems));
+        } else {
+            // 如果工作坊陣列為空，可以選擇移除 Workshopcart 的 localStorage 項目
+            localStorage.removeItem('Workshopcart');
         }
 
-
-        router.push('/cart');
+        // router.push('/cart');
+        // // 跳轉到 /cart 並強制刷新頁面
+        // router.push('/cart').then(() => {
+        //     // 使用 window.location.reload() 強制重新整理頁面
+        //     window.location.reload()
+        // })
+        window.location.href = '/cart';
     };
 
     return (
@@ -90,7 +101,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
 
                         {/* 顯示第一個商品 */}
                         <div>
-                            <Link className={`text-decoration-none ${styles.link}`} href="/user/order/detail" passHref onClick={handleClick}>
+                            <Link className={`text-decoration-none ${styles.link}`} href={`/user/order/detail`} passHref onClick={handleClick}>
+                                {/*  */}
                                 <div key={items[0].id}>
                                     {items[0].product_id && (
                                         <Item
@@ -111,8 +123,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                                             imageSrc={`http://localhost:3005/workshop/${items[0].img_cover}`}
                                             title={items[0].type}
                                             instructor={items[0].teachers_name}
-                                            date={`${items[0].ws_date.replace(/-/g,'/')}`}
-                                            time={`${items[0].start_time.split(':').slice(0,2).join(':')} - ${items[0].end_time.split(':').slice(0,2).join(':')}`}
+                                            date={`${items[0].ws_date.replace(/-/g, '/')}`}
+                                            time={`${items[0].start_time.split(':').slice(0, 2).join(':')} - ${items[0].end_time.split(':').slice(0, 2).join(':')}`}
                                             price={new Intl.NumberFormat().format(items[0].workshop_price)}
                                             dsPrice={new Intl.NumberFormat().format(items[0].workshop_price * 0.95)}
                                             quantity={items[0].quantity}
@@ -143,8 +155,8 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                                                     imageSrc={`http://localhost:3005/workshop/${item.img_cover}`}
                                                     title={item.type}
                                                     instructor={item.teachers_name}
-                                                    date={`${item.ws_date.replace(/-/g,'/')}`}
-                                                    time={`${item.start_time.split(':').slice(0,2).join(':')} - ${item.end_time.split(':').slice(0,2).join(':')}`}
+                                                    date={`${item.ws_date.replace(/-/g, '/')}`}
+                                                    time={`${item.start_time.split(':').slice(0, 2).join(':')} - ${item.end_time.split(':').slice(0, 2).join(':')}`}
                                                     price={new Intl.NumberFormat().format(item.workshop_price)}
                                                     dsPrice={new Intl.NumberFormat().format(item.workshop_price * 0.95)}
                                                     quantity={item.quantity}
@@ -155,7 +167,7 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
                                 </div>
                             </Link>
                         </div>
-                        <button onClick={toggleShowItems} className={`btn ${styles.showItem} `}>
+                        <button onClick={toggleShowItems} className={`btn ${styles.showItem} ps`}>
                             {showAllItems ? <>隱藏其他商品<GoChevronUp /></> : <>檢視其他商品<GoChevronDown /></>}
                         </button>
                     </div>
@@ -164,11 +176,11 @@ export default function Order({ orderId, order_number, totalAmount, status = "�
 
 
             <div className={`${styles.footer} d-flex flex-column justify-content-end align-items-end border-top p-2`}>
-                <div className={`total p-2`}>
+                <div className={`${styles.total} p-2`}>
                     訂單金額：<span className="h4">NT$ {new Intl.NumberFormat().format(totalAmount)}</span>
                 </div>
                 <div className="botton-group d-flex justify-content-end p-2 h6">
-                    <div className={`${styles.again} btn btn-primary align-content-center me-3`} onClick={handleBuyAgain}>
+                    <div className={`${styles.again} btn btn-primary align-content-center`} onClick={handleBuyAgain}>
                         再買一次
                     </div>
                     {/* <div className={`${styles.btn}  btn-primary align-content-center`}>評論</div> */}

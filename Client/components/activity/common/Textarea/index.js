@@ -3,6 +3,7 @@ import styles from './index.module.scss'
 
 export default function Textarea({
   title,
+  titleEn,
   name,
   rows,
   width,
@@ -15,6 +16,7 @@ export default function Textarea({
     <div className="mb-4">
       <label htmlFor={name} className={`${styles.label} h4 mb-3 d-block`}>
         {title}
+        <span>{titleEn}</span>
       </label>
       <textarea
         name={name}

@@ -4,16 +4,53 @@ import { PiPlus } from 'react-icons/pi'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import UserCard from '../../common/userCard'
-import Sidebar from '@/components/admin/common/admin-side-bar'
+import Sidebar from '@/components/activity/common/Sidebar'
 import UserTitle from '@/components/user/common/user-title'
 import Pagination from '@/components/shared/pagination'
+import {
+  PiMagnifyingGlass,
+  PiHeartStraight,
+  PiHeartStraightFill,
+  PiArrowRight,
+} from 'react-icons/pi'
+import Image from 'next/image'
+import { useAuth } from '@/hooks/use-auth'
+import DeleteModal from '@/components/shared/modal-delete'
 import AdminTitle from '@/components/admin/common/admin-title'
 export default function Index() {
   const [activities, setActivities] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const activitiesPerPage = 7
-
-  // Fetch data from the API
+  const activitiesPerPage = 6
+  const [showModal, setShowModal] = useState(false)
+  const { auth } = useAuth()
+  const userId = auth.userData.id
+  //活動刪除
+  const deleteAct = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/activity/delete/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        }
+      )
+      console.log(id)
+      if (response.ok) {
+        setActivities((prevActivities) =>
+          prevActivities.filter((activity) => activity.id !== id)
+        )
+        setShowModal(false)
+      } else {
+        alert('刪除失敗1，請稍後再試！')
+      }
+    } catch (err) {
+      alert('刪除失敗，請稍後再試！')
+    }
+  }
+  // 抓取活動進來
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -46,13 +83,6 @@ export default function Index() {
 
   const totalPages = Math.ceil(activities.length / activitiesPerPage)
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1)
-  }
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1)
-  }
   const handlePageChange = (page) => {
     setCurrentPage(page)
     console.log(`切換到頁碼: ${page}`)
@@ -60,59 +90,99 @@ export default function Index() {
 
   return (
     <>
-      <AdminTitle/>
+      <AdminTitle />
 
       <div className={styles['user-section']}>
         <Sidebar />
         <div className={styles['any-section']}>
           <UserTitle CN="活動管理" ENG="Activity Management" />
 
-          <div className={`${styles['card-Area']} d-flex mt-5 flex-wrap`}>
+          <div className="newAct text-end">
             <Link href="/admin/activity/upload">
-              <button className={`${styles['new-act']} mt-5 me-5`}>
-                <div className="text-center">
-                  <PiPlus className={styles.plus} />
-                  <p className={`${styles.picUploadText} h4 mt-3`}>新增活動</p>
-                </div>
-              </button>
+              <button className="btn btn-primary">+</button>
             </Link>
+          </div>
 
-            {currentActivities.map((activity) => (
-              <UserCard
-                key={activity.id}
-                title={activity.CHN_name}
-                subtitle={activity.ENG_name}
-                date={`${activity.start_at} - ${activity.end_at}`}
-                image={`http://localhost:3005/upload/activity/${activity.img1}`}
-                id={activity.id}
-                onDelete={handleDelete}
-              />
+          <div className={`${styles['card-Area']} d-flex mt-5 flex-wrap`}>
+            {currentActivities.map((item) => (
+              <div key={item.id} className={`${styles.fav} col-4 mt-5`}>
+                <div className={`${styles.workshop} p-0`}>
+                  {/* 編輯與刪除按鈕 */}
+                  <div className={styles['action-buttons']}>
+                    <Link href={`/admin/activity/edit?id=${item.id}`}>
+                      <button className={styles['edit-button']}>編輯</button>
+                    </Link>
+                    <button
+                      className={styles['delete-button']}
+                      onClick={() => setShowModal(true)} // 僅顯示模態框
+                    >
+                      刪除
+                    </button>
+                    <DeleteModal
+                      title="刪除活動"
+                      content={`確定要刪除「${item.CHN_name}」這則活動嗎？`}
+                      btnConfirm="確定刪除"
+                      btnCancel="取消"
+                      ConfirmFn={() => deleteAct(item.id)} // 在確認按鈕中執行刪除
+                      show={showModal}
+                      handleClose={() => setShowModal(false)} // 關閉模態框
+                    />
+                  </div>
+
+                  {/* 活動圖片 */}
+                  <div className={styles.workshopImg}>
+                    <Image
+                      layout="responsive"
+                      width={480}
+                      height={615}
+                      className={styles.coverImg}
+                      src={`http://localhost:3005/upload/activity/${item.img1}`}
+                      alt={`${item.CHN_name} 的圖片`}
+                    />
+                  </div>
+
+                  {/* 活動資訊 */}
+                  <div className={styles.wInformation}>
+                    <div className={styles.innerText}>
+                      <h4
+                        className={`h5 ${styles.wTitle} d-flex align-items-center justify-content-between`}
+                      >
+                        {item.CHN_name}
+                      </h4>
+                      <div className={styles.wDetail}>
+                        <p className="p mb-2">{item.ENG_name}</p>
+                        <h6 className="p mb-3">
+                          活動時間
+                          <br />
+                          {item.start_at} - {item.end_at}
+                        </h6>
+                        <div className={styles.wStatus}>
+                          <p
+                            className={`ps ${
+                              item.status === '已截止'
+                                ? styles.over
+                                : styles.nowOpen
+                            }`}
+                          >
+                            {item.status}
+                          </p>
+                          <Link href={`/activity/activity-det?id=${item.id}`}>
+                            <div className={styles.more}>
+                              <h6 className="h6">MORE</h6>
+                              <PiArrowRight
+                                className={`${styles.phArrow} ms-2`}
+                              />
+                            </div>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
 
-          {/* 控制page*/}
-          {/* <div
-            className="d-flex justify-content-center
-           align-items-center gap-5  mt-5"
-          >
-            <button
-              onClick={handlePrevPage}
-              className="btn btn-dark"
-              disabled={currentPage === 1}
-            >
-              上一頁
-            </button>
-            <p>
-              第 {currentPage} 頁，共 {totalPages} 頁
-            </p>
-            <button
-              onClick={handleNextPage}
-              className="btn btn-dark"
-              disabled={currentPage === totalPages}
-            >
-              下一頁
-            </button>
-          </div> */}
           <div className="mt-5">
             <Pagination
               currentPage={currentPage}

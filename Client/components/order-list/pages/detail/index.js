@@ -3,11 +3,11 @@ import styles from './index.module.scss'; // 頁面樣式
 import Item from '@/components/order-list/common/item-discount/comment-btn';
 import Workshop from '@/components/order-list/common/workshop';
 import OrderSection from '@/components/user/common/user-section';
-import Link from 'next/link';
 
 const OrderDetail = () => {
     const [orderData, setOrderData] = useState(null); // 用來存儲訂單資料
     const [loading, setLoading] = useState(true); // 載入狀態
+
 
     useEffect(() => {
         const orderId = localStorage.getItem('orderId'); // 從 localStorage 取得 orderId
@@ -84,7 +84,7 @@ const OrderDetail = () => {
                 {/* 訂單信息和收件信息 */}
                 <div className={`${styles.msg} d-flex justify-content-around`}>
                     <div className={styles["msg-left"]}>
-                        <div className={`${styles["left-title"]} h4 `}>訂單信息</div>
+                        <div className={`${styles["left-title"]} h4 `}>訂單資訊</div>
                         <div className={`${styles.detail} h6 ms-3`}>
                             <div>訂單編號：{order_number}</div>
                             <div>付款方式：{payment}</div>
