@@ -16,6 +16,10 @@
   padding: 70px 120px;
   box-sizing: border-box;
   flex: 1;
+  .newAct {
+    margin-top: 40px;
+    margin-left: 100px;
+  }
 }
 
 .nav-item {
@@ -67,6 +71,7 @@
 // ------------------------------------
 .card-Area {
   display: flex;
+
   margin-left: 100px;
   a {
     text-decoration: none;
