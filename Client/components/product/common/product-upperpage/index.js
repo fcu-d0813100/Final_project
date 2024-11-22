@@ -125,7 +125,7 @@ const selectedProductImages = useMemo(() => {
   // 加入購物車通知
   const addPnotify = () =>
     toast.success(`已新增 ${quantity} 件商品至購物車`, {
-      style: { border: '1.2px solid #90957a', padding: '12px 40px', color: '#626553' },
+      style: { padding: '12px 40px', color: '#626553' },
       iconTheme: { primary: '#626553', secondary: '#fff' },
     })
   
@@ -133,11 +133,10 @@ const selectedProductImages = useMemo(() => {
   const outOfStockNotify = () =>
   toast.error(`目前庫存僅剩 ${selectedProduct.stock} 件，請調整購買數量`, {
     style: {
-      border: '1.2px solid #f44336',
       padding: '12px 40px',
-      color: '#f44336',
+      color: '#973929',
     },
-    iconTheme: { primary: '#f44336', secondary: '#fff' },
+    iconTheme: { primary: '#973929', secondary: '#fff' },
   });
 
   // 立即購買函數
@@ -160,11 +159,11 @@ const selectedProductImages = useMemo(() => {
     } else {
       toast.error("請選擇至少 1 件商品", {
         style: {
-          border: '1.2px solid #f44336',
+          // border: '1.2px solid #f44336',
           padding: '12px 40px',
-          color: '#f44336',
+          color: '#973929',
         },
-        iconTheme: { primary: '#f44336', secondary: '#fff' },
+        iconTheme: { primary: '#973929', secondary: '#fff' },
       });
       navigateToCart = false;
     }
@@ -338,11 +337,10 @@ const selectedProductImages = useMemo(() => {
                         } else {
                           toast.error("請選擇至少 1 件商品", {
                             style: {
-                              border: '1.2px solid #f44336',
                               padding: '12px 40px',
-                              color: '#f44336',
+                              color: '#973929',
                             },
-                            iconTheme: { primary: '#f44336', secondary: '#fff' },
+                            iconTheme: { primary: '#973929', secondary: '#fff' },
                           });
                         }
                       }}
