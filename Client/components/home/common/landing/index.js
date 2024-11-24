@@ -1,56 +1,56 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
-import styles from './index.module.scss';
-import Image from 'next/image';
-import { BsArrowRight } from "react-icons/bs";
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import styles from './index.module.scss'
+import Image from 'next/image'
+import { BsArrowRight } from 'react-icons/bs'
 
 const LandingPage = () => {
-  const [isButtonVisible, setIsButtonVisible] = useState(false);
-  const [hasSeenAnimation, setHasSeenAnimation] = useState(false);  // 用來記錄是否已經看過動畫
-  const router = useRouter();
+  const [isButtonVisible, setIsButtonVisible] = useState(false)
+  const [hasSeenAnimation, setHasSeenAnimation] = useState(false) // 用來記錄是否已經看過動畫
+  const router = useRouter()
 
   // 檢查 sessionStorage 中是否有動畫已觀看的標記
   useEffect(() => {
-    const seenAnimation = sessionStorage.getItem('hasSeenAnimation');
-    const visitedLanding = sessionStorage.getItem('hasVisitedLanding');
+    const seenAnimation = sessionStorage.getItem('hasSeenAnimation')
+    const visitedLanding = sessionStorage.getItem('hasVisitedLanding')
 
     if (seenAnimation || visitedLanding) {
       // 如果標記存在，直接跳轉到首頁，不顯示動畫頁面
-      router.push('/');
+      router.push('/')
     } else {
       // 如果沒有標記，顯示動畫
-      setHasSeenAnimation(true);
+      setHasSeenAnimation(true)
     }
 
     // 監聽頁面關閉事件，關閉頁面時清除標記
     const handleBeforeUnload = () => {
-      sessionStorage.removeItem('hasSeenAnimation');
-      sessionStorage.removeItem('hasVisitedLanding');
-    };
+      sessionStorage.removeItem('hasSeenAnimation')
+      sessionStorage.removeItem('hasVisitedLanding')
+    }
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('beforeunload', handleBeforeUnload)
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [router]);
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [router])
 
   // 動畫完成後顯示按鈕
   const handleAnimationComplete = () => {
-    setIsButtonVisible(true);
-  };
+    setIsButtonVisible(true)
+  }
 
   // 用戶點擊按鈕後，將標記設置為已觀看動畫，然後跳轉到首頁
   const handleButtonClick = () => {
-    sessionStorage.setItem('hasSeenAnimation', 'true');  // 設置動畫已看過標記
-    sessionStorage.setItem('hasVisitedLanding', 'true');  // 設置已訪問過 landing 頁面標記
-    router.push('/');  // 跳轉到首頁
-  };
+    sessionStorage.setItem('hasSeenAnimation', 'true') // 設置動畫已看過標記
+    sessionStorage.setItem('hasVisitedLanding', 'true') // 設置已訪問過 landing 頁面標記
+    router.push('/') // 跳轉到首頁
+  }
 
   // 如果還沒有顯示過動畫，那就返回 null，不渲染
   if (!hasSeenAnimation) {
-    return null;  // 保證只有當動畫標記不存在時才渲染此頁面
+    return null // 保證只有當動畫標記不存在時才渲染此頁面
   }
 
   return (
@@ -64,9 +64,9 @@ const LandingPage = () => {
         className="intro-text"
       >
         {/* 圖片容器 */}
-        <div className=''>
+        <div className="">
           <Image
-          className={styles.img}
+            className={styles.img}
             src="/discount/banner.svg" // 圖片路徑
             alt="Discount image" // 圖片描述
             layout="fill" // 確保圖像填滿整個容器
@@ -93,9 +93,11 @@ const LandingPage = () => {
             transition={{ duration: 1, delay: 0.5 }} // 設置延遲讓它們逐漸顯現
             className={`${styles.title} flex-column justify-content-center align-content-center h-100 w-100 text-center`}
           >
-            <div className='mb-5 pb-5'>
+            <div className="mb-5 pb-5">
               <div className={`${styles.name} h1-L`}>Beautique</div>
-              <div className={`${styles.sutitle} h3-L`}>Where Beauty <br/> Meets Uniqueness .</div>
+              <div className={`${styles.sutitle} h3-L`}>
+                Where Beauty <br /> Meets Unique .
+              </div>
             </div>
 
             {/* 按鈕 */}
@@ -107,14 +109,14 @@ const LandingPage = () => {
                 className={`${styles.homeBtn} btn h5 enter-button d-flex justify-content-center align-items-center`}
                 onClick={handleButtonClick}
               >
-                SHOW NOW  <BsArrowRight className={styles.right} size={30}/>
+                SHOW NOW <BsArrowRight className={styles.right} size={30} />
               </motion.button>
             )}
           </motion.div>
         </div>
       </motion.div>
     </div>
-  );
-};
+  )
+}
 
-export default LandingPage;
+export default LandingPage

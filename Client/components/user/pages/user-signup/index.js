@@ -296,7 +296,7 @@ export default function RegisterForm() {
                     Beautique
                   </button>
                   <h3 className={styles['slogan']}>
-                    Where Beauty <br /> Meets Uniqueness.
+                    Where Beauty <br /> Meets Unique.
                   </h3>
                   <h6 className={`h6 ${styles['text']}`}>
                     已經是Beautique會員?立即登入享受會員專屬體驗！{' '}
