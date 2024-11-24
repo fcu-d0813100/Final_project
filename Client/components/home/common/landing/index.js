@@ -96,7 +96,7 @@ const LandingPage = () => {
             <div className="mb-5 pb-5">
               <div className={`${styles.name} h1-L`}>Beautique</div>
               <div className={`${styles.sutitle} h3-L`}>
-                Where Beauty <br /> Meets Unique .
+                Where Beauty Meets Unique .
               </div>
             </div>
 
