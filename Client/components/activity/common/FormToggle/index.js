@@ -20,6 +20,12 @@ export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
   const { auth } = useAuth()
   const router = useRouter()
   const userId = auth.userData.id
+  const now = new Date()
+
+  const dateStr1 = end_at
+  const dateStr2 = now
+  const date1 = new Date(dateStr1) //活動結束時間
+  const date2 = new Date(dateStr2) //目前此時此刻的時間
 
   useEffect(() => {
     console.log('使用者 ID:', userId) // 印出 userId
@@ -27,6 +33,18 @@ export default function FormToggle({ ENG_name, CHN_name, start_at, end_at }) {
   const toggleForm = () => {
     if (userId === 0) {
       setShowLoginModal(true) // 如果 userId 是 0，顯示登入模態框
+    } else if (date1 < date2) {
+      toast.error(' 活動已結束', {
+        style: {
+          border: '1.2px solid #90957a',
+          padding: '12px 40px',
+          color: '#963827',
+        },
+        iconTheme: {
+          primary: '#963827',
+          secondary: '#fff',
+        },
+      })
     } else {
       setIsExpanded(!isExpanded) // 否則展開表單
     }
