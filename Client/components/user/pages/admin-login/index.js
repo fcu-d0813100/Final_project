@@ -89,16 +89,6 @@ export default function AdminLogin(props) {
                       登入
                     </button>
                   </div>
-                  {/*  */}
-                  <button
-                    onClick={() => {
-                      setAccount('admin')
-                      setPassword('12345')
-                    }}
-                  >
-                    一鍵輸入
-                  </button>
-                  {/*  */}
                 </div>
               </div>
             </div>

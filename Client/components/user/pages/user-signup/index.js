@@ -210,7 +210,7 @@ export default function RegisterForm() {
                   </div>
                   <div className="row p-0 m-0 d-flex justify-content-between">
                     <div
-                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-sm-5 col-12`}
+                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-md-6 col-12`}
                     >
                       <label htmlFor="name" className={styles['text-input']}>
                         姓名:{' '}
@@ -227,26 +227,8 @@ export default function RegisterForm() {
                         className={`${styles['line-input']} `}
                       />
                     </div>
-                    {/* <div
-                      className={` ${styles['input-area']} ${styles['line-input-pw']} ps-2 col-6`}
-                    >
-                      <label htmlFor="gender" className={styles['text-input']}>
-                        稱謂{' '}
-                      </label>
-                      <select
-                        id="title"
-                        className={`${styles['line-input']} ${styles['custom-select']}`}
-                      >
-                        <option value="" disabled selected>
-                          選擇稱謂
-                        </option>
-                        <option value="male">先生</option>
-                        <option value="female">女士</option>
-                        <option value="other">其他</option>
-                      </select>
-                    </div> */}
                     <div
-                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-12 col-sm-7`}
+                      className={`${styles['input-area']} ${styles['line-input-pw']} pe-2 col-12 col-md-6`}
                     >
                       <label htmlFor="email" className={styles['text-input']}>
                         Email:{' '}
@@ -266,22 +248,6 @@ export default function RegisterForm() {
                         placeholder="請輸入Email"
                       />
                     </div>
-                    {/* <div
-                      className={`${styles['input-area']} ${styles['line-input-pw']} ps-2 col-12 col-sm-6`}
-                    >
-                      <label
-                        htmlFor="birthday"
-                        className={styles['text-input']}
-                      >
-                        生日
-                      </label>
-                      <input
-                        type="date"
-                        name="birthday"
-                        value={user.birthday}
-                        className={`${styles['line-input']} `}
-                      />
-                    </div> */}
                   </div>
                   <div className={`form-check ${styles['form-area']} my-2 `}>
                     <div>
@@ -305,8 +271,8 @@ export default function RegisterForm() {
                       創建帳號
                     </button>
                   </div>
-                  <div className="row d-flex justify-content-end align-items-start">
-                    <div className={`col-7 ${styles['signup-rwd']}`}>
+                  <div className="d-flex justify-content-end align-items-start">
+                    <div className={`${styles['signup-rwd']} pt-3`}>
                       已經有帳號了?{' '}
                       <Link href="/user/login/user" className="text-black">
                         立即登入
@@ -330,7 +296,7 @@ export default function RegisterForm() {
                     Beautique
                   </button>
                   <h3 className={styles['slogan']}>
-                    Where Beauty <br /> Meets Uniqueness.
+                    Where Beauty <br /> Meets Unique.
                   </h3>
                   <h6 className={`h6 ${styles['text']}`}>
                     已經是Beautique會員?立即登入享受會員專屬體驗！{' '}

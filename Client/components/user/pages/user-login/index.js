@@ -205,13 +205,13 @@ export default function UserLogin() {
                   onClick={() => {
                     setTimeout(() => {
                       router.push('/')
-                    }, 1500)
+                    }, 1000)
                   }}
                 >
                   Beautique
                 </button>
                 <h3 className={styles['slogan']}>
-                  Where Beauty <br /> Meets Uniqueness.
+                  Where Beauty <br /> Meets Unique.
                 </h3>
                 <h6 className={`h6 ${styles['text']}`}>
                   註冊成為Beautique會員，第一時間掌握最新美妝潮流！
@@ -293,16 +293,18 @@ export default function UserLogin() {
                   </button>
                 </div>
                 {/*  */}
-                <button
+                {/* <button
                   onClick={() => {
                     setAccount('Bella')
                     setPassword('12345')
                   }}
                 >
                   一鍵輸入
-                </button>
+                </button> */}
                 {/*  */}
-                <div className="row pt-4 d-flex justify-content-end align-items-start">
+                <div
+                  className={`${styles['signin-area']} row pt-4 d-flex justify-content-end align-items-start`}
+                >
                   <div className={`col-7 ${styles['signin-rwd']}`}>
                     還沒有帳號?{' '}
                     <Link href="/user/register" className="text-black">
@@ -339,11 +341,11 @@ export default function UserLogin() {
                 </div>
               </div>
             </div>
-            <p
-              className={`ps-phone text-white text-center ${styles['copyright']}`}
-            >
-              © 2024 COPYRIGHT@BEAUTIQUE CO.,LTD.ALL RIGHTS RESERVED.
-            </p>
+            <div className={styles['copyright']}>
+              <p className={`ps-phone text-white text-center `}>
+                © 2024 COPYRIGHT@BEAUTIQUE CO.,LTD.ALL RIGHTS RESERVED.
+              </p>
+            </div>
           </div>
         </div>
       </div>
