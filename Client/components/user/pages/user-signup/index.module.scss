@@ -1,5 +1,8 @@
 @import '@/styles/_variant.scss';
-
+.error{
+  color:$red-500;
+  font-size: 12px;
+}
 .bg-img {
   background: url(/user/login-bg.jpg) center center no-repeat;
   background-size: cover;
