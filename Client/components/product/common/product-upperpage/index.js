@@ -125,7 +125,7 @@ const selectedProductImages = useMemo(() => {
   // 加入購物車通知
   const addPnotify = () =>
     toast.success(`已新增 ${quantity} 件商品至購物車`, {
-      style: { border: '1.2px solid #90957a', padding: '12px 40px', color: '#626553' },
+      style: { padding: '12px 40px', color: '#626553' },
       iconTheme: { primary: '#626553', secondary: '#fff' },
     })
   
@@ -133,11 +133,10 @@ const selectedProductImages = useMemo(() => {
   const outOfStockNotify = () =>
   toast.error(`目前庫存僅剩 ${selectedProduct.stock} 件，請調整購買數量`, {
     style: {
-      border: '1.2px solid #f44336',
       padding: '12px 40px',
-      color: '#f44336',
+      color: '#973929',
     },
-    iconTheme: { primary: '#f44336', secondary: '#fff' },
+    iconTheme: { primary: '#973929', secondary: '#fff' },
   });
 
   // 立即購買函數
@@ -160,11 +159,11 @@ const selectedProductImages = useMemo(() => {
     } else {
       toast.error("請選擇至少 1 件商品", {
         style: {
-          border: '1.2px solid #f44336',
+          // border: '1.2px solid #f44336',
           padding: '12px 40px',
-          color: '#f44336',
+          color: '#973929',
         },
-        iconTheme: { primary: '#f44336', secondary: '#fff' },
+        iconTheme: { primary: '#973929', secondary: '#fff' },
       });
       navigateToCart = false;
     }
@@ -191,9 +190,9 @@ const selectedProductImages = useMemo(() => {
   return (
     <div className={styles['product-page']}>
       <div className="container">
-        <div className="row justify-content-center">
+        <div className={`${styles['product-page-row']} row justify-content-center`}>
           {/* 左側縮圖選項 */}
-          <div className="col-md-1 mt-5 p-1">
+          <div className="col-3 col-md-1  mt-5 p-1">
             <div className={styles['thumbnail-gallery']}>
               <button onClick={handlePrev} disabled={startIndex === 0} className={styles['arrow-button']}>
                 <FaChevronUp />
@@ -205,7 +204,7 @@ const selectedProductImages = useMemo(() => {
                   height={100}
                   src={`/product/mainimage/${product.mainimage}`}
                   alt={`Thumbnail ${index + 1}`}
-                  className={`${styles.thumbnail} ${selectedProduct.color_id === product.color_id ? styles['active-thumbnail'] : ''}`}
+                  className={`${styles.thumbnail} ${selectedProduct.color_id === product.color_id ? styles['active-thumbnail'] : ''} ${styles['thumail']} `}
                   onClick={() => setSelectedProduct(product)}
                 />
               ))}
@@ -217,7 +216,7 @@ const selectedProductImages = useMemo(() => {
           </div>
 
           {/* 主圖顯示區 */}
-          <div className="col-md-6 d-flex justify-content-center">
+          <div className={`${styles['main-image-container']} col-9 col-md-6 d-flex justify-content-center`}>
             <div
               className={styles['main-image']}
               onMouseMove={handleMouseMove}
@@ -246,7 +245,7 @@ const selectedProductImages = useMemo(() => {
           </div>
 
           {/* 右側產品詳細資訊 */}
-          <div className="col-md-5 mt-2">
+          <div className={`${styles['product-details-container']} col-md-5 mt-2`}>
             <div className={styles['product-details']}>
               <div className="justify-content-between align-items-center">
                 <div className="d-flex align-items-center mb-3 mt-3">
@@ -261,7 +260,7 @@ const selectedProductImages = useMemo(() => {
                     {favoriteProducts[selectedProduct.color_id] ? <FaHeart color="#973929" size={24} /> : <FaRegHeart size={24} />}
                   </button>
                 </div>
-                <h3 className="mb-0">{selectedProduct.product_name}</h3>
+                <h3 className={`${styles['product-name']} mb-0`}>{selectedProduct.product_name}</h3>
               </div>
               <div className={styles['product-details-info']}>
                 <p>{`使用方法: ${selectedProduct.usages}`}</p>
@@ -338,11 +337,10 @@ const selectedProductImages = useMemo(() => {
                         } else {
                           toast.error("請選擇至少 1 件商品", {
                             style: {
-                              border: '1.2px solid #f44336',
                               padding: '12px 40px',
-                              color: '#f44336',
+                              color: '#973929',
                             },
-                            iconTheme: { primary: '#f44336', secondary: '#fff' },
+                            iconTheme: { primary: '#973929', secondary: '#fff' },
                           });
                         }
                       }}

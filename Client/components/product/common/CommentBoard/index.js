@@ -12,10 +12,10 @@ import toast from 'react-hot-toast';
 import { FaRegThumbsUp, FaThumbsUp } from 'react-icons/fa';
 
 const CommentBoard = ({orderItemId, productId, colorId, brand, productName, colorName, animateChart, productImage }) => {
-  console.log('colorId:', colorId);
+  console.log('123colorId:', colorId);
   console.log('orderItemId:', orderItemId);
   console.log('productId:', productId);
-  console.log('colorId:', colorId);
+  // console.log('colorId:', colorId);
   const { auth } = useAuth();
   const isAuthenticated = auth.isAuth; // 判斷是否已登入
   const router = useRouter();

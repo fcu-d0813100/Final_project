@@ -59,7 +59,7 @@ LEFT JOIN
 WHERE 
     o.user_id = ${userId}
 GROUP BY 
-    o.id;`
+    o.id DESC;`
         const [result] = await db.query(sqlSelect, [userId]) // 使用參數化查詢
 
         // 檢查結果
@@ -69,7 +69,7 @@ GROUP BY
 
         // 返回結果
         res.json(result)
-        console.log('Query result:', result)
+        // console.log('Query result:', result)
     } catch (error) {
         console.error('Database query error:', error) // 輸出錯誤日誌
         res
@@ -165,7 +165,7 @@ GROUP BY
 
         // 返回結果
         res.json(result)
-        console.log('Query result:', result)
+        // console.log('Query result:', result)
     } catch (error) {
         console.error('Database query error:', error) // 輸出錯誤日誌
         res

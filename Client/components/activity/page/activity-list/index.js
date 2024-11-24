@@ -282,7 +282,7 @@ export default function Activity() {
           <>
             {/* 手機版卡片 (小於 390px 顯示) */}
             <div
-              className={`${Styles['act-MoBcard-sec']} container d-flex flex-column align-items-center`}
+              className={`${Styles['act-MoBcard-sec']} container d-flex d-none flex-column align-items-center`}
             >
               {active.map((item) => (
                 <div key={item.id} className={`${Styles['mobCard']} mb-3`}>
