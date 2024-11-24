@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { PiPlus } from 'react-icons/pi'
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
-import UserCard from '../../common/userCard'
+
 import Sidebar from '@/components/activity/common/Sidebar'
 import UserTitle from '@/components/user/common/user-title'
 import Pagination from '@/components/shared/pagination'
-import {
-  PiMagnifyingGlass,
-  PiHeartStraight,
-  PiHeartStraightFill,
-  PiArrowRight,
-} from 'react-icons/pi'
+import { PiArrowRight } from 'react-icons/pi'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 import DeleteModal from '@/components/shared/modal-delete'
 import AdminTitle from '@/components/admin/common/admin-title'
-export default function Index() {
+import AdminSideBar from '@/components/admin/common/admin-side-bar'
+export default function Index({ children, titleCN, titleENG }) {
   const [activities, setActivities] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const activitiesPerPage = 6
@@ -90,10 +86,16 @@ export default function Index() {
 
   return (
     <>
-      <AdminTitle />
-
+      <header
+        className={`${styles.header} d-flex justify-content-between align-items-center px-5`}
+      >
+        <div className={`${['h3-L']}`}>Beautique</div>
+        <div className="h5">Admin</div>
+        <div></div>
+      </header>
       <div className={styles['user-section']}>
-        <Sidebar />
+        <AdminSideBar />
+
         <div className={styles['any-section']}>
           <UserTitle CN="活動管理" ENG="Activity Management" />
 

@@ -211,7 +211,7 @@ export default function UserLogin() {
                   Beautique
                 </button>
                 <h3 className={styles['slogan']}>
-                  Where Beauty <br /> Meets Uniqueness.
+                  Where Beauty <br /> Meets Unique.
                 </h3>
                 <h6 className={`h6 ${styles['text']}`}>
                   註冊成為Beautique會員，第一時間掌握最新美妝潮流！

@@ -119,6 +119,11 @@
     display: none !important;
   }
 }
+@media (min-width: 1920px) and (max-width: 2000px) {
+  .act-MoBcard-sec {
+    display: none !important;
+  }
+}
 
 .act-main {
   padding-top: 40px;

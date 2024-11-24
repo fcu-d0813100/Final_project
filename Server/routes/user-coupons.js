@@ -35,6 +35,7 @@ router.get('/:userId', async (req, res) => {
             JOIN coupon_list ON coupon_relation.coupon_id = coupon_list.id
             WHERE coupon_relation.user_id = ${userId}
               AND coupon_list.end_date > '${currentDate}'  -- 篩選 end_date 大於當前日期的優惠券
+              AND coupon_relation.order_id IS NULL
             ORDER BY coupon_list.end_date ASC
             LIMIT ${limit} OFFSET ${offset}`;  // 使用 LIMIT 和 OFFSET 來分頁
 

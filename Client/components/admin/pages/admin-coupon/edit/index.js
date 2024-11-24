@@ -206,7 +206,7 @@ export default function Index() {
                                 type="text"
                                 name="name"
                                 value={coupon.name}
-                                onChange={(e) => setCoupon(e.target.value)}
+                                onChange={handleInputChange}
                             />
                         </div>
 

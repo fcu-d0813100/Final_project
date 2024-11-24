@@ -59,7 +59,7 @@ LEFT JOIN
 WHERE 
     o.user_id = ${userId}
 GROUP BY 
-    o.id;`
+    o.id DESC;`
         const [result] = await db.query(sqlSelect, [userId]) // 使用參數化查詢
 
         // 檢查結果
