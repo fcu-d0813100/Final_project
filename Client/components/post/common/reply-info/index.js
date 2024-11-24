@@ -8,6 +8,7 @@ import styles from './index.module.scss'
 import PostIcon from '../post-icon'
 import { usePost } from '@/hooks/post/use-post'
 import useAlert from '@/hooks/alert/use-alert'
+import useToast from '@/hooks/toast/use-toast'
 
 export default function ReplyInfo({
   onReplyClick = () => {},
@@ -30,6 +31,8 @@ export default function ReplyInfo({
   const userId = auth.userData.id
   const { forceUpdate } = usePost()
   const commentIdRef = useRef() //delete comment
+  const showToast = useToast()
+
   const showAlert = useAlert()
   const formattedTime = commentCreateTime
     ? format(new Date(commentCreateTime), 'yyyy-MM-dd HH:mm')
@@ -110,10 +113,11 @@ export default function ReplyInfo({
           userId,
         }),
       })
-      showAlert('刪除成功', <RiCheckboxCircleFill color="#90957A" />)
+      showToast('刪除成功', 'success')
+      // showAlert('刪除成功', <RiCheckboxCircleFill color="#90957A" />)
       forceUpdate()
     } catch (err) {
-      showAlert('刪除失敗，請稍後再試！')
+      showToast('刪除失敗，請稍後再試！', 'error')
     }
   }
 
