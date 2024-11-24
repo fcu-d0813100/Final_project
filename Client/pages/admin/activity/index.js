@@ -8,3 +8,6 @@ export default function Index(props) {
     </>
   )
 }
+Index.getLayout = function getLayout(page) {
+  return <>{page}</> // 返回頁面內容，不套用任何布局
+}
