@@ -205,7 +205,7 @@ export default function UserLogin() {
                   onClick={() => {
                     setTimeout(() => {
                       router.push('/')
-                    }, 1500)
+                    }, 1000)
                   }}
                 >
                   Beautique
