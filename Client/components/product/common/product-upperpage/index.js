@@ -350,7 +350,31 @@ const selectedProductImages = useMemo(() => {
                     </button>
                     <button
                       className={`${styles['buy-now']} h6 btn-primary`}
-                      onClick={() => handleAddToCart(true)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (quantity > selectedProduct.stock) {
+                          // 如果數量超過庫存，顯示庫存不足通知並停止操作
+                          outOfStockNotify()
+                          return
+                        }
+                        if (quantity > 0) {
+                          onAddProductMany({ ...selectedProduct, quantity })
+                          addPnotify()
+                          router.push('/cart') // 導向購物車頁面
+                        } else {
+                          toast.error('請選擇至少 1 件商品', {
+                            style: {
+                              border: '1.2px solid #f44336',
+                              padding: '12px 40px',
+                              color: '#f44336',
+                            },
+                            iconTheme: {
+                              primary: '#f44336',
+                              secondary: '#fff',
+                            },
+                          })
+                        }
+                      }}
                     >
                       <FaShoppingBag className={styles['icon']} />
                       立即購買
