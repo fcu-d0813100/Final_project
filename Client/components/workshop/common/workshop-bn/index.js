@@ -9,7 +9,7 @@ export default function WorkshopsBN(props) {
     <>
       <div className={styles.section01}>
         <div className="container d-flex justify-content-center">
-          <div className="row col-7">
+          <div className="row  col-lg-7 ">
             <div className={styles.main}>
               <div>
                 <div className={styles.headerTitle}>
@@ -17,8 +17,8 @@ export default function WorkshopsBN(props) {
                   <span className="h1-L text-light"> Makeup Workshop </span>
                 </div>
                 <hr />
-                <p className="mt-5">
-                  彩妝課程為愛好美妝的你設計，從基礎到進階技巧，
+                <p className={`${styles.detailText} mt-5`}>
+                  彩妝課程為愛美妝的你設計，從基礎到進階技巧，
                   <br />
                   掌握專業彩妝知識與實務操作，提升個人風格與美學創意。
                 </p>
