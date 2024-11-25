@@ -613,7 +613,7 @@ router.get('/post_save/:userId', async function (req, res, next) {
       GROUP BY    
         post.id, user.id, user.img, user.nickname
       ORDER BY 
-        post_save.created_at DESC`
+        post_save.id ASC`
   const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
   res.json(result)
 })
