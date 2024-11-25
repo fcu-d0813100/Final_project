@@ -332,7 +332,7 @@ router.get('/isSaved/:postId/:userId', async (req, res) => {
 router.post('/save/:postId/:userId', async (req, res) => {
   const { postId, userId } = req.params
   try {
-    const sqlInsert = `INSERT INTO post_save (post_id, user_id) VALUES (${postId}, ${userId})`
+    const sqlInsert = `INSERT INTO post_save (post_id, user_id,created_at) VALUES (${postId}, ${userId},NOW())`
     await db.query(sqlInsert, [postId, userId])
     res.json({ status: 'success', message: '收藏成功' })
   } catch (err) {
