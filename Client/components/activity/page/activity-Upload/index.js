@@ -12,7 +12,7 @@ import Sidebar from '@/components/activity/common/Sidebar'
 import Swal from 'sweetalert2'
 import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
 import ReactDOMServer from 'react-dom/server'
-
+import AdminSideBar from '@/components/admin/common/admin-side-bar'
 export default function Upload(props) {
   const router = useRouter()
 
@@ -176,13 +176,16 @@ export default function Upload(props) {
       <header
         className={`${styles.header} d-flex justify-content-between align-items-center px-5`}
       >
-        <div className="h3-L">Beautique</div>
+        <div className={`${['h3-L']}`}>Beautique</div>
         <div className="h5">Admin</div>
+        <div></div>
       </header>
 
-      <div>
-        <Sidebar />
-
+      <div
+        className="d-flex
+      "
+      >
+        <AdminSideBar />
         <form onSubmit={handleSubmit}>
           <div className={styles.main}>
             <DashboardTitle chTitle="活動上架" enTitle="New activity" />
