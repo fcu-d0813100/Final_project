@@ -127,11 +127,11 @@ export default function WorkshopAll(props) {
   return (
     <>
       <WorkshopsBN search={search} setSearch={setSearch} onSearch={onSearch} />
-
+      <div className={`${styles.colorArea}`}></div>
       <div className="container">
         <div className={styles.selectBar}>
           <div className="d-flex align-items-center">
-            <p className="m-0 me-3 h6 text-dark ">日期</p>
+            <p className="m-0 me-3 h6 text-dark d-none d-sm-block">日期</p>
             <input
               type="date"
               className={`${styles.searchInput} mx-2`}
@@ -155,7 +155,7 @@ export default function WorkshopAll(props) {
             />
           </div>
 
-          <div className="d-flex">
+          <div className={`${styles.dropdownArea} d-flex`}>
             <Dropdown
               name={selectedStatus}
               items={statusOptions}
@@ -178,7 +178,9 @@ export default function WorkshopAll(props) {
       </div>
 
       <div className={`${styles.section03} container`}>
-        <div className={`${styles.tOwnWorkshops} row row-cols-3 mt-4 mb-5`}>
+        <div
+          className={`${styles.tOwnWorkshops} row row-cols-sm-1 row-cols-md-2 row-cols-xl-3 mt-4 mb-5`}
+        >
           {currentItems.length > 0 ? (
             currentItems.map((item) => {
               // 將 dates 字串轉換成陣列
