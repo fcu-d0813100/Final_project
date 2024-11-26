@@ -161,12 +161,14 @@ export default function PostCard({
           <div className={styles['post-info-wrap']}>
             <div className={styles['post-info']}>
               <div className={`${styles['info-title']} h6`}>{title}</div>
-              <div>
+              <div className={styles['info-content-wrap']}>
                 <span className={styles['info-content']}>{content}</span>
-                {tags &&
-                  tags
-                    .split(',')
-                    .map((tag, index) => <span key={index}>#{tag}</span>)}
+                <span>
+                  {tags &&
+                    tags
+                      .split(',')
+                      .map((tag, index) => <span key={index}>#{tag}</span>)}
+                </span>
               </div>
               <div className={styles['info-date']}>{formattedTime}</div>
             </div>

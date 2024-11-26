@@ -124,12 +124,21 @@
     gap: 4px;
 
     span:nth-child(n + 2) {
+      display: flex;
       color: #963827;
     }
     .info-title {
-      padding: 4px 0;
+      padding: 4px 0 8px;
       font-size: 20px;
       font-weight: 500;
+    }
+    .info-content {
+      white-space: pre-wrap;
+    }
+    .info-content-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     .info-date {
       padding: 10px 0;
