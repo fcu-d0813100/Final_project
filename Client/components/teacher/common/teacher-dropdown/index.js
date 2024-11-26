@@ -18,7 +18,7 @@ export default function Dropdown({ name = '', items = [], onSelect }) {
 
   return (
     <>
-      <div className="dropdown mx-3">
+      <div className="dropdown mx-2 mx-md-3">
         <a
           href="#"
           className={`${styles.dropdownTitle} p d-flex justify-content-between`}

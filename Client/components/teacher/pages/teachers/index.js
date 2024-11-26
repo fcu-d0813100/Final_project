@@ -103,7 +103,7 @@ export default function Teachers(props) {
       <div className={styles.bodyImg}>
         <header className={styles.header}>
           <div className={`${styles.container} d-flex justify-content-center`}>
-            <div className="row col-7">
+            <div className="row col-md-7">
               <div className={styles.main}>
                 <div>
                   <p className={`${styles.headerTitle} h5`}>
@@ -111,7 +111,7 @@ export default function Teachers(props) {
                     <span className="h1-L text-light">Makeup Artist</span>
                   </p>
                   <hr />
-                  <p className="mt-5">
+                  <p className={`${styles.detailText} mt-5`}>
                     我們的專業，成就您的美麗。
                     <br />
                     課程由業界資深化妝師親自授課，擁有豐富的實務經驗和教學技巧，將前沿的化妝技術傳授給學員，
@@ -121,10 +121,8 @@ export default function Teachers(props) {
             </div>
           </div>
 
-          <div
-            className={`container d-flex justify-content-between align-items-center ${styles.selectBar}`}
-          >
-            <div className="d-flex align-items-center">
+          <div className={`container ${styles.selectBar}`}>
+            <div className="d-flex align-items-center justify-content-center">
               <InputIME
                 type="text"
                 className={styles.searchInput}
@@ -146,7 +144,9 @@ export default function Teachers(props) {
                 <PiMagnifyingGlass />
               </a>
             </div>
-            <div className="d-flex">
+            <div
+              className={`${styles.dropdownArea} d-flex justify-content-center`}
+            >
               <Dropdown
                 name={selectedType}
                 items={typeOptions}
@@ -168,9 +168,12 @@ export default function Teachers(props) {
           </div>
         </header>
 
-        <div className={`${styles.section01} container `}>
+        <div className={`${styles.section01} container`}>
           {groupedTeachers.map((row, rowIndex) => (
-            <div className="d-flex justify-content-between" key={rowIndex}>
+            <div
+              className="mx-3 mx-md-0 d-block d-lg-flex justify-content-between"
+              key={rowIndex}
+            >
               {row.map((teacher, index) => (
                 <TeacherBox
                   tid={teacher.id}
@@ -187,7 +190,7 @@ export default function Teachers(props) {
           ))}
         </div>
 
-        <div className={`container ${styles.bottomText}`}>
+        <div className={`container-lg ${styles.bottomText}`}>
           <p className="pt-3">Define Your Beauty</p>
         </div>
       </div>
