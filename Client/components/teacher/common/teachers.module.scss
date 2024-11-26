@@ -27,6 +27,9 @@
   }
 
   .selectBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -42,11 +45,9 @@
     padding: 15px;
   }
   .searchInput:focus {
-      outline: none;
-      border: 1.5px solid $green-500;
-    }
-
-  
+    outline: none;
+    border: 1.5px solid $green-500;
+  }
 }
 
 //-----------------------------------------------------
@@ -77,7 +78,6 @@
     .tBlack {
       opacity: 1;
       visibility: visible;
-      
     }
 
     &:hover {
@@ -125,7 +125,6 @@
       margin-top: 10px;
       border-left: 1px solid $green-500;
       padding-left: 25px;
-      
     }
     .tDetail {
       width: 120px;
@@ -143,10 +142,178 @@
   font-family: $secondary-font;
   font-size: 32px;
   font-style: italic;
-  display: flex; 
+  display: flex;
   justify-content: center;
   align-items: center;
 }
+@media (max-width: 1440px) {
+}
+@media (max-width: 1200px) {
+}
+@media (max-width: 992px) {
+  .header {
+    height: 500px;
+    .main {
+      height: 500px;
+    }
+    .headerTitle {
+      margin-top: 120px;
+      span {
+        font-size: 60px;
+      }
+    }
+    hr {
+      width: 100%;
+    }
+    .selectBar {
+      display: block;
+      width: 100%;
+      z-index: 99;
+    }
+    .searchInput {
+      width: 80%;
+    }
+    .dropdownArea {
+      margin-top: 20px;
+      width: 100%;
+      > div {
+        width: 100%;
+        text-wrap: nowrap;
+      }
+    }
+  }
+}
 
+@media (max-width: 768px) {
+  .header {
+    .headerTitle {
+      span {
+        font-size: 55px;
+      }
+    }
+    .container {
+      padding-inline: 80px;
+    }
+  }
+  .section01 {
+    background-color: transparent;
+    a {
+      height: 100%;
+      margin-bottom: 30px;
+      .tBlack {
+        opacity: 0;
+        visibility: hidden;
+        width: 350px;
+      }
+      .blackImg {
+        display: none;
+        width: 0px;
+      }
+      .tColor {
+        opacity: 1;
+        visibility: visible;
+        width: 100%;
+      }
+      &:hover {
+        .tBlack {
+          opacity: 0;
+          visibility: hidden;
+          width: 350px;
+        }
+        .blackImg {
+          display: none;
+          width: 0px;
+        }
+        .tColor {
+          opacity: 1;
+          visibility: visible;
+          width: 100%;
+        }
+      }
+    }
+    .tColor {
+      height: 300px;
+      border: none;
 
-
+      .colorImg {
+        height: 100%;
+        width: 62%;
+      }
+      .tDetail {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+@media (max-width: 576px) {
+  .header {
+    height: 400px;
+    .headerTitle {
+      margin-top: 45px;
+      span {
+        text-wrap: nowrap;
+      }
+    }
+  }
+  .section01 {
+    .tColor {
+      height: 300px;
+      border: none;
+      .tName {
+        font-size: 40px;
+      }
+    }
+  }
+}
+@media (max-width: 390px) {
+  .header {
+    height: 380px;
+    .main {
+      height: 500px;
+    }
+    .headerTitle {
+      margin-top: 40px;
+      span {
+        font-size: 40px;
+        text-wrap: nowrap;
+      }
+    }
+    hr {
+      width: 100%;
+    }
+    .detailText {
+      font-size: 14px;
+    }
+  }
+  .section01 {
+    a {
+      margin-bottom: 15px;
+    }
+    .tColor {
+      height: 210px;
+      .colorImg {
+        height: 100%;
+        width: 60%;
+      }
+      .textContent {
+        top: 10px;
+        right: 20px;
+      }
+      .tName {
+        font-size: 32px;
+      }
+      .tDetail {
+        margin-top: 10px;
+        width: 105px;
+      }
+      .information {
+        font-size: 14px;
+        border: none;
+      }
+    }
+  }
+  .bottomText {
+    height: 70px;
+    font-size: 28px;
+  }
+}
