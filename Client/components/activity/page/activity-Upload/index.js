@@ -12,7 +12,7 @@ import Sidebar from '@/components/activity/common/Sidebar'
 import Swal from 'sweetalert2'
 import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri'
 import ReactDOMServer from 'react-dom/server'
-import AdminSideBar from '@/components/admin/common/admin-side-bar'
+import AdminSideBar from '@/components/activity/common/admin-side-bar'
 export default function Upload(props) {
   const router = useRouter()
 
