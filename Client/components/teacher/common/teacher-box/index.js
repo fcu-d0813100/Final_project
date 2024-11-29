@@ -8,7 +8,7 @@ import { PiArrowRight } from 'react-icons/pi'
 export default function TeacherBox({ tid,blackImg, colorImg, name, type, nation, years }) {
   return (
     <>
-      <a href={`/teacher/detail/${tid}`} className="flex-grow-1 ">
+      <a href={`/teacher/detail/${tid}`} className="flex-grow-1">
         <div className={`${styles.tBlack} d-flex`}>
           <div className={`${styles.blackImg} flex-grow-1`}>
             <Image
@@ -38,13 +38,13 @@ export default function TeacherBox({ tid,blackImg, colorImg, name, type, nation,
             <div className={styles.information}>
               <div className="h5">Main skills</div>
               <div className={styles.tDetail}>
-                <p className="mb-5">{type}</p>
+                <p className="mb-0 mb-md-5">{type}</p>
                 <p className="my-2">
                   {nation} <br />
                   <span>資歷{years}年</span>
                 </p>
                 <div
-                  className={`${styles.more} d-flex align-content-center mt-5`}
+                  className={`${styles.more} d-flex align-content-center mt-2 mt-md-5`}
                 >
                   <p className="h6">MORE</p>
                   <PiArrowRight className="ph ms-2" />

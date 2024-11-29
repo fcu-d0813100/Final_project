@@ -332,7 +332,7 @@ router.get('/isSaved/:postId/:userId', async (req, res) => {
 router.post('/save/:postId/:userId', async (req, res) => {
   const { postId, userId } = req.params
   try {
-    const sqlInsert = `INSERT INTO post_save (post_id, user_id) VALUES (${postId}, ${userId})`
+    const sqlInsert = `INSERT INTO post_save (post_id, user_id,created_at) VALUES (${postId}, ${userId},NOW())`
     await db.query(sqlInsert, [postId, userId])
     res.json({ status: 'success', message: '收藏成功' })
   } catch (err) {
@@ -592,29 +592,33 @@ router.get('/post_publish/:userId', async function (req, res, next) {
 // render user-post-save 指定id的user
 router.get('/post_save/:userId', async function (req, res, next) {
   const sqlSelect = `SELECT 
-        post.id, 
-        post.title,
-        post.status, 
-        user.id AS user_id,
-        user.nickname, 
-        user.img AS user_img, 
-        (SELECT COUNT(*) FROM post_like WHERE post_like.post_id = post.id) AS like_count,
-        (SELECT pic FROM post_image WHERE post_image.post_id = post.id LIMIT 1) AS post_img
-      FROM 
-        post
-      JOIN 
-        user ON post.user_id = user.id
-      LEFT JOIN 
-        post_like ON post.id = post_like.post_id
-      JOIN 
-        post_save ON post.id = post_save.post_id
-      WHERE
-        post.id IN (SELECT post_id FROM post_save WHERE user_id = ${req.params.userId}  AND post.status = 1)
-      GROUP BY    
-        post.id, user.id, user.img, user.nickname
-      ORDER BY 
-        post_save.created_at DESC`
+    post.id, 
+    post.title,
+    post.status, 
+    user.id AS user_id,
+    user.nickname, 
+    user.img AS user_img, 
+    (SELECT COUNT(*) FROM post_like WHERE post_like.post_id = post.id) AS like_count,
+    (SELECT pic FROM post_image WHERE post_image.post_id = post.id LIMIT 1) AS post_img,
+    post_save.created_at
+FROM 
+    post
+JOIN 
+    user ON post.user_id = user.id
+JOIN 
+    post_save ON post.id = post_save.post_id
+LEFT JOIN 
+    post_like ON post.id = post_like.post_id
+WHERE 
+    post_save.user_id = ${req.params.userId}
+    AND post.status = 1
+GROUP BY 
+    post.id, user.id, user.img, user.nickname, post_save.created_at
+ORDER BY 
+    post_save.created_at DESC
+`
   const [result] = await db.query(sqlSelect).catch((e) => console.log(e))
+  console.log(result)
   res.json(result)
 })
 

@@ -10,7 +10,7 @@ import Swal from 'sweetalert2'
 import ReactDOMServer from 'react-dom/server'
 import { RiCheckboxCircleFill, RiCloseCircleFill } from 'react-icons/ri'
 import { PiArrowRight } from 'react-icons/pi'
-import AdminSideBar from '@/components/admin/common/admin-side-bar'
+import AdminSideBar from '@/components/activity/common/admin-side-bar'
 export default function Edit() {
   const router = useRouter()
   const { id } = router.query
