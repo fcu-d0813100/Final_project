@@ -168,7 +168,11 @@ export default function Page1({
             bigText="新增封面圖"
             smText="必填"
             name="img_cover"
-            initialImage={`http://localhost:3005/workshop/${workshop.img_cover}`} // 傳入現有圖片的 URL
+            initialImage={
+              workshop.img_cover
+                ? `http://localhost:3005/workshop/${workshop.img_cover}`
+                : null
+            }// 傳入現有圖片的 URL
             onFileChange={handleFileChange}
           />
 
