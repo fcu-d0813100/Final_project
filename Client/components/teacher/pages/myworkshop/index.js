@@ -10,7 +10,6 @@ import Sidebar from '@/components/teacher/common/t-dashboard-side-bar'
 import TDashboardBN from '@/components/teacher/common/t-dashboard-bn'
 import DashboardTitle from '@/components/shared/dashboard-title-y'
 import React, { useState, useEffect } from 'react'
-import { Link } from 'phosphor-react'
 
 export default function MyWorkshop(props) {
   const { auth, login, logout } = useAuth()
@@ -201,7 +200,11 @@ export default function MyWorkshop(props) {
                 <MyWorkshopBox
                   key={item.id}
                   id={item.id}
-                  img={`http://localhost:3005/workshop/${item.img_cover}`}
+                  img={
+                    item.img_cover
+                      ? `http://localhost:3005/workshop/${item.img_cover}`
+                      : '/workshop/picture.svg'
+                  }
                   name={item.name}
                   start_date={beginDate}
                   end_date={endDate}
