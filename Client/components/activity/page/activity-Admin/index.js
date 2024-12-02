@@ -12,7 +12,7 @@ import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 import DeleteModal from '@/components/shared/modal-delete'
 import AdminTitle from '@/components/admin/common/admin-title'
-import AdminSideBar from '@/components/admin/common/admin-side-bar'
+import AdminSideBar from '@/components/activity/common/admin-side-bar'
 export default function Index({ children, titleCN, titleENG }) {
   const [activities, setActivities] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
