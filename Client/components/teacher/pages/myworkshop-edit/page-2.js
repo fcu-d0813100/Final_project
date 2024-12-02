@@ -30,7 +30,11 @@ export default function Page2({
             bigText="新增細節圖"
             smText="1920 X 550 px"
             name="img_lg"
-            initialImage={`http://localhost:3005/workshop/${workshop.img_lg}`}
+            initialImage={
+              workshop.img_lg
+                ? `http://localhost:3005/workshop/${workshop.img_lg}`
+                : null
+            }
             onFileChange={handleFileChange}
           />
           <div className=" d-flex mt-5">
@@ -40,7 +44,11 @@ export default function Page2({
               bigText="新增細節圖"
               smText="960 X 530 px"
               name="img_sm01"
-              initialImage={`http://localhost:3005/workshop/${workshop.img_sm01}`}
+              initialImage={
+                workshop.img_sm01
+                  ? `http://localhost:3005/workshop/${workshop.img_sm01}`
+                  : null
+              }
               onFileChange={handleFileChange}
             />
             <div className="mx-3"></div>
@@ -50,7 +58,11 @@ export default function Page2({
               bigText="新增細節圖"
               smText="720 X 620 px"
               name="img_sm02"
-              initialImage={`http://localhost:3005/workshop/${workshop.img_sm02}`}
+              initialImage={
+                workshop.img_sm02
+                  ? `http://localhost:3005/workshop/${workshop.img_sm02}`
+                  : null
+              }
               onFileChange={handleFileChange}
             />
           </div>

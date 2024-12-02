@@ -60,7 +60,9 @@ export default function WorkshopEdit(props) {
 
     // 其餘表單資料
     Object.keys(workshop).forEach((key) => {
-      form.append(key, workshop[key])
+      if (workshop[key] !== null) {
+        form.append(key, workshop[key])
+      }
     })
 
     // 加入 timeSchedule 資料
